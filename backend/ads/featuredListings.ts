@@ -1,0 +1,135 @@
+// ============================================================
+// THE PRIDE TIMES — FEATURED BUSINESS LISTINGS (DIRECTORY)
+// ============================================================
+// Premium paid listings shown in the business directory
+// and sidebar of relevant category pages.
+// ============================================================
+
+import type { FeaturedListingAd } from "./adsTypes";
+
+export const FEATURED_LISTINGS: FeaturedListingAd[] = [
+  {
+    id: "listing_001",
+    name: "Deloitte Consulting Feature",
+    format: "featured_listing",
+    provider: "direct",
+    status: "active",
+    targeting: "global",
+    pages: ["/business-news", "/leadership", "/finance", "/"],
+    priority: 1,
+    impressions: 45230,
+    clicks: 3617,
+    revenue: 5000.00,
+    ctr: 8.0,
+    createdAt: "2026-04-01",
+    expiresAt: "2026-09-30",
+    budget: 12000,
+    spent: 5000,
+    businessName: "Deloitte Consulting LLP",
+    tagline: "Driving transformation. Delivering impact.",
+    description: "Deloitte provides industry-leading audit and assurance, consulting, financial advisory, risk advisory, tax and related services. With 450,000 professionals in 150+ countries.",
+    website: "https://www.deloitte.com",
+    category: "Management Consulting",
+    location: "Global — 150+ Countries",
+    contactEmail: "contact@deloitte.com",
+    phoneNumber: "+1-212-555-0100",
+    rating: 4.8,
+    reviewCount: 12450,
+    badge: "premium",
+  },
+  {
+    id: "listing_002",
+    name: "KPMG Advisory",
+    format: "featured_listing",
+    provider: "direct",
+    status: "active",
+    targeting: "global",
+    pages: ["/finance", "/business-news", "/leadership"],
+    priority: 2,
+    impressions: 28470,
+    clicks: 2277,
+    revenue: 4200.00,
+    ctr: 8.0,
+    createdAt: "2026-04-15",
+    expiresAt: "2026-09-15",
+    budget: 10000,
+    spent: 4200,
+    businessName: "KPMG International",
+    tagline: "Inspiring Confidence. Empowering Change.",
+    description: "KPMG is a global network of professional firms providing Audit, Tax and Advisory services with 265,000 people in 144 countries and territories.",
+    website: "https://www.kpmg.com",
+    category: "Audit & Advisory",
+    location: "Global — 144 Countries",
+    contactEmail: "inquiry@kpmg.com",
+    rating: 4.7,
+    reviewCount: 9870,
+    badge: "partner",
+  },
+  {
+    id: "listing_003",
+    name: "McKinsey & Company",
+    format: "featured_listing",
+    provider: "direct",
+    status: "active",
+    targeting: "global",
+    pages: ["/leadership", "/innovation", "/business-news"],
+    priority: 1,
+    impressions: 62100,
+    clicks: 4347,
+    revenue: 7500.00,
+    ctr: 7.0,
+    createdAt: "2026-03-01",
+    expiresAt: "2026-12-31",
+    budget: 20000,
+    spent: 7500,
+    businessName: "McKinsey & Company",
+    tagline: "Act boldly. Deliver impact. Be unstoppable.",
+    description: "McKinsey & Company is a global management consulting firm that serves leading businesses, governments, and NGOs. Trusted by 90% of Fortune 500 companies.",
+    website: "https://www.mckinsey.com",
+    category: "Strategy Consulting",
+    location: "Global — 65+ Countries",
+    contactEmail: "contact@mckinsey.com",
+    rating: 4.9,
+    reviewCount: 18230,
+    badge: "featured",
+  },
+  {
+    id: "listing_004",
+    name: "NASSCOM Tech Directory",
+    format: "featured_listing",
+    provider: "direct",
+    status: "active",
+    targeting: "india",
+    pages: ["/technology", "/innovation", "/smart-cities"],
+    priority: 2,
+    impressions: 18340,
+    clicks: 1284,
+    revenue: 2500.00,
+    ctr: 7.0,
+    createdAt: "2026-05-01",
+    expiresAt: "2026-08-31",
+    budget: 6000,
+    spent: 2500,
+    businessName: "NASSCOM",
+    tagline: "India's Premier Tech Industry Association",
+    description: "NASSCOM represents India's $245B technology industry. Access 3,000+ member companies, events, research, and networking for tech professionals.",
+    website: "https://www.nasscom.in",
+    category: "Industry Association",
+    location: "India — 50+ Cities",
+    contactEmail: "info@nasscom.in",
+    rating: 4.6,
+    reviewCount: 5400,
+    badge: "sponsored",
+  },
+];
+
+export function getFeaturedListingsForPage(page: string, limit = 3): FeaturedListingAd[] {
+  return FEATURED_LISTINGS.filter(
+    (l) =>
+      l.status === "active" &&
+      (l.pages.includes(page) || l.pages.includes("*")) &&
+      (!l.expiresAt || new Date(l.expiresAt) > new Date())
+  )
+    .sort((a, b) => a.priority - b.priority)
+    .slice(0, limit);
+}
