@@ -9,6 +9,7 @@ import {
   TrendingUp,
   ArrowUpRight,
 } from "lucide-react";
+
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import CeospotImg from "../../../imports/Ceospot.png";
 
@@ -54,7 +55,7 @@ function SectionHeader({
 }
 
 /* ============================================================
-   HERO DATA
+   HERO
 ============================================================ */
 
 const hero = {
@@ -287,13 +288,6 @@ function StoryRow({
    MAIN PAGE
 ============================================================ */
 
-/*
-  IMPORTANT:
-  This is a NAMED EXPORT because App.tsx uses:
-
-  import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
-*/
-
 export function CeoSpotlightPage() {
   return (
     <main className="min-h-screen bg-white text-black">
@@ -340,17 +334,20 @@ export function CeoSpotlightPage() {
 
         <section className="mb-12">
           <article className="group cursor-pointer">
-            <div className="relative overflow-hidden bg-gray-100">
+
+            <div className="relative overflow-hidden rounded-md border border-gray-200 bg-gray-100 shadow-sm">
               <ImageWithFallback
                 src={hero.image}
                 alt={hero.title}
                 className="h-[290px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.025] sm:h-[390px] md:h-[500px] lg:h-[570px]"
               />
 
+              <div className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-inset ring-black/10" />
+
               <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
               <div className="absolute bottom-5 left-5 sm:bottom-7 sm:left-7">
-                <span className="inline-flex items-center gap-2 bg-red-600 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
+                <span className="inline-flex items-center gap-2 rounded-sm bg-red-600 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
                   <span className="h-1.5 w-1.5 rounded-full bg-white" />
                   {hero.category}
                 </span>
@@ -401,16 +398,18 @@ export function CeoSpotlightPage() {
             {ceoInterviews.map((ceo) => (
               <article
                 key={ceo.id}
-                className="group overflow-hidden border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-black hover:shadow-[0_12px_35px_rgba(0,0,0,0.08)]"
+                className="group overflow-hidden rounded-md border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-black hover:shadow-[0_12px_35px_rgba(0,0,0,0.08)]"
               >
-                <div className="relative overflow-hidden bg-gray-100">
+                <div className="relative overflow-hidden border-b border-gray-200 bg-gray-100">
                   <ImageWithFallback
                     src={ceo.image}
                     alt={ceo.name}
                     className="h-[230px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
 
-                  <span className="absolute left-4 top-4 bg-black px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-white">
+                  <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/10" />
+
+                  <span className="absolute left-4 top-4 rounded-sm bg-black px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-white">
                     {ceo.topic}
                   </span>
                 </div>
@@ -454,11 +453,12 @@ export function CeoSpotlightPage() {
         </section>
 
         {/* ====================================================
-            PT30 BLACK FEATURE
+            PT30
         ==================================================== */}
 
-        <section className="mb-14 overflow-hidden bg-[#090909] text-white">
+        <section className="mb-14 overflow-hidden rounded-md bg-[#090909] text-white">
           <div className="p-6 sm:p-8 md:p-10">
+
             <div className="mb-8 flex flex-col gap-4 border-b border-white/15 pb-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <div className="mb-2 flex items-center gap-2">
@@ -484,7 +484,7 @@ export function CeoSpotlightPage() {
               {pt30Features.map((person) => (
                 <article
                   key={person.rank}
-                  className="group relative overflow-hidden border border-white/10 p-6 transition-colors hover:border-yellow-400"
+                  className="group relative overflow-hidden rounded-md border border-white/10 p-6 transition-colors hover:border-yellow-400"
                 >
                   <div className="absolute right-3 top-0 font-serif text-[100px] font-bold leading-none text-white/[0.035]">
                     {person.rank}
@@ -635,6 +635,7 @@ export function CeoSpotlightPage() {
           />
 
           <div className="grid grid-cols-1 gap-px bg-gray-200 md:grid-cols-3">
+
             <article className="bg-white p-6 md:p-7">
               <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
                 01 · Strategy
@@ -679,11 +680,12 @@ export function CeoSpotlightPage() {
                 technological and organizational change.
               </p>
             </article>
+
           </div>
         </section>
 
         {/* ====================================================
-            PAGE FOOTER
+            FOOTER
         ==================================================== */}
 
         <footer className="mt-10 border-t border-gray-300 pt-4">
@@ -692,6 +694,7 @@ export function CeoSpotlightPage() {
             <span>Executive Intelligence Desk</span>
           </div>
         </footer>
+
       </div>
     </main>
   );
