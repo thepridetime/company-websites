@@ -1,114 +1,140 @@
+import { useState } from "react";
 import { Link } from "react-router";
-import { Twitter, Linkedin, Facebook, Instagram } from "lucide-react";
+import { Crown, Instagram, Youtube, ChevronUp } from "lucide-react";
 import logoImg from "../../imports/logo.png";
 
-const footerSections = [
-  {
-    title: "Magazine",
-    links: [
-      { label: "Home", path: "/" },
-      { label: "Technology", path: "/technology" },
-      { label: "Finance", path: "/finance" },
-      { label: "Billionaires", path: "/billionaires" },
-      { label: "World", path: "/world" },
-      { label: "Topics", path: "/featured" },
-    ],
-  },
-  {
-    title: "Rankings",
-    links: [
-      { label: "World's Billionaires", path: "/billionaires#world" },
-      { label: "Pride Times 30", path: "/billionaires#pt30" },
-      { label: "India's Richest", path: "/billionaires#india" },
-      { label: "White House Watch", path: "/world" },
-      { label: "Leadership 100", path: "/finance#leadership" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About Us", path: "#" },
-      { label: "Advertise", path: "#" },
-      { label: "Careers", path: "#" },
-      { label: "Contact Us", path: "#" },
-      { label: "Press Room", path: "#" },
-    ],
-  },
-];
+const GOLD = "#D4A017";
+
+/* Brand icons not in lucide (X / Pinterest) as tiny inline marks */
+function XIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+function PinterestIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.017 0C5.396 0 0 5.396 0 12.017c0 5.086 3.163 9.421 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.024 0 1.518.769 1.518 1.69 0 1.03-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345c-.09.375-.293 1.194-.333 1.361-.052.221-.174.267-.402.161-1.499-.698-2.436-2.888-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378 0 0-.602 2.291-.748 2.853-.271 1.043-1.002 2.35-1.492 3.146 1.124.348 2.317.535 3.554.535 6.621 0 12.017-5.396 12.017-12.017C24.034 5.396 18.638 0 12.017 0z" />
+    </svg>
+  );
+}
 
 const socialLinks = [
-  { icon: Facebook, href: "https://www.facebook.com/thepridetime", label: "Facebook" },
-  { icon: Twitter, href: "https://x.com/thepridetime", label: "Twitter/X" },
-  { icon: Linkedin, href: "https://www.linkedin.com/company/thepridetimes", label: "LinkedIn" },
-  { icon: Instagram, href: "https://www.instagram.com/thepridetime/", label: "Instagram" },
+  { icon: (s: number) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.507 17.523 2 12 2S2 6.507 2 12.06c0 5.02 3.657 9.184 8.438 9.94v-7.03H7.898v-2.91h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.459h-1.26c-1.243 0-1.63.771-1.63 1.562v1.878h2.773l-.443 2.91h-2.33V22c4.78-.756 8.437-4.92 8.437-9.94z"/></svg>, href: "https://www.facebook.com/thepridetime", label: "Facebook" },
+  { icon: (s: number) => <Instagram size={s} />, href: "https://www.instagram.com/thepridetime/", label: "Instagram" },
+  { icon: (s: number) => <XIcon size={s} />, href: "https://x.com/thepridetime", label: "X" },
+  { icon: (s: number) => <Youtube size={s} />, href: "https://www.youtube.com/@thepridetime", label: "YouTube" },
+  { icon: (s: number) => <PinterestIcon size={s} />, href: "https://www.pinterest.com/thepridetime/", label: "Pinterest" },
+];
+
+const bottomLinks = [
+  { label: "Team", path: "/team" },
+  { label: "Privacy Policy", path: "/Privacy" },
+  { label: "Terms Of Use", path: "/Terms" },
 ];
 
 export function Footer() {
+  const [cookieDismissed, setCookieDismissed] = useState(false);
+
   return (
-    <footer className="bg-black text-white mt-4">
-      {/* Main footer */}
-      <div className="pt-container pt-12 pb-5">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-2">
-              <img src={logoImg} alt="The Pride Times" className="h-8 w-8 flex-shrink-0" />
-              <span className="pt-logo text-2xl" style={{ color: "#ffffff" }}>
-                THE <span className="pt-logo-accent">PRIDE</span> TIMES
-              </span>
-            </Link>
-            <p className="text-gray-400 text-xs leading-relaxed">
-              The world's leading source for business intelligence, technology coverage, and global financial news.
+    <footer className="bg-black text-white pt-10 pb-6 relative">
+      <div className="max-w-5xl mx-auto px-4">
+        {/* Ornamental top rule */}
+        <div className="flex items-center justify-center gap-3 mb-10">
+          <span className="h-px flex-1" style={{ background: `linear-gradient(to right, transparent, ${GOLD}99)` }} />
+          <span className="w-1.5 h-1.5 rotate-45" style={{ background: GOLD }} />
+          <Crown size={22} style={{ color: GOLD }} fill={GOLD} />
+          <span className="w-1.5 h-1.5 rotate-45" style={{ background: GOLD }} />
+          <span className="h-px flex-1" style={{ background: `linear-gradient(to left, transparent, ${GOLD}99)` }} />
+        </div>
+
+        {/* Brand */}
+        <Link to="/" className="flex items-center justify-center gap-5 mb-2 text-center sm:text-left">
+          <img src={logoImg} alt="The Pride Times" className="h-16 w-16 sm:h-20 sm:w-20 object-contain flex-shrink-0" />
+          <span className="hidden sm:block h-16 w-px" style={{ background: `${GOLD}55` }} />
+          <div>
+            <div
+              className="pt-logo leading-none"
+              style={{ fontSize: "clamp(2.25rem, 5vw, 3.75rem)" }}
+            >
+              THE <span className="pt-logo-accent">PRIDE</span> TIMES
+            </div>
+            <p className="text-xs sm:text-sm text-gray-400 uppercase tracking-widest mt-2">
+              Voices That Inspire. Stories That Matter.
             </p>
           </div>
+        </Link>
 
-          {/* Link columns */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <h4 className="text-white text-sm mb-3 uppercase tracking-wider">{section.title}</h4>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      to={link.path}
-                      className="text-gray-400 text-xs hover:text-red-500 transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Ornamental divider */}
+        <div className="flex items-center justify-center gap-3 my-8">
+          <span className="h-px w-20 sm:w-28" style={{ background: `${GOLD}66` }} />
+          <span className="w-1.5 h-1.5 rotate-45" style={{ background: GOLD }} />
+          <span className="h-px w-20 sm:w-28" style={{ background: `${GOLD}66` }} />
+        </div>
+
+        {/* Social icons */}
+        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8">
+          {socialLinks.map(({ icon, href, label }) => (
+            <a
+              key={label}
+              href={href}
+              aria-label={label}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center border rounded-md text-white hover:bg-white/5 transition-colors"
+              style={{ borderColor: `${GOLD}88` }}
+            >
+              {icon(20)}
+            </a>
+          ))}
+        </div>
+
+        {/* Simple link row */}
+        <div className="flex items-center justify-center gap-3 text-sm text-gray-300 mb-2">
+          {bottomLinks.map((link, i) => (
+            <span key={link.label} className="flex items-center gap-3">
+              <Link to={link.path} className="hover:text-white transition-colors">
+                {link.label}
+              </Link>
+              {i < bottomLinks.length - 1 && <span style={{ color: `${GOLD}88` }}>|</span>}
+            </span>
           ))}
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-gray-800 py-4">
-        <div className="pt-container flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-gray-500 text-xs">
-            © {new Date().getFullYear()} The Pride Times. All rights reserved. 
+      {/* Bottom bar — copyright + cookie notice */}
+      <div className="border-t border-white/10 mt-8 pt-4">
+        <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-gray-500">
+            © {new Date().getFullYear()} The Pride Times. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-xs text-gray-500">
-            <a href="/Privacy" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
-            <a href="/Terms" className="hover:text-gray-300 transition-colors">Terms of Use</a>
-            <a href="/CookiePolicy" className="hover:text-gray-300 transition-colors">Cookie Settings</a>
-            <a href="/Accessibility" className="hover:text-gray-300 transition-colors">Accessibility</a>
-          </div>
-          <div className="flex items-center gap-4">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="text-gray-500 hover:text-white transition-colors"
+
+          {!cookieDismissed && (
+            <div className="flex items-center gap-4 text-xs text-gray-400">
+              <span>Your experience on this site will be improved by allowing cookies.</span>
+              <button
+                onClick={() => setCookieDismissed(true)}
+                className="border rounded-md px-4 py-2 text-white hover:bg-white/5 transition-colors whitespace-nowrap"
+                style={{ borderColor: `${GOLD}88` }}
               >
-                <Icon size={16} />
-              </a>
-            ))}
-          </div>
+                Allow cookies
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Back to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Back to top"
+        className="fixed bottom-6 right-6 w-11 h-11 rounded-md flex items-center justify-center text-black shadow-lg hover:brightness-110 transition"
+        style={{ background: GOLD }}
+      >
+        <ChevronUp size={20} />
+      </button>
     </footer>
   );
 }
