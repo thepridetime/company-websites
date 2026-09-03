@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Crown, Instagram, Youtube, ChevronUp } from "lucide-react";
+import { Crown, Instagram, Youtube, Linkedin, Sparkle, ChevronUp } from "lucide-react";
 import logoImg from "../../imports/logo.png";
 
 const GOLD = "#D4A017";
@@ -27,6 +27,7 @@ const socialLinks = [
   { icon: (s: number) => <XIcon size={s} />, href: "https://x.com/thepridetime", label: "X" },
   { icon: (s: number) => <Youtube size={s} />, href: "https://www.youtube.com/@thepridetime", label: "YouTube" },
   { icon: (s: number) => <PinterestIcon size={s} />, href: "https://www.pinterest.com/thepridetime/", label: "Pinterest" },
+  { icon: (s: number) => <Linkedin size={s} />, href: "https://www.linkedin.com/company/thepridetimes", label: "LinkedIn" },
 ];
 
 const bottomLinks = [
@@ -50,57 +51,62 @@ export function Footer() {
           <span className="h-px flex-1" style={{ background: `linear-gradient(to left, transparent, ${GOLD}99)` }} />
         </div>
 
-        {/* Brand */}
-        <Link to="/" className="flex items-center justify-center gap-5 mb-2 text-center sm:text-left">
-          <img src={logoImg} alt="The Pride Times" className="h-16 w-16 sm:h-20 sm:w-20 object-contain flex-shrink-0" />
-          <span className="hidden sm:block h-16 w-px" style={{ background: `${GOLD}55` }} />
-          <div>
-            <div
-              className="pt-logo leading-none"
-              style={{ fontSize: "clamp(2.25rem, 5vw, 3.75rem)" }}
-            >
-              THE <span className="pt-logo-accent">PRIDE</span> TIMES
+        {/* Two-column: brand | socials + links */}
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-14 mb-2">
+          {/* Left: brand */}
+          <Link to="/" className="flex items-center gap-5 flex-shrink-0">
+            <img src={logoImg} alt="The Pride Times" className="h-14 w-14 sm:h-16 sm:w-16 object-contain flex-shrink-0" />
+            <span className="h-14 sm:h-16 w-px" style={{ background: `${GOLD}55` }} />
+            <div>
+              <div className="pt-logo leading-none" style={{ fontSize: "clamp(1.75rem, 4vw, 2.75rem)" }}>
+                THE <span className="pt-logo-accent">PRIDE</span> TIMES
+              </div>
+              <p className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest mt-2">
+                Voices That Inspire. Stories That Matter.
+              </p>
             </div>
-            <p className="text-xs sm:text-sm text-gray-400 uppercase tracking-widest mt-2">
-              Voices That Inspire. Stories That Matter.
-            </p>
+          </Link>
+
+          {/* Vertical divider */}
+          <span className="hidden lg:block w-px self-stretch" style={{ background: `${GOLD}40` }} />
+
+          {/* Right: socials + links */}
+          <div className="relative flex flex-col items-center lg:items-start gap-4">
+            <div className="flex items-center gap-3">
+              {socialLinks.map(({ icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-11 h-11 flex items-center justify-center border rounded-md text-white hover:bg-white/5 transition-colors"
+                  style={{ borderColor: `${GOLD}88` }}
+                >
+                  {icon(17)}
+                </a>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-3 text-sm text-gray-300">
+              {bottomLinks.map((link, i) => (
+                <span key={link.label} className="flex items-center gap-3">
+                  <Link to={link.path} className="hover:text-white transition-colors">
+                    {link.label}
+                  </Link>
+                  {i < bottomLinks.length - 1 && <span style={{ color: `${GOLD}88` }}>|</span>}
+                </span>
+              ))}
+            </div>
+
+            {/* Sparkle accent */}
+            <Sparkle
+              size={16}
+              className="absolute -bottom-1 -right-6 hidden sm:block"
+              style={{ color: `${GOLD}AA` }}
+              fill={`${GOLD}55`}
+            />
           </div>
-        </Link>
-
-        {/* Ornamental divider */}
-        <div className="flex items-center justify-center gap-3 my-8">
-          <span className="h-px w-20 sm:w-28" style={{ background: `${GOLD}66` }} />
-          <span className="w-1.5 h-1.5 rotate-45" style={{ background: GOLD }} />
-          <span className="h-px w-20 sm:w-28" style={{ background: `${GOLD}66` }} />
-        </div>
-
-        {/* Social icons */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-8">
-          {socialLinks.map(({ icon, href, label }) => (
-            <a
-              key={label}
-              href={href}
-              aria-label={label}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center border rounded-md text-white hover:bg-white/5 transition-colors"
-              style={{ borderColor: `${GOLD}88` }}
-            >
-              {icon(20)}
-            </a>
-          ))}
-        </div>
-
-        {/* Simple link row */}
-        <div className="flex items-center justify-center gap-3 text-sm text-gray-300 mb-2">
-          {bottomLinks.map((link, i) => (
-            <span key={link.label} className="flex items-center gap-3">
-              <Link to={link.path} className="hover:text-white transition-colors">
-                {link.label}
-              </Link>
-              {i < bottomLinks.length - 1 && <span style={{ color: `${GOLD}88` }}>|</span>}
-            </span>
-          ))}
         </div>
       </div>
 
