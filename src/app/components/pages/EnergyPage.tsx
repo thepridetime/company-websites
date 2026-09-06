@@ -94,6 +94,76 @@ const snapshot = [
   { label: "Top Energy Deal Type (2026)", value: "Power generation, storage, and transmission assets" },
 ];
 
+/* =========================================================
+   ENERGY MARKET REPORT — editorial wire content (2.2 Energy)
+========================================================= */
+
+const energyReportGroups = [
+  {
+    code: "OIL",
+    title: "Oil Market Volatility",
+    points: [
+      "July 2026 was one of the most volatile months for crude oil in recent memory, driven by the U.S.–Iran conflict, Strait of Hormuz shipping attacks, and Houthi strikes on Saudi tankers.",
+      "U.S. crude oil production is forecast at a record 13.83 million barrels per day in 2026.",
+    ],
+  },
+  {
+    code: "GAS",
+    title: "Natural Gas",
+    points: [
+      "U.S. marketed natural gas production is projected to hit a record 122.5 Bcf/d in 2026 (+3.4% YoY), driven by the Permian and Haynesville regions.",
+      "Henry Hub spot prices are forecast to average $2.87/MMBtu in Q3 2026, down 50 cents from the July STEO, due to reduced LNG feedgas demand and robust production.",
+    ],
+  },
+  {
+    code: "PWR",
+    title: "Power & Renewables",
+    points: [
+      "Solar, hydropower, and wind generation grew by 21%, 9%, and 6% respectively in H1 2026 vs. H1 2025.",
+      "Natural gas-fired electricity generation increased 2% in H1 2026 and is forecast to rise further in 2027 as gas prices remain relatively low.",
+    ],
+    growth: [
+      { label: "Solar", value: 21 },
+      { label: "Hydropower", value: 9 },
+      { label: "Wind", value: 6 },
+      { label: "Gas-fired", value: 2 },
+    ],
+  },
+];
+
+const energyReportStats = [
+  { value: "13.83M", label: "US crude output, bbl/d (2026F)" },
+  { value: "122.5", label: "US gas output, Bcf/d (2026F)" },
+  { value: "$2.87", label: "Henry Hub, /MMBtu (Q3 2026F)" },
+  { value: "+21%", label: "Solar generation growth, H1 YoY" },
+  { value: "+9%", label: "Hydropower growth, H1 YoY" },
+  { value: "+6%", label: "Wind growth, H1 YoY" },
+];
+
+/** Bolds percentages, currency amounts, and unit figures inline so key
+ *  numbers are scannable instead of buried in paragraph text. */
+const STAT_RE =
+  /([$€¥]\s?[\d.,]+(?:\s?(?:billion|trillion|million))?|-?\d+(?:\.\d+)?%|\d+(?:\.\d+)?\s?(?:million barrels per day|Bcf\/d|\/MMBtu))/g;
+
+function Emphasize({ text, color = "#B8752E" }: { text: string; color?: string }) {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+  const re = new RegExp(STAT_RE);
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
+    nodes.push(
+      <strong key={key++} className="font-semibold tabular-nums" style={{ color }}>
+        {match[0]}
+      </strong>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
+  return <>{nodes}</>;
+}
+
 function DocketHeader({ title, note }: { title: string; note?: string }) {
   return (
     <div className="flex items-baseline justify-between border-b-2 border-[#17140F] pb-2.5 mb-5">
@@ -296,6 +366,86 @@ export function EnergyPage() {
                   <Clock size={10} />
                   {s.time}
                 </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Energy Market Report — editorial wire dispatch (2.2 Energy) ── */}
+        <section className="mb-14">
+          <div className="border-b-2 border-[#17140F] pb-2.5 mb-2 flex items-baseline justify-between">
+            <h2 className="uppercase tracking-[0.16em] text-sm font-semibold">Energy Market Report</h2>
+            <span className="font-mono text-[10px] text-[#8A887F]">July 2026 Wrap</span>
+          </div>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-[#8A887F] mb-6">2.2 &nbsp;Energy</p>
+
+          {/* Key figures strip */}
+          <div className="flex items-stretch overflow-x-auto no-scrollbar border border-[#D9D4C7] bg-white mb-8">
+            {energyReportStats.map((s, i) => (
+              <div
+                key={s.label}
+                className={`flex-1 min-w-[140px] px-5 py-4 ${i > 0 ? "border-l border-[#D9D4C7]" : ""}`}
+              >
+                <p className="text-xl sm:text-2xl font-mono font-semibold tabular-nums text-[#B8752E]">
+                  {s.value}
+                </p>
+                <p className="text-[10px] uppercase tracking-wide text-[#8A887F] mt-1 leading-tight">
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {energyReportGroups.map((group) => (
+              <div
+                key={group.code}
+                className="border border-[#D9D4C7] bg-white hover:shadow-[0_2px_10px_rgba(23,20,15,0.06)] hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <div className="flex items-baseline gap-2 px-6 pt-4 pb-3 border-b border-[#D9D4C7]">
+                  <span className="font-mono text-[11px] font-bold text-[#B8752E]">{group.code}</span>
+                  <span className="text-[11px] text-[#8A887F]">—</span>
+                  <h3 className="uppercase tracking-[0.1em] text-xs font-semibold text-[#17140F]">
+                    {group.title}
+                  </h3>
+                </div>
+                <ul className="flex flex-col gap-3 px-6 pt-5">
+                  {group.points.map((p, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="text-[#B8752E] text-[10px] mt-1.5 shrink-0">▪</span>
+                      <p className="text-[13.5px] leading-relaxed text-[#3A3934]">
+                        <Emphasize text={p} />
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+
+                {group.growth && (
+                  <div className="px-6 pb-5 pt-4 mt-1">
+                    <p className="text-[9.5px] uppercase tracking-wider text-[#8A887F] mb-2.5">
+                      Generation growth, H1 2026 vs. H1 2025
+                    </p>
+                    <div className="flex flex-col gap-2">
+                      {group.growth.map((g) => {
+                        const max = Math.max(...group.growth!.map((x) => x.value));
+                        return (
+                          <div key={g.label} className="flex items-center gap-2.5">
+                            <span className="text-[10.5px] text-[#55534C] w-[68px] shrink-0">{g.label}</span>
+                            <div className="flex-1 h-1.5 bg-[#F0EDE5] overflow-hidden">
+                              <div
+                                className="h-full bg-[#B8752E]"
+                                style={{ width: `${(g.value / max) * 100}%` }}
+                              />
+                            </div>
+                            <span className="text-[10.5px] font-mono font-semibold text-[#B8752E] w-7 text-right shrink-0">
+                              +{g.value}%
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
