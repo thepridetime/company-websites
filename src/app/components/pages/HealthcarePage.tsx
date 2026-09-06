@@ -1,4 +1,3 @@
-
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Clock, Heart, Radio, TrendingUp, ArrowUpRight } from "lucide-react";
 
@@ -219,6 +218,91 @@ const healthcareStocks = [
   },
 ];
 
+const policyGroups = [
+  {
+    code: "REG",
+    title: "Regulatory & Policy Updates",
+    accent: "teal" as const,
+    points: [
+      "On August 5, the FDA approved the first-ever mRNA flu vaccine, Moderna's mFLUSIVA, for adults ages 50–64, with accelerated approval for adults 65+.",
+      "On July 31, CMS finalized the FY 2027 Hospital Inpatient Prospective Payment System (IPPS) rule with a 2.3% increase in operating payment rates.",
+      "CMS launched an Applied Behavior Analysis (ABA) toolkit for autism care on August 4, citing 421% growth in Medicaid ABA spending between 2021 and 2025.",
+    ],
+  },
+  {
+    code: "COV",
+    title: "Coverage & Market Dynamics",
+    accent: "rose" as const,
+    points: [
+      "Medicaid policy changes beginning in 2026 could increase the number of uninsured by 7.5 million by 2034, with over half coming from new work requirements starting January 1, 2027.",
+      "ACA Marketplace effectuated enrollment could fall to ~17.5 million in 2026, down from 22.3 million in 2025, as enhanced premium tax credits expired.",
+      "U.S. News published the 2026–2027 Best Hospitals list on August 4, with Hackensack, Mount Sinai, New York-Presbyterian, and NYU Langone tying for #1 in the New York region.",
+    ],
+  },
+  {
+    code: "IT",
+    title: "Healthcare IT",
+    accent: "slate" as const,
+    points: [
+      "Epic launched a new outpatient AI tool to pull insights from patient records, with Ochsner Health in Louisiana as the first adopter.",
+      "Data breaches at an EHR vendor and prescribing software company compromised the data of over 3.7 million people (as of August 18).",
+    ],
+  },
+];
+
+const policyStats = [
+  { value: "+2.3%", label: "FY2027 IPPS payment rate increase" },
+  { value: "+421%", label: "Medicaid ABA spending, 2021–25" },
+  { value: "7.5M", label: "Projected new uninsured by 2034" },
+  { value: "17.5M", label: "ACA enrollment, 2026 (est.)" },
+  { value: "3.7M+", label: "People affected by EHR data breaches" },
+];
+
+const accentInk: Record<"teal" | "rose" | "slate", string> = {
+  teal: "#0F766E",
+  rose: "#BE123C",
+  slate: "#475569",
+};
+const accentBorderTop: Record<"teal" | "rose" | "slate", string> = {
+  teal: "bg-teal-500",
+  rose: "bg-rose-500",
+  slate: "bg-slate-500",
+};
+const accentText: Record<"teal" | "rose" | "slate", string> = {
+  teal: "text-teal-700",
+  rose: "text-rose-700",
+  slate: "text-slate-600",
+};
+
+/** Bolds percentages, currency amounts, and "X million/M" figures inline
+ *  so key numbers are scannable instead of buried in paragraph text. */
+const STAT_RE = /(\$?\d[\d.,]*\s?(?:million|billion)?\+?%?|\+\d[\d.,]*[MK]\+?)/g;
+
+function Emphasize({ text, color }: { text: string; color: string }) {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+  const re = new RegExp(STAT_RE);
+  while ((match = re.exec(text)) !== null) {
+    // Skip bare years/dates like "2026" or "August 5" from being bolded —
+    // only bold matches that carry a %, M, K, or decimal (real figures).
+    const isMeaningful = /[%MK.]|million|billion/.test(match[0]);
+    if (isMeaningful) {
+      if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
+      nodes.push(
+        <strong key={key++} className="font-semibold" style={{ color }}>
+          {match[0]}
+        </strong>
+      );
+      lastIndex = match.index + match[0].length;
+    }
+  }
+  if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
+  return <>{nodes}</>;
+}
+
+
 function StoryMeta({
   author,
   time,
@@ -244,7 +328,7 @@ function SecondaryStory({
 }) {
   return (
     <article className="group cursor-pointer">
-      <div className="relative overflow-hidden rounded-lg bg-gray-100 mb-4">
+      <div className="relative overflow-hidden rounded-xl bg-gray-100 mb-4">
         <ImageWithFallback
           src={data.image}
           alt={data.title}
@@ -359,7 +443,7 @@ export function HealthcarePage() {
 
           {/* MAIN HERO */}
           <article className="lg:col-span-8 group cursor-pointer">
-            <div className="relative overflow-hidden rounded-lg bg-gray-100">
+            <div className="relative overflow-hidden rounded-xl bg-gray-100">
               <ImageWithFallback
                 src={hero.image}
                 alt={hero.title}
@@ -476,7 +560,7 @@ export function HealthcarePage() {
         <section className="mb-14">
           <SectionHeader title="Healthcare Intelligence" />
 
-          <article className="grid grid-cols-1 md:grid-cols-2 gap-0 bg-gray-50 border border-gray-200 rounded-lg overflow-hidden group cursor-pointer">
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-0 bg-gray-50 border border-gray-200 rounded-xl overflow-hidden group cursor-pointer">
             <div className="overflow-hidden">
               <ImageWithFallback
                 src={hero1.image}
@@ -553,6 +637,60 @@ export function HealthcarePage() {
           </div>
         </section>
 
+        {/* POLICY & REGULATION REPORT */}
+        <section className="mb-14">
+          <SectionHeader title="Policy &amp; Regulation Report" accent="teal" />
+
+          {/* Key figures strip */}
+          <div className="flex items-stretch overflow-x-auto no-scrollbar border border-gray-200 rounded-xl bg-gray-50 mb-8">
+            {policyStats.map((s, i) => (
+              <div
+                key={s.label}
+                className={`flex-1 min-w-[140px] px-5 py-4 ${i > 0 ? "border-l border-gray-200" : ""}`}
+              >
+                <p className="text-xl sm:text-2xl font-mono font-semibold tabular-nums text-teal-700">
+                  {s.value}
+                </p>
+                <p className="text-[10px] uppercase tracking-wide text-gray-500 mt-1 leading-tight">
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {policyGroups.map((group) => (
+              <article
+                key={group.code}
+                className="relative border border-gray-200 rounded-xl p-5 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <div className={`absolute top-0 left-0 right-0 h-1 ${accentBorderTop[group.accent]}`} />
+
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={`text-[10px] font-bold uppercase tracking-[0.13em] ${accentText[group.accent]}`}>
+                    {group.code}
+                  </span>
+                  <span className="text-gray-300">—</span>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.1em] text-gray-800">
+                    {group.title}
+                  </h3>
+                </div>
+
+                <ul className="flex flex-col gap-3">
+                  {group.points.map((p, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className={`text-[10px] mt-1.5 shrink-0 ${accentText[group.accent]}`}>▪</span>
+                      <p className="text-[13px] leading-relaxed text-gray-600">
+                        <Emphasize text={p} color={accentInk[group.accent]} />
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
         {/* NEWS COLUMNS */}
         <section className="pt-8 border-t-2 border-gray-950">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10">
@@ -602,4 +740,3 @@ export function HealthcarePage() {
     </main>
   );
 }
-
