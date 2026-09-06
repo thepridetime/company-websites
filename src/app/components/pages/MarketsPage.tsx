@@ -1,4 +1,4 @@
-import { BarChart2, Radio } from "lucide-react";
+import { BarChart2, Radio, AlertTriangle } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -139,6 +139,14 @@ function MarketTable({
 }) {
   const visibleCols = cols.filter((c) => c !== "up");
 
+  if (!data || data.length === 0) {
+    return (
+      <p className="py-8 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[#8A887F]">
+        No data available
+      </p>
+    );
+  }
+
   return (
     <table className="w-full text-sm border-collapse font-mono">
       <thead>
@@ -215,6 +223,7 @@ export function MarketsPage() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const tabs = ["indices", "crypto"];
 
@@ -223,15 +232,42 @@ export function MarketsPage() {
   ======================================================= */
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadData() {
       try {
         const data = await getQuotes();
 
-        setMarketData(data);
-      } catch (error) {
-        console.error(error);
+        if (cancelled) return;
+
+        const hasIndices = Array.isArray(data?.indices) && data.indices.length > 0;
+        const hasCrypto = Array.isArray(data?.crypto) && data.crypto.length > 0;
+
+        setMarketData({
+          indices: hasIndices ? data.indices : [],
+          crypto: hasCrypto ? data.crypto : [],
+        });
+
+        // The underlying providers (Finnhub / Marketstack / Upstox) fail
+        // quietly with a 401 when an API key/token is missing or expired.
+        // getQuotes() swallows that and returns empty arrays, so treat an
+        // all-empty response as a data-source problem rather than "no data".
+        if (!hasIndices && !hasCrypto) {
+          setError(
+            "Live market data is unavailable right now — the data providers didn't return a response. This usually means an API key is missing/expired, not that markets are closed."
+          );
+        } else {
+          setError(null);
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setError(
+            "Couldn't reach the market data service. Check your connection or try again shortly."
+          );
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
@@ -239,7 +275,10 @@ export function MarketsPage() {
 
     const interval = setInterval(loadData, 30000);
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -492,6 +531,37 @@ export function MarketsPage() {
 
 
         {/* =================================================
+            DATA-SOURCE WARNING BANNER
+            Only shown once we have a real error signal — keeps
+            the console 401s from being an invisible blank screen.
+        ================================================= */}
+
+        {!loading && error && (
+          <div
+            className="
+              flex
+              items-start
+              gap-2.5
+              border
+              border-[#E3B341]
+              bg-[#FFF8E6]
+              text-[#7A5A00]
+              px-4
+              py-3
+              mb-6
+              rounded-sm
+              text-[12.5px]
+              leading-relaxed
+            "
+            role="status"
+          >
+            <AlertTriangle size={15} strokeWidth={2} className="shrink-0 mt-0.5" />
+            <span>{error}</span>
+          </div>
+        )}
+
+
+        {/* =================================================
             GLOBAL MARKETS DASHBOARD — "Ticker Board"
             White letterpress-bordered panel. A thin wire-red
             rule along the top and a pulsing LIVE mark carry
@@ -505,7 +575,7 @@ export function MarketsPage() {
             border-[#D9D4C7]
             border-t-[3px]
             border-t-[#A32F26]
-            rounded-sm
+            rounded-md
             overflow-hidden
             shadow-[0_10px_30px_-12px_rgba(23,20,15,0.12)]
           "
@@ -556,20 +626,20 @@ export function MarketsPage() {
                 text-[9px]
                 font-semibold
                 tracking-[0.12em]
-                text-[#A32F26]
                 flex
                 items-center
                 gap-1.5
               "
+              style={{ color: error ? "#B08900" : "#A32F26" }}
             >
 
               <Radio
                 size={11}
                 strokeWidth={2.25}
-                className="motion-safe:animate-pulse"
+                className={error ? "" : "motion-safe:animate-pulse"}
               />
 
-              LIVE
+              {error ? "OFFLINE" : "LIVE"}
 
             </span>
 
@@ -611,92 +681,98 @@ export function MarketsPage() {
                   INDEX STRIP
               ================================================= */}
 
-              <div
-                className="
-                  flex
-                  items-stretch
-                  gap-0
-                  overflow-x-auto
-                  no-scrollbar
-                  border-b
-                  border-[#D9D4C7]
-                  bg-[#FCFBF8]
-                "
-              >
+              {marketData.indices.length > 0 ? (
+                <div
+                  className="
+                    flex
+                    items-stretch
+                    gap-0
+                    overflow-x-auto
+                    no-scrollbar
+                    border-b
+                    border-[#D9D4C7]
+                    bg-[#FCFBF8]
+                  "
+                >
 
-                {marketData.indices.map(
-                  (idx: any, i: number) => (
+                  {marketData.indices.map(
+                    (idx: any, i: number) => (
 
-                    <div
-                      key={idx.name}
-                      className={`
-                        flex-shrink-0
-                        px-5
-                        py-4
-                        ${
-                          i > 0
-                            ? "border-l border-[#E3DECF]"
-                            : ""
-                        }
-                      `}
-                    >
-
-                      <p
-                        className="
-                          font-mono
-                          text-[10px]
-                          uppercase
-                          tracking-[0.14em]
-                          text-[#8A887F]
-                        "
-                      >
-                        {idx.name}
-                      </p>
-
-
-                      <p
-                        className="
-                          font-serif
-                          text-[19px]
-                          text-[#17140F]
-                          mt-1
-                          tabular-nums
-                        "
-                      >
-                        {idx.value}
-                      </p>
-
-
-                      <span
-                        className="
-                          font-mono
-                          text-[11px]
-                          tabular-nums
-                          flex
-                          items-center
-                          gap-1
-                          mt-1
-                          font-semibold
-                        "
-                        style={{
-                          color: idx.up ? UP : DOWN,
-                        }}
+                      <div
+                        key={idx.name}
+                        className={`
+                          flex-shrink-0
+                          px-5
+                          py-4
+                          ${
+                            i > 0
+                              ? "border-l border-[#E3DECF]"
+                              : ""
+                          }
+                        `}
                       >
 
-                        <span className="text-[9px]">
-                          {idx.up ? "▲" : "▼"}
+                        <p
+                          className="
+                            font-mono
+                            text-[10px]
+                            uppercase
+                            tracking-[0.14em]
+                            text-[#8A887F]
+                          "
+                        >
+                          {idx.name}
+                        </p>
+
+
+                        <p
+                          className="
+                            font-serif
+                            text-[19px]
+                            text-[#17140F]
+                            mt-1
+                            tabular-nums
+                          "
+                        >
+                          {idx.value}
+                        </p>
+
+
+                        <span
+                          className="
+                            font-mono
+                            text-[11px]
+                            tabular-nums
+                            flex
+                            items-center
+                            gap-1
+                            mt-1
+                            font-semibold
+                          "
+                          style={{
+                            color: idx.up ? UP : DOWN,
+                          }}
+                        >
+
+                          <span className="text-[9px]">
+                            {idx.up ? "▲" : "▼"}
+                          </span>
+
+                          {idx.change} ({idx.pts})
+
                         </span>
 
-                        {idx.change} ({idx.pts})
+                      </div>
 
-                      </span>
+                    )
+                  )}
 
-                    </div>
-
-                  )
-                )}
-
-              </div>
+                </div>
+              ) : (
+                <div className="py-8 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[#8A887F] border-b border-[#D9D4C7] bg-[#FCFBF8]">
+                  Index feed unavailable
+                </div>
+              )}
 
 
               {/* =================================================
@@ -794,7 +870,7 @@ export function MarketsPage() {
                       <Tooltip
                         contentStyle={{
                           fontSize: 11,
-                          borderRadius: 0,
+                          borderRadius: 6,
                           border: `1px solid ${RULE}`,
                           background: "#FFFFFF",
                           color: INK,
@@ -880,7 +956,7 @@ export function MarketsPage() {
                       <Tooltip
                         contentStyle={{
                           fontSize: 11,
-                          borderRadius: 0,
+                          borderRadius: 6,
                           border: `1px solid ${RULE}`,
                           background: "#FFFFFF",
                           color: INK,
@@ -892,7 +968,7 @@ export function MarketsPage() {
 
                       <Bar
                         dataKey="change"
-                        radius={0}
+                        radius={[0, 4, 4, 0]}
                       >
 
                         {sectorData.map(
@@ -952,6 +1028,7 @@ export function MarketsPage() {
                       px-3
                       py-2.5
                       transition-colors
+                      duration-200
                       ${
                         activeTab === tab
                           ? "text-[#17140F] border-b-2 border-[#A32F26]"
@@ -1033,7 +1110,7 @@ export function MarketsPage() {
           </p>
 
           {/* Key figures strip */}
-          <div className="flex items-stretch overflow-x-auto no-scrollbar border border-[#D9D4C7] bg-white mb-10">
+          <div className="flex items-stretch overflow-x-auto no-scrollbar border border-[#D9D4C7] bg-white rounded-md mb-10">
             {reportStats.map((s, i) => (
               <div
                 key={s.label}
@@ -1059,7 +1136,7 @@ export function MarketsPage() {
               {equityRegions.map((r) => (
                 <div
                   key={r.region}
-                  className="border border-[#D9D4C7] bg-white hover:shadow-[0_2px_10px_rgba(23,20,15,0.06)] hover:-translate-y-0.5 transition-all duration-200"
+                  className="border border-[#D9D4C7] bg-white rounded-md hover:shadow-[0_2px_10px_rgba(23,20,15,0.06)] hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <div className="flex items-baseline gap-2 px-5 pt-4 pb-3 border-b border-[#D9D4C7]">
                     <span className="font-mono text-[11px] font-bold text-[#A32F26]">{r.wire}</span>
@@ -1088,7 +1165,7 @@ export function MarketsPage() {
             <h3 className="text-[13px] uppercase tracking-[0.14em] font-semibold text-[#A32F26] mb-5">
               1.2 &nbsp;Fixed Income &amp; Bonds
             </h3>
-            <div className="border border-[#D9D4C7] bg-white px-6 py-5">
+            <div className="border border-[#D9D4C7] bg-white rounded-md px-6 py-5">
               <ul className="flex flex-col gap-3.5 max-w-3xl">
                 {fixedIncomePoints.map((p, i) => (
                   <li key={i} className="flex items-start gap-2">
