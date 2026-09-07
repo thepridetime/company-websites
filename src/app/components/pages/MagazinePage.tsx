@@ -390,7 +390,7 @@ export function MagazinePage() {
             Get unlimited access to every article, every issue, all special reports, exclusive interviews, and premium newsletters. Ad-free. Starting at $4.99/month.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to={isSignedIn ? "/dashboard" : "/signin"} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 transition-colors text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400">
+            <Link to={isSignedIn ? "/dashboard" : "/login"} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 transition-colors text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400">
               Start Free 30-Day Trial
             </Link>
             <button className="border border-gray-600 hover:border-gray-400 text-white px-8 py-3 transition-colors text-sm">
