@@ -19,6 +19,11 @@ interface AuthContextType {
   isSignedIn: boolean;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signUp: (
+    email: string,
+    password: string,
+    metadata?: Record<string, unknown>
+  ) => Promise<{ success: boolean; error?: string; needsEmailConfirmation?: boolean }>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   upgradeToPremoium: () => void;
@@ -150,6 +155,51 @@ setIsLoading(false);
     error: "Login failed",
   };
 };
+const signUp = async (
+  email: string,
+  password: string,
+  metadata?: Record<string, unknown>
+) => {
+  setIsLoading(true);
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/login`,
+      data: metadata,
+    },
+  });
+
+  setIsLoading(false);
+
+  if (error) {
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+
+  // If the project has email confirmation disabled, Supabase returns an
+  // active session immediately — sign the user in right away instead of
+  // making them wait on a confirmation email that was never sent.
+  if (data.session && data.user) {
+    setUser({
+      id: data.user.id,
+      name: (metadata?.name as string) || data.user.email?.split("@")[0] || "User",
+      email: data.user.email || "",
+      tier: "free",
+      joinedDate: "",
+      country: (metadata?.country as string) || "",
+      savedArticles: 0,
+      readingStreak: 0,
+    });
+    return { success: true, needsEmailConfirmation: false };
+  }
+
+  return { success: true, needsEmailConfirmation: true };
+};
+
 const resetPassword = async (email: string) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${window.location.origin}/reset-password`,
@@ -195,6 +245,7 @@ const signInWithGoogle = async () => {
     isSignedIn: !!user,
     isLoading,
     signIn,
+    signUp,
     signInWithGoogle,
      resetPassword,
     signOut,
