@@ -45,7 +45,7 @@ export function DashboardPage() {
 
  useEffect(() => {
   if (!isLoading && !isSignedIn) {
-    navigate("/signin");
+    navigate("/login");
   }
 }, [isLoading, isSignedIn, navigate]);
 if (isLoading) {
