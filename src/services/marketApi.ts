@@ -5,6 +5,7 @@ const INDIAN_API_KEY     = import.meta.env.VITE_INDIAN_MARKET_API_KEY;
 
 // ── 1. FINNHUB ─────────────────────────────────────────────────
 async function finnhubQuote(symbol: string) {
+  if (!FINNHUB_KEY) throw new Error("Finnhub key missing");
   const res = await fetch(
     `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_KEY}`
   );
@@ -15,6 +16,7 @@ async function finnhubQuote(symbol: string) {
 }
 
 async function finnhubForex(base: string) {
+  if (!FINNHUB_KEY) throw new Error("Finnhub key missing");
   const res = await fetch(
     `https://finnhub.io/api/v1/forex/rates?base=${base}&token=${FINNHUB_KEY}`
   );
@@ -24,6 +26,7 @@ async function finnhubForex(base: string) {
 
 // ── 2. ALPHA VANTAGE ───────────────────────────────────────────
 async function avQuote(symbol: string) {
+  if (!ALPHA_VANTAGE_KEY) throw new Error("Alpha Vantage key missing");
   const res = await fetch(
     `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
   );
@@ -39,6 +42,7 @@ async function avQuote(symbol: string) {
 }
 
 async function avForex(from: string, to: string) {
+  if (!ALPHA_VANTAGE_KEY) throw new Error("Alpha Vantage key missing");
   const res = await fetch(
     `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${from}&to_currency=${to}&apikey=${ALPHA_VANTAGE_KEY}`
   );
@@ -52,6 +56,7 @@ async function avForex(from: string, to: string) {
 // ── 3. MARKETSTACK ─────────────────────────────────────────────
 // EOD data for Indian + Global stocks
 async function marketstackQuote(symbol: string) {
+  if (!MARKETSTACK_KEY) throw new Error("Marketstack key missing");
   const res = await fetch(
     `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${symbol}`
   );
@@ -74,6 +79,7 @@ async function marketstackQuote(symbol: string) {
 
 // Fetch multiple Marketstack symbols in one call
 async function marketstackBatch(symbols: string[]) {
+  if (!MARKETSTACK_KEY) throw new Error("Marketstack key missing");
   const joined = symbols.join(",");
   const res = await fetch(
     `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${joined}&limit=${symbols.length}`
@@ -86,6 +92,7 @@ async function marketstackBatch(symbols: string[]) {
 // ── 4. UPSTOX (Indian API) ─────────────────────────────────────
 // Upstox v2 API - LTP (Last Traded Price) for NSE instruments
 async function upstoxLTP(instrumentKey: string) {
+  if (!INDIAN_API_KEY) throw new Error("Upstox key missing");
   const res = await fetch(
     `https://api.upstox.com/v2/market-quote/ltp?instrument_key=${instrumentKey}`,
     {
@@ -102,6 +109,7 @@ async function upstoxLTP(instrumentKey: string) {
 
 // Upstox - Full market quote with OHLC
 async function upstoxQuote(instrumentKey: string) {
+  if (!INDIAN_API_KEY) throw new Error("Upstox key missing");
   const res = await fetch(
     `https://api.upstox.com/v2/market-quote/quotes?instrument_key=${instrumentKey}`,
     {
