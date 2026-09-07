@@ -27,7 +27,7 @@ export function ResetPasswordPage() {
     }
 
     alert("Password updated successfully");
-    navigate("/signin");
+    navigate("/login");
   };
 
   return (
