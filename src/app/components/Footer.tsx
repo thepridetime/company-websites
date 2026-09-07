@@ -5,7 +5,6 @@ import {
   Instagram,
   Youtube,
   Linkedin,
-  Sparkle,
   ChevronUp,
 } from "lucide-react";
 
@@ -107,11 +106,13 @@ export function Footer() {
   return (
     <footer className="bg-black text-white pt-10 pb-6 relative">
 
-      {/* Main Footer Container */}
+      {/* =========================================
+          MAIN FOOTER CONTAINER
+      ========================================== */}
       <div className="max-w-5xl mx-auto px-4">
 
         {/* =========================================
-            ORNAMENTAL TOP RULE
+            ORNAMENTAL TOP LINE
         ========================================== */}
         <div className="flex items-center justify-center gap-3 mb-10">
 
@@ -163,6 +164,7 @@ export function Footer() {
               )`,
             }}
           />
+
         </div>
 
         {/* =========================================
@@ -229,7 +231,7 @@ export function Footer() {
           {/* =====================================
               RIGHT SECTION
           ====================================== */}
-          <div className="relative flex flex-col items-center lg:items-start gap-4">
+          <div className="flex flex-col items-center lg:items-start gap-4">
 
             {/* =================================
                 SOCIAL MEDIA BUTTONS
@@ -244,16 +246,7 @@ export function Footer() {
                     aria-label={label}
                     target="_blank"
                     rel="noopener noreferrer"
-
-                    /*
-                     * IMPORTANT:
-                     * No hover classes.
-                     * No transition.
-                     * No animation.
-                     * No mouse events.
-                     */
                     className="w-11 h-11 flex items-center justify-center border rounded-md text-white"
-
                     style={{
                       borderColor: `${GOLD}88`,
                     }}
@@ -300,18 +293,6 @@ export function Footer() {
 
             </div>
 
-            {/* =================================
-                STATIC SPARKLE
-            ================================== */}
-            <Sparkle
-              size={16}
-              className="absolute -bottom-1 -right-6 hidden sm:block"
-              style={{
-                color: `${GOLD}AA`,
-              }}
-              fill={`${GOLD}55`}
-            />
-
           </div>
         </div>
       </div>
@@ -342,15 +323,7 @@ export function Footer() {
           })
         }
         aria-label="Back to top"
-
-        /*
-         * No hover effect.
-         * No transition.
-         * No brightness change.
-         * No scaling.
-         */
         className="fixed bottom-6 right-6 w-11 h-11 rounded-md flex items-center justify-center text-black shadow-lg"
-
         style={{
           background: GOLD,
         }}
