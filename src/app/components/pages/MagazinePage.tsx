@@ -3,30 +3,17 @@ import { BookOpen, Download, Crown, ChevronRight, Play } from "lucide-react";
 import { Link } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
-//import jsPDF from "jspdf";
 import AxisImg from "../../../imports/Axis03.png";
 import ErikaImg from "../../../imports/Erika.png";
 import ErikaImg1 from "../../../imports/Erika01.png";
 import ErikaImg2 from "../../../imports/Erika02.png";
 import EyeslImg1 from "../../../imports/Eyesl01.png";
 import EyeslImg2 from "../../../imports/Eyesl02.png";
-import NVBCImg1 from "../../../imports/NVBC01.png";
-import NVBCImg2 from "../../../imports/NVBC02.png";
 import EddieImg from "../../../imports/Eddie.png";
 import TribeImg from "../../../imports/TribePay.png";
 import TribePayImg from "../../../imports/TribePay04.png";
-import SculptImg1 from "../../../imports/Sculpt01.png";
-import SculptImg2 from "../../../imports/Sculpt02.png";
-import SculptImg3 from "../../../imports/Sculpt03.png";
 import TribeImg1 from "../../../imports/TribePay01.png";
 import TribeImg2 from "../../../imports/TribePay02.png";
-import NPRT1Img from "../../../imports/NPRT01.png";
-import NPRT2Img from "../../../imports/NPRT02.png";
-import NPRT3Img from "../../../imports/NPRT03.png";
-import NPRTBann1Img from "../../../imports/NPRTBANNER01.png";
-import NPRTBann2Img from "../../../imports/NPRTBANNER02.png";
-import NPRTBann3Img from "../../../imports/NPRTBANNER03.png";
-import NPRTBann4Img from "../../../imports/NPRTBANNER04.png";
 
 /* Section header — hairline rule + uppercase eyebrow, consistent site-wide */
 function SH({ title, icon: Icon }: { title: string; icon?: React.ComponentType<{ size?: number; className?: string }> }) {
@@ -41,28 +28,6 @@ function SH({ title, icon: Icon }: { title: string; icon?: React.ComponentType<{
   );
 }
 
-
-const currentIssue = {
-  month: "JUNE 2026",
-  //volume: "Vol. 12 · Issue 5",
-  coverHeadline: "MASTERFULLY RENOVATED RANCH RETREAT, MOVE-IN READY WITH EVERY MODERN DETAILS",
-  coverSubhead: "PLUS: STEP INTO LUXURIOUS LIVING IN FOREST SERINITY.",
-  image:NPRT1Img,
-  images: [
-    NPRT1Img,
-    NPRT2Img,
-    NPRT3Img
-  ],
-  features: [
-    "A rare opportunity to rent a move-in-ready home that perfectly balances modern comfort, private nature-filled living, and four-season appeal.The Perfect Blend of Luxury Living, Functional Design, and Lasting Values with two private acres at your fingertips, the landscaping possibilities are truly endless. Create gardens, trails, or open meadows that enhance the natural beauty already surrounding you. The landlord will support your vision to keep the outdoor oasis thriving year-round.",
-  ],
-};
-const banner1Images = [
-  NPRTBann1Img,
-  NPRTBann2Img,
-  NPRTBann3Img,
-  NPRTBann4Img
-];
 const banner2Images = [
   TribeImg1,
   TribeImg2
@@ -115,15 +80,6 @@ const Articles = [
     ],
     premium: false 
   },
-  { month: "March 1, 2026",
-    headline: "2026 Outlook: The Trends That Will Define the Global Economy", 
-    image: NVBCImg2,
-    images:[
-      NVBCImg2,
-      NVBCImg1
-    ], 
-    premium: false 
-  },
   { month: "March 4, 2026",
      headline: "Person of the Year: The Leaders Who Shaped 2025", 
      image: EddieImg, 
@@ -132,15 +88,6 @@ const Articles = [
       TribeImg,
       TribePayImg
      ],
-     premium: false 
-    },
-  { month: "March 3, 2026",
-     headline: "Smart Cities: Building the Urban World of 2050", 
-     image: SculptImg1,
-     images: [
-      SculptImg1,
-      SculptImg2
-     ], 
      premium: false 
     },
 ];
@@ -168,25 +115,6 @@ export function MagazinePage() {
   const [zoom, setZoom] = useState(1);
   const [showBanner, setShowBanner] = useState(false);
   const [bannerImages, setBannerImages] = useState<string[]>([]);
-  const downloadArticlePDF = (article: any) => {
-  const doc = new jsPDF();
-
-  doc.setFontSize(20);
-  doc.text(article.headline || "", 10, 20);
-
-  doc.setFontSize(12);
-  doc.text(`Author: ${article.author || "The Pride Times Team"}`, 10, 35);
-
-  doc.text(`Date: ${article.month || ""}`, 10, 45);
-
-  const content = article.content || "";
-
-  const lines = doc.splitTextToSize(content, 180);
-
-  doc.text(lines, 10, 60);
-
-  doc.save(`${article.headline}.pdf`);
-};
 
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
@@ -198,100 +126,22 @@ export function MagazinePage() {
         </div>
       </div>
 
-      {/* Current Issue Hero */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 pb-10 border-b border-gray-200">
-        <div className="relative">
-          <div className="absolute top-3 left-3 z-10 bg-red-600 text-white text-[10px] uppercase tracking-[0.15em] px-2.5 py-1">
-            CURRENT
-          </div>
-          <ImageWithFallback
-            src={currentIssue.images[0]}
-            alt={currentIssue.coverHeadline}
-            className="w-full h-96 object-cover shadow-xl"
-          />
-        </div>
-        <div className="flex flex-col justify-center">
-          <span className="text-xs text-gray-500 uppercase tracking-[0.2em] mb-2">{currentIssue.month}</span>
-          <h1 className="font-serif text-2xl lg:text-3xl leading-tight mb-3">{currentIssue.coverHeadline}</h1>
-          <p className="text-gray-500 text-sm mb-4">{currentIssue.coverSubhead}</p>
-          <div className="mb-6">
-            <ul className="flex flex-col gap-2">
-              {currentIssue.features.map((f, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-gray-700">
-                  <span className="w-1 h-1 bg-red-600 rounded-full flex-shrink-0 mt-2" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex gap-3">
-            <button
-  onClick={() => {
-  setSelectedArticle({
-    headline: currentIssue.coverHeadline,
-    image: currentIssue.images,
-    images: currentIssue.images,
-    month: currentIssue.month,
-    author: "The Pride Times Team",
-    category: "Real Estate",
-    content: currentIssue.features.join("\n\n")
-  });
-
-  setCurrentImage(0);
-  setZoom(1);
-}}
-  className="bg-black text-white text-sm px-6 py-2.5 hover:bg-gray-800 transition-colors flex items-center gap-2"
->
-  <BookOpen size={14} />
-  Read Now
-</button>
-            <button
-  onClick={() =>
-    downloadArticlePDF({
-      headline: currentIssue.coverHeadline,
-      month: currentIssue.month,
-      author: "The Pride Times Team",
-      content: currentIssue.features.join("\n\n")
-    })
-  }
-  className="border border-gray-300 hover:border-black text-sm px-6 py-2.5 hover:bg-gray-50 transition-colors flex items-center gap-2"
->
-  <Download size={14} />
-  Download PDF
-</button>
-          </div>
-        </div>
+      <div
+        onClick={() => {
+          setBannerImages(banner2Images);
+          setShowBanner(true);
+          setCurrentImage(0);
+          setZoom(1);
+        }}
+        className="mb-8 cursor-pointer"
+      >
+        <img
+          src={banner2Images[0]}
+          alt="Banner"
+          className="w-full h-[160px] object-cover shadow-lg"
+        />
       </div>
-     <div
-  onClick={() => {
-    setBannerImages(banner1Images);
-    setShowBanner(true);
-    setCurrentImage(0);
-    setZoom(1);
-  }}
-  className="mb-8 cursor-pointer"
->
-  <img
-    src={banner1Images[0]}
-    alt="Banner"
-   className="w-full h-[300px] md:h-[500px] object-cover shadow-lg"
-  />
-</div>
-<div
-  onClick={() => {
-    setBannerImages(banner2Images);
-    setShowBanner(true);
-    setCurrentImage(0);
-    setZoom(1);
-  }}
-  className="mb-8 cursor-pointer"
->
-  <img
-    src={banner2Images[0]}
-    alt="Banner"
-    className="w-full h-[160px] object-cover shadow-lg"
-  />
-</div>
+
       {/* Past Issues */}
       <div className="mb-10">
         <SH title="Articles" icon={BookOpen} />
