@@ -71,7 +71,8 @@ const Articles = [
       Gene editing technologies are becoming mainstream...
     `
   },
-  { month: "March 3, 2026",
+  { id: 3,
+    month: "March 3, 2026",
     headline: "The Electric Future: How EVs Are Rewriting the Rules of Mobility", 
     image: EyeslImg1, 
     images: [
@@ -80,7 +81,8 @@ const Articles = [
     ],
     premium: false 
   },
-  { month: "March 4, 2026",
+  { id: 4,
+     month: "March 4, 2026",
      headline: "Person of the Year: The Leaders Who Shaped 2025", 
      image: EddieImg, 
      images: [
@@ -133,34 +135,34 @@ export function MagazinePage() {
           setCurrentImage(0);
           setZoom(1);
         }}
-        className="mb-8 cursor-pointer"
+        className="mb-10 cursor-pointer overflow-hidden shadow-lg"
       >
         <img
           src={banner2Images[0]}
           alt="Banner"
-          className="w-full h-[160px] object-cover shadow-lg"
+          className="w-full h-[160px] sm:h-[200px] object-cover hover:scale-[1.02] transition-transform duration-500"
         />
       </div>
 
-      {/* Past Issues */}
-      <div className="mb-10">
+      {/* Articles — 4-column grid on desktop */}
+      <div className="mb-12">
         <SH title="Articles" icon={BookOpen} />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8">
           {Articles.map((issue) => (
-         <div
-  key={issue.id}
-  className="group cursor-pointer"
-  onClick={() => {
-  setSelectedArticle(issue);
-  setCurrentImage(0);
-  setZoom(1);
-}}
->
-              <div className="relative overflow-hidden shadow-md mb-3 transition-transform duration-300 group-hover:-translate-y-0.5">
+            <div
+              key={issue.id}
+              className="group cursor-pointer flex flex-col"
+              onClick={() => {
+                setSelectedArticle(issue);
+                setCurrentImage(0);
+                setZoom(1);
+              }}
+            >
+              <div className="relative overflow-hidden shadow-md mb-3 aspect-[3/4] transition-transform duration-300 group-hover:-translate-y-0.5">
                 <ImageWithFallback
                   src={issue.image}
                   alt={issue.month}
-                  className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 {issue.premium && !isPremium && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -169,7 +171,7 @@ export function MagazinePage() {
                 )}
               </div>
               <p className="text-[11px] text-gray-500 uppercase tracking-wider">{issue.month}</p>
-              <p className="font-serif text-sm leading-snug mt-1 group-hover:text-red-600 transition-colors">{issue.headline}</p>
+              <p className="font-serif text-sm leading-snug mt-1 group-hover:text-red-600 transition-colors line-clamp-3">{issue.headline}</p>
               <ChevronRight
                 size={12}
                 className="text-red-600 mt-1.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
