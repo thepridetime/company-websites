@@ -84,6 +84,11 @@ export function MarketsTicker() {
             value: item.value,
             change: Number(String(item.change).replace("%", "")),
           })),
+          ...data.stocks.map((item: any) => ({
+            symbol: item.symbol ?? item.name,
+            value: item.value,
+            change: Number(String(item.change).replace("%", "")),
+          })),
           ...data.crypto.map((item: any) => ({
             symbol: item.name,
             value: item.value,
