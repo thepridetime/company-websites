@@ -5,7 +5,6 @@ const INDIAN_API_KEY     = import.meta.env.VITE_INDIAN_MARKET_API_KEY;
 
 // ── 1. FINNHUB ─────────────────────────────────────────────────
 async function finnhubQuote(symbol: string) {
-  if (!FINNHUB_KEY) throw new Error("Finnhub key missing");
   const res = await fetch(
     `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_KEY}`
   );
@@ -16,7 +15,6 @@ async function finnhubQuote(symbol: string) {
 }
 
 async function finnhubForex(base: string) {
-  if (!FINNHUB_KEY) throw new Error("Finnhub key missing");
   const res = await fetch(
     `https://finnhub.io/api/v1/forex/rates?base=${base}&token=${FINNHUB_KEY}`
   );
@@ -26,7 +24,6 @@ async function finnhubForex(base: string) {
 
 // ── 2. ALPHA VANTAGE ───────────────────────────────────────────
 async function avQuote(symbol: string) {
-  if (!ALPHA_VANTAGE_KEY) throw new Error("Alpha Vantage key missing");
   const res = await fetch(
     `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_KEY}`
   );
@@ -42,7 +39,6 @@ async function avQuote(symbol: string) {
 }
 
 async function avForex(from: string, to: string) {
-  if (!ALPHA_VANTAGE_KEY) throw new Error("Alpha Vantage key missing");
   const res = await fetch(
     `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${from}&to_currency=${to}&apikey=${ALPHA_VANTAGE_KEY}`
   );
@@ -56,7 +52,6 @@ async function avForex(from: string, to: string) {
 // ── 3. MARKETSTACK ─────────────────────────────────────────────
 // EOD data for Indian + Global stocks
 async function marketstackQuote(symbol: string) {
-  if (!MARKETSTACK_KEY) throw new Error("Marketstack key missing");
   const res = await fetch(
     `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${symbol}`
   );
@@ -79,7 +74,6 @@ async function marketstackQuote(symbol: string) {
 
 // Fetch multiple Marketstack symbols in one call
 async function marketstackBatch(symbols: string[]) {
-  if (!MARKETSTACK_KEY) throw new Error("Marketstack key missing");
   const joined = symbols.join(",");
   const res = await fetch(
     `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${joined}&limit=${symbols.length}`
@@ -92,7 +86,6 @@ async function marketstackBatch(symbols: string[]) {
 // ── 4. UPSTOX (Indian API) ─────────────────────────────────────
 // Upstox v2 API - LTP (Last Traded Price) for NSE instruments
 async function upstoxLTP(instrumentKey: string) {
-  if (!INDIAN_API_KEY) throw new Error("Upstox key missing");
   const res = await fetch(
     `https://api.upstox.com/v2/market-quote/ltp?instrument_key=${instrumentKey}`,
     {
@@ -109,7 +102,6 @@ async function upstoxLTP(instrumentKey: string) {
 
 // Upstox - Full market quote with OHLC
 async function upstoxQuote(instrumentKey: string) {
-  if (!INDIAN_API_KEY) throw new Error("Upstox key missing");
   const res = await fetch(
     `https://api.upstox.com/v2/market-quote/quotes?instrument_key=${instrumentKey}`,
     {
@@ -127,8 +119,32 @@ async function upstoxQuote(instrumentKey: string) {
   return quote;
 }
 
+// ── STOCK WATCHLIST (Finnhub real-time quotes) ─────────────────
+// symbol -> display name. Extend this list to track more tickers;
+// each one costs one extra Finnhub call per refresh.
+const STOCK_WATCHLIST: { symbol: string; name: string }[] = [
+  { symbol: "AAPL",  name: "Apple" },
+  { symbol: "MSFT",  name: "Microsoft" },
+  { symbol: "GOOGL", name: "Alphabet" },
+  { symbol: "AMZN",  name: "Amazon" },
+  { symbol: "TSLA",  name: "Tesla" },
+  { symbol: "NVDA",  name: "Nvidia" },
+  { symbol: "META",  name: "Meta" },
+  { symbol: "NFLX",  name: "Netflix" },
+];
+
 // ── FALLBACK DATA ──────────────────────────────────────────────
 const FALLBACK = {
+  stocks: [
+    { name: "Apple",     value: "$232.15", change: "+0.62%", pts: "+1.43",  up: true  },
+    { name: "Microsoft", value: "$421.30", change: "+0.35%", pts: "+1.47",  up: true  },
+    { name: "Alphabet",  value: "$168.44", change: "-0.21%", pts: "-0.36",  up: false },
+    { name: "Amazon",    value: "$186.90", change: "+0.88%", pts: "+1.63",  up: true  },
+    { name: "Tesla",     value: "$248.50", change: "-1.12%", pts: "-2.82",  up: false },
+    { name: "Nvidia",    value: "$134.75", change: "+2.14%", pts: "+2.82",  up: true  },
+    { name: "Meta",      value: "$563.20", change: "+0.47%", pts: "+2.63",  up: true  },
+    { name: "Netflix",   value: "$712.40", change: "-0.18%", pts: "-1.28",  up: false },
+  ],
   usIndices: [
     { name: "S&P 500",      value: "5,892.31",  change: "+1.14%", pts: "+66.43",  up: true  },
     { name: "NASDAQ",       value: "19,245.78", change: "+1.56%", pts: "+296.12", up: true  },
@@ -169,11 +185,12 @@ export async function getQuotes() {
 
   // All 4 APIs fire in parallel
   const [
-    // 1. FINNHUB — US Indices + Crypto + Commodities + Forex
+    // 1. FINNHUB — US Indices + Crypto + Commodities + Forex + Stocks
     spyR, qqqR, diaR, iwmR,
     btcR, ethR, solR,
     forexR,
     goldR, oilR,
+    stocksR,
 
     // 2. ALPHA VANTAGE — Indian Indices + USD/INR
     niftyR, sensexR, usdInrR,
@@ -196,6 +213,13 @@ export async function getQuotes() {
     finnhubForex("USD"),
     finnhubQuote("GLD"),
     finnhubQuote("USO"),
+
+    // Finnhub — real-time quotes for the stock watchlist, batched into
+    // one Promise.allSettled so one bad/rate-limited symbol can't take
+    // the others down with it.
+    Promise.allSettled(
+      STOCK_WATCHLIST.map((s) => finnhubQuote(s.symbol))
+    ),
 
     // Alpha Vantage
     avQuote("NIFTYBEES.BSE"),
@@ -234,6 +258,34 @@ export async function getQuotes() {
       };
     }
     return { ...fb, live: false, source: "fallback" };
+  });
+
+  // ── STOCKS (Finnhub real-time quotes) ───────────────────────
+  const stocks: any[] = STOCK_WATCHLIST.map(({ symbol, name }, i) => {
+    const fb = FALLBACK.stocks[i];
+
+    // stocksR is the outer Promise.allSettled result; when it fulfilled,
+    // .value is itself an array of per-symbol allSettled results.
+    if (stocksR.status !== "fulfilled") {
+      return { ...fb, symbol, live: false, source: "fallback" };
+    }
+
+    const r = stocksR.value[i];
+    if (r.status === "fulfilled") {
+      const d = r.value;
+      return {
+        name,
+        symbol,
+        value:  `$${Number(d.c).toLocaleString("en-US", { maximumFractionDigits: 2 })}`,
+        change: `${Number(d.dp).toFixed(2)}%`,
+        pts:    Number(d.d).toFixed(2),
+        up:     Number(d.d) >= 0,
+        live:   true,
+        source: "Finnhub",
+      };
+    }
+
+    return { ...fb, symbol, live: false, source: "fallback" };
   });
 
   // ── INDIAN INDICES (Alpha Vantage primary, Marketstack backup) ──
@@ -390,7 +442,8 @@ export async function getQuotes() {
     indices,
     usIndices,
     indianIndices,
-    indianStocks,  
+    indianStocks,
+    stocks,
     crypto,
     forex,
     commodities,
