@@ -104,14 +104,14 @@ export function InnovationPage() {
 
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-14">
           <div className="lg:col-span-2 group cursor-pointer">
-            <div className="overflow-hidden rounded-[2px] relative">
+            <div className="overflow-hidden rounded-2xl relative shadow-sm">
               <ImageWithFallback
                 src={hero.image}
                 alt={hero.title}
                 className="w-full h-72 md:h-[400px] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-90" />
-              <span className="absolute left-4 bottom-4 bg-red-600 text-white px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase rounded-[2px] shadow-sm">
+              <span className="absolute left-4 bottom-4 bg-red-600 text-white px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase rounded-full shadow-sm">
                 {hero.category}
               </span>
             </div>
@@ -140,7 +140,7 @@ export function InnovationPage() {
               {techTrends.map((t) => (
                 <div
                   key={t.trend}
-                  className="border border-gray-200 rounded-[2px] p-4 hover:border-gray-900 hover:shadow-[0_2px_0_0_rgba(0,0,0,1)] transition-all duration-300 cursor-pointer"
+                  className="border border-gray-200 rounded-xl p-4 hover:border-gray-900 hover:shadow-md transition-all duration-300 cursor-pointer"
                 >
                   <p className="text-sm font-semibold text-gray-900">{t.trend}</p>
                   <p className="text-xs text-gray-500 leading-5 mt-1.5">{t.desc}</p>
@@ -163,29 +163,29 @@ export function InnovationPage() {
             </h2>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="border-b-2 border-gray-900">
-                  <th className="text-left py-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] w-10">#</th>
-                  <th className="text-left py-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em]">Innovation</th>
-                  <th className="text-left py-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] hidden md:table-cell">Category</th>
-                  <th className="text-left py-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] hidden lg:table-cell">Company</th>
-                  <th className="text-left py-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] hidden sm:table-cell">Impact</th>
+                <tr className="border-b-2 border-gray-900 bg-gray-50">
+                  <th className="text-left py-3 px-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] w-10">#</th>
+                  <th className="text-left py-3 px-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em]">Innovation</th>
+                  <th className="text-left py-3 px-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] hidden md:table-cell">Category</th>
+                  <th className="text-left py-3 px-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] hidden lg:table-cell">Company</th>
+                  <th className="text-left py-3 px-3 text-[10px] text-gray-400 font-bold uppercase tracking-[0.14em] hidden sm:table-cell">Impact</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {innovationAwards.map((a) => (
                   <tr key={a.rank} className="hover:bg-gray-50 transition-colors group cursor-pointer">
-                    <td className="py-3.5 text-gray-300 text-sm font-bold tabular-nums">
+                    <td className="py-3.5 px-3 text-gray-300 text-sm font-bold tabular-nums">
                       {String(a.rank).padStart(2, "0")}
                     </td>
-                    <td className="py-3.5 pr-3 font-semibold text-gray-900 transition-colors group-hover:text-red-600">
+                    <td className="py-3.5 px-3 font-semibold text-gray-900 transition-colors group-hover:text-red-600">
                       {a.innovation}
                     </td>
-                    <td className="py-3.5 pr-3 text-gray-500 text-xs hidden md:table-cell">{a.category}</td>
-                    <td className="py-3.5 pr-3 text-gray-500 text-xs hidden lg:table-cell">{a.company}</td>
-                    <td className="py-3.5 text-xs text-gray-600 leading-5 hidden sm:table-cell">{a.impact}</td>
+                    <td className="py-3.5 px-3 text-gray-500 text-xs hidden md:table-cell">{a.category}</td>
+                    <td className="py-3.5 px-3 text-gray-500 text-xs hidden lg:table-cell">{a.company}</td>
+                    <td className="py-3.5 px-3 text-xs text-gray-600 leading-5 hidden sm:table-cell">{a.impact}</td>
                   </tr>
                 ))}
               </tbody>
@@ -210,7 +210,7 @@ export function InnovationPage() {
 
             <div className="divide-y divide-gray-200">
               {startupWatch.map((s) => (
-                <div key={s.name} className="py-4 first:pt-0 group cursor-pointer">
+                <div key={s.name} className="py-4 px-2 -mx-2 first:pt-0 rounded-lg group cursor-pointer transition-colors hover:bg-gray-50">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-red-600">
@@ -223,7 +223,7 @@ export function InnovationPage() {
                     <div className="text-right shrink-0">
                       <p className="text-xs font-bold text-green-700 tabular-nums">{s.funding}</p>
                       <span
-                        className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-[2px] ${stageBadge[s.stage]}`}
+                        className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${stageBadge[s.stage]}`}
                       >
                         {s.stage}
                       </span>
@@ -239,7 +239,7 @@ export function InnovationPage() {
             <SH title="Research Breakthroughs" />
             <div className="divide-y divide-gray-200">
               {researchBreakthroughs.map((r) => (
-                <div key={r.id} className="py-4 first:pt-0 group cursor-pointer">
+                <div key={r.id} className="py-4 px-2 -mx-2 first:pt-0 rounded-lg group cursor-pointer transition-colors hover:bg-gray-50">
                   <span className="text-[11px] font-bold text-red-600 uppercase tracking-[0.14em]">
                     {r.institution}
                   </span>
