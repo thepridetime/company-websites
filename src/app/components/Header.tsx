@@ -1,19 +1,19 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Search, Menu, X, User, ChevronDown, Crown, LogOut, BookOpen } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { searchIndex } from "../data/searchIndex";
 
 /* Primary nav — consolidates the old two-row category navigation into one
    compact black bar, per the premium editorial redesign spec. */
 const primaryNav = [
   { label: "Markets", path: "/markets" },
-  { label: "Business News", path: "/business-news" },
-  { label: "International Business", path: "/international-news" },
-  { label: "Startup Success", path: "/startup-success" },
-  { label: "CEO Spotlight", path: "/ceospotlight" },
-  { label: "Magazines", path: "/magazine" },
-  { label: "Innovation", path: "/innovation" },
+  { label: "Finance", path: "/finance" },
+  { label: "Technology", path: "/technology" },
+  { label: "Cybersecurity", path: "/cybersecurity" },
+  { label: "Energy", path: "/energy" },
+  { label: "World", path: "/world" },
+  { label: "Leadership", path: "/leadership" },
+  { label: "Billionaires", path: "/billionaires" },
 ];
 
 const editions = ["Asia Edition", "Americas Edition", "Europe Edition", "India Edition"];
@@ -29,7 +29,6 @@ export function Header() {
   const navigate = useNavigate();
   const { isSignedIn, user, signOut } = useAuth();
   const isPremium = user?.tier === "premium";
-  const searchBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!editionOpen) return;
@@ -39,77 +38,6 @@ export function Header() {
     return () => clearTimeout(timer);
   }, [editionOpen]);
 
-  /* Close the search dropdown on an outside click, so it behaves
-     like the other dropdowns (edition selector, user menu). */
-  useEffect(() => {
-    if (!searchOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
-        setSearchOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [searchOpen]);
-
-  /* FIX #1 — close every open menu whenever the route changes, so
-     navigating from the mobile drawer (or anywhere else) doesn't
-     leave the drawer, search box, or user menu stuck open. */
-  useEffect(() => {
-    setMobileOpen(false);
-    setSearchOpen(false);
-    setUserMenuOpen(false);
-    setEditionOpen(false);
-  }, [location.pathname]);
-
-  /* FIX #1 (cont.) — close the mobile drawer as soon as the user
-     scrolls, since the drawer is an in-flow dropdown rather than a
-     fixed overlay and was staying open while the page scrolled
-     behind it. */
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const handleScroll = () => setMobileOpen(false);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [mobileOpen]);
-
-  /* FIX #1 (cont.) — lock body scroll while the drawer is open so it
-     reads as a real overlay instead of a dropdown the page scrolls
-     past. */
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
-  /* Live results as the user types — matched against title and
-     category, capped to a short list for the dropdown. */
-  const searchResults = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return [];
-    return searchIndex
-      .filter(
-        (item) =>
-          item.title.toLowerCase().includes(q) ||
-          item.category.toLowerCase().includes(q) ||
-          item.excerpt.toLowerCase().includes(q)
-      )
-      .slice(0, 6);
-  }, [searchQuery]);
-
-  const closeSearch = () => {
-    setSearchOpen(false);
-    setSearchQuery("");
-  };
-
-  const runFullSearch = () => {
-    const q = searchQuery.trim();
-    if (!q) return;
-    navigate(`/search?q=${encodeURIComponent(q)}`);
-    closeSearch();
-  };
-
   const handleSignOut = () => {
     signOut();
     setUserMenuOpen(false);
@@ -118,27 +46,17 @@ export function Header() {
 
   return (
     <header className="w-full bg-white z-50">
-      {/* ── Black primary navigation ──
-          FIX #2 (revised) — this bar is desktop-only real estate: on
-          mobile there's no room for it, and squeezing the tagline in
-          here kept overlapping the logo row below. The whole bar is
-          now hidden below lg; the tagline instead lives under the
-          logo (see the brand header section further down). */}
-      <div className="pt-top-nav hidden lg:block">
+      {/* ── Black primary navigation ── */}
+      <div className="pt-top-nav">
         <div className="pt-container h-full flex items-center justify-between">
           <nav className="hidden lg:flex items-center gap-6 h-full">
-            <a
-              href="https://www.youtube.com/@vmpridetimes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pt-focusable flex items-center gap-2"
-            >
+            <Link to="/live-tv" className="pt-focusable flex items-center gap-2">
               <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
               </span>
               Live TV
-            </a>
+            </Link>
 
             {primaryNav.map((item) => (
               <Link
@@ -190,85 +108,46 @@ export function Header() {
               )}
             </div>
           </div>
+
+          {/* Mobile: brand mini-label */}
+          <span className="lg:hidden text-[11px] text-gray-300 uppercase tracking-widest">
+            The Global Voice of Business
+          </span>
         </div>
       </div>
 
       {/* ── Brand header ── */}
       <div className="pt-brand-header">
-        <div className="pt-container h-full flex items-center justify-between gap-3 py-6 min-w-0">
+        <div className="pt-container h-full flex items-center justify-between gap-3 py-9 min-w-0">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 sm:gap-3 flex-shrink min-w-0">
             <div className="block min-w-0">
               <div className="pt-logo text-3xl sm:text-[38px] lg:text-[46px] xl:text-[52px] truncate">
                 THE <span className="pt-logo-accent">PRIDE</span> TIMES
               </div>
-              {/* FIX #2 (revised) — was hidden below sm and only lived
-                  in the removed top bar on mobile. Now always visible
-                  under the logo, at a smaller size on phones so it
-                  never forces the brand row to wrap. */}
-              <div className="pt-tagline block uppercase mt-1 text-[10px] sm:text-xs truncate">
+              <div className="pt-tagline hidden sm:block uppercase mt-1">
                 The Global Voice of Innovation, Leadership &amp; Success
               </div>
             </div>
           </Link>
 
           {/* Right controls */}
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {searchOpen ? (
-              <div className="relative" ref={searchBoxRef}>
-                <div className="pt-search-box flex items-center gap-2 px-3 w-[180px] xs:w-[220px] sm:w-[300px] lg:w-[420px]">
-                  <Search size={14} className="text-gray-400 flex-shrink-0" />
-                  <input
-                    autoFocus
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for news, topics, companies..."
-                    className="text-sm outline-none w-full bg-transparent"
-                    onKeyDown={(e) => {
-                      if (e.key === "Escape") closeSearch();
-                      if (e.key === "Enter") runFullSearch();
-                    }}
-                  />
-                  <button onClick={closeSearch} aria-label="Close search">
-                    <X size={14} className="text-gray-400 hover:text-black" />
-                  </button>
-                </div>
-
-                {/* Live results dropdown */}
-                {searchQuery.trim() && (
-                  <div className="absolute right-0 top-full mt-2 w-[260px] xs:w-[280px] sm:w-[360px] lg:w-[420px] bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-[360px] overflow-y-auto">
-                    {searchResults.length > 0 ? (
-                      <>
-                        {searchResults.map((item) => (
-                          <Link
-                            key={item.id}
-                            to={item.link}
-                            onClick={closeSearch}
-                            className="flex flex-col gap-0.5 px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors"
-                          >
-                            <span className="text-[10px] font-bold text-red-600 uppercase tracking-[0.12em]">
-                              {item.category}
-                            </span>
-                            <span className="text-sm font-medium text-gray-900 leading-[1.35] line-clamp-2">
-                              {item.title}
-                            </span>
-                          </Link>
-                        ))}
-                        <button
-                          onClick={runFullSearch}
-                          className="block w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 uppercase tracking-wide hover:bg-gray-50 transition-colors"
-                        >
-                          See all results for "{searchQuery.trim()}"
-                        </button>
-                      </>
-                    ) : (
-                      <div className="px-4 py-4 text-sm text-gray-500">
-                        No results found for "{searchQuery.trim()}"
-                      </div>
-                    )}
-                  </div>
-                )}
+              <div className="pt-search-box flex items-center gap-2 px-3 w-[220px] sm:w-[300px] lg:w-[420px]">
+                <Search size={14} className="text-gray-400 flex-shrink-0" />
+                <input
+                  autoFocus
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for news, topics, companies..."
+                  className="text-sm outline-none w-full bg-transparent"
+                  onKeyDown={(e) => e.key === "Escape" && setSearchOpen(false)}
+                />
+                <button onClick={() => setSearchOpen(false)} aria-label="Close search">
+                  <X size={14} className="text-gray-400 hover:text-black" />
+                </button>
               </div>
             ) : (
               <button
@@ -285,7 +164,7 @@ export function Header() {
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="pt-account-btn hidden md:flex items-center justify-center transition-colors hover:bg-gray-50"
+                  className="pt-account-btn hidden sm:flex items-center justify-center transition-colors hover:bg-gray-50"
                 >
                   <div className={`w-full h-full rounded-full flex items-center justify-center text-white text-xs ${isPremium ? "bg-black" : "bg-gray-500"}`}>
                     {user?.name[0]}
@@ -317,17 +196,11 @@ export function Header() {
                 )}
               </div>
             ) : (
-              /* FIX #3 — Sign In and Subscribe previously switched on
-                 at different breakpoints (sm vs md), so in between the
-                 two the Sign In icon appeared alone with no Subscribe
-                 button next to it, reading as "disoriented." Both now
-                 switch on together at md, and stay inside the mobile
-                 drawer below md for a consistent mobile layout. */
               <>
-                <Link to="/login" className="pt-account-btn hidden md:flex items-center justify-center transition-colors hover:bg-gray-50" aria-label="Sign In">
+                <Link to="/signin" className="pt-account-btn hidden sm:flex items-center justify-center transition-colors hover:bg-gray-50" aria-label="Sign In">
                   <User size={18} className="text-gray-700" />
                 </Link>
-                <Link to="/signup" className="pt-subscribe-btn hidden md:inline-flex items-center">
+                <Link to="/signin" className="pt-subscribe-btn hidden md:inline-flex items-center">
                   Subscribe
                 </Link>
               </>
@@ -342,51 +215,33 @@ export function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[var(--pt-header-height,0px)] bottom-0 z-40 bg-white overflow-y-auto">
-          <nav className="flex flex-col gap-0 px-4 py-4">
-            {/* FIX #3 (cont.) — Sign In / Subscribe moved to the top
-                of the drawer as two clearly separated, evenly sized
-                actions instead of one cramped button, and only shown
-                here (never doubled with the header buttons) below md. */}
-            {!isSignedIn && (
-              <div className="flex items-center gap-2.5 pb-4 mb-2 border-b border-gray-100">
-                <Link
-                  to="/login"
-                  className="flex-1 text-center text-sm font-semibold border border-gray-300 rounded-full py-2.5"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="flex-1 text-center text-sm font-bold uppercase tracking-wide text-white bg-red-600 rounded-full py-2.5 hover:bg-red-700 transition-colors"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Subscribe
-                </Link>
-              </div>
-            )}
+        <div className="lg:hidden bg-white border-t border-gray-200 px-4 py-4 max-h-[70vh] overflow-y-auto">
+          {/* Brand heading at the top of the mobile dropdown */}
+          <div className="pb-3 mb-2 border-b border-gray-100">
+            <span className="pt-logo text-xl">
+              THE <span className="pt-logo-accent">PRIDE</span> TIMES
+            </span>
+          </div>
 
+          <nav className="flex flex-col gap-0">
             <Link to="/" className="py-2.5 text-sm border-b border-gray-100" onClick={() => setMobileOpen(false)}>Home</Link>
-            <a
-              href="https://www.youtube.com/@vmpridetimes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="py-2.5 text-sm border-b border-gray-100 flex items-center gap-2 text-red-600"
-              onClick={() => setMobileOpen(false)}
-            >
+            <Link to="/live-tv" className="py-2.5 text-sm border-b border-gray-100 flex items-center gap-2 text-red-600" onClick={() => setMobileOpen(false)}>
               <span className="relative flex h-2 w-2 flex-shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
               </span>
               Live TV
-            </a>
+            </Link>
             {primaryNav.map((item) => (
               <Link key={item.label} to={item.path} className="py-2.5 text-sm border-b border-gray-100" onClick={() => setMobileOpen(false)}>
                 {item.label}
               </Link>
             ))}
-            {isSignedIn && (
+            {!isSignedIn ? (
+              <Link to="/signin" className="mt-3 block text-center pt-subscribe-btn" onClick={() => setMobileOpen(false)}>
+                Sign In / Subscribe
+              </Link>
+            ) : (
               <button onClick={() => { handleSignOut(); setMobileOpen(false); }} className="mt-2 text-red-600 text-sm py-2.5 text-left">
                 Sign Out
               </button>
