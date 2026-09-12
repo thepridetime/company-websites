@@ -888,14 +888,14 @@ footer .pt-logo-accent {
 ======================================== */
 
 .pt-market-card {
-  width: 200px;
-  min-width: 200px;
+  width: 168px;
+  min-width: 168px;
 
-  height: 56px;
+  height: 40px;
 
-  padding: 0 18px;
+  padding: 0 10px;
 
-  border-radius: 12px;
+  border-radius: 8px;
 
   background: #0b0b0b;
 
