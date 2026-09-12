@@ -59,6 +59,12 @@ const impactInk: Record<string, string> = {
   Low: "text-[#55534C]",
 };
 
+const impactBg: Record<string, string> = {
+  High: "bg-[#A32F26]/10",
+  Medium: "bg-[#8A6A1F]/10",
+  Low: "bg-[#55534C]/10",
+};
+
 function DocketHeader({ title, note }: { title: string; note?: string }) {
   return (
     <div className="flex items-baseline justify-between border-b-2 border-[#17140F] pb-2 mb-1">
@@ -90,15 +96,15 @@ export function WhiteHouseWatchPage() {
         {/* ── Lead story + policy tracker ───────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 mb-14">
           <div className="group cursor-pointer">
-            <div className="overflow-hidden mb-5 border border-[#17140F]/10">
+            <div className="overflow-hidden mb-5 border border-[#17140F]/10 rounded-xl shadow-sm">
               <ImageWithFallback
                 src={hero.image}
                 alt={hero.title}
-                className="w-full h-64 sm:h-80 lg:h-[26rem] object-cover grayscale-[15%] group-hover:grayscale-0 transition-all duration-700 ease-out"
+                className="w-full h-64 sm:h-80 lg:h-[26rem] object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-[1.015] transition-all duration-700 ease-out"
               />
             </div>
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[#A32F26] font-semibold mb-2">
-              <span className="border border-[#A32F26] px-1.5 py-0.5 font-mono">{hero.citation}</span>
+              <span className="border border-[#A32F26] px-1.5 py-0.5 font-mono rounded-md">{hero.citation}</span>
               <span className="text-[#55534C]">{hero.category}</span>
             </div>
             <h2
@@ -110,7 +116,7 @@ export function WhiteHouseWatchPage() {
             <p className="text-[#3A3934] text-sm sm:text-[15px] mt-4 leading-relaxed max-w-2xl">{hero.excerpt}</p>
             <div className="flex items-center gap-3 mt-5 text-xs text-[#8A887F] border-t border-[#17140F]/10 pt-3">
               <span className="uppercase tracking-wide">By {hero.author}</span>
-              <span className="w-1 h-1 bg-[#D9D4C7]" />
+              <span className="w-1 h-1 rounded-full bg-[#D9D4C7]" />
               <span className="flex items-center gap-1">
                 <Clock size={10} /> {hero.time}
               </span>
@@ -118,17 +124,19 @@ export function WhiteHouseWatchPage() {
           </div>
 
           {/* Policy tracker — legislative pipeline */}
-          <div>
+          <div className="rounded-xl border border-[#D9D4C7] bg-white/50 p-4 sm:p-5 shadow-sm">
             <DocketHeader title="Policy Tracker" />
             <div className="flex flex-col">
               {policyTrackers.map((p, i) => (
                 <div
                   key={p.policy}
-                  className={`py-4 border-b border-[#D9D4C7] ${i === 0 ? "border-t border-[#D9D4C7]" : ""}`}
+                  className={`py-4 border-b border-[#D9D4C7] rounded-md px-1 -mx-1 transition-colors hover:bg-[#17140F]/[0.02] ${
+                    i === 0 ? "border-t border-[#D9D4C7]" : ""
+                  }`}
                 >
                   <div className="flex items-start justify-between gap-2 mb-2.5">
                     <p className="text-sm leading-snug text-[#17140F] font-medium">{p.policy}</p>
-                    <span className="font-mono text-[10px] text-[#8A887F] whitespace-nowrap shrink-0 uppercase tracking-wide">
+                    <span className="font-mono text-[10px] text-[#8A887F] whitespace-nowrap shrink-0 uppercase tracking-wide bg-[#17140F]/[0.04] rounded-full px-2 py-0.5">
                       {p.chamber}
                     </span>
                   </div>
@@ -137,7 +145,7 @@ export function WhiteHouseWatchPage() {
                       <div key={stage} className="flex items-center flex-1 last:flex-none">
                         <div className="flex flex-col items-center gap-1.5">
                           <span
-                            className={`w-2 h-2 rounded-full shrink-0 ${
+                            className={`w-2 h-2 rounded-full shrink-0 transition-colors ${
                               si <= p.stage ? "bg-[#A32F26]" : "bg-[#D9D4C7]"
                             }`}
                           />
@@ -151,7 +159,7 @@ export function WhiteHouseWatchPage() {
                         </div>
                         {si < stages.length - 1 && (
                           <span
-                            className={`h-px flex-1 -mt-4 ${si < p.stage ? "bg-[#A32F26]" : "bg-[#D9D4C7]"}`}
+                            className={`h-px flex-1 -mt-4 rounded-full ${si < p.stage ? "bg-[#A32F26]" : "bg-[#D9D4C7]"}`}
                           />
                         )}
                       </div>
@@ -166,53 +174,55 @@ export function WhiteHouseWatchPage() {
         {/* ── Administration actions — docket table ─────────── */}
         <section className="mb-14">
           <DocketHeader title="Administration Actions" note={`${administrationActions.length} ENTRIES THIS WEEK`} />
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="text-[10px] uppercase tracking-wider text-[#8A887F]">
-                <th className="text-left font-normal py-2 hidden sm:table-cell">Docket</th>
-                <th className="text-left font-normal py-2">Action</th>
-                <th className="text-left font-normal py-2 hidden md:table-cell">Date</th>
-                <th className="text-right font-normal py-2">Impact</th>
-              </tr>
-            </thead>
-            <tbody>
-              {administrationActions.map((a) => (
-                <tr key={a.id} className="border-t border-[#D9D4C7] hover:bg-[#17140F]/[0.025] transition-colors group cursor-pointer">
-                  <td className="py-3 font-mono text-xs text-[#8A887F] whitespace-nowrap hidden sm:table-cell">{a.docket}</td>
-                  <td className="py-3">
-                    <span className="text-[10px] uppercase tracking-wide text-[#8A887F] block sm:hidden mb-0.5">
-                      {a.type}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wide text-[#8A887F] hidden sm:block mb-0.5">
-                      {a.type}
-                    </span>
-                    <span className="text-[#17140F] group-hover:text-[#A32F26] transition-colors leading-snug">
-                      {a.title}
-                    </span>
-                  </td>
-                  <td className="py-3 font-mono text-[11px] text-[#8A887F] hidden md:table-cell whitespace-nowrap">
-                    {a.date}
-                  </td>
-                  <td className="py-3 text-right">
-                    <span className={`font-mono text-[10px] uppercase tracking-wide font-bold ${impactInk[a.impact]}`}>
-                      {a.impact}
-                    </span>
-                  </td>
+          <div className="rounded-xl border border-[#D9D4C7] overflow-hidden shadow-sm">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="text-[10px] uppercase tracking-wider text-[#8A887F] bg-[#17140F]/[0.02]">
+                  <th className="text-left font-normal py-2.5 px-4 hidden sm:table-cell">Docket</th>
+                  <th className="text-left font-normal py-2.5 px-4">Action</th>
+                  <th className="text-left font-normal py-2.5 px-4 hidden md:table-cell">Date</th>
+                  <th className="text-right font-normal py-2.5 px-4">Impact</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {administrationActions.map((a) => (
+                  <tr key={a.id} className="border-t border-[#D9D4C7] hover:bg-[#17140F]/[0.025] transition-colors group cursor-pointer">
+                    <td className="py-3 px-4 font-mono text-xs text-[#8A887F] whitespace-nowrap hidden sm:table-cell">{a.docket}</td>
+                    <td className="py-3 px-4">
+                      <span className="text-[10px] uppercase tracking-wide text-[#8A887F] block sm:hidden mb-0.5">
+                        {a.type}
+                      </span>
+                      <span className="text-[10px] uppercase tracking-wide text-[#8A887F] hidden sm:block mb-0.5">
+                        {a.type}
+                      </span>
+                      <span className="text-[#17140F] group-hover:text-[#A32F26] transition-colors leading-snug">
+                        {a.title}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 font-mono text-[11px] text-[#8A887F] hidden md:table-cell whitespace-nowrap">
+                      {a.date}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <span className={`inline-block font-mono text-[10px] uppercase tracking-wide font-bold rounded-full px-2.5 py-1 ${impactInk[a.impact]} ${impactBg[a.impact]}`}>
+                        {a.impact}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         {/* ── Economic plate + latest wire ──────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <section>
+          <section className="rounded-xl border border-[#D9D4C7] bg-white/50 p-4 sm:p-5 shadow-sm">
             <DocketHeader title="Key Economic Indicators" />
             <div>
               {economicData.map((e, i) => (
                 <div
                   key={e.metric}
-                  className={`py-3 flex items-center justify-between border-b border-[#D9D4C7] ${
+                  className={`py-3 px-1 -mx-1 rounded-md flex items-center justify-between border-b border-[#D9D4C7] transition-colors hover:bg-[#17140F]/[0.02] ${
                     i === 0 ? "border-t border-[#D9D4C7]" : ""
                   }`}
                 >
@@ -228,13 +238,13 @@ export function WhiteHouseWatchPage() {
             </div>
           </section>
 
-          <section>
+          <section className="rounded-xl border border-[#D9D4C7] bg-white/50 p-4 sm:p-5 shadow-sm">
             <DocketHeader title="Latest from the White House" />
             <div>
               {latestNews.map((n, i) => (
                 <div
                   key={n.id}
-                  className={`py-3.5 group cursor-pointer border-b border-[#D9D4C7] ${
+                  className={`py-3.5 px-1 -mx-1 rounded-md group cursor-pointer border-b border-[#D9D4C7] transition-colors hover:bg-[#17140F]/[0.02] ${
                     i === 0 ? "border-t border-[#D9D4C7]" : ""
                   }`}
                 >
