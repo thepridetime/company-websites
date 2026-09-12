@@ -6,6 +6,7 @@ import {
   Leaf,
   Car,
   BarChart2,
+  Cpu,
 } from "lucide-react";
 
 import Smartc1Img from "../../../imports/Smartc1.png";
@@ -242,6 +243,33 @@ const sustainabilityNews = [
   },
 ];
 
+const aiInfraCityNews = [
+  {
+    id: 1,
+    title:
+      "Dubai launches a Digital Twin Platform phase focused on urban planning, infrastructure and asset management.",
+    time: "Just now",
+  },
+  {
+    id: 2,
+    title:
+      "GCC infrastructure leaders say the region is moving AI deployment from individual projects to entire infrastructure portfolios.",
+    time: "Just now",
+  },
+  {
+    id: 3,
+    title:
+      "City leaders worldwide organize around the rising power and water burden of AI data centers.",
+    time: "1 hr ago",
+  },
+  {
+    id: 4,
+    title:
+      "Mayors begin treating compute capacity as a utility-planning issue rather than a conventional commercial real-estate decision.",
+    time: "3 hrs ago",
+  },
+];
+
 /* =========================================================
    FEATURE DATA
 ========================================================= */
@@ -287,7 +315,7 @@ function ArticleCard({
   return (
     <article className="group cursor-pointer">
       <div
-        className={`relative overflow-hidden rounded-[2px] bg-gray-100 ${
+        className={`relative overflow-hidden rounded-xl bg-gray-100 shadow-sm group-hover:shadow-lg transition-shadow duration-300 ${
           large ? "h-72 md:h-[440px]" : "h-64 md:h-80"
         }`}
       >
@@ -299,7 +327,7 @@ function ArticleCard({
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-90" />
 
-        <span className="absolute left-4 bottom-4 bg-red-600 text-white px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase rounded-[2px] shadow-sm">
+        <span className="absolute left-4 bottom-4 bg-red-600 text-white px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase rounded-md shadow-sm">
           {data.category}
         </span>
       </div>
@@ -351,9 +379,9 @@ function NewsColumn({
         {items.map((item, index) => (
           <article
             key={`${title}-${item.id}-${index}`}
-            className="group py-4 first:pt-0 cursor-pointer"
+            className="group py-4 first:pt-0 cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
           >
-            <h3 className="text-[14px] md:text-[15px] leading-[1.55] text-gray-800 transition-colors group-hover:text-red-600">
+            <h3 className="text-[14px] md:text-[15px] leading-[1.55] text-gray-800 transition-colors duration-200 group-hover:text-red-600">
               {item.title}
             </h3>
 
@@ -383,7 +411,7 @@ export function SmartCitiesPage() {
 
         <header className="border-b-4 border-black pb-5 mb-10">
           <div className="flex items-center gap-3.5">
-            <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-white shrink-0">
+            <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-white shrink-0 shadow-sm">
               <Building2 size={20} strokeWidth={1.75} />
             </div>
 
@@ -416,7 +444,7 @@ export function SmartCitiesPage() {
               {cityRankings.map((city) => (
                 <div
                   key={city.rank}
-                  className="py-3.5 flex items-center gap-3.5"
+                  className="py-3.5 flex items-center gap-3.5 transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
                 >
                   <span className="w-6 shrink-0 text-sm font-bold text-gray-300 tabular-nums">
                     {String(city.rank).padStart(2, "0")}
@@ -460,6 +488,54 @@ export function SmartCitiesPage() {
         </section>
 
         {/* =================================================
+            AI INFRASTRUCTURE & SMART CITIES
+        ================================================= */}
+
+        <section className="mb-14 border-t-2 border-black pt-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2">
+              <SH title="AI Infrastructure & Smart Cities" />
+
+              <div className="divide-y divide-gray-200">
+                {aiInfraCityNews.map((item) => (
+                  <article
+                    key={item.id}
+                    className="group py-4 first:pt-0 cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
+                  >
+                    <h3 className="text-[14px] md:text-[15px] leading-[1.55] text-gray-800 transition-colors duration-200 group-hover:text-red-600">
+                      {item.title}
+                    </h3>
+
+                    <div className="mt-2 flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-gray-400">
+                      <Clock size={10} strokeWidth={2.25} />
+                      {item.time}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <aside className="lg:border-l lg:border-gray-200 lg:pl-8">
+              <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-3">
+                <Cpu size={14} strokeWidth={2} className="text-red-600" />
+                <h2 className="text-[13px] font-bold uppercase tracking-[0.16em] text-gray-900">
+                  Executive Takeaway
+                </h2>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-4 shadow-sm">
+                <p className="text-[13px] leading-[1.6] text-gray-600">
+                  Cities with fast grid interconnection, transparent
+                  permitting, reliable water policy and strong cyber
+                  standards may become the preferred locations for the
+                  next wave of AI infrastructure.
+                </p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        {/* =================================================
             FEATURE BOXES
         ================================================= */}
 
@@ -471,7 +547,7 @@ export function SmartCitiesPage() {
               ({ icon: Icon, title, news }) => (
                 <article
                   key={title}
-                  className="group border border-gray-200 bg-gray-50/60 p-5 hover:bg-white hover:border-gray-900 hover:shadow-[0_2px_0_0_rgba(0,0,0,1)] transition-all duration-300"
+                  className="group border border-gray-200 bg-gray-50/60 rounded-xl p-5 hover:bg-white hover:border-gray-900 hover:shadow-[0_2px_0_0_rgba(0,0,0,1)] transition-all duration-300"
                 >
                   <div className="flex items-center justify-center w-9 h-9 rounded-full bg-black text-white mb-4 group-hover:bg-red-600 transition-colors duration-300">
                     <Icon size={16} strokeWidth={1.75} />
