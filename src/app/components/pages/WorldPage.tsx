@@ -128,7 +128,7 @@ export function WorldPage() {
         {/* ── Lead story (drop cap) + wire ticker ───────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 mb-14">
           <div className="group cursor-pointer">
-            <div className="overflow-hidden mb-5 border border-[#17140F]/10">
+            <div className="overflow-hidden rounded-md mb-5 border border-[#17140F]/10">
               <ImageWithFallback
                 src={worldHero.image}
                 alt={worldHero.title}
@@ -136,7 +136,7 @@ export function WorldPage() {
               />
             </div>
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[#A32F26] font-semibold mb-2">
-              <span className="border border-[#A32F26] px-1.5 py-0.5">{worldHero.dateline}</span>
+              <span className="border border-[#A32F26] rounded-sm px-1.5 py-0.5">{worldHero.dateline}</span>
               <span className="text-[#55534C]">{worldHero.category}</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl leading-[1.08] tracking-tight group-hover:text-[#A32F26] transition-colors duration-300
@@ -146,7 +146,7 @@ export function WorldPage() {
             <p className="text-[#3A3934] text-sm sm:text-[15px] mt-4 leading-relaxed max-w-2xl">{worldHero.excerpt}</p>
             <div className="flex items-center gap-3 mt-5 text-xs text-[#8A887F] border-t border-[#17140F]/10 pt-3">
               <span className="uppercase tracking-wide">By {worldHero.author}</span>
-              <span className="w-1 h-1 bg-[#D9D4C7]" />
+              <span className="w-1 h-1 rounded-full bg-[#D9D4C7]" />
               <span className="flex items-center gap-1">
                 <Clock size={10} /> {worldHero.time}
               </span>
@@ -154,7 +154,7 @@ export function WorldPage() {
           </div>
 
           {/* Wire ticker — signature element */}
-          <div className="bg-[#17140F] text-[#EDE9DD] relative">
+          <div className="bg-[#17140F] text-[#EDE9DD] relative rounded-md overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-3 bg-[repeating-radial-gradient(circle_at_4px_10px,#FAFAF7_0px,#FAFAF7_1.5px,transparent_1.5px,transparent_12px)] opacity-30" />
             <div className="pl-5 pr-4 pt-4 pb-2 border-b border-dashed border-[#55534C] flex items-center justify-between">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#EDE9DD]/90">
@@ -164,7 +164,7 @@ export function WorldPage() {
             </div>
             <div className="pl-5 pr-4 divide-y divide-dashed divide-[#3A3934]">
               {whiteHouseNews.map((item) => (
-                <div key={item.id} className="py-3 font-mono group/wire cursor-pointer">
+                <div key={item.id} className="py-3 font-mono group/wire cursor-pointer rounded-sm hover:bg-white/[0.03] transition-colors px-1 -mx-1">
                   <div className="flex items-center gap-2 text-[9px] text-[#A32F26] tracking-wider">
                     <span>[{item.tag}]</span>
                     <span className="text-[#8A887F]">{item.time}</span>
@@ -189,7 +189,7 @@ export function WorldPage() {
             {geopoliticsAlerts.map((alert, i) => (
               <div
                 key={alert.id}
-                className={`flex items-center gap-4 py-3 border-b border-[#D9D4C7] hover:bg-[#17140F]/[0.025] transition-colors cursor-pointer ${
+                className={`flex items-center gap-4 py-3 px-2 -mx-2 rounded-sm border-b border-[#D9D4C7] hover:bg-[#17140F]/[0.025] transition-colors cursor-pointer ${
                   i === 0 ? "border-t border-[#D9D4C7]" : ""
                 }`}
               >
@@ -220,7 +220,7 @@ export function WorldPage() {
                 </div>
                 <div className="flex flex-col gap-4">
                   {region.stories.map((s) => (
-                    <div key={s.id} className="group cursor-pointer">
+                    <div key={s.id} className="group cursor-pointer rounded-sm hover:bg-[#17140F]/[0.025] transition-colors -mx-1 px-1 py-0.5">
                       <p className="text-[13.5px] leading-snug text-[#17140F] group-hover:text-[#A32F26] transition-colors">
                         {s.title}
                       </p>
@@ -246,7 +246,7 @@ export function WorldPage() {
               {unResolutions.map((r, i) => (
                 <div
                   key={r.id}
-                  className={`flex items-start gap-4 py-3.5 border-b border-[#D9D4C7] hover:bg-[#17140F]/[0.025] transition-colors cursor-pointer ${
+                  className={`flex items-start gap-4 py-3.5 px-2 -mx-2 rounded-sm border-b border-[#D9D4C7] hover:bg-[#17140F]/[0.025] transition-colors cursor-pointer ${
                     i === 0 ? "border-t border-[#D9D4C7]" : ""
                   }`}
                 >
@@ -279,11 +279,11 @@ export function WorldPage() {
               <tbody>
                 {diplomacyTracker.map((d, i) => (
                   <tr key={i} className="border-t border-[#D9D4C7] hover:bg-[#17140F]/[0.025] transition-colors">
-                    <td className="py-3 text-[13.5px] font-medium text-[#17140F]">
+                    <td className="py-3 text-[13.5px] font-medium text-[#17140F] rounded-l-sm">
                       {d.country1} <span className="text-[#B8B4A8]">/</span> {d.country2}
                     </td>
                     <td className="py-3 text-xs text-[#55534C] hidden sm:table-cell">{d.type}</td>
-                    <td className="py-3 text-right">
+                    <td className="py-3 text-right rounded-r-sm">
                       <span className={`font-mono text-[10px] uppercase tracking-wide font-semibold ${statusInk[d.status] ?? "text-[#55534C]"}`}>
                         {d.status}
                       </span>
