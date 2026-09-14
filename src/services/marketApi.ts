@@ -130,8 +130,10 @@ const FALLBACK = {
     { name: "RUSSELL 2000", value: "2,134.56",  change: "+0.45%", pts: "+9.56",   up: true  },
   ],
   indianIndices: [
-    { name: "NIFTY 50", value: "24,678.90", change: "-0.34%", pts: "-84.21",  up: false },
-    { name: "SENSEX",   value: "81,245.60", change: "-0.21%", pts: "-170.61", up: false },
+    { name: "NIFTY 50",   value: "24,678.90", change: "-0.34%", pts: "-84.21",  up: false },
+    { name: "SENSEX",     value: "81,245.60", change: "-0.21%", pts: "-170.61", up: false },
+    { name: "NIFTY BANK", value: "52,340.15", change: "+0.45%", pts: "+234.50", up: true  },
+    { name: "NIFTY IT",   value: "38,920.30", change: "+1.12%", pts: "+431.20", up: true  },
   ],
   indianStocks: [
     { name: "Reliance",  value: "₹2,934.50", change: "+0.87%", up: true  },
@@ -152,6 +154,7 @@ const FALLBACK = {
   commodities: [
     { name: "Gold",      value: "$2,345.60", change: "+0.89%", up: true  },
     { name: "Crude Oil", value: "$78.45",    change: "-1.23%", up: false },
+    { name: "Silver",    value: "$29.45",    change: "+0.45%", up: true  },
   ],
 };
 
@@ -185,11 +188,11 @@ export async function getQuotes() {
       STOCK_WATCHLIST.map((s) => finnhubQuote(s.symbol))
     ),
 
-    // Alpha Vantage — Nifty 50 only. Sensex dropped: there is no
-    // reliable free-tier Sensex-tracking symbol on Alpha Vantage,
-    // and the previous "SETFNIF50.BSE * 1000" hack was actually a
-    // Nifty ETF, not Sensex — it never matched. Sensex now uses
-    // the fallback value until a proper Sensex data source is wired up.
+    // Alpha Vantage — Nifty 50 only. Sensex dropped from live fetching:
+    // there is no reliable free-tier Sensex-tracking symbol on Alpha
+    // Vantage, and the old "SETFNIF50.BSE * 1000" hack was actually a
+    // Nifty ETF, not Sensex — it never matched. Sensex, Nifty Bank, and
+    // Nifty IT below use fallback values until a proper source is wired up.
     avQuote("NIFTYBEES.BSE"),
     avForex("USD", "INR"),
 
@@ -245,7 +248,12 @@ export async function getQuotes() {
     return { ...fb, symbol, live: false, source: "fallback" };
   });
 
-  // ── INDIAN INDICES (Nifty via Alpha Vantage; Sensex = fallback) ──
+  // ── INDIAN INDICES ───────────────────────────────────────────
+  // NIFTY 50: live via Alpha Vantage (NIFTYBEES ETF proxy).
+  // SENSEX / NIFTY BANK / NIFTY IT: no reliable free-tier live source
+  // wired up yet — these stay on fallback data. Kept in the array
+  // (rather than removed) so anything indexing indianIndices[1..3]
+  // doesn't break.
   const indianIndices: any[] = [];
 
   if (niftyR.status === "fulfilled") {
@@ -263,8 +271,9 @@ export async function getQuotes() {
     indianIndices.push({ ...FALLBACK.indianIndices[0], live: false, source: "fallback" });
   }
 
-  // Sensex: no reliable free-tier proxy currently wired up.
-  indianIndices.push({ ...FALLBACK.indianIndices[1], live: false, source: "fallback" });
+  indianIndices.push({ ...FALLBACK.indianIndices[1], live: false, source: "fallback" }); // SENSEX
+  indianIndices.push({ ...FALLBACK.indianIndices[2], live: false, source: "fallback" }); // NIFTY BANK
+  indianIndices.push({ ...FALLBACK.indianIndices[3], live: false, source: "fallback" }); // NIFTY IT
 
   // ── INDIAN STOCKS (Marketstack EOD — Upstox removed) ────────
   const indianStockSymbols = [
@@ -336,7 +345,7 @@ export async function getQuotes() {
     forex.push(...FALLBACK.forex.slice(1).map(f => ({ ...f, live: false, source: "fallback" })));
   }
 
-  // ── COMMODITIES (Finnhub ETF proxies) ───────────────────────
+  // ── COMMODITIES (Finnhub ETF proxies + fallback) ────────────
   const commodities: any[] = [];
 
   if (goldR.status === "fulfilled") {
@@ -361,6 +370,10 @@ export async function getQuotes() {
     commodities.push({ ...FALLBACK.commodities[1], live: false, source: "fallback" });
   }
 
+  // Silver: no live source wired up — fallback only, kept so the
+  // array length matches what other components expect.
+  commodities.push({ ...FALLBACK.commodities[2], live: false, source: "fallback" });
+
   const indices = [...usIndices, ...indianIndices];
 
   return {
@@ -374,4 +387,4 @@ export async function getQuotes() {
     commodities,
     bonds: [],
   };
-}fv
+}
