@@ -223,7 +223,7 @@ export async function getQuotes() {
 
     // Alpha Vantage
     avQuote("NIFTYBEES.BSE"),
-    avQuote("SETFNIF50.BSE"),
+    avQuote("SENSEXBEES.BSE"),   // was SETFNIF50.BSE (a Nifty ETF, wrong index)
     avForex("USD", "INR"),
 
     // Marketstack — top Indian stocks EOD batch
@@ -293,14 +293,17 @@ export async function getQuotes() {
 
   if (niftyR.status === "fulfilled") {
     const d = niftyR.value;
+    // NIFTYBEES no longer tracks a clean 1:100 ratio to the Nifty index —
+    // as of Sep 2026 it's closer to ~86x (NIFTYBEES ~₹273 vs Nifty ~23,400).
+    // This ratio drifts slowly over time and should be re-checked periodically.
     indianIndices.push({
       name: "NIFTY 50",
-      value:  (d.price * 100).toLocaleString("en-IN", { maximumFractionDigits: 2 }),
+      value:  (d.price * 86).toLocaleString("en-IN", { maximumFractionDigits: 2 }),
       change: `${d.changePct.toFixed(2)}%`,
       pts:    d.changeAbs.toFixed(2),
       up:     d.changePct >= 0,
       live:   true,
-      source: "Alpha Vantage",
+      source: "Alpha Vantage (ETF-based approximation)",
     });
   } else {
     indianIndices.push({ ...FALLBACK.indianIndices[0], live: false, source: "fallback" });
@@ -308,14 +311,18 @@ export async function getQuotes() {
 
   if (sensexR.status === "fulfilled") {
     const d = sensexR.value;
+    // SENSEXBEES has no fixed ratio to the Sensex like NIFTYBEES does with
+    // Nifty — its NAV drifts relative to the index over time. ~95x is the
+    // current approximate ratio; this will need occasional re-checking
+    // against the real Sensex value and adjusting.
     indianIndices.push({
       name: "SENSEX",
-      value:  (d.price * 1000).toLocaleString("en-IN", { maximumFractionDigits: 2 }),
+      value:  (d.price * 95).toLocaleString("en-IN", { maximumFractionDigits: 2 }),
       change: `${d.changePct.toFixed(2)}%`,
       pts:    d.changeAbs.toFixed(2),
       up:     d.changePct >= 0,
       live:   true,
-      source: "Alpha Vantage",
+      source: "Alpha Vantage (ETF-based approximation)",
     });
   } else {
     indianIndices.push({ ...FALLBACK.indianIndices[1], live: false, source: "fallback" });
