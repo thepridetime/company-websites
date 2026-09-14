@@ -1,3 +1,4 @@
+
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Download, BookOpen, Clock, ChevronRight, Newspaper } from "lucide-react";
 import { Link } from "react-router";
@@ -25,7 +26,8 @@ function SH({ title }: { title: string }) {
 const hero = {
   category: "Deal Tracker",
   title: "Deal Activity Snapshot: May 25 – June 3, 2026   ",
-  excerpt:"The last 10 days of May and opening days of June 2026 saw a sustained wave of high-value corporate transactions, spanning gaming, financial services, homebuilding, technology, industrial software, and insurance. Below is a comprehensive tracker of the most significant confirmed deals across all sectors during this period.  ",
+  excerpt:
+    "The last 10 days of May and opening days of June 2026 saw a sustained wave of high-value corporate transactions, spanning gaming, financial services, homebuilding, technology, industrial software, and insurance. Below is a comprehensive tracker of the most significant confirmed deals across all sectors during this period.  ",
   author: "Sagar Kumar",
   time: "May-June 2026",
   image: CVImg,
@@ -52,21 +54,99 @@ const keyThemes = [
 ];
 
 const covers = [
-  { month: "May 2026", headline: "The AI Economy: How Artificial Intelligence is Reshaping Global GDP", subhead: "Plus: World Billionaires · India's Rise · Green Energy Revolution", image: "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?w=400&h=550&fit=crop", current: true, path: "/technology" },
-  { month: "April 2026", headline: "India Rising: The New Superpower Transforming Global Business Dynamics", subhead: "Exclusive CEO Interviews · Markets Special · Leadership 100", image: "https://images.unsplash.com/photo-1761233138997-44d9b002a08f?w=400&h=550&fit=crop&crop=top", current: false, path: "/finance" },
-  { month: "March 2026", headline: "Healthcare 2030: The Biotech Revolution Saving Millions of Lives", subhead: "CRISPR · AI Diagnostics · Pharma Rankings · Hospital Innovation", image: "https://images.unsplash.com/photo-1766315746079-215ff5115e9f?w=400&h=550&fit=crop", current: false, path: "/healthcare" },
-  { month: "February 2026", headline: "The Electric Future: How EVs Are Rewriting the Rules of Mobility", subhead: "Battery Breakthrough · Charging Infrastructure · Auto Rankings", image: "https://images.unsplash.com/photo-1760012945940-74d6bf54c0fb?w=400&h=550&fit=crop", current: false, path: "/manufacturing" },
-  { month: "January 2026", headline: "2026 Outlook: The Trends That Will Define the Global Economy", subhead: "Economic Forecasts · Sector Winners · Key Risks · CEO Survey", image: "https://images.unsplash.com/photo-1679583721525-658d164e609b?w=400&h=550&fit=crop", current: false, path: "/finance" },
-  { month: "December 2025", headline: "Person of the Year: The Leaders Who Shaped 2025", subhead: "Annual Awards · 50 Leaders to Watch · Year in Review", image: "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?w=400&h=550&fit=crop", current: false, path: "/leadership" },
+  {
+    month: "May 2026",
+    headline: "The AI Economy: How Artificial Intelligence is Reshaping Global GDP",
+    subhead: "Plus: World Billionaires · India's Rise · Green Energy Revolution",
+    image:
+      "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?w=400&h=550&fit=crop",
+    current: true,
+    path: "/technology",
+  },
+  {
+    month: "April 2026",
+    headline: "India Rising: The New Superpower Transforming Global Business Dynamics",
+    subhead: "Exclusive CEO Interviews · Markets Special · Leadership 100",
+    image:
+      "https://images.unsplash.com/photo-1761233138997-44d9b002a08f?w=400&h=550&fit=crop&crop=top",
+    current: false,
+    path: "/finance",
+  },
+  {
+    month: "March 2026",
+    headline: "Healthcare 2030: The Biotech Revolution Saving Millions of Lives",
+    subhead: "CRISPR · AI Diagnostics · Pharma Rankings · Hospital Innovation",
+    image:
+      "https://images.unsplash.com/photo-1766315746079-215ff5115e9f?w=400&h=550&fit=crop",
+    current: false,
+    path: "/healthcare",
+  },
+  {
+    month: "February 2026",
+    headline: "The Electric Future: How EVs Are Rewriting the Rules of Mobility",
+    subhead: "Battery Breakthrough · Charging Infrastructure · Auto Rankings",
+    image:
+      "https://images.unsplash.com/photo-1760012945940-74d6bf54c0fb?w=400&h=550&fit=crop",
+    current: false,
+    path: "/manufacturing",
+  },
+  {
+    month: "January 2026",
+    headline: "2026 Outlook: The Trends That Will Define the Global Economy",
+    subhead: "Economic Forecasts · Sector Winners · Key Risks · CEO Survey",
+    image:
+      "https://images.unsplash.com/photo-1679583721525-658d164e609b?w=400&h=550&fit=crop",
+    current: false,
+    path: "/finance",
+  },
+  {
+    month: "December 2025",
+    headline: "Person of the Year: The Leaders Who Shaped 2025",
+    subhead: "Annual Awards · 50 Leaders to Watch · Year in Review",
+    image:
+      "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?w=400&h=550&fit=crop",
+    current: false,
+    path: "/leadership",
+  },
 ];
 
 const dailyStories = [
-  { id: 1, time: "6:00 AM IST", title: "Morning Market Brief: Asia Opens Mixed, Shanghai Up 1.2%", category: "Markets" },
-  { id: 2, time: "7:30 AM IST", title: "The Pride Times Daily Cover: AI Investment Supercycle Begins", category: "Technology" },
-  { id: 3, time: "9:00 AM IST", title: "India Open: RBI Rate Decision Day — Markets Hold Breath", category: "India" },
-  { id: 4, time: "12:00 PM IST", title: "Midday Brief: Europe Stocks Up on ECB Signals", category: "Finance" },
-  { id: 5, time: "3:30 PM IST", title: "US Pre-Market: Futures Point to Record High Open", category: "Markets" },
-  { id: 6, time: "6:00 PM IST", title: "Evening Digest: Today's Top 10 Business Stories", category: "All" },
+  {
+    id: 1,
+    time: "6:00 AM IST",
+    title: "Morning Market Brief: Asia Opens Mixed, Shanghai Up 1.2%",
+    category: "Markets",
+  },
+  {
+    id: 2,
+    time: "7:30 AM IST",
+    title: "The Pride Times Daily Cover: AI Investment Supercycle Begins",
+    category: "Technology",
+  },
+  {
+    id: 3,
+    time: "9:00 AM IST",
+    title: "India Open: RBI Rate Decision Day — Markets Hold Breath",
+    category: "India",
+  },
+  {
+    id: 4,
+    time: "12:00 PM IST",
+    title: "Midday Brief: Europe Stocks Up on ECB Signals",
+    category: "Finance",
+  },
+  {
+    id: 5,
+    time: "3:30 PM IST",
+    title: "US Pre-Market: Futures Point to Record High Open",
+    category: "Markets",
+  },
+  {
+    id: 6,
+    time: "6:00 PM IST",
+    title: "Evening Digest: Today's Top 10 Business Stories",
+    category: "All",
+  },
 ];
 
 const currentIssueFeatures = [
@@ -111,7 +191,7 @@ export function CoverStoriesPage() {
         ================================================= */}
 
         <article className="group cursor-pointer mb-10">
-          <div className="relative overflow-hidden rounded-[2px]">
+          <div className="relative overflow-hidden rounded-2xl">
             <ImageWithFallback
               src={hero.image}
               alt={hero.title}
@@ -151,23 +231,47 @@ export function CoverStoriesPage() {
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b-2 border-gray-900">
-                  <th className="py-3 pr-4 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Date</th>
-                  <th className="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Acquirer</th>
-                  <th className="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Target</th>
-                  <th className="px-3 py-3 text-right text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Value</th>
-                  <th className="pl-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 hidden sm:table-cell">Sector</th>
+                  <th className="py-3 pr-4 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                    Date
+                  </th>
+                  <th className="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                    Acquirer
+                  </th>
+                  <th className="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                    Target
+                  </th>
+                  <th className="px-3 py-3 text-right text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                    Value
+                  </th>
+                  <th className="pl-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 hidden sm:table-cell">
+                    Sector
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {dealRows.map((row, index) => (
                   <tr key={index} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-3.5 pr-4 text-gray-500 whitespace-nowrap">{row[0]}</td>
-                    <td className="px-3 py-3.5 font-semibold text-gray-900">{row[1]}</td>
-                    <td className="px-3 py-3.5 text-gray-600">{row[2]}</td>
-                    <td className={`px-3 py-3.5 text-right font-bold tabular-nums whitespace-nowrap ${row[3] === "Undisclosed" ? "text-gray-400 font-medium" : "text-gray-900"}`}>
+                    <td className="py-3.5 pr-4 text-gray-500 whitespace-nowrap">
+                      {row[0]}
+                    </td>
+                    <td className="px-3 py-3.5 font-semibold text-gray-900">
+                      {row[1]}
+                    </td>
+                    <td className="px-3 py-3.5 text-gray-600">
+                      {row[2]}
+                    </td>
+                    <td
+                      className={`px-3 py-3.5 text-right font-bold tabular-nums whitespace-nowrap ${
+                        row[3] === "Undisclosed"
+                          ? "text-gray-400 font-medium"
+                          : "text-gray-900"
+                      }`}
+                    >
                       {row[3]}
                     </td>
-                    <td className="pl-3 py-3.5 text-xs text-gray-500 hidden sm:table-cell">{row[4]}</td>
+                    <td className="pl-3 py-3.5 text-xs text-gray-500 hidden sm:table-cell">
+                      {row[4]}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -188,7 +292,9 @@ export function CoverStoriesPage() {
                 <span className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-black text-white text-xs font-bold">
                   {i + 1}
                 </span>
-                <p className="text-[15px] leading-[1.75] text-gray-700 pt-0.5">{theme}</p>
+                <p className="text-[15px] leading-[1.75] text-gray-700 pt-0.5">
+                  {theme}
+                </p>
               </li>
             ))}
           </ol>
@@ -214,6 +320,7 @@ export function CoverStoriesPage() {
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-400 mb-5">
             Today's Cover Story Schedule — May 22, 2026
           </p>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {dailyStories.map((s) => (
               <div
@@ -221,8 +328,14 @@ export function CoverStoriesPage() {
                 className="border border-white/10 rounded-[2px] p-4 hover:border-white/30 hover:bg-white/5 transition-colors cursor-pointer group"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <Clock size={10} strokeWidth={2.25} className="text-gray-500" />
-                  <span className="text-[11px] text-gray-500 tabular-nums">{s.time}</span>
+                  <Clock
+                    size={10}
+                    strokeWidth={2.25}
+                    className="text-gray-500"
+                  />
+                  <span className="text-[11px] text-gray-500 tabular-nums">
+                    {s.time}
+                  </span>
                   <span className="text-[10px] font-bold bg-white/10 text-gray-300 px-2 py-0.5 rounded-[2px] ml-auto uppercase tracking-wide">
                     {s.category}
                   </span>
@@ -245,17 +358,19 @@ export function CoverStoriesPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {covers.map((cover) => (
               <Link key={cover.month} to={cover.path} className="group">
-                <div className="relative overflow-hidden rounded-[2px] mb-2.5">
+                <div className="relative overflow-hidden rounded-2xl mb-2.5">
                   <ImageWithFallback
                     src={cover.image}
                     alt={cover.month}
                     className="w-full h-60 object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
                   />
+
                   {cover.current && (
                     <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-[2px] tracking-wide">
                       CURRENT
                     </span>
                   )}
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-2.5 left-2.5 right-2.5">
                       <p className="text-white text-xs font-medium flex items-center gap-1.5">
@@ -265,7 +380,11 @@ export function CoverStoriesPage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.12em]">{cover.month}</p>
+
+                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.12em]">
+                  {cover.month}
+                </p>
+
                 <p className="text-xs leading-[1.4] mt-1 text-gray-700 transition-colors group-hover:text-red-600">
                   {cover.headline}
                 </p>
@@ -288,12 +407,21 @@ export function CoverStoriesPage() {
               {covers[0].headline}
             </h2>
 
-            <p className="text-gray-500 text-sm leading-[1.6] mt-2 mb-5">{covers[0].subhead}</p>
+            <p className="text-gray-500 text-sm leading-[1.6] mt-2 mb-5">
+              {covers[0].subhead}
+            </p>
 
             <ul className="flex flex-col gap-2.5 mb-6">
               {currentIssueFeatures.map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-sm text-gray-700">
-                  <ChevronRight size={13} strokeWidth={2.25} className="text-red-600 shrink-0" />
+                <li
+                  key={f}
+                  className="flex items-center gap-2.5 text-sm text-gray-700"
+                >
+                  <ChevronRight
+                    size={13}
+                    strokeWidth={2.25}
+                    className="text-red-600 shrink-0"
+                  />
                   {f}
                 </li>
               ))}
@@ -304,6 +432,7 @@ export function CoverStoriesPage() {
                 <BookOpen size={14} strokeWidth={2} />
                 Read Online
               </button>
+
               <button className="border border-gray-300 text-sm font-semibold px-5 py-2.5 rounded-[2px] hover:bg-gray-50 hover:border-gray-400 transition-colors flex items-center gap-2">
                 <Download size={14} strokeWidth={2} />
                 Download
@@ -311,7 +440,7 @@ export function CoverStoriesPage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-[2px]">
+          <div className="overflow-hidden rounded-2xl">
             <ImageWithFallback
               src={covers[0].image}
               alt={covers[0].headline}
@@ -324,3 +453,4 @@ export function CoverStoriesPage() {
     </div>
   );
 }
+
