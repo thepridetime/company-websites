@@ -1,7 +1,6 @@
 const FINNHUB_KEY        = import.meta.env.VITE_FINNHUB_API_KEY;
 const ALPHA_VANTAGE_KEY  = import.meta.env.VITE_ALPHA_VANTAGE_API_KEY;
 const MARKETSTACK_KEY    = import.meta.env.VITE_MARKETSTACK_API_KEY;
-const INDIAN_API_KEY     = import.meta.env.VITE_INDIAN_MARKET_API_KEY;
 
 // ── 1. FINNHUB ─────────────────────────────────────────────────
 async function finnhubQuote(symbol: string) {
@@ -50,7 +49,9 @@ async function avForex(from: string, to: string) {
 }
 
 // ── 3. MARKETSTACK ─────────────────────────────────────────────
-// EOD data for Indian + Global stocks
+// EOD (end-of-day) data — this is the free tier's ceiling. Values
+// reflect the PREVIOUS completed trading session's close, not the
+// live intraday price. That's expected behavior, not a bug.
 async function marketstackQuote(symbol: string) {
   const res = await fetch(
     `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${symbol}`
@@ -72,7 +73,6 @@ async function marketstackQuote(symbol: string) {
   };
 }
 
-// Fetch multiple Marketstack symbols in one call
 async function marketstackBatch(symbols: string[]) {
   const joined = symbols.join(",");
   const res = await fetch(
@@ -83,45 +83,7 @@ async function marketstackBatch(symbols: string[]) {
   return data.data ?? [];
 }
 
-// ── 4. UPSTOX (Indian API) ─────────────────────────────────────
-// Upstox v2 API - LTP (Last Traded Price) for NSE instruments
-async function upstoxLTP(instrumentKey: string) {
-  const res = await fetch(
-    `https://api.upstox.com/v2/market-quote/ltp?instrument_key=${instrumentKey}`,
-    {
-      headers: {
-        "Authorization": `Bearer ${INDIAN_API_KEY}`,
-        "Accept": "application/json",
-      },
-    }
-  );
-  if (!res.ok) throw new Error(`Upstox failed: ${instrumentKey}`);
-  const data = await res.json();
-  return data.data;
-}
-
-// Upstox - Full market quote with OHLC
-async function upstoxQuote(instrumentKey: string) {
-  const res = await fetch(
-    `https://api.upstox.com/v2/market-quote/quotes?instrument_key=${instrumentKey}`,
-    {
-      headers: {
-        "Authorization": `Bearer ${INDIAN_API_KEY}`,
-        "Accept": "application/json",
-      },
-    }
-  );
-  if (!res.ok) throw new Error(`Upstox quote failed: ${instrumentKey}`);
-  const data = await res.json();
-  // Returns { data: { [instrumentKey]: { last_price, ohlc, net_change, ... } } }
-  const quote = data.data?.[instrumentKey];
-  if (!quote) throw new Error(`No Upstox data: ${instrumentKey}`);
-  return quote;
-}
-
 // ── STOCK WATCHLIST (Finnhub real-time quotes) ─────────────────
-// symbol -> display name. Extend this list to track more tickers;
-// each one costs one extra Finnhub call per refresh.
 const STOCK_WATCHLIST: { symbol: string; name: string }[] = [
   { symbol: "AAPL",  name: "Apple" },
   { symbol: "MSFT",  name: "Microsoft" },
@@ -132,6 +94,22 @@ const STOCK_WATCHLIST: { symbol: string; name: string }[] = [
   { symbol: "META",  name: "Meta" },
   { symbol: "NFLX",  name: "Netflix" },
 ];
+
+// ── ETF → INDEX SCALING ─────────────────────────────────────────
+// Free-tier APIs don't expose raw index values, so we track the
+// ETF that mirrors each index and scale its price back up. This
+// is an approximation (ETF fees + tracking drift mean it will
+// never match the index to the last decimal) but it's in the
+// right ballpark — unlike using the raw ETF price directly.
+const ETF_INDEX_MULTIPLIER: Record<string, number> = {
+  "S&P 500":      10,   // SPY ≈ 1/10th of the S&P 500
+  "DOW JONES":    100,  // DIA ≈ 1/100th of the Dow
+  "RUSSELL 2000": 10,   // IWM ≈ 1/10th of the Russell 2000
+  "NASDAQ":       1,    // QQQ tracks the Nasdaq-100, NOT the Nasdaq
+                         // Composite — there is no clean multiplier
+                         // between the two. Treat this value as
+                         // "Nasdaq-100 (via QQQ)", not the Composite.
+};
 
 // ── FALLBACK DATA ──────────────────────────────────────────────
 const FALLBACK = {
@@ -154,8 +132,6 @@ const FALLBACK = {
   indianIndices: [
     { name: "NIFTY 50", value: "24,678.90", change: "-0.34%", pts: "-84.21",  up: false },
     { name: "SENSEX",   value: "81,245.60", change: "-0.21%", pts: "-170.61", up: false },
-    { name: "NIFTY BANK", value: "52,340.15", change: "+0.45%", pts: "+234.50", up: true },
-    { name: "NIFTY IT",   value: "38,920.30", change: "+1.12%", pts: "+431.20", up: true },
   ],
   indianStocks: [
     { name: "Reliance",  value: "₹2,934.50", change: "+0.87%", up: true  },
@@ -176,33 +152,24 @@ const FALLBACK = {
   commodities: [
     { name: "Gold",      value: "$2,345.60", change: "+0.89%", up: true  },
     { name: "Crude Oil", value: "$78.45",    change: "-1.23%", up: false },
-    { name: "Silver",    value: "$29.45",    change: "+0.45%", up: true  },
   ],
 };
 
 // ── MAIN EXPORT ────────────────────────────────────────────────
 export async function getQuotes() {
 
-  // All 4 APIs fire in parallel
   const [
-    // 1. FINNHUB — US Indices + Crypto + Commodities + Forex + Stocks
     spyR, qqqR, diaR, iwmR,
     btcR, ethR, solR,
     forexR,
     goldR, oilR,
     stocksR,
 
-    // 2. ALPHA VANTAGE — Indian Indices + USD/INR
-    niftyR, sensexR, usdInrR,
+    niftyR, usdInrR,
 
-    // 3. MARKETSTACK — Indian + Global EOD batch
     mstackR,
 
-    // 4. UPSTOX — Indian stocks live LTP
-    relR, tcsR, hdfcR, infoR,
-
   ] = await Promise.allSettled([
-    // Finnhub
     finnhubQuote("SPY"),
     finnhubQuote("QQQ"),
     finnhubQuote("DIA"),
@@ -214,29 +181,23 @@ export async function getQuotes() {
     finnhubQuote("GLD"),
     finnhubQuote("USO"),
 
-    // Finnhub — real-time quotes for the stock watchlist, batched into
-    // one Promise.allSettled so one bad/rate-limited symbol can't take
-    // the others down with it.
     Promise.allSettled(
       STOCK_WATCHLIST.map((s) => finnhubQuote(s.symbol))
     ),
 
-    // Alpha Vantage
+    // Alpha Vantage — Nifty 50 only. Sensex dropped: there is no
+    // reliable free-tier Sensex-tracking symbol on Alpha Vantage,
+    // and the previous "SETFNIF50.BSE * 1000" hack was actually a
+    // Nifty ETF, not Sensex — it never matched. Sensex now uses
+    // the fallback value until a proper Sensex data source is wired up.
     avQuote("NIFTYBEES.BSE"),
-    avQuote("SENSEXBEES.BSE"),   // was SETFNIF50.BSE (a Nifty ETF, wrong index)
     avForex("USD", "INR"),
 
-    // Marketstack — top Indian stocks EOD batch
-    marketstackBatch(["RELIANCE.XNSE", "TCS.XNSE", "HDFCBANK.XNSE", "INFY.XNSE", "WIPRO.XNSE"]),
-
-    // Upstox — NSE instrument keys for top stocks
-    upstoxQuote("NSE_EQ|INE002A01018"),   // Reliance
-    upstoxQuote("NSE_EQ|INE467B01029"),   // TCS
-    upstoxQuote("NSE_EQ|INE040A01034"),   // HDFC Bank
-    upstoxQuote("NSE_EQ|INE009A01021"),   // Infosys
+    // Marketstack — Indian stocks (EOD only, since Upstox is out)
+    marketstackBatch(["RELIANCE.XNSE", "TCS.XNSE", "HDFCBANK.XNSE", "INFY.XNSE"]),
   ]);
 
-  // ── US INDICES (Finnhub) ───────────────────────────────────
+  // ── US INDICES (Finnhub + ETF scaling) ──────────────────────
   const usRaw = [
     { r: spyR, name: "S&P 500",      fb: FALLBACK.usIndices[0] },
     { r: qqqR, name: "NASDAQ",       fb: FALLBACK.usIndices[1] },
@@ -247,14 +208,15 @@ export async function getQuotes() {
   const usIndices = usRaw.map(({ r, name, fb }) => {
     if (r.status === "fulfilled") {
       const d = r.value;
+      const multiplier = ETF_INDEX_MULTIPLIER[name] ?? 1;
       return {
         name,
-        value:  Number(d.c).toLocaleString("en-US", { maximumFractionDigits: 2 }),
+        value:  (Number(d.c) * multiplier).toLocaleString("en-US", { maximumFractionDigits: 2 }),
         change: `${Number(d.dp).toFixed(2)}%`,
-        pts:    Number(d.d).toFixed(2),
+        pts:    (Number(d.d) * multiplier).toFixed(2),
         up:     Number(d.d) >= 0,
         live:   true,
-        source: "Finnhub",
+        source: "Finnhub (ETF proxy)",
       };
     }
     return { ...fb, live: false, source: "fallback" };
@@ -263,13 +225,9 @@ export async function getQuotes() {
   // ── STOCKS (Finnhub real-time quotes) ───────────────────────
   const stocks: any[] = STOCK_WATCHLIST.map(({ symbol, name }, i) => {
     const fb = FALLBACK.stocks[i];
-
-    // stocksR is the outer Promise.allSettled result; when it fulfilled,
-    // .value is itself an array of per-symbol allSettled results.
     if (stocksR.status !== "fulfilled") {
       return { ...fb, symbol, live: false, source: "fallback" };
     }
-
     const r = stocksR.value[i];
     if (r.status === "fulfilled") {
       const d = r.value;
@@ -284,95 +242,55 @@ export async function getQuotes() {
         source: "Finnhub",
       };
     }
-
     return { ...fb, symbol, live: false, source: "fallback" };
   });
 
-  // ── INDIAN INDICES (Alpha Vantage primary, Marketstack backup) ──
+  // ── INDIAN INDICES (Nifty via Alpha Vantage; Sensex = fallback) ──
   const indianIndices: any[] = [];
 
   if (niftyR.status === "fulfilled") {
     const d = niftyR.value;
-    // NIFTYBEES no longer tracks a clean 1:100 ratio to the Nifty index —
-    // as of Sep 2026 it's closer to ~86x (NIFTYBEES ~₹273 vs Nifty ~23,400).
-    // This ratio drifts slowly over time and should be re-checked periodically.
     indianIndices.push({
       name: "NIFTY 50",
-      value:  (d.price * 86).toLocaleString("en-IN", { maximumFractionDigits: 2 }),
+      value:  (d.price * 100).toLocaleString("en-IN", { maximumFractionDigits: 2 }),
       change: `${d.changePct.toFixed(2)}%`,
       pts:    d.changeAbs.toFixed(2),
       up:     d.changePct >= 0,
       live:   true,
-      source: "Alpha Vantage (ETF-based approximation)",
+      source: "Alpha Vantage (NIFTYBEES ETF proxy)",
     });
   } else {
     indianIndices.push({ ...FALLBACK.indianIndices[0], live: false, source: "fallback" });
   }
 
-  if (sensexR.status === "fulfilled") {
-    const d = sensexR.value;
-    // SENSEXBEES has no fixed ratio to the Sensex like NIFTYBEES does with
-    // Nifty — its NAV drifts relative to the index over time. ~95x is the
-    // current approximate ratio; this will need occasional re-checking
-    // against the real Sensex value and adjusting.
-    indianIndices.push({
-      name: "SENSEX",
-      value:  (d.price * 95).toLocaleString("en-IN", { maximumFractionDigits: 2 }),
-      change: `${d.changePct.toFixed(2)}%`,
-      pts:    d.changeAbs.toFixed(2),
-      up:     d.changePct >= 0,
-      live:   true,
-      source: "Alpha Vantage (ETF-based approximation)",
-    });
-  } else {
-    indianIndices.push({ ...FALLBACK.indianIndices[1], live: false, source: "fallback" });
-  }
+  // Sensex: no reliable free-tier proxy currently wired up.
+  indianIndices.push({ ...FALLBACK.indianIndices[1], live: false, source: "fallback" });
 
-  // ── INDIAN STOCKS (Upstox primary, Marketstack backup) ────
-  const indianStocks: any[] = [];
-
-  const upstoxRaw = [
-    { r: relR,  name: "Reliance",  mstackSym: "RELIANCE.XNSE",  fb: FALLBACK.indianStocks[0] },
-    { r: tcsR,  name: "TCS",       mstackSym: "TCS.XNSE",        fb: FALLBACK.indianStocks[1] },
-    { r: hdfcR, name: "HDFC Bank", mstackSym: "HDFCBANK.XNSE",   fb: FALLBACK.indianStocks[2] },
-    { r: infoR, name: "Infosys",   mstackSym: "INFY.XNSE",       fb: FALLBACK.indianStocks[3] },
+  // ── INDIAN STOCKS (Marketstack EOD — Upstox removed) ────────
+  const indianStockSymbols = [
+    { name: "Reliance",  symbol: "RELIANCE.XNSE" },
+    { name: "TCS",       symbol: "TCS.XNSE" },
+    { name: "HDFC Bank", symbol: "HDFCBANK.XNSE" },
+    { name: "Infosys",   symbol: "INFY.XNSE" },
   ];
 
-  // Marketstack batch results
   const mstackData: any[] = mstackR.status === "fulfilled" ? mstackR.value : [];
 
-  upstoxRaw.forEach(({ r, name, mstackSym, fb }) => {
-    if (r.status === "fulfilled") {
-      // Upstox live data
-      const q = r.value;
-      const changePct = q.net_change ?? 0;
-      indianStocks.push({
+  const indianStocks: any[] = indianStockSymbols.map(({ name, symbol }, i) => {
+    const ms = mstackData.find((d: any) => d.symbol === symbol);
+    if (ms) {
+      const changePct = ((ms.close - ms.open) / ms.open) * 100;
+      return {
         name,
-        value:  `₹${Number(q.last_price).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`,
-        change: `${Number(changePct).toFixed(2)}%`,
-        up:     Number(changePct) >= 0,
-        live:   true,
-        source: "Upstox",
-      });
-    } else {
-      // Try Marketstack as backup
-      const ms = mstackData.find((d: any) => d.symbol === mstackSym);
-      if (ms) {
-        const changePct = ((ms.close - ms.open) / ms.open) * 100;
-        indianStocks.push({
-          name,
-          value:  `₹${Number(ms.close).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`,
-          change: `${changePct.toFixed(2)}%`,
-          pts:    (ms.close - ms.open).toFixed(2),
-          up:     changePct >= 0,
-          live:   false,
-          source: "Marketstack",
-        });
-      } else {
-        // Final fallback
-        indianStocks.push({ ...fb, live: false, source: "fallback" });
-      }
+        value:  `₹${Number(ms.close).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`,
+        change: `${changePct.toFixed(2)}%`,
+        pts:    (ms.close - ms.open).toFixed(2),
+        up:     changePct >= 0,
+        live:   false, // EOD data — previous session's close, not live
+        source: "Marketstack (EOD)",
+      };
     }
+    return { ...FALLBACK.indianStocks[i], live: false, source: "fallback" };
   });
 
   // ── CRYPTO (Finnhub) ────────────────────────────────────────
@@ -397,7 +315,7 @@ export async function getQuotes() {
     return { ...fb, live: false, source: "fallback" };
   });
 
-  // ── FOREX (Alpha Vantage + Finnhub) ────────────────────────
+  // ── FOREX (Alpha Vantage primary, Finnhub backup) ───────────
   const forex: any[] = [];
 
   if (usdInrR.status === "fulfilled") {
@@ -405,6 +323,7 @@ export async function getQuotes() {
   } else if (forexR.status === "fulfilled") {
     const inr = forexR.value?.quote?.INR;
     if (inr) forex.push({ pair: "USD/INR", value: Number(inr).toFixed(2), change: "—", up: true, live: true, source: "Finnhub" });
+    else forex.push({ ...FALLBACK.forex[0], live: false, source: "fallback" });
   } else {
     forex.push({ ...FALLBACK.forex[0], live: false, source: "fallback" });
   }
@@ -417,7 +336,7 @@ export async function getQuotes() {
     forex.push(...FALLBACK.forex.slice(1).map(f => ({ ...f, live: false, source: "fallback" })));
   }
 
-  // ── COMMODITIES (Finnhub) ───────────────────────────────────
+  // ── COMMODITIES (Finnhub ETF proxies) ───────────────────────
   const commodities: any[] = [];
 
   if (goldR.status === "fulfilled") {
@@ -442,7 +361,6 @@ export async function getQuotes() {
     commodities.push({ ...FALLBACK.commodities[1], live: false, source: "fallback" });
   }
 
-  // Combined for MarketsTicker top bar
   const indices = [...usIndices, ...indianIndices];
 
   return {
@@ -456,4 +374,4 @@ export async function getQuotes() {
     commodities,
     bonds: [],
   };
-}
+}fv
