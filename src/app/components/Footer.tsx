@@ -177,7 +177,7 @@ export function Footer() {
           ====================================== */}
           <Link
             to="/"
-            className="flex items-center gap-5 flex-shrink-0"
+            className="flex items-center gap-9 flex-shrink-0"
           >
 
             {/* Logo */}
