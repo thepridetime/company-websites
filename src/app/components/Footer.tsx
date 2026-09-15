@@ -1,3 +1,4 @@
+
 import { Link } from "react-router";
 import {
   Crown,
@@ -103,21 +104,21 @@ const bottomLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-black text-white pt-8 sm:pt-10 pb-5 relative overflow-hidden">
+    <footer className="bg-black text-white pt-10 pb-6 relative">
 
       {/* =========================================
           MAIN FOOTER CONTAINER
       ========================================== */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto px-4">
 
         {/* =========================================
             ORNAMENTAL TOP LINE
         ========================================== */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-10">
+        <div className="flex items-center justify-center gap-3 mb-10">
 
           {/* Left Line */}
           <span
-            className="h-px flex-1 max-w-[180px] sm:max-w-none"
+            className="h-px flex-1"
             style={{
               background: `linear-gradient(
                 to right,
@@ -129,7 +130,7 @@ export function Footer() {
 
           {/* Left Diamond */}
           <span
-            className="w-1.5 h-1.5 rotate-45 flex-shrink-0"
+            className="w-1.5 h-1.5 rotate-45"
             style={{
               background: GOLD,
             }}
@@ -137,8 +138,7 @@ export function Footer() {
 
           {/* Crown */}
           <Crown
-            size={20}
-            className="sm:w-[22px] sm:h-[22px] flex-shrink-0"
+            size={22}
             style={{
               color: GOLD,
             }}
@@ -147,7 +147,7 @@ export function Footer() {
 
           {/* Right Diamond */}
           <span
-            className="w-1.5 h-1.5 rotate-45 flex-shrink-0"
+            className="w-1.5 h-1.5 rotate-45"
             style={{
               background: GOLD,
             }}
@@ -155,7 +155,7 @@ export function Footer() {
 
           {/* Right Line */}
           <span
-            className="h-px flex-1 max-w-[180px] sm:max-w-none"
+            className="h-px flex-1"
             style={{
               background: `linear-gradient(
                 to left,
@@ -164,93 +164,45 @@ export function Footer() {
               )`,
             }}
           />
+
         </div>
 
         {/* =========================================
             MAIN FOOTER CONTENT
         ========================================== */}
-        <div
-          className="
-            flex
-            flex-col
-            lg:flex-row
-            items-center
-            lg:items-center
-            justify-between
-            gap-8
-            md:gap-10
-            lg:gap-12
-            xl:gap-20
-            mb-2
-            w-full
-          "
-        >
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-14 mb-2">
 
           {/* =====================================
               BRAND SECTION
           ====================================== */}
           <Link
             to="/"
-            className="
-              flex
-              items-center
-              justify-center
-              lg:justify-start
-              gap-4
-              sm:gap-5
-              md:gap-6
-              flex-shrink-0
-              w-full
-              lg:w-auto
-              min-w-0
-            "
+            className="flex items-center gap-5 flex-shrink-0"
           >
 
             {/* Logo */}
             <img
               src={logoImg}
               alt="The Pride Times"
-              className="
-                h-12
-                w-12
-                sm:h-14
-                sm:w-14
-                md:h-16
-                md:w-16
-                object-contain
-                flex-shrink-0
-              "
+              className="h-14 w-14 sm:h-16 sm:w-16 object-contain flex-shrink-0"
             />
 
             {/* Gold Divider */}
             <span
-              className="
-                h-12
-                sm:h-14
-                md:h-16
-                w-px
-                flex-shrink-0
-              "
+              className="h-14 sm:h-16 w-px"
               style={{
                 background: `${GOLD}55`,
               }}
             />
 
             {/* Brand Text */}
-            <div className="min-w-0 text-left">
+            <div>
 
               <div
-                className="
-                  pt-logo
-                  leading-none
-                  whitespace-nowrap
-                  text-[1.35rem]
-                  xs:text-[1.5rem]
-                  sm:text-[1.75rem]
-                  md:text-[2rem]
-                  lg:text-[2.25rem]
-                  xl:text-[2.75rem]
-                "
+                className="pt-logo leading-none"
+                style={{
+                  fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
+                }}
               >
                 THE{" "}
                 <span className="pt-logo-accent">
@@ -259,21 +211,7 @@ export function Footer() {
                 TIMES
               </div>
 
-              <p
-                className="
-                  text-[8px]
-                  xs:text-[9px]
-                  sm:text-[10px]
-                  md:text-xs
-                  text-gray-400
-                  uppercase
-                  tracking-[0.12em]
-                  sm:tracking-widest
-                  mt-1.5
-                  sm:mt-2
-                  whitespace-nowrap
-                "
-              >
+              <p className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest mt-2">
                 Voices That Inspire. Stories That Matter.
               </p>
 
@@ -281,60 +219,25 @@ export function Footer() {
           </Link>
 
           {/* =====================================
-              GOLDEN VERTICAL DIVIDER
+              VERTICAL DIVIDER
           ====================================== */}
           <span
-            className="
-              hidden
-              lg:block
-              w-px
-              self-stretch
-              min-h-[80px]
-              flex-shrink-0
-            "
+            className="hidden lg:block w-px self-stretch"
             style={{
-              background: `linear-gradient(
-                to bottom,
-                transparent,
-                ${GOLD}70,
-                transparent
-              )`,
+              background: `${GOLD}40`,
             }}
           />
 
           {/* =====================================
               RIGHT SECTION
           ====================================== */}
-          <div
-            className="
-              flex
-              flex-col
-              items-center
-              lg:items-end
-              gap-4
-              sm:gap-5
-              w-full
-              lg:w-auto
-              min-w-0
-            "
-          >
+          <div className="flex flex-col items-center lg:items-start gap-4">
 
             {/* =================================
                 SOCIAL MEDIA BUTTONS
             ================================== */}
-            <div
-              className="
-                flex
-                flex-wrap
-                items-center
-                justify-center
-                lg:justify-end
-                gap-2
-                sm:gap-2.5
-                md:gap-3
-                w-full
-              "
-            >
+            <div className="flex items-center gap-3">
+
               {socialLinks.map(
                 ({ icon, href, label }) => (
                   <a
@@ -343,70 +246,33 @@ export function Footer() {
                     aria-label={label}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="
-                      w-9
-                      h-9
-                      sm:w-10
-                      sm:h-10
-                      md:w-11
-                      md:h-11
-                      flex
-                      items-center
-                      justify-center
-                      border
-                      rounded-md
-                      text-white
-                      transition-all
-                      duration-200
-                      hover:text-[#D4A017]
-                      hover:-translate-y-0.5
-                      hover:bg-white/5
-                    "
+                    className="w-11 h-11 flex items-center justify-center border rounded-md text-white"
                     style={{
                       borderColor: `${GOLD}88`,
                     }}
                   >
-                    {icon(16)}
+                    {icon(17)}
                   </a>
                 )
               )}
+
             </div>
 
             {/* =================================
                 FOOTER NAVIGATION LINKS
             ================================== */}
-            <div
-              className="
-                flex
-                flex-wrap
-                items-center
-                justify-center
-                lg:justify-end
-                gap-x-2
-                sm:gap-x-3
-                gap-y-2
-                text-xs
-                sm:text-sm
-                text-gray-300
-                text-center
-              "
-            >
+            <div className="flex items-center gap-3 text-sm text-gray-300">
+
               {bottomLinks.map((link, i) => (
 
                 <span
                   key={link.label}
-                  className="flex items-center gap-2 sm:gap-3"
+                  className="flex items-center gap-3"
                 >
 
                   <Link
                     to={link.path}
-                    className="
-                      inline-block
-                      transition-colors
-                      duration-200
-                      hover:text-[#D4A017]
-                      whitespace-nowrap
-                    "
+                    className="inline-block"
                   >
                     {link.label}
                   </Link>
@@ -424,6 +290,7 @@ export function Footer() {
 
                 </span>
               ))}
+
             </div>
 
           </div>
@@ -433,23 +300,11 @@ export function Footer() {
       {/* =========================================
           COPYRIGHT BAR
       ========================================== */}
-      <div className="border-t border-white/10 mt-7 sm:mt-8 pt-4">
+      <div className="border-t border-white/10 mt-8 pt-4">
 
-        <div
-          className="
-            max-w-6xl
-            mx-auto
-            px-4
-            sm:px-6
-            lg:px-8
-            flex
-            items-center
-            justify-center
-            text-center
-          "
-        >
+        <div className="max-w-5xl mx-auto px-4 flex items-center justify-center">
 
-          <p className="text-[10px] sm:text-xs text-gray-500 leading-relaxed">
+          <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} The Pride Times.
             All rights reserved.
           </p>
@@ -468,35 +323,12 @@ export function Footer() {
           })
         }
         aria-label="Back to top"
-        className="
-          fixed
-          bottom-4
-          right-4
-          sm:bottom-5
-          sm:right-5
-          md:bottom-6
-          md:right-6
-          w-9
-          h-9
-          sm:w-10
-          sm:h-10
-          md:w-11
-          md:h-11
-          rounded-md
-          flex
-          items-center
-          justify-center
-          text-black
-          shadow-lg
-          transition-all
-          duration-200
-          hover:scale-105
-        "
+        className="fixed bottom-6 right-6 w-11 h-11 rounded-md flex items-center justify-center text-black shadow-lg"
         style={{
           background: GOLD,
         }}
       >
-        <ChevronUp size={18} className="sm:w-5 sm:h-5" />
+        <ChevronUp size={20} />
       </button>
 
     </footer>
