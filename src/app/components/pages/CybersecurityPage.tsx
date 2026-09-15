@@ -4,6 +4,9 @@ import {
   Shield,
   AlertTriangle,
   ChevronRight,
+  Cpu,
+  Bot,
+  KeyRound,
 } from "lucide-react";
 import CS2Img from "../../../imports/CS2.png";
 import CS3Img from "../../../imports/CS3.png";
@@ -22,7 +25,7 @@ function SH({ title, id }: { title: string; id?: string }) {
         </h2>
       </div>
 
-      <button className="text-[11px] font-semibold text-gray-400 hover:text-red-600 transition-colors flex items-center gap-1">
+      <button className="text-[11px] font-semibold text-gray-400 hover:text-red-600 transition-colors duration-200 flex items-center gap-1">
         See All
         <ChevronRight size={12} strokeWidth={2.25} />
       </button>
@@ -99,6 +102,49 @@ const stories = [
 ];
 
 /* =========================================================
+   AI & NATIONAL INFRASTRUCTURE
+========================================================= */
+
+const aiInfraStories = [
+  {
+    id: 1,
+    title:
+      "H200 shipments to China resume under authorization — the compute chokepoint persists at the intersection of export controls and national security.",
+    time: "Just now",
+  },
+  {
+    id: 2,
+    title:
+      "U.S. announces restrictions on Chinese humanoid and quadruped robots plus certain power inverters, extending export policy to physical AI.",
+    time: "Just now",
+  },
+  {
+    id: 3,
+    title:
+      "AI agents as cyber operators: August disclosures show models taking unauthorized cyber actions under test conditions, raising new enterprise control questions.",
+    time: "2 hrs ago",
+  },
+  {
+    id: 4,
+    title:
+      "100+ tech firms publicly urge governments to strengthen defenses against AI-driven hacking, reframing cybersecurity as infrastructure-level risk.",
+    time: "3 hrs ago",
+  },
+  {
+    id: 5,
+    title:
+      "IBM and Together AI sign a $240M agreement pairing IBM Cloud with thousands of Nvidia Blackwell processors for an AI inference cluster.",
+    time: "5 hrs ago",
+  },
+];
+
+const zeroTrustNote = {
+  title: "Zero-Trust Implication: Identity Becomes the Control Plane",
+  body:
+    "As AI agents receive credentials and tool access, conventional network boundaries become less sufficient. The operating model should emphasize short-lived credentials, human approval gates for high-impact actions, continuous logging, model provenance, and segmented tool permissions — every agent needs a smaller blast radius than the employee it assists.",
+};
+
+/* =========================================================
    SECURITY RESPONSE MATRIX
 ========================================================= */
 
@@ -141,7 +187,7 @@ const marketData = [
 function SplitArticle({ data }: { data: typeof hero1 }) {
   return (
     <article className="group cursor-pointer">
-      <div className="overflow-hidden rounded-[2px] mb-3 bg-gray-100">
+      <div className="overflow-hidden rounded-xl mb-3 bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow duration-300">
         <ImageWithFallback
           src={data.image}
           alt={data.title}
@@ -188,7 +234,7 @@ export function CybersecurityPage() {
 
         <header className="border-b-4 border-black pb-5 mb-10">
           <div className="flex items-center gap-3.5">
-            <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-white shrink-0">
+            <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-white shrink-0 shadow-sm">
               <Shield size={19} strokeWidth={1.75} />
             </div>
             <div>
@@ -209,7 +255,7 @@ export function CybersecurityPage() {
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-14 pb-14 border-b border-gray-200">
 
           <article className="lg:col-span-2 group cursor-pointer">
-            <div className="overflow-hidden rounded-[2px] mb-4 bg-gray-100">
+            <div className="overflow-hidden rounded-xl mb-4 bg-gray-100 shadow-sm group-hover:shadow-lg transition-shadow duration-300">
               <ImageWithFallback
                 src={hero.image}
                 alt={hero.title}
@@ -221,7 +267,7 @@ export function CybersecurityPage() {
               {hero.category}
             </span>
 
-            <h1 className="font-serif text-2xl md:text-[34px] font-bold leading-[1.1] tracking-tight mt-2.5 text-gray-950 transition-colors group-hover:text-red-600">
+            <h1 className="font-serif text-2xl md:text-[34px] font-bold leading-[1.1] tracking-tight mt-2.5 text-gray-950 transition-colors duration-200 group-hover:text-red-600">
               {hero.title}
             </h1>
 
@@ -248,12 +294,12 @@ export function CybersecurityPage() {
 
             <div className="divide-y divide-gray-200">
               {threatAlerts.map((a) => (
-                <div key={a.id} className="py-3.5 first:pt-0 group cursor-pointer">
-                  <span className={`inline-block text-[10px] font-bold tracking-wide px-2 py-0.5 rounded-[2px] ${threatColor[a.severity]}`}>
+                <div key={a.id} className="py-3.5 first:pt-0 group cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md">
+                  <span className={`inline-block text-[10px] font-bold tracking-wide px-2 py-0.5 rounded-md ${threatColor[a.severity]}`}>
                     {a.severity}
                   </span>
 
-                  <p className="text-[13px] leading-[1.35] mt-2 font-semibold text-gray-900 transition-colors group-hover:text-red-600">
+                  <p className="text-[13px] leading-[1.35] mt-2 font-semibold text-gray-900 transition-colors duration-200 group-hover:text-red-600">
                     {a.title}
                   </p>
 
@@ -277,30 +323,75 @@ export function CybersecurityPage() {
         </section>
 
         {/* =================================================
+            AI & NATIONAL INFRASTRUCTURE
+        ================================================= */}
+
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-14 pb-14 border-b border-gray-200">
+          <div className="lg:col-span-2">
+            <SH title="AI & National Infrastructure" />
+
+            <div className="divide-y divide-gray-200">
+              {aiInfraStories.map((s) => (
+                <div key={s.id} className="py-3.5 first:pt-0 group cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md">
+                  <p className="text-[14px] leading-[1.5] font-semibold text-gray-900 transition-colors duration-200 group-hover:text-red-600">
+                    {s.title}
+                  </p>
+                  <span className="text-[10px] text-gray-400 flex items-center gap-1.5 mt-1.5">
+                    <Clock size={9} strokeWidth={2.25} />
+                    {s.time}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <aside className="lg:border-l lg:border-gray-200 lg:pl-8">
+            <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-3">
+              <KeyRound size={14} strokeWidth={2} className="text-red-600" />
+              <h2 className="text-[13px] font-bold uppercase tracking-[0.16em] text-gray-900">
+                Zero-Trust Watch
+              </h2>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-4 shadow-sm">
+              <div className="flex items-center gap-2 mb-2">
+                <Bot size={14} className="text-red-600" strokeWidth={2} />
+                <p className="text-[12px] font-bold uppercase tracking-wide text-gray-900">
+                  {zeroTrustNote.title}
+                </p>
+              </div>
+              <p className="text-[13px] leading-[1.6] text-gray-600">
+                {zeroTrustNote.body}
+              </p>
+            </div>
+          </aside>
+        </section>
+
+        {/* =================================================
             SECURITY RESPONSE MATRIX
         ================================================= */}
 
         <section className="mb-14">
           <SH title="Security Response" />
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b-2 border-gray-900">
-                  <th className="py-3 pr-4 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Threat</th>
+                  <th className="py-3 pl-4 pr-4 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Threat</th>
                   <th className="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Control</th>
                   <th className="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 hidden sm:table-cell">Risk</th>
-                  <th className="pl-3 py-3 text-right text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Cadence</th>
+                  <th className="pl-3 pr-4 py-3 text-right text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Cadence</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {responseMatrix.map((r) => (
-                  <tr key={r.threat} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-3.5 pr-4 font-semibold text-gray-900">{r.threat}</td>
+                  <tr key={r.threat} className="hover:bg-gray-50 transition-colors duration-200">
+                    <td className="py-3.5 pl-4 pr-4 font-semibold text-gray-900">{r.threat}</td>
                     <td className="px-3 py-3.5 text-gray-600">{r.control}</td>
                     <td className="px-3 py-3.5 text-gray-500 text-xs hidden sm:table-cell">{r.risk}</td>
-                    <td className="pl-3 py-3.5 text-right">
-                      <span className="inline-flex text-[10px] font-bold uppercase tracking-wide text-gray-500 bg-gray-100 px-2.5 py-1 rounded-[2px]">
+                    <td className="pl-3 pr-4 py-3.5 text-right">
+                      <span className="inline-flex text-[10px] font-bold uppercase tracking-wide text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md">
                         {r.cadence}
                       </span>
                     </td>
@@ -321,7 +412,7 @@ export function CybersecurityPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {stories.map((s) => (
               <article key={s.id} className="group cursor-pointer">
-                <div className="overflow-hidden rounded-[2px] mb-3 bg-gray-100">
+                <div className="overflow-hidden rounded-xl mb-3 bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow duration-300">
                   <ImageWithFallback
                     src={s.image}
                     alt={s.title}
@@ -333,7 +424,7 @@ export function CybersecurityPage() {
                   {s.category}
                 </span>
 
-                <h3 className="text-sm font-bold leading-[1.3] mt-1.5 text-gray-950 transition-colors group-hover:text-red-600">
+                <h3 className="text-sm font-bold leading-[1.3] mt-1.5 text-gray-950 transition-colors duration-200 group-hover:text-red-600">
                   {s.title}
                 </h3>
 
@@ -357,8 +448,8 @@ export function CybersecurityPage() {
             <SH title="Policy & Defense" />
             <div className="divide-y divide-gray-200">
               {defenseNews.map((n) => (
-                <div key={n.id} className="py-3.5 first:pt-0 group cursor-pointer">
-                  <p className="text-sm font-semibold leading-[1.5] text-gray-900 transition-colors group-hover:text-red-600">
+                <div key={n.id} className="py-3.5 first:pt-0 group cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md">
+                  <p className="text-sm font-semibold leading-[1.5] text-gray-900 transition-colors duration-200 group-hover:text-red-600">
                     {n.title}
                   </p>
                   <span className="text-[10px] text-gray-400 flex items-center gap-1.5 mt-1.5">
@@ -375,7 +466,7 @@ export function CybersecurityPage() {
             <SH title="Cyber Stocks" />
             <div className="divide-y divide-gray-200">
               {marketData.map((m) => (
-                <div key={m.ticker} className="py-3.5 first:pt-0 flex items-center justify-between">
+                <div key={m.ticker} className="py-3.5 first:pt-0 flex items-center justify-between transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md">
                   <div>
                     <p className="text-sm font-semibold text-gray-900">{m.company}</p>
                     <p className="text-[10px] text-gray-400 uppercase tracking-wide mt-0.5">{m.ticker}</p>
