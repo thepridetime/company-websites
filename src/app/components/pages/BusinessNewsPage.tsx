@@ -1,4 +1,4 @@
-import { Clock, Briefcase } from "lucide-react";
+import { Clock, Briefcase, ChevronRight } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 /* =========================================================
@@ -13,6 +13,132 @@ function SectionHeader({ title }: { title: string }) {
       <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
         {title}
       </h2>
+    </div>
+  );
+}
+
+/* =========================================================
+   AD SPACE
+========================================================= */
+
+function AdSpace({
+  label = "Advertisement Space",
+}: {
+  label?: string;
+}) {
+  return (
+    <div className="relative w-full overflow-hidden rounded-sm border border-gray-200 bg-gradient-to-r from-[#102b33] via-[#193944] to-[#28596a]">
+      <div className="flex min-h-[90px] flex-col items-center justify-center px-4 py-5 text-center">
+        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-sky-300">
+          Google AdSense
+        </span>
+
+        <span className="mt-1 text-sm sm:text-base font-semibold text-white">
+          {label}
+        </span>
+
+        <span className="mt-1 text-[8px] sm:text-[9px] text-sky-300">
+          728 × 90 • Leaderboard
+        </span>
+      </div>
+
+      <span className="absolute right-1.5 top-1 text-[7px] text-gray-300">
+        Advertisement
+      </span>
+    </div>
+  );
+}
+
+/* =========================================================
+   SIDEBAR SPONSORED AD
+========================================================= */
+
+function SponsoredAd() {
+  return (
+    <div className="rounded-md border border-gray-200 bg-[#faf9f4] overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2">
+        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+          Sponsored Content
+        </span>
+
+        <span className="text-[8px] text-gray-400">
+          Ad
+        </span>
+      </div>
+
+      <div className="mx-3 mb-3 flex h-[145px] items-center justify-center bg-[#10162f] px-4 text-center">
+        <div>
+          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-400">
+            Featured Partner
+          </p>
+
+          <p className="mt-3 text-base font-semibold text-white">
+            Your Ad Here
+          </p>
+
+          <p className="mt-2 text-[9px] leading-4 text-gray-300">
+            Reach 2M+ business readers
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   MORE STORIES SIDEBAR
+========================================================= */
+
+function MoreStories({
+  stories,
+}: {
+  stories: {
+    title: string;
+    time: string;
+    category?: string;
+  }[];
+}) {
+  return (
+    <div className="mt-5">
+      <div className="border-b-2 border-black pb-2">
+        <h3 className="text-[12px] font-bold uppercase tracking-[0.08em]">
+          More Stories
+        </h3>
+      </div>
+
+      <div className="divide-y divide-gray-200">
+        {stories.slice(0, 3).map((story, index) => (
+          <article
+            key={`${story.title}-${index}`}
+            className="group cursor-pointer py-3"
+          >
+            <div className="flex gap-3">
+              <div className="flex h-[48px] w-[68px] shrink-0 items-center justify-center rounded-sm bg-gray-100">
+                <span className="text-[9px] font-bold uppercase text-gray-400">
+                  News
+                </span>
+              </div>
+
+              <div className="min-w-0">
+                {story.category && (
+                  <span className="text-[8px] font-bold uppercase tracking-[0.1em] text-red-600">
+                    {story.category}
+                  </span>
+                )}
+
+                <h4 className="mt-1 text-[11px] sm:text-xs font-semibold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
+                  {story.title}
+                </h4>
+
+                <span className="mt-1 flex items-center gap-1 text-[9px] text-gray-400">
+                  <Clock size={9} />
+                  {story.time}
+                </span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
@@ -206,7 +332,7 @@ const startupNews = [
 ];
 
 /* =========================================================
-   STATUS BADGE HELPERS
+   STATUS BADGES
 ========================================================= */
 
 const earningsBadge: Record<string, string> = {
@@ -249,16 +375,16 @@ const TH = ({
 export function BusinessNewsPage() {
   return (
     <div className="w-full bg-white text-gray-900 antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-9 lg:px-8">
 
         {/* =================================================
             PAGE HEADER
         ================================================= */}
 
-        <header className="border-b-4 border-black pb-5 mb-10">
+        <header className="border-b-4 border-black pb-5 mb-7 md:mb-8">
           <div className="flex items-center gap-3.5">
 
-            <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-white shrink-0">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-white">
               <Briefcase size={19} strokeWidth={1.75} />
             </div>
 
@@ -267,7 +393,7 @@ export function BusinessNewsPage() {
                 Corporate Intelligence
               </p>
 
-              <h1 className="mt-1 font-serif text-3xl md:text-[42px] font-bold tracking-tight leading-tight">
+              <h1 className="mt-1 font-serif text-3xl font-bold leading-tight tracking-tight md:text-[42px]">
                 Business News
               </h1>
             </div>
@@ -277,64 +403,95 @@ export function BusinessNewsPage() {
 
 
         {/* =================================================
-            HERO STORY
+            TOP ADVERTISEMENT
         ================================================= */}
 
-        <article className="group cursor-pointer mb-14">
+        <div className="mb-7 md:mb-9">
+          <AdSpace />
+        </div>
 
-          <div className="overflow-hidden rounded-md relative">
-            <ImageWithFallback
-              src={hero.image}
-              alt={hero.title}
-              className="w-full h-[240px] sm:h-[320px] md:h-[390px] lg:h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-            />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-90" />
-          </div>
+        {/* =================================================
+            HERO + SIDEBAR
+        ================================================= */}
 
-          <div className="mt-5 max-w-5xl">
+        <section className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_245px] lg:gap-6">
 
-            <span className="inline-block text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-              {hero.category}
-            </span>
+          {/* =================================================
+              HERO STORY
+          ================================================= */}
 
-            <h2 className="mt-2 font-serif text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600">
-              {hero.title}
-            </h2>
+          <article className="group cursor-pointer">
 
-            <p className="mt-4 max-w-4xl text-sm md:text-base lg:text-[17px] leading-[1.75] text-gray-600">
-              {hero.excerpt}
-            </p>
+            <div className="relative overflow-hidden rounded-md">
+              <ImageWithFallback
+                src={hero.image}
+                alt={hero.title}
+                className="h-[240px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[320px] md:h-[390px] lg:h-[420px]"
+              />
 
-            <div className="mt-5 pt-4 border-t border-gray-200 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-400">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-90" />
+            </div>
 
-              <span className="font-semibold text-gray-600">
-                By {hero.author}
+            <div className="mt-5">
+
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                {hero.category}
               </span>
 
-              <span className="h-1 w-1 rounded-full bg-gray-300" />
+              <h2 className="mt-2 max-w-5xl font-serif text-2xl font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600 sm:text-3xl md:text-4xl lg:text-[40px]">
+                {hero.title}
+              </h2>
 
-              <span className="flex items-center gap-1.5">
-                <Clock size={11} strokeWidth={2.25} />
-                {hero.time}
-              </span>
+              <p className="mt-4 max-w-4xl text-sm leading-[1.7] text-gray-600 md:text-base">
+                {hero.excerpt}
+              </p>
+
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-200 pt-4 text-xs text-gray-400">
+
+                <span className="font-semibold text-gray-600">
+                  By {hero.author}
+                </span>
+
+                <span className="h-1 w-1 rounded-full bg-gray-300" />
+
+                <span className="flex items-center gap-1.5">
+                  <Clock size={11} strokeWidth={2.25} />
+                  {hero.time}
+                </span>
+
+              </div>
 
             </div>
-          </div>
-        </article>
+          </article>
+
+
+          {/* =================================================
+              RIGHT SIDEBAR
+          ================================================= */}
+
+          <aside className="lg:pt-0">
+
+            <SponsoredAd />
+
+            <MoreStories stories={corporateNews} />
+
+          </aside>
+
+        </section>
 
 
         {/* =================================================
             EARNINGS
         ================================================= */}
 
-        <section className="mb-14">
+        <section className="mt-12 mb-12 md:mt-14">
 
           <SectionHeader title="Earnings Season" />
 
           <div className="overflow-x-auto">
 
-            <table className="w-full min-w-[650px] text-sm border-collapse">
+            <table className="w-full min-w-[650px] border-collapse text-sm">
 
               <thead>
                 <tr className="border-b-2 border-gray-900">
@@ -359,7 +516,7 @@ export function BusinessNewsPage() {
                         {e.company}
                       </span>
 
-                      <span className="ml-1.5 text-gray-400 text-xs">
+                      <span className="ml-1.5 text-xs text-gray-400">
                         ({e.ticker})
                       </span>
                     </td>
@@ -396,9 +553,11 @@ export function BusinessNewsPage() {
                 ))}
 
               </tbody>
+
             </table>
 
           </div>
+
         </section>
 
 
@@ -406,23 +565,33 @@ export function BusinessNewsPage() {
             M&A TRACKER
         ================================================= */}
 
-        <section className="mb-14">
+        <section className="mb-12 md:mb-14">
 
           <SectionHeader title="M&A Tracker" />
 
           <div className="overflow-x-auto">
 
-            <table className="w-full min-w-[700px] text-sm border-collapse">
+            <table className="w-full min-w-[700px] border-collapse text-sm">
 
               <thead>
                 <tr className="border-b-2 border-gray-900">
+
                   <TH>Acquirer</TH>
+
                   <TH>Target</TH>
-                  <TH align="right">Value</TH>
+
+                  <TH align="right">
+                    Value
+                  </TH>
+
                   <TH className="hidden md:table-cell">
                     Sector
                   </TH>
-                  <TH align="right">Status</TH>
+
+                  <TH align="right">
+                    Status
+                  </TH>
+
                 </tr>
               </thead>
 
@@ -464,9 +633,11 @@ export function BusinessNewsPage() {
                 ))}
 
               </tbody>
+
             </table>
 
           </div>
+
         </section>
 
 
@@ -474,7 +645,7 @@ export function BusinessNewsPage() {
             CORPORATE + STARTUPS
         ================================================= */}
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-10 border-t-2 border-black pt-10">
+        <section className="grid grid-cols-1 gap-10 border-t-2 border-black pt-10 md:grid-cols-2">
 
           {/* =================================================
               CORPORATE NEWS
@@ -483,13 +654,6 @@ export function BusinessNewsPage() {
           <div>
 
             <SectionHeader title="Corporate News" />
-
-            {/* Each news item now has:
-                - Border on all 4 sides
-                - Slight rounded corners
-                - Separate spacing
-                - Subtle hover background
-            */}
 
             <div className="space-y-3">
 
@@ -520,13 +684,13 @@ export function BusinessNewsPage() {
                     className="
                       mt-1.5
                       text-sm
-                      md:text-[15px]
                       font-semibold
                       leading-[1.5]
                       text-gray-900
                       transition-colors
                       duration-200
                       group-hover:text-red-600
+                      md:text-[15px]
                     "
                   >
                     {n.title}
@@ -553,6 +717,7 @@ export function BusinessNewsPage() {
               ))}
 
             </div>
+
           </div>
 
 
@@ -563,10 +728,6 @@ export function BusinessNewsPage() {
           <div>
 
             <SectionHeader title="Startups & Venture" />
-
-            {/* Each startup story has the same subtle
-                4-side border and rounded treatment.
-            */}
 
             <div className="space-y-3">
 
@@ -592,13 +753,13 @@ export function BusinessNewsPage() {
                   <h3
                     className="
                       text-sm
-                      md:text-[15px]
                       font-semibold
                       leading-[1.5]
                       text-gray-900
                       transition-colors
                       duration-200
                       group-hover:text-red-600
+                      md:text-[15px]
                     "
                   >
                     {n.title}
@@ -625,6 +786,103 @@ export function BusinessNewsPage() {
               ))}
 
             </div>
+
+          </div>
+
+        </section>
+
+
+        {/* =================================================
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <div className="my-12 md:my-14">
+          <AdSpace label="Business Solutions | Powered by The Pride Times" />
+        </div>
+
+
+        {/* =================================================
+            SPONSORED EVENTS
+        ================================================= */}
+
+        <section className="rounded-md border border-gray-100 bg-gray-50 p-4 sm:p-5">
+
+          <div className="mb-4 flex items-center gap-2">
+
+            <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+              Sponsorship
+            </span>
+
+            <span className="text-[9px] text-gray-400">
+              Presented by our partners
+            </span>
+
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+            {[
+              "Global Finance Summit 2026",
+              "Tech Leaders Forum",
+              "Energy Transition Conference",
+              "AI & Business World",
+            ].map((item) => (
+
+              <div
+                key={item}
+                className="flex min-h-[90px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-4 text-center"
+              >
+
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+                  <Briefcase size={13} />
+                </div>
+
+                <p className="mt-2 text-[10px] font-bold text-gray-900">
+                  {item}
+                </p>
+
+                <p className="mt-1 text-[8px] text-gray-400">
+                  Sponsored Event
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
+
+        {/* =================================================
+            NEWSLETTER
+        ================================================= */}
+
+        <section className="mt-6 rounded-md bg-[#071a2d] px-5 py-8 text-center sm:px-8 md:py-10">
+
+          <h2 className="font-serif text-xl font-bold text-white md:text-2xl">
+            Stay Ahead with The Pride Times
+          </h2>
+
+          <p className="mt-2 text-xs text-gray-300 md:text-sm">
+            Daily briefings on Business News delivered to your inbox.
+          </p>
+
+          <div className="mx-auto mt-5 flex max-w-lg flex-col gap-2 sm:flex-row">
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="h-10 flex-1 rounded-sm border border-gray-500 bg-white/10 px-3 text-xs text-white outline-none placeholder:text-gray-400 focus:border-red-500"
+            />
+
+            <button
+              type="button"
+              className="h-10 rounded-sm bg-red-600 px-5 text-xs font-bold text-white transition-colors hover:bg-red-700"
+            >
+              Subscribe Free
+            </button>
+
           </div>
 
         </section>
