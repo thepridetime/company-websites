@@ -9,6 +9,11 @@ interface TickerCard {
   change: number;
 }
 
+function parseChange(value: unknown): number | null {
+  const parsed = Number.parseFloat(String(value ?? "").replace("%", ""));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 /* Bloomberg-style mega-menu columns for "Top Securities".
    All paths point at routes that already exist in App.tsx. */
 const megaMenuColumns = [
@@ -54,7 +59,7 @@ const megaMenuColumns = [
   {
     title: "Company",
     links: [
-      { label: "About Us", path: "#" },
+      { label: "About Us", path: "/about-us" },
       { label: "Advertise", path: "#" },
       { label: "Careers", path: "#" },
       { label: "Contact Us", path: "#" },
@@ -78,33 +83,33 @@ export function MarketsTicker() {
 
         // Map real API data into Bloomberg-style cards.
         // No hardcoded values — everything comes from tickerData.
-        const tickerData: TickerCard[] = [
+        const tickerData: (TickerCard | null)[] = [
           ...data.usIndices.map((item: any) => ({
             symbol: item.name,
             value: item.value,
-            change: Number(String(item.change).replace("%", "")),
+            change: parseChange(item.change),
           })),
           ...data.stocks.map((item: any) => ({
             symbol: item.symbol ?? item.name,
             value: item.value,
-            change: Number(String(item.change).replace("%", "")),
+            change: parseChange(item.change),
           })),
           ...data.crypto.map((item: any) => ({
             symbol: item.name,
             value: item.value,
-            change: Number(String(item.change).replace("%", "")),
+            change: parseChange(item.change),
           })),
           ...data.commodities.map((item: any) => ({
             symbol: item.name,
             value: item.value,
-            change: Number(String(item.change).replace("%", "")),
+            change: parseChange(item.change),
           })),
           ...data.indianIndices.map((item: any) => ({
             symbol: item.name,
             value: item.value,
-            change: Number(String(item.change).replace("%", "")),
+            change: parseChange(item.change),
           })),
-        ];
+        ].filter((item): item is TickerCard => item !== null && item.change !== null);
 
         setCards(tickerData);
       } catch (error) {
@@ -183,9 +188,16 @@ export function MarketsTicker() {
   };
 
   return (
-    <div className="pt-securities-bar w-full">
+    <div className="pt-securities-bar w-full relative">
       <div className="pt-container flex items-stretch">
-        {/* ── Top Securities — Bloomberg-style mega-menu trigger ── */}
+        {/* ── Top Securities — Bloomberg-style mega-menu trigger ──
+            The dropdown itself is NOT nested in here — see below.
+            An absolutely positioned element sizes itself against its
+            nearest `position` ancestor, and this wrapper (needed only
+            so the button's own tiny dropdown arrow rotates in place)
+            is only as wide as the "Menu" button. Nesting the full-bleed
+            panel inside it made the panel inherit that narrow width
+            instead of the full bar. */}
         <div className="relative flex-shrink-0">
           <button
             className="pt-securities-btn flex items-center gap-1.5 h-full"
@@ -195,27 +207,6 @@ export function MarketsTicker() {
             Menu
             <ChevronDown size={14} className={`transition-transform ${showSecurities ? "rotate-180" : ""}`} />
           </button>
-
-          {showSecurities && (
-            <div className="pt-mega-menu absolute left-0 top-full mt-2 z-50">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-6">
-                {megaMenuColumns.map((column) => (
-                  <div key={column.title}>
-                    <h4 className="pt-mega-menu-heading">{column.title}</h4>
-                    <ul className="flex flex-col gap-2.5">
-                      {column.links.map((link) => (
-                        <li key={link.label}>
-                          <Link to={link.path} onClick={() => setShowSecurities(false)}>
-                            {link.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* ── Continuously auto-scrolling market cards, always visible in the navbar ── */}
@@ -274,6 +265,40 @@ export function MarketsTicker() {
           </button>
         </div>
       </div>
+
+      {showSecurities && (
+        /* Direct child of the full-width `.pt-securities-bar` (the
+           nearest positioned ancestor), so inset-x-0 stretches this
+           edge-to-edge across the real viewport width — not the
+           narrow "Menu" button above. */
+        <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
+          <div className="pt-container">
+            <div className="pt-mega-menu-inner">
+              {megaMenuColumns.map((column) => (
+                <div key={column.title}>
+                  <h4 className="pt-mega-menu-heading">{column.title}</h4>
+                  <ul className="flex flex-col gap-3">
+                    {column.links.map((link) => (
+                      <li key={link.label}>
+                        <Link to={link.path} onClick={() => setShowSecurities(false)}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-mega-menu-utility">
+              <Link to="/signup" onClick={() => setShowSecurities(false)}>Sign Up</Link>
+              <Link to="/magazine" onClick={() => setShowSecurities(false)}>Digital Edition</Link>
+              <Link to="/Privacy" onClick={() => setShowSecurities(false)}>Privacy Policy</Link>
+              <Link to="/terms" onClick={() => setShowSecurities(false)}>Terms of Use</Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
