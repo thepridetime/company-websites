@@ -1,24 +1,145 @@
+import { Clock, Rocket, ChevronRight } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import {
-  Clock,
-  Rocket,
-  TrendingUp,
-  Users,
-  Globe2,
-  Award,
-  Building,
-} from "lucide-react";
+import { Link } from "react-router";
+
+/* =========================================================
+   TYPES
+========================================================= */
+
+type Story = {
+  id?: number;
+  category: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  time: string;
+  image: string;
+  path?: string;
+};
+
+/* =========================================================
+   DATA
+========================================================= */
+
+const hero: Story = {
+  category: "STARTUP SUCCESS",
+  title: "Perplexity AI Raises $1.2B Series D, Valued at $15B",
+  excerpt:
+    "The AI search startup secures major backing from SoftBank, Bessemer, and Nvidia as it targets 100M daily active users by Q4 2026.",
+  author: "Sagar Kumar",
+  time: "2 hr ago",
+  image:
+    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400",
+  path: "/startup-success",
+};
+
+const latestNews = [
+  {
+    id: 1,
+    category: "TECHNOLOGY",
+    title:
+      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    excerpt:
+      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and Southeast Asia.",
+    time: "12 min ago",
+    image:
+      "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=900&h=520&fit=crop",
+    path: "/technology",
+  },
+  {
+    id: 2,
+    category: "TECHNOLOGY",
+    title:
+      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    excerpt:
+      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
+    time: "35 min ago",
+    image:
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&h=520&fit=crop",
+    path: "/technology",
+  },
+  {
+    id: 3,
+    category: "TECHNOLOGY",
+    title:
+      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    excerpt:
+      "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing.",
+    time: "2 hr ago",
+    image:
+      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&h=520&fit=crop",
+    path: "/technology",
+  },
+  {
+    id: 4,
+    category: "TECHNOLOGY",
+    title:
+      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 8 Languages",
+    excerpt:
+      "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative features.",
+    time: "3 hr ago",
+    image:
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&h=520&fit=crop",
+    path: "/technology",
+  },
+  {
+    id: 5,
+    category: "TECHNOLOGY",
+    title:
+      "Meta's Llama 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    excerpt:
+      "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in enterprise reasoning.",
+    time: "5 hr ago",
+    image:
+      "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=900&h=520&fit=crop",
+    path: "/technology",
+  },
+  {
+    id: 6,
+    category: "TECHNOLOGY",
+    title:
+      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    excerpt:
+      "The latest satellite constellation expansion brings high-speed internet to more regions across Africa, South Asia, and Latin America.",
+    time: "6 hr ago",
+    image:
+      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&h=520&fit=crop",
+    path: "/technology",
+  },
+];
+
+/* =========================================================
+   MORE STORIES
+========================================================= */
+
+const moreStories = [
+  {
+    category: "STARTUP SUCCESS",
+    title: "Indian Unicorn Zepto Hits $10B Valuation, Eyes Global Expansion",
+    time: "4 hr ago",
+    image:
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop",
+    path: "/startup-success",
+  },
+  {
+    category: "STARTUP SUCCESS",
+    title:
+      "Y Combinator W2026 Cohort: 40% of Startups Are Pure AI Companies",
+    time: "5 hr ago",
+    image:
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300&h=200&fit=crop",
+    path: "/startup-success",
+  },
+];
 
 /* =========================================================
    SECTION HEADER
 ========================================================= */
 
-function SH({ title }: { title: string }) {
+function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-6">
-      <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
-
-      <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
+    <div className="border-t-2 border-black pt-3 mb-5">
+      <h2 className="text-[15px] md:text-[17px] font-bold text-gray-900">
         {title}
       </h2>
     </div>
@@ -26,263 +147,215 @@ function SH({ title }: { title: string }) {
 }
 
 /* =========================================================
-   HERO DATA
+   AD BANNER
 ========================================================= */
 
-const hero = {
-  category: "FOUNDER ECONOMY",
-  title:
-    "Global Startup Funding Crosses $412 Billion in 2026 as AI Ventures Absorb Half of All Venture Capital",
-  excerpt:
-    "Venture funding rebounded sharply through the first half of 2026, with global deal value reaching $412 billion — the strongest run since 2021's peak. AI-native startups accounted for roughly 51% of total capital deployed, spanning applied-AI tooling, robotics, and vertical enterprise software. Late-stage rounds grew fastest as investors concentrated capital in a smaller number of companies with proven revenue traction, while seed funding stayed selective but resilient, favoring founders with prior exits or deep technical pedigrees.",
-  author: "Sagar Kumar",
-  time: "August 2026",
-  image:
-    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200",
-};
-
-const hero1 = {
-  category: "FOUNDER ECONOMY",
-  title: "From Garage to Unicorn: The 18-Month Playbook Founders Are Repeating",
-  excerpt:
-    "A new class of startups is reaching unicorn status in under 18 months, compressing a timeline that once took the better part of a decade. Interviews with founders across fintech, climate hardware, and applied-AI point to a common pattern: a narrow initial wedge, aggressive early customer concentration in one industry, and a fundraising strategy built around signaling from a small number of high-conviction investors rather than broad market validation.",
-  author: "Sagar Kumar",
-  time: "July 2026",
-  image:
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200",
-};
-
-const hero2 = {
-  category: "FOUNDER ECONOMY",
-  title: "Bootstrapped and Proud: The Founders Skipping the Term Sheet",
-  excerpt:
-    "A growing cohort of founders is deliberately avoiding venture capital altogether, using revenue-based financing and customer prepayments to fund growth instead. Several profitable, fully bootstrapped companies have crossed $50 million in annual recurring revenue in the past year without raising a priced round, arguing that ownership and decision speed matter more than capital velocity.",
-  author: "Sagar Kumar",
-  time: "June 2026",
-  image:
-    "https://images.unsplash.com/photo-1531973576160-7125cd663d86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200",
-};
-
-/* =========================================================
-   UNICORN WATCH PANEL
-========================================================= */
-
-const unicornWatch = [
-  { company: "Solvane AI", sector: "Applied AI", valuation: "$9.2B", status: "New Unicorn" },
-  { company: "Fenwick Robotics", sector: "Industrial Robotics", valuation: "$6.8B", status: "New Unicorn" },
-  { company: "Cascade Health", sector: "Digital Health", valuation: "$4.1B", status: "Markup" },
-  { company: "Northwind Energy", sector: "Climate Hardware", valuation: "$3.4B", status: "New Unicorn" },
-  { company: "Ledgerly", sector: "Fintech Infra", valuation: "$2.9B", status: "Markup" },
-  { company: "Quiet Room", sector: "Consumer Audio", valuation: "$1.6B", status: "New Unicorn" },
-];
-
-/* =========================================================
-   FUNDING & VC NEWS
-========================================================= */
-
-const fundingNews = [
-  {
-    id: 1,
-    title:
-      "Sequoia closes a $2.3 billion early-stage fund focused entirely on applied-AI and robotics startups.",
-    time: "Just now",
-  },
-  {
-    id: 2,
-    title:
-      "Seed-stage valuations climb 22% year-over-year as investors compete for technical founding teams.",
-    time: "Just now",
-  },
-  {
-    id: 3,
-    title:
-      "Sovereign wealth funds increase direct startup investment, bypassing traditional VC intermediaries.",
-    time: "2 hrs ago",
-  },
-  {
-    id: 4,
-    title:
-      "Revenue-based financing platforms report record volume as founders seek non-dilutive capital.",
-    time: "4 hrs ago",
-  },
-  {
-    id: 5,
-    title:
-      "Corporate venture arms account for nearly a third of Series B rounds in the first half of 2026.",
-    time: "6 hrs ago",
-  },
-];
-
-const founderNews = [
-  {
-    id: 1,
-    title:
-      "Second-time founders raise pre-seed rounds at triple the valuation of first-time peers, data shows.",
-    time: "Just now",
-  },
-  {
-    id: 2,
-    title:
-      "A 19-year-old dropout's climate-materials startup raises $40M Series A led by a top-tier fund.",
-    time: "1 hr ago",
-  },
-  {
-    id: 3,
-    title:
-      "Solo founders now represent 1 in 5 venture-backed seed rounds, up from 1 in 12 five years ago.",
-    time: "3 hrs ago",
-  },
-  {
-    id: 4,
-    title:
-      "Founder wellbeing platforms see rising demand as burnout becomes a board-level topic.",
-    time: "5 hrs ago",
-  },
-  {
-    id: 5,
-    title:
-      "Remote-first startups now outpace hub-based peers on early revenue growth, new study finds.",
-    time: "7 hrs ago",
-  },
-];
-
-/* =========================================================
-   IPO & EXITS
-========================================================= */
-
-const exitNews = [
-  { id: 1, title: "Enterprise data-infrastructure startup files for a $6B IPO, the year's largest tech listing so far.", time: "Just now" },
-  { id: 2, title: "A climate-hardware unicorn is acquired by an industrial conglomerate in an all-cash $2.1B deal.", time: "2 hrs ago" },
-  { id: 3, title: "Secondary markets for private startup shares see record trading volume as employees seek liquidity.", time: "4 hrs ago" },
-  { id: 4, title: "A decade-old fintech startup completes a rare direct listing, skipping the traditional IPO roadshow.", time: "6 hrs ago" },
-];
-
-const acceleratorNews = [
-  { id: 1, title: "Y Combinator's newest batch skews heavily toward applied-AI and defense-tech startups.", time: "Just now" },
-  { id: 2, title: "Africa's largest startup accelerator graduates its biggest cohort yet, spanning 14 countries.", time: "3 hrs ago" },
-  { id: 3, title: "Corporate accelerators pivot from innovation theater toward direct equity investment.", time: "5 hrs ago" },
-  { id: 4, title: "University-backed deep-tech incubators see applications double amid an AI hardware wave.", time: "7 hrs ago" },
-];
-
-/* =========================================================
-   FEATURE DATA
-========================================================= */
-
-const features = [
-  {
-    icon: TrendingUp,
-    title: "Fundraising",
-    news: "Founders navigate a bifurcated market — AI ventures raise easily, everything else competes harder.",
-  },
-  {
-    icon: Users,
-    title: "Team Building",
-    news: "Early hires increasingly come from equity-heavy compensation as cash-strapped startups compete for talent.",
-  },
-  {
-    icon: Globe2,
-    title: "Global Expansion",
-    news: "Startups internationalize earlier, often within 12 months of a seed round, chasing larger addressable markets.",
-  },
-  {
-    icon: Award,
-    title: "Exit Strategy",
-    news: "Founders increasingly plan acquisition paths from day one rather than defaulting to an IPO ambition.",
-  },
-];
-
-/* =========================================================
-   ARTICLE CARD
-========================================================= */
-
-function ArticleCard({
-  data,
-  large = false,
-}: {
-  data: typeof hero;
-  large?: boolean;
-}) {
+function AdBanner({ secondary = false }: { secondary?: boolean }) {
   return (
-    <article className="group cursor-pointer">
-      <div
-        className={`relative overflow-hidden rounded-xl bg-gray-100 shadow-sm group-hover:shadow-lg transition-shadow duration-300 ${
-          large ? "h-72 md:h-[440px]" : "h-64 md:h-80"
-        }`}
-      >
-        <ImageWithFallback
-          src={data.image}
-          alt={data.title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-        />
+    <div
+      className={`relative w-full overflow-hidden ${
+        secondary
+          ? "bg-[#12313b] h-[95px] md:h-[105px]"
+          : "bg-[#102d35] h-[88px] md:h-[96px]"
+      }`}
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0d252c] via-[#173b45] to-[#285968]" />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-90" />
-
-        <span className="absolute left-4 bottom-4 bg-red-600 text-white px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase rounded-md shadow-sm">
-          {data.category}
-        </span>
-      </div>
-
-      <div className="pt-5">
-        <h2
-          className={`font-serif font-bold leading-[1.15] text-gray-950 transition-colors duration-200 group-hover:text-red-600 ${
-            large ? "text-[26px] md:text-[42px]" : "text-xl md:text-2xl"
-          }`}
-        >
-          {data.title}
-        </h2>
-
-        <p className="mt-3 text-sm md:text-[15px] text-gray-600 leading-[1.75]">
-          {data.excerpt}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
+        <p className="text-[8px] md:text-[9px] font-bold tracking-[0.2em] text-cyan-300 uppercase">
+          Google Adsense
         </p>
 
-        <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap items-center gap-4 text-xs text-gray-400">
-          <span className="font-medium text-gray-500">By {data.author}</span>
+        <p className="mt-1 text-white text-sm md:text-base font-semibold">
+          {secondary
+            ? "Business Solutions | Powered by The Pride Times"
+            : "Advertisement Space"}
+        </p>
 
-          <span className="flex items-center gap-1.5">
-            <Clock size={11} strokeWidth={2.25} />
-            {data.time}
+        <p className="text-[8px] md:text-[9px] text-cyan-200 mt-0.5">
+          728 × 90 • Leaderboard
+        </p>
+      </div>
+
+      <span className="absolute top-1 right-1 text-[6px] bg-white/80 px-1 py-0.5 text-gray-500">
+        Advertisement
+      </span>
+    </div>
+  );
+}
+
+/* =========================================================
+   SPONSORED CONTENT
+========================================================= */
+
+function SponsoredContent() {
+  return (
+    <aside className="w-full">
+      <div className="border border-gray-200 rounded-md overflow-hidden bg-white">
+        <div className="flex items-center justify-between px-3 py-2">
+          <span className="text-[8px] font-bold uppercase tracking-wide text-gray-500">
+            Sponsored Content
           </span>
+
+          <span className="text-[8px] text-gray-400">Ad</span>
+        </div>
+
+        <div className="mx-3 mb-3 h-[155px] md:h-[170px] bg-[#11172f] flex flex-col items-center justify-center text-center">
+          <p className="text-[9px] font-bold tracking-[0.16em] text-yellow-400">
+            FEATURED PARTNER
+          </p>
+
+          <p className="text-white text-sm font-semibold mt-2">
+            Your Ad Here
+          </p>
+
+          <p className="text-[9px] text-gray-300 mt-1">
+            Reach 2M+ business readers
+          </p>
         </div>
       </div>
+
+      <div className="mt-5">
+        <h3 className="border-b-2 border-black pb-2 text-[13px] font-bold uppercase">
+          More Stories
+        </h3>
+
+        <div>
+          {moreStories.map((story) => (
+            <Link
+              key={story.title}
+              to={story.path}
+              className="flex gap-3 py-3 border-b border-gray-200 group"
+            >
+              <div className="w-[78px] h-[55px] shrink-0 overflow-hidden rounded-sm">
+                <ImageWithFallback
+                  src={story.image}
+                  alt={story.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-[8px] font-bold uppercase text-red-600">
+                  {story.category}
+                </p>
+
+                <p className="mt-1 text-[11px] md:text-[12px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600">
+                  {story.title}
+                </p>
+
+                <p className="text-[8px] text-gray-400 mt-1">
+                  {story.time}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+function HeroStory() {
+  return (
+    <article className="group">
+      <Link to={hero.path || "#"} className="block">
+        <div className="w-full overflow-hidden rounded-md">
+          <ImageWithFallback
+            src={hero.image}
+            alt={hero.title}
+            className="w-full h-[280px] sm:h-[350px] md:h-[400px] lg:h-[430px] object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+          />
+        </div>
+
+        <div className="pt-3">
+          <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
+            {hero.category}
+          </p>
+
+          <h2 className="mt-1 font-serif text-[25px] sm:text-[30px] md:text-[34px] lg:text-[38px] font-bold leading-[1.08] text-gray-950 group-hover:text-red-600 transition-colors">
+            {hero.title}
+          </h2>
+
+          <p className="mt-2 text-[12px] md:text-[14px] text-gray-600 leading-[1.55]">
+            {hero.excerpt}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4 mt-3 text-[9px] md:text-[10px] text-gray-400">
+            <span className="font-medium text-gray-500">
+              By {hero.author}
+            </span>
+
+            <span>{hero.time}</span>
+          </div>
+        </div>
+      </Link>
     </article>
   );
 }
 
 /* =========================================================
-   NEWS COLUMN
+   NEWS CARD
 ========================================================= */
 
-function NewsColumn({
-  title,
-  items,
+function NewsCard({
+  story,
 }: {
-  title: string;
-  items: { id: number; title: string; time: string }[];
+  story: (typeof latestNews)[number];
 }) {
   return (
-    <section>
-      <SH title={title} />
-
-      <div className="divide-y divide-gray-200">
-        {items.map((item, index) => (
-          <article
-            key={`${title}-${item.id}-${index}`}
-            className="group py-4 first:pt-0 cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
-          >
-            <h3 className="text-[14px] md:text-[15px] leading-[1.55] text-gray-800 transition-colors duration-200 group-hover:text-red-600">
-              {item.title}
-            </h3>
-
-            <div className="mt-2 flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-gray-400">
-              <Clock size={10} strokeWidth={2.25} />
-              {item.time}
-            </div>
-          </article>
-        ))}
+    <Link
+      to={story.path}
+      className="group block border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow-md transition-shadow duration-300"
+    >
+      <div className="w-full h-[165px] sm:h-[180px] md:h-[175px] lg:h-[185px] overflow-hidden">
+        <ImageWithFallback
+          src={story.image}
+          alt={story.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+        />
       </div>
-    </section>
+
+      <div className="p-3">
+        <p className="text-[8px] font-bold uppercase text-red-600 tracking-wide">
+          {story.category}
+        </p>
+
+        <h3 className="mt-1.5 font-serif text-[14px] md:text-[15px] font-bold leading-[1.18] text-gray-900 group-hover:text-red-600 transition-colors">
+          {story.title}
+        </h3>
+
+        <p className="mt-1.5 text-[10px] md:text-[11px] text-gray-600 leading-[1.45] line-clamp-2">
+          {story.excerpt}
+        </p>
+
+        <div className="flex items-center gap-1.5 mt-2.5 pt-2 border-t border-gray-100 text-[8px] text-gray-400">
+          <span>By Sagar Kumar</span>
+
+          <span className="flex items-center gap-1 ml-auto">
+            <Clock size={9} />
+            {story.time}
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 }
+
+/* =========================================================
+   SPONSORSHIP
+========================================================= */
+
+const sponsorships = [
+  "Global Finance Summit 2026",
+  "Tech Leaders Forum",
+  "Energy Transition Conference",
+  "AI & Business World",
+];
 
 /* =========================================================
    MAIN PAGE
@@ -290,182 +363,144 @@ function NewsColumn({
 
 export function StartupSuccessPage() {
   return (
-    <div className="w-full bg-white text-gray-900 antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div className="w-full min-h-screen bg-white text-gray-900 antialiased">
+      {/* =====================================================
+          FULL WIDTH PAGE CONTAINER
+      ===================================================== */}
 
-        {/* =================================================
-            PAGE HEADER
-        ================================================= */}
+      <main className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 py-6 md:py-8">
+        {/* ===================================================
+            PAGE TITLE
+        =================================================== */}
 
-        <header className="border-b-4 border-black pb-5 mb-10">
-          <div className="flex items-center gap-3.5">
-            <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-white shrink-0 shadow-sm">
-              <Rocket size={20} strokeWidth={1.75} />
-            </div>
+        <header className="border-t-[3px] border-red-600 pt-4 mb-6">
+          <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
+            Startup Success
+          </h1>
 
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-600">
-                Founder Economy
-              </p>
-
-              <h1 className="mt-1 font-serif text-3xl md:text-[42px] font-bold tracking-tight leading-tight">
-                Startup Success
-              </h1>
-            </div>
-          </div>
+          <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
+            The world's most exciting startups, funding rounds, and founder
+            stories.
+          </p>
         </header>
 
-        {/* =================================================
-            HERO + UNICORN WATCH
-        ================================================= */}
+        {/* ===================================================
+            TOP AD
+        =================================================== */}
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-14">
-          <div className="lg:col-span-2">
-            <ArticleCard data={hero} large />
+        <div className="mb-6">
+          <AdBanner />
+        </div>
+
+        {/* ===================================================
+            HERO + SIDEBAR
+        =================================================== */}
+
+        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,3.2fr)_minmax(260px,1fr)] gap-5 lg:gap-6 mb-8">
+          <HeroStory />
+
+          <div className="lg:border-l lg:border-gray-200 lg:pl-5">
+            <SponsoredContent />
           </div>
-
-          <aside className="lg:border-l lg:border-gray-200 lg:pl-8">
-            <SH title="Unicorn Watch 2026" />
-
-            <div className="divide-y divide-gray-200">
-              {unicornWatch.map((c) => (
-                <div
-                  key={c.company}
-                  className="py-3.5 flex items-center justify-between gap-3 transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
-                >
-                  <div className="min-w-0">
-                    <p className="font-semibold text-sm text-gray-900 truncate">
-                      {c.company}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-0.5">{c.sector}</p>
-                  </div>
-
-                  <div className="text-right shrink-0">
-                    <p className="text-sm font-bold tabular-nums text-gray-900">
-                      {c.valuation}
-                    </p>
-                    <p className="text-[10px] font-semibold uppercase text-green-700 mt-0.5">
-                      {c.status}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-4 text-[11px] leading-5 text-gray-400">
-              Valuations reflect most recent priced or secondary rounds.
-            </p>
-          </aside>
         </section>
 
-        {/* =================================================
-            SECONDARY STORIES
-        ================================================= */}
+        {/* ===================================================
+            LATEST STARTUP SUCCESS NEWS
+        =================================================== */}
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-14">
-          <ArticleCard data={hero1} />
-          <ArticleCard data={hero2} />
-        </section>
+        <section className="mb-8">
+          <SectionHeader title="Latest Startup Success News" />
 
-        {/* =================================================
-            FEATURE BOXES
-        ================================================= */}
-
-        <section className="mb-14">
-          <SH title="Founder Focus" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {features.map(({ icon: Icon, title, news }) => (
-              <article
-                key={title}
-                className="group border border-gray-200 bg-gray-50/60 rounded-xl p-5 hover:bg-white hover:border-gray-900 hover:shadow-[0_2px_0_0_rgba(0,0,0,1)] transition-all duration-300"
-              >
-                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-black text-white mb-4 group-hover:bg-red-600 transition-colors duration-300">
-                  <Icon size={16} strokeWidth={1.75} />
-                </div>
-
-                <p className="text-[11px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                  {title}
-                </p>
-
-                <h3 className="mt-2 text-sm leading-[1.6] text-gray-600 group-hover:text-gray-950 transition-colors duration-200">
-                  {news}
-                </h3>
-              </article>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {latestNews.map((story) => (
+              <NewsCard key={story.id} story={story} />
             ))}
           </div>
         </section>
 
-        {/* =================================================
-            FUNDING & FOUNDER NEWS
-        ================================================= */}
+        {/* ===================================================
+            SECOND AD
+        =================================================== */}
 
-        <section className="border-t-2 border-black pt-10 mb-14">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <NewsColumn title="Funding & Venture Capital" items={fundingNews} />
-            <NewsColumn title="Founder Spotlight" items={founderNews} />
+        <div className="mb-6">
+          <AdBanner secondary />
+        </div>
+
+        {/* ===================================================
+            SPONSORED EVENTS
+        =================================================== */}
+
+        <section className="bg-[#f8f8f8] border border-gray-100 rounded-md p-4 md:p-5 mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="px-2 py-1 border border-gray-200 bg-white rounded text-[7px] font-bold uppercase tracking-wide text-gray-500">
+              Sponsorship
+            </span>
+
+            <span className="text-[9px] text-gray-400">
+              Presented by our partners
+            </span>
           </div>
-        </section>
 
-        {/* =================================================
-            IPO/EXITS + ACCELERATORS
-        ================================================= */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {sponsorships.map((item) => (
+              <div
+                key={item}
+                className="bg-white border border-gray-200 rounded-md min-h-[78px] flex flex-col items-center justify-center text-center px-3 hover:border-red-200 transition-colors"
+              >
+                <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
+                  <Rocket
+                    size={13}
+                    className="text-red-600"
+                    strokeWidth={1.8}
+                  />
+                </div>
 
-        <section className="border-t-2 border-black pt-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div>
-              <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-6">
-                <Building size={14} strokeWidth={2} className="text-red-600" />
-                <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
-                  IPO &amp; Exits
-                </h2>
+                <p className="text-[9px] md:text-[10px] font-semibold text-gray-800">
+                  {item}
+                </p>
+
+                <p className="text-[7px] text-gray-400 mt-0.5">
+                  Sponsored Event
+                </p>
               </div>
-
-              <div className="divide-y divide-gray-200">
-                {exitNews.map((n) => (
-                  <div
-                    key={n.id}
-                    className="py-3.5 first:pt-0 group cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
-                  >
-                    <p className="text-sm font-semibold leading-[1.5] text-gray-900 transition-colors duration-200 group-hover:text-red-600">
-                      {n.title}
-                    </p>
-                    <span className="text-[10px] text-gray-400 flex items-center gap-1.5 mt-1.5">
-                      <Clock size={9} strokeWidth={2.25} />
-                      {n.time}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <NewsColumn title="Accelerators & Incubators" items={acceleratorNews} />
+            ))}
           </div>
         </section>
 
-        {/* =================================================
-            BOTTOM EDITORIAL BAR
-        ================================================= */}
+        {/* ===================================================
+            NEWSLETTER
+        =================================================== */}
 
-        <section className="mt-14 border-t-4 border-black pt-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-red-600">
-                The Pride Times
-              </p>
+        <section className="rounded-md bg-[#071a2d] px-5 py-8 md:py-9 text-center mb-8">
+          <h2 className="font-serif text-white text-[20px] md:text-[24px] font-bold">
+            Stay Ahead with The Pride Times
+          </h2>
 
-              <p className="mt-1 text-sm text-gray-500">
-                Founders, funding rounds, and the companies redefining growth.
-              </p>
-            </div>
+          <p className="text-[10px] md:text-[11px] text-gray-300 mt-1">
+            Daily briefings on Startup Success delivered to your inbox.
+          </p>
 
-            <div className="text-[11px] uppercase tracking-wide text-gray-400">
-              Founder Economy · 2026
-            </div>
-          </div>
+          <form
+            className="flex flex-col sm:flex-row justify-center gap-2 mt-5"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="w-full sm:w-[260px] h-9 rounded border border-white/10 bg-[#1d3347] px-3 text-[10px] text-white placeholder:text-gray-400 outline-none focus:border-red-500"
+            />
+
+            <button
+              type="submit"
+              className="h-9 px-5 rounded bg-red-600 hover:bg-red-700 text-white text-[10px] font-semibold transition-colors"
+            >
+              Subscribe Free
+            </button>
+          </form>
         </section>
-
-      </div>
+      </main>
     </div>
   );
 }
+
+export default StartupSuccessPage;
