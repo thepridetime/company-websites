@@ -36,6 +36,9 @@ import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
 import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
 
+// ABOUT US PAGE
+import { AboutUsPage } from "./components/pages/AboutUsPage";
+
 // ============================================================
 // LEGAL / SYSTEM PAGES
 // ============================================================
@@ -110,6 +113,7 @@ export default function App() {
           {/* ==================================================
               AUTH / STANDALONE PAGES
               ================================================== */}
+
           <Route
             path="/login"
             element={<LoginPage />}
@@ -465,6 +469,23 @@ export default function App() {
                 topBanner={false}
               >
                 <CeoSpotlightPage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* ==================================================
+              ABOUT US
+              ================================================== */}
+
+          <Route
+            path="/about-us"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <AboutUsPage />
               </MagazineLayout>
             }
           />
