@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import {
   Search,
-  Menu,
   X,
   User,
   ChevronDown,
@@ -39,8 +38,8 @@ const editions = [
 ========================================================= */
 
 export function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [editionOpen, setEditionOpen] = useState(false);
   const [edition, setEdition] = useState("Asia Edition");
@@ -53,6 +52,7 @@ export function Header() {
   const isPremium = user?.tier === "premium";
 
   const searchBoxRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   /* =========================================================
      CLOSE EDITION DROPDOWN AUTOMATICALLY
@@ -69,7 +69,7 @@ export function Header() {
   }, [editionOpen]);
 
   /* =========================================================
-     CLOSE SEARCH DROPDOWN WHEN CLICKING OUTSIDE
+     SEARCH OUTSIDE CLICK HANDLER
   ========================================================= */
 
   useEffect(() => {
@@ -78,8 +78,7 @@ export function Header() {
         searchBoxRef.current &&
         !searchBoxRef.current.contains(e.target as Node)
       ) {
-        /* Search input remains visible.
-           Only the result dropdown closes naturally. */
+        // Search remains visible.
       }
     };
 
@@ -95,43 +94,21 @@ export function Header() {
   ========================================================= */
 
   useEffect(() => {
-    setMobileOpen(false);
     setUserMenuOpen(false);
     setEditionOpen(false);
+    setSearchOpen(false);
     setSearchQuery("");
   }, [location.pathname]);
 
   /* =========================================================
-     CLOSE MOBILE MENU ON SCROLL
+     FOCUS SEARCH INPUT WHEN THE SEARCH BAR OPENS
   ========================================================= */
 
   useEffect(() => {
-    if (!mobileOpen) return;
-
-    const handleScroll = () => {
-      setMobileOpen(false);
-    };
-
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [mobileOpen]);
-
-  /* =========================================================
-     LOCK BODY SCROLL WHILE MOBILE MENU IS OPEN
-  ========================================================= */
-
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
+    if (searchOpen) {
+      searchInputRef.current?.focus();
+    }
+  }, [searchOpen]);
 
   /* =========================================================
      SEARCH RESULTS
@@ -179,7 +156,7 @@ export function Header() {
   ========================================================= */
 
   return (
-    <header className="w-full bg-white z-50 relative">
+    <header className="w-full bg-white relative z-50">
       {/* =====================================================
           BLACK PRIMARY NAVIGATION
       ===================================================== */}
@@ -204,7 +181,7 @@ export function Header() {
               Live TV
             </a>
 
-            {/* Primary navigation */}
+            {/* Primary Navigation */}
 
             {primaryNav.map((item) => (
               <Link
@@ -219,17 +196,22 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Right side */}
+          {/* =================================================
+              RIGHT SIDE
+          ================================================= */}
 
           <div className="hidden lg:flex items-center gap-4">
+            {/* Digital Edition */}
+
             <Link
               to="/magazine"
               className="pt-focusable flex items-center gap-1"
             >
               <BookOpen size={12} />
-
               Digital Edition
             </Link>
+
+            {/* Signed In User */}
 
             {isSignedIn && (
               <Link
@@ -247,7 +229,9 @@ export function Header() {
               </Link>
             )}
 
-            {/* Edition */}
+            {/* =================================================
+                EDITION SELECTOR
+            ================================================= */}
 
             <div className="relative">
               <button
@@ -316,7 +300,27 @@ export function Header() {
           ================================================= */}
 
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            {/* User menu */}
+            {/* =================================================
+                SEARCH TOGGLE
+
+                Circular icon button matching the account button.
+                Clicking it opens/closes the full-width (100%)
+                search bar directly below the header.
+            ================================================= */}
+
+            <button
+              type="button"
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="pt-account-btn flex items-center justify-center transition-colors hover:bg-gray-50"
+              aria-label="Search"
+              aria-expanded={searchOpen}
+            >
+              <Search size={18} className="text-gray-700" />
+            </button>
+
+            {/* =================================================
+                USER MENU
+            ================================================= */}
 
             {isSignedIn ? (
               <div className="relative">
@@ -326,6 +330,7 @@ export function Header() {
                   }
                   className="pt-account-btn hidden md:flex items-center justify-center transition-colors hover:bg-gray-50"
                   aria-label="Account"
+                  aria-expanded={userMenuOpen}
                 >
                   <div
                     className={`w-full h-full rounded-full flex items-center justify-center text-white text-xs ${
@@ -352,7 +357,6 @@ export function Header() {
                       {isPremium && (
                         <span className="inline-flex items-center gap-1 text-xs text-yellow-700 bg-yellow-100 px-1.5 py-0.5 rounded mt-1">
                           <Crown size={10} />
-
                           Premium
                         </span>
                       )}
@@ -403,6 +407,8 @@ export function Header() {
               </div>
             ) : (
               <>
+                {/* Sign In */}
+
                 <Link
                   to="/login"
                   className="pt-account-btn hidden md:flex items-center justify-center transition-colors hover:bg-gray-50"
@@ -414,6 +420,8 @@ export function Header() {
                   />
                 </Link>
 
+                {/* Subscribe */}
+
                 <Link
                   to="/signup"
                   className="pt-subscribe-btn hidden md:inline-flex items-center"
@@ -423,70 +431,118 @@ export function Header() {
               </>
             )}
 
-            {/* Mobile menu button */}
-
-            <button
-              className="lg:hidden p-2 flex-shrink-0"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={mobileOpen}
-            >
-              {mobileOpen ? (
-                <X size={20} />
-              ) : (
-                <Menu size={20} />
-              )}
-            </button>
           </div>
         </div>
       </div>
 
       {/* =====================================================
           FULL WIDTH SEARCH ROW
-          
-          IMPORTANT:
-          Search is now completely separated from the logo
-          and right-side controls. This prevents overlap.
+
+          Search is completely separated from:
+          - Logo
+          - Account
+          - Subscribe
+          - Menu
+
+          It occupies 100% of the available container width.
       ===================================================== */}
 
-      <div className="w-full border-t border-gray-100 border-b border-gray-200 bg-white">
-        <div className="pt-container py-2.5 sm:py-3">
-          <div
-            ref={searchBoxRef}
-            className="relative w-full"
-          >
-            {/* Search input */}
+      {searchOpen && (
+        <div className="w-full border-t border-gray-100 border-b border-gray-200 bg-white relative">
+          <div className="pt-container w-full py-2.5 sm:py-3">
+            <div
+              ref={searchBoxRef}
+              className="relative w-full min-w-0"
+            >
+              {/* =================================================
+                  SEARCH INPUT
+              ================================================= */}
 
-            <div className="w-full h-10 sm:h-11 border border-gray-200 rounded-md bg-white flex items-center px-3 sm:px-4 gap-2 shadow-sm focus-within:border-gray-400 focus-within:ring-1 focus-within:ring-gray-200 transition-all">
-              <Search
-                size={16}
-                className="text-gray-400 flex-shrink-0"
-              />
-
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) =>
-                  setSearchQuery(e.target.value)
-                }
-                placeholder="Search for news, topics, companies..."
-                className="w-full min-w-0 h-full bg-transparent outline-none border-none text-sm text-gray-800 placeholder:text-gray-400"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    runFullSearch();
-                  }
-
-                  if (e.key === "Escape") {
-                    setSearchQuery("");
-                  }
-                }}
-                aria-label="Search"
-              />
-
-              {searchQuery && (
+              <div
+                className="
+                  w-full
+                  h-10
+                  sm:h-11
+                  border
+                  border-gray-200
+                  rounded-md
+                  bg-white
+                  flex
+                  items-center
+                  px-3
+                  sm:px-4
+                  gap-2
+                  shadow-sm
+                  focus-within:border-gray-400
+                  focus-within:ring-1
+                  focus-within:ring-gray-200
+                  transition-all
+                  overflow-hidden
+                  box-border
+                "
+              >
                 <button
+                  type="button"
+                  onClick={() => {
+                    if (searchQuery.trim()) {
+                      runFullSearch();
+                    } else {
+                      searchInputRef.current?.focus();
+                    }
+                  }}
+                  aria-label="Search"
+                  className="flex-shrink-0"
+                >
+                  <Search
+                    size={16}
+                    className="text-gray-400 hover:text-black transition-colors"
+                  />
+                </button>
+
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) =>
+                    setSearchQuery(e.target.value)
+                  }
+                  placeholder="Search for news, topics, companies..."
+                  className="
+                    w-full
+                    min-w-0
+                    h-full
+                    flex-1
+                    bg-transparent
+                    outline-none
+                    border-none
+                    text-sm
+                    text-gray-800
+                    placeholder:text-gray-400
+                  "
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      runFullSearch();
+                    }
+
+                    if (e.key === "Escape") {
+                      setSearchQuery("");
+                      setSearchOpen(false);
+                    }
+                  }}
+                  aria-label="Search"
+                />
+
+                {searchQuery && (
+                  <button
+                    type="button"
                   onClick={() => setSearchQuery("")}
-                  className="flex-shrink-0 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                  className="
+                    flex-shrink-0
+                    p-1
+                    rounded-full
+                    hover:bg-gray-100
+                    transition-colors
+                  "
                   aria-label="Clear search"
                 >
                   <X
@@ -496,182 +552,97 @@ export function Header() {
                 </button>
               )}
             </div>
-
-            {/* =================================================
-                FULL WIDTH SEARCH RESULTS
-            ================================================= */}
-
-            {searchQuery.trim() && (
-              <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-xl z-[200] overflow-hidden">
-                {searchResults.length > 0 ? (
-                  <>
-                    {searchResults.map((item) => (
-                      <Link
-                        key={item.id}
-                        to={item.link}
-                        onClick={() =>
-                          setSearchQuery("")
-                        }
-                        className="flex flex-col gap-1 px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors"
-                      >
-                        <span className="text-[10px] font-bold text-red-600 uppercase tracking-[0.12em]">
-                          {item.category}
-                        </span>
-
-                        <span className="text-sm font-medium text-gray-900 leading-[1.35] line-clamp-2">
-                          {item.title}
-                        </span>
-                      </Link>
-                    ))}
-
-                    <button
-                      onClick={runFullSearch}
-                      className="block w-full text-left px-4 py-3 text-xs font-semibold text-red-600 uppercase tracking-wide hover:bg-gray-50 transition-colors"
-                    >
-                      See all results for "
-                      {searchQuery.trim()}"
-                    </button>
-                  </>
-                ) : (
-                  <div className="px-4 py-4 text-sm text-gray-500">
-                    No results found for "
-                    {searchQuery.trim()}"
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </div>
-      </div>
 
-      {/* =====================================================
-          MOBILE MENU
-      ===================================================== */}
+        {/* =================================================
+            SEARCH RESULTS
 
-      {mobileOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-0 bottom-0 z-[150] bg-white overflow-y-auto">
-          {/* Mobile menu header */}
+            Rendered outside `pt-container` so it spans the
+            full width of the page (100%), edge to edge,
+            directly below the search bar — not just the
+            width of the search input.
+        ================================================= */}
 
-          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
-            <Link
-              to="/"
-              onClick={() => setMobileOpen(false)}
-              className="min-w-0"
-            >
-              <div className="pt-logo text-2xl sm:text-3xl whitespace-nowrap">
-                THE{" "}
-                <span className="pt-logo-accent">
-                  PRIDE
-                </span>{" "}
-                TIMES
-              </div>
-            </Link>
+        {searchQuery.trim() && (
+          <div
+            className="
+              absolute
+              inset-x-0
+              top-full
+              w-full
+              bg-white
+              border-t
+              border-gray-200
+              shadow-xl
+              z-[200]
+              overflow-hidden
+            "
+          >
+            <div className="pt-container w-full">
+              {searchResults.length > 0 ? (
+                <>
+                  {searchResults.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={item.link}
+                      onClick={() =>
+                        setSearchQuery("")
+                      }
+                      className="
+                        flex
+                        flex-col
+                        gap-1
+                        px-4
+                        py-3
+                        border-b
+                        border-gray-100
+                        last:border-b-0
+                        hover:bg-gray-50
+                        transition-colors
+                      "
+                    >
+                      <span className="text-[10px] font-bold text-red-600 uppercase tracking-[0.12em]">
+                        {item.category}
+                      </span>
 
-            <button
-              onClick={() => setMobileOpen(false)}
-              className="p-2"
-              aria-label="Close menu"
-            >
-              <X size={22} />
-            </button>
+                      <span className="text-sm font-medium text-gray-900 leading-[1.35] line-clamp-2">
+                        {item.title}
+                      </span>
+                    </Link>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={runFullSearch}
+                    className="
+                      block
+                      w-full
+                      text-left
+                      px-4
+                      py-3
+                      text-xs
+                      font-semibold
+                      text-red-600
+                      uppercase
+                      tracking-wide
+                      hover:bg-gray-50
+                      transition-colors
+                    "
+                  >
+                    See all results for "
+                    {searchQuery.trim()}"
+                  </button>
+                </>
+              ) : (
+                <div className="px-4 py-4 text-sm text-gray-500">
+                  No results found for "
+                  {searchQuery.trim()}"
+                </div>
+              )}
+            </div>
           </div>
-
-          <nav className="flex flex-col gap-0 px-4 py-4">
-            {/* Sign In / Subscribe */}
-
-            {!isSignedIn && (
-              <div className="flex items-center gap-2.5 pb-4 mb-2 border-b border-gray-100">
-                <Link
-                  to="/login"
-                  className="flex-1 text-center text-sm font-semibold border border-gray-300 rounded-full py-2.5"
-                  onClick={() =>
-                    setMobileOpen(false)
-                  }
-                >
-                  Sign In
-                </Link>
-
-                <Link
-                  to="/signup"
-                  className="flex-1 text-center text-sm font-bold uppercase tracking-wide text-white bg-red-600 rounded-full py-2.5 hover:bg-red-700 transition-colors"
-                  onClick={() =>
-                    setMobileOpen(false)
-                  }
-                >
-                  Subscribe
-                </Link>
-              </div>
-            )}
-
-            {/* Home */}
-
-            <Link
-              to="/"
-              className="py-3 text-sm border-b border-gray-100"
-              onClick={() => setMobileOpen(false)}
-            >
-              Home
-            </Link>
-
-            {/* Live TV */}
-
-            <a
-              href="https://www.youtube.com/@vmpridetimes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="py-3 text-sm border-b border-gray-100 flex items-center gap-2 text-red-600"
-              onClick={() => setMobileOpen(false)}
-            >
-              <span className="relative flex h-2 w-2 flex-shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
-              </span>
-
-              Live TV
-            </a>
-
-            {/* Primary navigation */}
-
-            {primaryNav.map((item) => (
-              <Link
-                key={item.label}
-                to={item.path}
-                className="py-3 text-sm border-b border-gray-100"
-                onClick={() => setMobileOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            {/* Signed in user */}
-
-            {isSignedIn && (
-              <>
-                <Link
-                  to="/dashboard"
-                  className="py-3 text-sm border-b border-gray-100 flex items-center gap-2"
-                  onClick={() =>
-                    setMobileOpen(false)
-                  }
-                >
-                  <User size={15} />
-
-                  My Dashboard
-                </Link>
-
-                <button
-                  onClick={() => {
-                    handleSignOut();
-                    setMobileOpen(false);
-                  }}
-                  className="mt-2 text-red-600 text-sm py-3 text-left"
-                >
-                  Sign Out
-                </button>
-              </>
-            )}
-          </nav>
+        )}
         </div>
       )}
     </header>
