@@ -1,1135 +1,495 @@
-import { BarChart2, Radio } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-  BarChart,
-  Bar,
-  Cell,
-} from "recharts";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getQuotes } from "../../../services/marketApi";
 
-/* Same publication system as WorldPage / EnergyPage / WhiteHouseWatchPage:
-   paper #FAFAF7  ink #17140F  ink-soft #55534C  rule #D9D4C7  wire (live) #A32F26
+/*
+  Markets Page
+  ------------------------------------------------------------
+  Editorial market-dashboard layout based on the supplied
+  reference design.
 
-   The Markets dashboard used to be styled as a dark "Mac terminal" console
-   (traffic-light dots, near-black background). That's been replaced with a
-   "ticker board" treatment: a white, letterpress-bordered panel that still
-   reads as a live feed — the wire-red accent and a pulsing LIVE mark carry
-   that signal instead of a dark chrome window. */
+  Uses the project's existing market provider and keeps the
+  market information already defined for The Pride Times:
+  - Global indices
+  - Top stocks
+  - Cryptocurrency
+  - Market categories
+  - Existing live-refresh behaviour
 
-const spChartData = [
-  { time: "9am", value: 5820 },
-  { time: "10am", value: 5845 },
-  { time: "11am", value: 5830 },
-  { time: "12pm", value: 5855 },
-  { time: "1pm", value: 5848 },
-  { time: "2pm", value: 5870 },
-  { time: "3pm", value: 5880 },
-  { time: "4pm", value: 5892 },
+  The surrounding site header/footer can continue to be supplied
+  by the application's existing layout.
+*/
+
+type MarketRow = {
+  name: string;
+  value: string;
+  change: string;
+  up: boolean;
+  pts?: string;
+  company?: string;
+  volume?: string;
+  marketCap?: string;
+  ytd?: string;
+};
+
+type MarketData = {
+  indices: MarketRow[];
+  stocks: MarketRow[];
+  crypto: MarketRow[];
+};
+
+const fallbackIndices: MarketRow[] = [
+  { name: "S&P 500", value: "5,892.31", change: "+1.14%", up: true, ytd: "+18.4%" },
+  { name: "Nasdaq Composite", value: "19,245.78", change: "+1.56%", up: true, ytd: "+24.1%" },
+  { name: "Dow Jones Ind. Avg.", value: "42,318.45", change: "+0.82%", up: true, ytd: "+12.3%" },
+  { name: "Russell 2000", value: "2,134.56", change: "+0.45%", up: true, ytd: "+9.7%" },
+  { name: "FTSE 100", value: "8,241.70", change: "+0.19%", up: true, ytd: "+7.2%" },
+  { name: "Nikkei 225", value: "38,912.44", change: "-0.21%", up: false, ytd: "+14.8%" },
+  { name: "Hang Seng", value: "18,342.10", change: "-0.87%", up: false, ytd: "-3.4%" },
+  { name: "Nifty 50", value: "22,419.95", change: "-0.34%", up: false, ytd: "+11.2%" },
+  { name: "DAX", value: "18,612.80", change: "+0.54%", up: true, ytd: "+9.8%" },
+  { name: "CAC 40", value: "7,984.20", change: "+0.31%", up: true, ytd: "+6.5%" },
 ];
 
-const sectorData = [
-  { sector: "Tech", change: 2.1 },
-  { sector: "Finance", change: 1.4 },
-  { sector: "Health", change: 0.8 },
-  { sector: "Energy", change: -1.2 },
-  { sector: "Retail", change: 0.6 },
-  { sector: "Utilities", change: -0.3 },
-  { sector: "Materials", change: 1.8 },
-  { sector: "Industrial", change: 0.9 },
+const fallbackStocks: MarketRow[] = [
+  { name: "AAPL", company: "Apple Inc.", value: "$232.15", change: "+0.62%", up: true, volume: "78.4M", marketCap: "$3.52T" },
+  { name: "MSFT", company: "Microsoft Corp.", value: "$421.30", change: "+0.35%", up: true, volume: "21.2M", marketCap: "$3.13T" },
+  { name: "NVDA", company: "NVIDIA Corp.", value: "$879.50", change: "+2.34%", up: true, volume: "143.8M", marketCap: "$2.16T" },
+  { name: "GOOGL", company: "Alphabet Inc.", value: "$168.44", change: "-0.21%", up: false, volume: "19.6M", marketCap: "$2.08T" },
+  { name: "AMZN", company: "Amazon.com Inc.", value: "$186.90", change: "+1.02%", up: true, volume: "32.1M", marketCap: "$1.97T" },
+  { name: "META", company: "Meta Platforms", value: "$493.28", change: "+1.88%", up: true, volume: "15.9M", marketCap: "$1.25T" },
+  { name: "TSLA", company: "Tesla Inc.", value: "$248.44", change: "+3.21%", up: true, volume: "88.5M", marketCap: "$791B" },
+  { name: "BRK.B", company: "Berkshire Hathaway", value: "$362.10", change: "-0.08%", up: false, volume: "4.2M", marketCap: "$785B" },
 ];
 
-const UP = "#1E7A4C";
-const DOWN = "#A32F26";
-const GRID = "#E3DECF";
-const MUTE = "#8A887F";
-const INK = "#17140F";
-const INK_SOFT = "#55534C";
-const RULE = "#D9D4C7";
-
-/* =========================================================
-   GLOBAL MARKETS REPORT — editorial wire content
-========================================================= */
-
-const equityRegions = [
-  {
-    wire: "US",
-    region: "United States",
-    points: [
-      "The S&P 500 finished July marginally lower (-0.13%), marking its first losing July since 2014, despite one of the strongest earnings seasons in history.",
-      "The Nasdaq-100 dropped 6.6% as semiconductor and AI-exposed stocks faced significant pressure amid questions about AI monetization and overcapacity.",
-      "Market breadth showed resilience: the equal-weighted S&P 500 advanced 0.78–0.9%, outperforming the cap-weighted index by over 100 basis points.",
-      "The Russell 2000 (small-cap index) gained 22% over the first seven months of 2026 — the best start to a year for small U.S. companies since 1991.",
-    ],
-  },
-  {
-    wire: "EU",
-    region: "Europe",
-    points: [
-      "The STOXX 600 posted a fourth consecutive monthly gain, reaching a new record high despite volatility from U.S.–Iran tensions.",
-      "Oil & Gas was the best-performing sector, benefiting from elevated crude prices.",
-      "Financials delivered strong gains — Santander +1.9%, BNP Paribas +7.4%.",
-    ],
-  },
-  {
-    wire: "ASIA",
-    region: "Asia",
-    points: [
-      "Japan's Nikkei 225 lost 8.1% in July as semiconductor and AI stocks corrected sharply.",
-      "A historic joint U.S.–Japan currency intervention in late July stabilized the yen, which had weakened to multi-decade lows (160–165 per dollar).",
-      "Japan spent approximately ¥8.45 trillion (~$52.8 billion) on July 31 alone.",
-    ],
-  },
+const fallbackCrypto: MarketRow[] = [
+  { name: "Bitcoin", value: "$612.40", change: "+1.14%", up: true, marketCap: "$89B" },
+  { name: "XRP", value: "$0.62", change: "+0.84%", up: true, marketCap: "$34B" },
+  { name: "Cardano", value: "$0.48", change: "-0.32%", up: false, marketCap: "$17B" },
 ];
 
-const fixedIncomePoints = [
-  "U.S. Treasury yields rose sharply: the 10-year yield climbed from ~4.45% to 4.75%, while the 30-year yield hit ~5.5% — levels not seen in nearly two decades.",
-  "The Federal Reserve, under new Chair Kevin Warsh, held rates steady at 3.75% in late July, though two officials dissented in favor of an immediate hike.",
-  "German Bund yields rose from ~2.95% to 3.20% as investors reassessed the likelihood of further ECB tightening.",
+const navItems = [
+  "Overview",
+  "Stocks",
+  "Indices",
+  "Crypto",
+  "Forex",
+  "Commodities",
+  "Mutual Funds",
+  "ETFs",
 ];
 
-const reportStats = [
-  { value: "-0.13%", label: "S&P 500 — July close" },
-  { value: "+22%", label: "Russell 2000 — YTD gain" },
-  { value: "-8.1%", label: "Nikkei 225 — July" },
-  { value: "4.75%", label: "US 10Y Treasury yield" },
-  { value: "3.75%", label: "Fed funds rate" },
-];
+function normalizeRows(rows: any[] | undefined, fallback: MarketRow[]): MarketRow[] {
+  if (!Array.isArray(rows) || rows.length === 0) return fallback;
 
-/** Bolds percentages, currency amounts, and basis-point figures inline
- *  so key numbers are scannable instead of buried in paragraph text. */
-const STAT_RE =
-  /([$€¥]\s?[\d.,]+(?:\s?(?:billion|trillion|million))?|-?\d+(?:\.\d+)?%|\d+(?:\.\d+)?\s?(?:basis points|bps))/g;
-
-function Emphasize({ text, color = "#A32F26" }: { text: string; color?: string }) {
-  const nodes: React.ReactNode[] = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  let key = 0;
-  const re = new RegExp(STAT_RE);
-  while ((match = re.exec(text)) !== null) {
-    if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
-    nodes.push(
-      <strong key={key++} className="font-semibold tabular-nums" style={{ color }}>
-        {match[0]}
-      </strong>
-    );
-    lastIndex = match.index + match[0].length;
-  }
-  if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
-  return <>{nodes}</>;
+  return rows.map((row: any, index: number) => ({
+    ...fallback[index],
+    ...row,
+    name: row?.name ?? fallback[index]?.name ?? "—",
+    value: row?.value ?? "—",
+    change: row?.change ?? "—",
+    up: typeof row?.up === "boolean" ? row.up : fallback[index]?.up ?? true,
+  }));
 }
 
-/* =========================================================
-   MARKET TABLE — light "ticker board" register
-========================================================= */
-
-function MarketTable({
-  data,
-  cols,
+function ChangeValue({
+  change,
+  up,
 }: {
-  data: Record<string, string | boolean>[];
-  cols: string[];
+  change: string;
+  up: boolean;
 }) {
-  const visibleCols = cols.filter((c) => c !== "up");
-
   return (
-    <table className="w-full text-sm border-collapse font-mono">
-      <thead>
-        <tr className="text-[10px] uppercase tracking-[0.14em] text-[#8A887F]">
-          {visibleCols.map((col) => (
-            <th
-              key={col}
-              className={`text-left font-normal py-2.5 border-b border-[#D9D4C7] ${
-                col === "change" ? "text-right" : ""
-              }`}
-            >
-              {col}
-            </th>
-          ))}
-        </tr>
-      </thead>
-
-      <tbody>
-        {data.map((row, i) => (
-          <tr
-            key={i}
-            className="border-b border-[#EFEBE1] last:border-b-0 hover:bg-[#FAFAF7] transition-colors"
-          >
-            {visibleCols.map((col) => (
-              <td
-                key={col}
-                className={`py-3 text-[13px] ${
-                  col === "change"
-                    ? "text-right font-semibold tabular-nums"
-                    : col === "name" ||
-                      col === "pair" ||
-                      col === "bond"
-                    ? "font-semibold text-[#17140F]"
-                    : "text-[#55534C] tabular-nums"
-                }`}
-                style={
-                  col === "change"
-                    ? { color: row.up ? UP : DOWN }
-                    : undefined
-                }
-              >
-                {col === "change" ? (
-                  <span className="inline-flex items-center justify-end gap-1.5">
-                    <span className="text-[10px]">
-                      {row.up ? "▲" : "▼"}
-                    </span>
-                    {String(row[col])}
-                  </span>
-                ) : typeof row[col] !== "boolean" ? (
-                  String(row[col])
-                ) : null}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <span
+      className={`inline-flex items-center gap-1 font-semibold ${
+        up ? "text-[#08A86B]" : "text-[#E3262E]"
+      }`}
+    >
+      <span className="text-[9px]">{up ? "▲" : "▼"}</span>
+      {change}
+    </span>
   );
 }
 
-/* =========================================================
-   MAIN PAGE
-========================================================= */
+function AdBanner({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative overflow-hidden border border-[#D7DDE0] bg-[#17333D]">
+      <div className="absolute right-2 top-1 text-[7px] text-white/60">
+        Advertisement
+      </div>
+
+      <div className="flex min-h-[74px] flex-col items-center justify-center px-4 text-center">
+        <span className="mb-1 text-[8px] font-bold tracking-[0.18em] text-[#55A8BD]">
+          GOOGLE ADSENSE
+        </span>
+
+        <span className="font-sans text-[12px] font-semibold text-white sm:text-[14px]">
+          {children}
+        </span>
+
+        <span className="mt-1 text-[8px] tracking-wide text-[#8BB6C1]">
+          728 × 90 • Leaderboard
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-3 flex items-center justify-between border-b border-[#17140F] pb-2">
+      <h2 className="font-serif text-[17px] font-bold tracking-tight text-[#17140F]">
+        {children}
+      </h2>
+    </div>
+  );
+}
 
 export function MarketsPage() {
-  const [activeTab, setActiveTab] = useState("indices");
-
-  const [marketData, setMarketData] = useState<{
-    indices: any[];
-    stocks: any[];
-    crypto: any[];
-  }>({
-    indices: [],
-    stocks: [],
-    crypto: [],
+  const [activeTab, setActiveTab] = useState("Overview");
+  const [marketData, setMarketData] = useState<MarketData>({
+    indices: fallbackIndices,
+    stocks: fallbackStocks,
+    crypto: fallbackCrypto,
   });
-
   const [loading, setLoading] = useState(true);
 
-  const tabs = ["indices", "stocks", "crypto"];
-
-  /* =======================================================
-     LOAD MARKET DATA
-  ======================================================= */
-
   useEffect(() => {
+    let mounted = true;
+
     async function loadData() {
       try {
         const data = await getQuotes();
 
-        setMarketData(data);
+        if (!mounted) return;
+
+        setMarketData({
+          indices: normalizeRows(data?.indices, fallbackIndices),
+          stocks: normalizeRows(data?.stocks, fallbackStocks),
+          crypto: normalizeRows(data?.crypto, fallbackCrypto),
+        });
       } catch (error) {
-        console.error(error);
+        console.error("Unable to load market data:", error);
+
+        if (mounted) {
+          setMarketData({
+            indices: fallbackIndices,
+            stocks: fallbackStocks,
+            crypto: fallbackCrypto,
+          });
+        }
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     }
 
     loadData();
 
-    const interval = setInterval(loadData, 30000);
+    const interval = window.setInterval(loadData, 30000);
 
-    return () => clearInterval(interval);
+    return () => {
+      mounted = false;
+      window.clearInterval(interval);
+    };
   }, []);
 
+  const displayIndices = marketData.indices.length
+    ? marketData.indices
+    : fallbackIndices;
+
+  const displayStocks = marketData.stocks.length
+    ? marketData.stocks
+    : fallbackStocks;
+
+  const displayCrypto = marketData.crypto.length
+    ? marketData.crypto
+    : fallbackCrypto;
+
   return (
-    <main className="bg-[#FAFAF7] text-[#17140F] antialiased">
-
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-
-        {/* =================================================
-            MASTHEAD
-        ================================================= */}
-
-        <div
-          className="
-            flex
-            items-baseline
-            justify-between
-            border-t-[3px]
-            border-b
-            border-[#17140F]
-            py-2.5
-            mb-1
-            text-[10px]
-            sm:text-xs
-            uppercase
-            tracking-[0.22em]
-            text-[#55534C]
-          "
-        >
-          <span className="flex items-center gap-2 font-semibold text-[#17140F]">
-
-            <span className="relative flex h-2 w-2">
-
-              <span
-                className="
-                  motion-safe:animate-ping
-                  absolute
-                  inline-flex
-                  h-full
-                  w-full
-                  rounded-full
-                  bg-[#A32F26]
-                  opacity-60
-                "
-              />
-
-              <span
-                className="
-                  relative
-                  inline-flex
-                  rounded-full
-                  h-2
-                  w-2
-                  bg-[#A32F26]
-                "
-              />
-
-            </span>
-
-            Real-Time Data
-
-          </span>
-
-          <span className="hidden sm:inline">
-            Terminal Feed &middot; Refreshes every 30s
-          </span>
-
-          <span className="sm:hidden">
-            Refreshes / 30s
-          </span>
-        </div>
-
-
-        {/* =================================================
-            PAGE TITLE
-        ================================================= */}
-
-        <div
-          className="
-            border-b-4
-            border-[#17140F]
-            pb-5
-            mb-8
-            flex
-            items-end
-            justify-between
-            gap-4
-          "
-        >
-
-          <h1
-            className="
-              font-serif
-              text-4xl
-              sm:text-5xl
-              tracking-tight
-              leading-none
-            "
-          >
-            Global Markets
+    <main className="min-h-screen bg-white text-[#17140F] antialiased">
+      <div className="mx-auto w-full max-w-[1180px] px-4 pb-14 pt-10 sm:px-6 lg:px-8">
+        {/* Page heading */}
+        <header className="border-t-[3px] border-[#E31B23] pt-4">
+          <h1 className="font-serif text-[28px] font-bold leading-none tracking-tight sm:text-[34px]">
+            Markets Dashboard
           </h1>
 
-          <p
-            className="
-              hidden
-              md:block
-              text-[11px]
-              uppercase
-              tracking-[0.16em]
-              text-[#8A887F]
-              pb-1
-            "
-          >
-            Indices &middot; Sectors &middot; Crypto
+          <p className="mt-2 text-[11px] text-[#55534C] sm:text-[12px]">
+            Real-time market data, indices, commodities, forex, crypto and more.
           </p>
+        </header>
 
+        {/* Advertisement */}
+        <div className="mt-4">
+          <AdBanner>Trade smarter with Pride Times Markets Intelligence</AdBanner>
         </div>
 
-
-        {/* =================================================
-            QUICK JUMP
-        ================================================= */}
-
-        <div className="flex flex-wrap gap-x-7 gap-y-2 mb-8">
-
-          <a
-            href="#sectors"
-            className="
-              text-[11px]
-              font-sans
-              uppercase
-              tracking-[0.12em]
-              leading-none
-              text-[#55534C]
-              hover:text-[#A32F26]
-              transition-colors
-              border-b
-              border-transparent
-              hover:border-[#A32F26]
-              pb-0.5
-            "
-          >
-            Overview
-          </a>
-
-
-          <a
-            href="#sectors"
-            className="
-              text-[11px]
-              font-sans
-              uppercase
-              tracking-[0.12em]
-              leading-none
-              text-[#55534C]
-              hover:text-[#A32F26]
-              transition-colors
-              border-b
-              border-transparent
-              hover:border-[#A32F26]
-              pb-0.5
-            "
-          >
-            Sector Performance
-          </a>
-
-
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab("indices");
-
-              document
-                .getElementById("markets-table")
-                ?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-            }}
-            className="
-              text-[11px]
-              font-sans
-              uppercase
-              tracking-[0.12em]
-              leading-none
-              text-[#55534C]
-              hover:text-[#A32F26]
-              transition-colors
-              border-b
-              border-transparent
-              hover:border-[#A32F26]
-              pb-0.5
-            "
-          >
-            Global Indices
-          </button>
-
-
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab("crypto");
-
-              document
-                .getElementById("markets-table")
-                ?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-            }}
-            className="
-              text-[11px]
-              font-sans
-              uppercase
-              tracking-[0.12em]
-              leading-none
-              text-[#55534C]
-              hover:text-[#A32F26]
-              transition-colors
-              border-b
-              border-transparent
-              hover:border-[#A32F26]
-              pb-0.5
-            "
-          >
-            Cryptocurrency
-          </button>
-
-
-          <a
-            href="#markets-report"
-            className="
-              text-[11px]
-              font-sans
-              uppercase
-              tracking-[0.12em]
-              leading-none
-              text-[#55534C]
-              hover:text-[#A32F26]
-              transition-colors
-              border-b
-              border-transparent
-              hover:border-[#A32F26]
-              pb-0.5
-            "
-          >
-            Markets Report
-          </a>
-
-        </div>
-
-
-        {/* =================================================
-            GLOBAL MARKETS DASHBOARD — "Ticker Board"
-            White letterpress-bordered panel. A thin wire-red
-            rule along the top and a pulsing LIVE mark carry
-            the "live feed" signal instead of a dark console.
-        ================================================= */}
-
-        <div
-          className="
-            bg-white
-            border
-            border-[#D9D4C7]
-            border-t-[3px]
-            border-t-[#A32F26]
-            rounded-sm
-            overflow-hidden
-            shadow-[0_10px_30px_-12px_rgba(23,20,15,0.12)]
-          "
+        {/* Market navigation */}
+        <nav
+          aria-label="Markets navigation"
+          className="mt-3 flex overflow-x-auto border-b border-[#D9D4C7] no-scrollbar"
         >
-
-          {/* =================================================
-              BOARD HEADER
-          ================================================= */}
-
-          <div
-            className="
-              flex
-              items-center
-              justify-between
-              px-4
-              sm:px-5
-              py-3.5
-              border-b
-              border-[#D9D4C7]
-            "
-          >
-
-            <div className="flex items-center gap-2.5">
-
-              <BarChart2
-                size={15}
-                strokeWidth={2}
-                className="text-[#17140F]"
-              />
-
-              <span
-                className="
-                  font-serif
-                  text-[15px]
-                  tracking-tight
-                  text-[#17140F]
-                "
-              >
-                Market Ticker
-              </span>
-
-            </div>
-
-
-            <span
-              className="
-                font-mono
-                text-[9px]
-                font-semibold
-                tracking-[0.12em]
-                text-[#A32F26]
-                flex
-                items-center
-                gap-1.5
-              "
+          {navItems.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setActiveTab(item)}
+              className={`relative shrink-0 px-4 py-3 text-[11px] font-medium transition-colors ${
+                activeTab === item
+                  ? "text-[#E31B23]"
+                  : "text-[#55534C] hover:text-[#17140F]"
+              }`}
             >
+              {item}
 
-              <Radio
-                size={11}
-                strokeWidth={2.25}
-                className="motion-safe:animate-pulse"
-              />
+              {activeTab === item && (
+                <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#E31B23]" />
+              )}
+            </button>
+          ))}
+        </nav>
 
-              LIVE
-
-            </span>
-
-          </div>
-
-
-          {/* =================================================
-              LOADING STATE
-          ================================================= */}
-
+        {/* Main dashboard */}
+        <div className="mt-5">
           {loading ? (
-
-            <div
-              className="
-                py-20
-                text-center
-                font-mono
-                text-xs
-                text-[#8A887F]
-                uppercase
-                tracking-[0.2em]
-              "
-            >
-
-              <BarChart2
-                size={20}
-                className="mx-auto mb-3 opacity-40"
-              />
-
-              Loading market data&hellip;
-
+            <div className="border border-[#E5E2DB] py-16 text-center">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-[#8A887F]">
+                Loading market data…
+              </p>
             </div>
-
           ) : (
-
             <>
+              {/* Global indices */}
+              <section>
+                <SectionHeading>Global Indices</SectionHeading>
 
-              {/* =================================================
-                  INDEX STRIP
-              ================================================= */}
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[680px] border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#17140F]">
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Index
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Value
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Change
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          YTD Return
+                        </th>
+                      </tr>
+                    </thead>
 
-              <div
-                className="
-                  flex
-                  items-stretch
-                  gap-0
-                  overflow-x-auto
-                  no-scrollbar
-                  border-b
-                  border-[#D9D4C7]
-                  bg-[#FCFBF8]
-                "
-              >
+                    <tbody>
+                      {displayIndices.map((row, index) => (
+                        <tr
+                          key={`${row.name}-${index}`}
+                          className="border-b border-[#ECE9E2] hover:bg-[#FAFAF7]"
+                        >
+                          <td className="py-2.5 text-[11px] font-semibold text-[#17140F]">
+                            {row.name}
+                          </td>
 
-                {marketData.indices.map(
-                  (idx: any, i: number) => (
+                          <td className="py-2.5 font-mono text-[11px] text-[#55534C]">
+                            {row.value}
+                          </td>
 
-                    <div
-                      key={idx.name}
-                      className={`
-                        flex-shrink-0
-                        px-5
-                        py-4
-                        ${
-                          i > 0
-                            ? "border-l border-[#E3DECF]"
-                            : ""
-                        }
-                      `}
+                          <td className="py-2.5 text-[11px]">
+                            <ChangeValue
+                              change={row.change}
+                              up={row.up}
+                            />
+                          </td>
+
+                          <td
+                            className={`py-2.5 text-[11px] font-semibold ${
+                              row.ytd?.startsWith("-")
+                                ? "text-[#E3262E]"
+                                : "text-[#08A86B]"
+                            }`}
+                          >
+                            {row.ytd ?? "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {/* Top stocks */}
+              <section className="mt-8">
+                <SectionHeading>Top Stocks</SectionHeading>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[800px] border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#17140F]">
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Symbol
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Company
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Price
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Change
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Volume
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Mkt Cap
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {displayStocks.map((row, index) => (
+                        <tr
+                          key={`${row.name}-${index}`}
+                          className="border-b border-[#ECE9E2] hover:bg-[#FAFAF7]"
+                        >
+                          <td className="py-2.5 text-[11px] font-semibold text-[#E31B23]">
+                            {row.name}
+                          </td>
+
+                          <td className="py-2.5 text-[11px] text-[#17140F]">
+                            {row.company ?? "—"}
+                          </td>
+
+                          <td className="py-2.5 font-mono text-[11px] font-semibold">
+                            {row.value}
+                          </td>
+
+                          <td className="py-2.5 text-[11px]">
+                            <ChangeValue
+                              change={row.change}
+                              up={row.up}
+                            />
+                          </td>
+
+                          <td className="py-2.5 text-[11px] text-[#77736B]">
+                            {row.volume ?? "—"}
+                          </td>
+
+                          <td className="py-2.5 text-[11px] font-semibold">
+                            {row.marketCap ?? "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {/* Cryptocurrency */}
+              <section className="mt-8">
+                <SectionHeading>Cryptocurrency</SectionHeading>
+
+                <div className="grid grid-cols-1 border border-[#E5E2DB] sm:grid-cols-3">
+                  {displayCrypto.slice(0, 3).map((row, index) => (
+                    <article
+                      key={`${row.name}-${index}`}
+                      className={`p-4 ${
+                        index > 0 ? "border-t sm:border-l sm:border-t-0" : ""
+                      } border-[#E5E2DB]`}
                     >
+                      <p className="text-[10px] text-[#77736B]">{row.name}</p>
 
-                      <p
-                        className="
-                          font-mono
-                          text-[10px]
-                          uppercase
-                          tracking-[0.14em]
-                          text-[#8A887F]
-                        "
-                      >
-                        {idx.name}
+                      <p className="mt-1 font-serif text-[20px] font-bold">
+                        {row.value}
                       </p>
 
+                      <div className="mt-1 flex items-center justify-between">
+                        <ChangeValue
+                          change={row.change}
+                          up={row.up}
+                        />
 
-                      <p
-                        className="
-                          font-serif
-                          text-[19px]
-                          text-[#17140F]
-                          mt-1
-                          tabular-nums
-                        "
-                      >
-                        {idx.value}
-                      </p>
-
-
-                      <span
-                        className="
-                          font-mono
-                          text-[11px]
-                          tabular-nums
-                          flex
-                          items-center
-                          gap-1
-                          mt-1
-                          font-semibold
-                        "
-                        style={{
-                          color: idx.up ? UP : DOWN,
-                        }}
-                      >
-
-                        <span className="text-[9px]">
-                          {idx.up ? "▲" : "▼"}
+                        <span className="text-[9px] text-[#8A887F]">
+                          Mkt Cap: {row.marketCap ?? "—"}
                         </span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
 
-                        {idx.change} ({idx.pts})
+              {/* Existing market report information, condensed to the reference page */}
+              <section className="mt-8">
+                <SectionHeading>Markets Report</SectionHeading>
 
-                      </span>
-
-                    </div>
-
-                  )
-                )}
-
-              </div>
-
-
-              {/* =================================================
-                  CHARTS
-              ================================================= */}
-
-              <div
-                className="
-                  grid
-                  grid-cols-1
-                  md:grid-cols-2
-                  divide-y
-                  md:divide-y-0
-                  md:divide-x
-                  divide-[#D9D4C7]
-                "
-                id="sectors"
-              >
-
-                {/* S&P 500 CHART */}
-
-                <div className="p-4 md:p-5">
-
-                  <div
-                    className="
-                      flex
-                      items-center
-                      justify-between
-                      mb-3
-                    "
-                  >
-
-                    <p
-                      className="
-                        font-mono
-                        text-[10px]
-                        uppercase
-                        tracking-[0.14em]
-                        text-[#8A887F]
-                      "
-                    >
-                      S&amp;P 500 — Today
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      S&P 500 — July Close
                     </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      -0.13%
+                    </p>
+                  </article>
 
-                    <span
-                      className="
-                        text-[10px]
-                        font-mono
-                        font-semibold
-                        tabular-nums
-                      "
-                      style={{ color: UP }}
-                    >
-                      +1.2%
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      Russell 2000 — YTD Gain
+                    </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      +22%
+                    </p>
+                  </article>
+
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      Nikkei 225 — July
+                    </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      -8.1%
+                    </p>
+                  </article>
+
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      US 10Y Treasury Yield
+                    </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      4.75%
+                    </p>
+                  </article>
+                </div>
+              </section>
+
+              {/* Sponsored content */}
+              <div className="mt-8">
+                <div className="overflow-hidden rounded-[3px] border border-[#E2DED2] bg-[#10162E]">
+                  <div className="border-b border-[#D8D1B8] bg-[#F4F0DF] px-2 py-1 text-[7px] uppercase tracking-[0.1em] text-[#77736B]">
+                    Sponsored Content
+                  </div>
+
+                  <div className="flex min-h-[78px] flex-col items-center justify-center text-center">
+                    <span className="text-[8px] font-bold tracking-[0.15em] text-[#F1D100]">
+                      MARKETEDGE PRO — ADVANCED TRADING ANALYTICS
                     </span>
 
+                    <span className="mt-1 text-[12px] font-semibold text-white">
+                      Your Ad Here
+                    </span>
+
+                    <span className="mt-1 text-[8px] text-white/60">
+                      Reach 2M+ business readers
+                    </span>
                   </div>
-
-
-                  <ResponsiveContainer
-                    width="100%"
-                    height={170}
-                  >
-
-                    <LineChart data={spChartData}>
-
-                      <CartesianGrid
-                        strokeDasharray="2 4"
-                        stroke={GRID}
-                        vertical={false}
-                      />
-
-                      <XAxis
-                        dataKey="time"
-                        tick={{
-                          fontSize: 10,
-                          fill: MUTE,
-                        }}
-                        axisLine={{
-                          stroke: GRID,
-                        }}
-                        tickLine={false}
-                      />
-
-                      <YAxis
-                        tick={{
-                          fontSize: 10,
-                          fill: MUTE,
-                        }}
-                        domain={[5800, 5900]}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-
-                      <Tooltip
-                        contentStyle={{
-                          fontSize: 11,
-                          borderRadius: 0,
-                          border: `1px solid ${RULE}`,
-                          background: "#FFFFFF",
-                          color: INK,
-                        }}
-                        labelStyle={{
-                          color: MUTE,
-                        }}
-                      />
-
-                      <Line
-                        type="monotone"
-                        dataKey="value"
-                        stroke={UP}
-                        strokeWidth={2}
-                        dot={false}
-                        activeDot={{
-                          r: 4,
-                          fill: UP,
-                          stroke: "#FFFFFF",
-                          strokeWidth: 2,
-                        }}
-                      />
-
-                    </LineChart>
-
-                  </ResponsiveContainer>
-
                 </div>
-
-
-                {/* SECTOR PERFORMANCE */}
-
-                <div className="p-4 md:p-5">
-
-                  <p
-                    className="
-                      font-mono
-                      text-[10px]
-                      uppercase
-                      tracking-[0.14em]
-                      text-[#8A887F]
-                      mb-3
-                    "
-                  >
-                    Sector Performance Today (%)
-                  </p>
-
-
-                  <ResponsiveContainer
-                    width="100%"
-                    height={170}
-                  >
-
-                    <BarChart
-                      data={sectorData}
-                      layout="vertical"
-                    >
-
-                      <XAxis
-                        type="number"
-                        tick={{
-                          fontSize: 10,
-                          fill: MUTE,
-                        }}
-                        axisLine={{
-                          stroke: GRID,
-                        }}
-                        tickLine={false}
-                      />
-
-                      <YAxis
-                        dataKey="sector"
-                        type="category"
-                        tick={{
-                          fontSize: 10,
-                          fill: INK_SOFT,
-                        }}
-                        width={58}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-
-                      <Tooltip
-                        contentStyle={{
-                          fontSize: 11,
-                          borderRadius: 0,
-                          border: `1px solid ${RULE}`,
-                          background: "#FFFFFF",
-                          color: INK,
-                        }}
-                        cursor={{
-                          fill: "rgba(23,20,15,0.035)",
-                        }}
-                      />
-
-                      <Bar
-                        dataKey="change"
-                        radius={0}
-                      >
-
-                        {sectorData.map(
-                          (entry, i) => (
-
-                            <Cell
-                              key={i}
-                              fill={
-                                entry.change >= 0
-                                  ? UP
-                                  : DOWN
-                              }
-                            />
-
-                          )
-                        )}
-
-                      </Bar>
-
-                    </BarChart>
-
-                  </ResponsiveContainer>
-
-                </div>
-
               </div>
-
-
-              {/* =================================================
-                  TABS
-              ================================================= */}
-
-              <div
-                className="
-                  flex
-                  gap-1
-                  px-4
-                  pt-3
-                  border-t
-                  border-[#D9D4C7]
-                "
-              >
-
-                {tabs.map((tab) => (
-
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() =>
-                      setActiveTab(tab)
-                    }
-                    className={`
-                      font-mono
-                      text-[10px]
-                      uppercase
-                      tracking-[0.14em]
-                      px-3
-                      py-2.5
-                      transition-colors
-                      ${
-                        activeTab === tab
-                          ? "text-[#17140F] border-b-2 border-[#A32F26]"
-                          : "text-[#8A887F] border-b-2 border-transparent hover:text-[#3A3934]"
-                      }
-                    `}
-                  >
-                    &gt; {tab}
-                  </button>
-
-                ))}
-
-              </div>
-
-
-              {/* =================================================
-                  MARKET TABLE
-              ================================================= */}
-
-              <div
-                className="px-4 pb-5"
-                id="markets-table"
-              >
-
-                {activeTab === "indices" && (
-
-                  <MarketTable
-                    data={marketData.indices as any}
-                    cols={[
-                      "name",
-                      "value",
-                      "change",
-                      "up",
-                    ]}
-                  />
-
-                )}
-
-
-                {activeTab === "stocks" && (
-
-                  <MarketTable
-                    data={marketData.stocks as any}
-                    cols={[
-                      "name",
-                      "value",
-                      "change",
-                      "up",
-                    ]}
-                  />
-
-                )}
-
-
-                {activeTab === "crypto" && (
-
-                  <MarketTable
-                    data={marketData.crypto as any}
-                    cols={[
-                      "name",
-                      "value",
-                      "change",
-                      "up",
-                    ]}
-                  />
-
-                )}
-
-              </div>
-
             </>
-
           )}
-
         </div>
-
-
-        {/* =================================================
-            GLOBAL MARKETS REPORT — editorial wire dispatch
-            Matches the column-ruled dispatch pattern used on
-            WorldPage / EnergyPage, on the paper background.
-        ================================================= */}
-
-        <section id="markets-report" className="mt-16 scroll-mt-6">
-
-          <div className="border-b-2 border-[#17140F] pb-2.5 mb-2 flex items-baseline justify-between">
-            <h2 className="uppercase tracking-[0.16em] text-sm font-semibold">
-              Global Markets Report
-            </h2>
-            <span className="font-mono text-[10px] text-[#8A887F]">July 2026 Wrap</span>
-          </div>
-          <p className="text-[11px] uppercase tracking-[0.14em] text-[#8A887F] mb-6">
-            1. Global Markets
-          </p>
-
-          {/* Key figures strip */}
-          <div className="flex items-stretch overflow-x-auto no-scrollbar border border-[#D9D4C7] bg-white mb-10">
-            {reportStats.map((s, i) => (
-              <div
-                key={s.label}
-                className={`flex-1 min-w-[130px] px-5 py-4 ${i > 0 ? "border-l border-[#D9D4C7]" : ""}`}
-              >
-                <p className="text-xl sm:text-2xl font-mono font-semibold tabular-nums text-[#A32F26]">
-                  {s.value}
-                </p>
-                <p className="text-[10px] uppercase tracking-wide text-[#8A887F] mt-1 leading-tight">
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* 1.1 Equity Markets */}
-          <div className="mb-12">
-            <h3 className="text-[13px] uppercase tracking-[0.14em] font-semibold text-[#A32F26] mb-5">
-              1.1 &nbsp;Equity Markets
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {equityRegions.map((r) => (
-                <div
-                  key={r.region}
-                  className="border border-[#D9D4C7] bg-white hover:shadow-[0_2px_10px_rgba(23,20,15,0.06)] hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <div className="flex items-baseline gap-2 px-5 pt-4 pb-3 border-b border-[#D9D4C7]">
-                    <span className="font-mono text-[11px] font-bold text-[#A32F26]">{r.wire}</span>
-                    <span className="text-[11px] text-[#8A887F]">—</span>
-                    <h4 className="uppercase tracking-[0.1em] text-xs font-semibold text-[#17140F]">
-                      {r.region}
-                    </h4>
-                  </div>
-                  <ul className="flex flex-col gap-3 px-5 py-4">
-                    {r.points.map((p, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="text-[#A32F26] text-[10px] mt-1.5 shrink-0">▪</span>
-                        <p className="text-[13px] leading-relaxed text-[#3A3934]">
-                          <Emphasize text={p} />
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 1.2 Fixed Income & Bonds */}
-          <div>
-            <h3 className="text-[13px] uppercase tracking-[0.14em] font-semibold text-[#A32F26] mb-5">
-              1.2 &nbsp;Fixed Income &amp; Bonds
-            </h3>
-            <div className="border border-[#D9D4C7] bg-white px-6 py-5">
-              <ul className="flex flex-col gap-3.5 max-w-3xl">
-                {fixedIncomePoints.map((p, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-[#A32F26] text-[10px] mt-1.5 shrink-0">▪</span>
-                    <p className="text-[13.5px] leading-relaxed text-[#3A3934]">
-                      <Emphasize text={p} />
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-        </section>
-
       </div>
 
-
-      {/* =====================================================
-          GLOBAL STYLES
-      ===================================================== */}
-
       <style>{`
-
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
@@ -1138,9 +498,7 @@ export function MarketsPage() {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-
       `}</style>
-
     </main>
   );
 }
