@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
-import { TrendingUp, TrendingDown, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { getQuotes } from "../../services/marketApi";
 
 interface TickerCard {
@@ -198,14 +198,49 @@ export function MarketsTicker() {
             is only as wide as the "Menu" button. Nesting the full-bleed
             panel inside it made the panel inherit that narrow width
             instead of the full bar. */}
-        <div className="relative flex-shrink-0">
+        <div className="relative flex-shrink-0 flex items-center">
           <button
-            className="pt-securities-btn flex items-center gap-1.5 h-full"
+            type="button"
             onClick={() => setShowSecurities(!showSecurities)}
+            aria-label="Top Securities menu"
             aria-expanded={showSecurities}
+            style={{
+              width: "95px",
+              height: "40px",
+              backgroundColor: "#ffffff",
+              border: "1px solid #d9d9d9",
+              borderRadius: "6px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "7px",
+              padding: "0",
+              margin: "0",
+              color: "#000000",
+              fontSize: "16px",
+              fontWeight: 700,
+              lineHeight: "1",
+              fontFamily: "Arial, Helvetica, sans-serif",
+              cursor: "pointer",
+              flexShrink: 0,
+              boxSizing: "border-box",
+            }}
           >
-            Menu
-            <ChevronDown size={14} className={`transition-transform ${showSecurities ? "rotate-180" : ""}`} />
+            <span>Menu</span>
+
+            <span
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: "4px solid transparent",
+                borderRight: "4px solid transparent",
+                borderTop: "5px solid #000000",
+                display: "inline-block",
+                marginTop: "2px",
+                transform: showSecurities ? "rotate(180deg)" : "none",
+                transition: "transform 0.15s ease",
+              }}
+            />
           </button>
         </div>
 
