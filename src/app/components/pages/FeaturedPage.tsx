@@ -361,12 +361,12 @@ export function FeaturedPage() {
 
             <div>
               <h1 className="font-serif text-[30px] sm:text-[36px] md:text-[42px] font-bold leading-none tracking-tight text-gray-950">
-                Cover Stories
+                Featured
               </h1>
 
               <p className="text-[11px] md:text-[12px] text-gray-500 mt-2">
-                Our signature long-form investigations and magazine cover
-                features.
+                Our top picks and must-read stories, curated by the
+                editorial desk.
               </p>
             </div>
 
@@ -442,12 +442,12 @@ export function FeaturedPage() {
         </section>
 
         {/* =================================================
-            LATEST COVER STORIES
+            LATEST FEATURED
         ================================================= */}
 
         <section className="mb-10 md:mb-12">
 
-          <SH title="Latest Cover Stories News" />
+          <SH title="Latest Featured News" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
 
