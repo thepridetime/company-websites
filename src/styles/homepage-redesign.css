@@ -830,23 +830,35 @@ footer .pt-logo-accent {
 .pt-securities-btn {
   height: 52px;
 
-  padding: 0 20px;
+  padding: 0 22px;
 
-  background: var(--pt-white);
+  background: var(--pt-black);
 
-  font-weight: 600;
+  font-weight: 700;
 
-  font-size: 13px;
+  font-size: 12.5px;
 
-  color: var(--pt-black);
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+
+  color: #ffffff;
 
   border-right: 1px solid var(--pt-border);
 
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .pt-securities-btn:hover {
-  background: #f7f7f7;
+  background: #262626;
+}
+
+.pt-securities-btn[aria-expanded="true"] {
+  background: var(--pt-red);
+}
+
+.pt-securities-btn[aria-expanded="true"]:hover {
+  background: var(--pt-red-dark);
 }
 
 
@@ -885,40 +897,63 @@ footer .pt-logo-accent {
 
 /* ========================================
    MEGA MENU
+   Full-bleed edge-to-edge panel (Bloomberg-style),
+   anchored to the securities bar rather than floating
+   as a small card.
 ======================================== */
 
 .pt-mega-menu {
-  width: min(760px, calc(100vw - 32px));
-
+  /* No explicit width: it's a direct child of the full-width,
+     position:relative .pt-securities-bar, and inset-x-0 in the
+     component already stretches it edge-to-edge against that
+     ancestor's real box — safer than width:100vw, which is measured
+     against the viewport and overflows horizontally by the
+     scrollbar's width in most desktop browsers. */
   background: #0b0b0b;
 
-  border: 1px solid #232323;
+  border-top: 2px solid var(--pt-red);
+  border-bottom: 1px solid #232323;
 
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 
-  border-radius: 8px;
+  padding: 40px 0 28px;
+}
 
-  padding: 24px 28px;
+.pt-mega-menu-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 48px;
+  row-gap: 28px;
+}
+
+@media (max-width: 768px) {
+  .pt-mega-menu-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .pt-mega-menu-heading {
-  color: #ffffff;
+  color: var(--pt-red);
 
   font-size: 13px;
 
   font-weight: 700;
 
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
 
   text-transform: uppercase;
 
-  margin-bottom: 14px;
+  margin-bottom: 18px;
+
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid #232323;
 }
 
 .pt-mega-menu a {
-  font-size: 13.5px;
+  font-size: 14px;
 
-  font-weight: 600;
+  font-weight: 500;
 
   color: #d5d5d5;
 
@@ -927,6 +962,26 @@ footer .pt-logo-accent {
 
 .pt-mega-menu a:hover {
   color: var(--pt-red);
+}
+
+.pt-mega-menu-utility {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #232323;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+}
+
+.pt-mega-menu-utility a {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #888888;
+}
+
+.pt-mega-menu-utility a:hover {
+  color: #ffffff;
 }
 
 
