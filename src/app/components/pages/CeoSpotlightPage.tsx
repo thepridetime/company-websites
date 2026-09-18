@@ -1,7 +1,6 @@
 import {
   Clock,
   Users,
-  Award,
   ChevronRight,
   Quote,
   MessageSquare,
@@ -12,6 +11,87 @@ import {
 
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import CeospotImg from "../../../imports/Ceospot.png";
+
+/* ============================================================
+   AD SLOT — matches the site's inline ad unit style
+============================================================ */
+
+function AdSlot({
+  label = "728 × 90 · Leaderboard",
+  title = "Advertisement Space",
+}: {
+  label?: string;
+  title?: string;
+}) {
+  return (
+    <div className="relative mb-10 rounded-[2px] bg-gradient-to-br from-slate-800 to-teal-900 px-4 py-8 text-center text-white">
+      <span className="absolute right-3 top-2 text-[10px] uppercase tracking-wide text-gray-400">
+        Advertisement
+      </span>
+      <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-sky-400">
+        Google AdSense
+      </p>
+      <p className="font-semibold">{title}</p>
+      <p className="mt-1 text-xs text-sky-300/80">{label}</p>
+    </div>
+  );
+}
+
+/* ============================================================
+   SPONSORED BANNER — partner content strip
+============================================================ */
+
+function SponsoredBanner() {
+  return (
+    <div className="relative mb-10 rounded-[2px] border border-white/10 bg-[#0b1220] px-4 py-7 text-center text-white sm:py-8">
+      <span className="absolute left-3 top-2 text-[9px] uppercase tracking-[0.15em] text-gray-500">
+        Sponsored Content
+      </span>
+      <span className="absolute right-3 top-2 text-[9px] uppercase tracking-wide text-gray-500">
+        Ad
+      </span>
+      <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-yellow-400">
+        Executive Leadership Program — Partner Content
+      </p>
+      <p className="font-serif text-xl font-bold sm:text-2xl">Your Ad Here</p>
+      <p className="mt-1 text-xs text-gray-400">Reach 2M+ business readers</p>
+    </div>
+  );
+}
+
+/* ============================================================
+   NEWSLETTER CTA
+============================================================ */
+
+function NewsletterCTA() {
+  return (
+    <section className="mb-14 rounded-[2px] bg-[#0b1a30] p-8 text-center text-white md:p-10">
+      <h2 className="mb-2 font-serif text-2xl md:text-[30px]">
+        Exclusive CEO Interviews
+      </h2>
+      <p className="mb-6 text-sm text-gray-400">
+        Be first to read our in-depth leader profiles and executive
+        briefings.
+      </p>
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
+      >
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50"
+        />
+        <button
+          type="submit"
+          className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+        >
+          Subscribe Free
+        </button>
+      </form>
+    </section>
+  );
+}
 
 /* ============================================================
    SECTION HEADER
@@ -55,19 +135,96 @@ function SectionHeader({
 }
 
 /* ============================================================
-   HERO
+   FEATURED LEADER (#1)
 ============================================================ */
 
-const hero = {
-  category: "CEO SPOTLIGHT",
-  title:
-    "Tilman Fertitta: Building America's Largest Integrated Entertainment Empire",
-  excerpt:
-    "Few executives have demonstrated the appetite for bold, large-scale deal-making that characterizes Tilman Fertitta's approach to business in 2026. The chairman and CEO of Fertitta Entertainment, whose holdings already include the Golden Nugget casino brand and the Houston Rockets, has staked a $17.6 billion claim on Caesars Entertainment — a move that would transform him into the undisputed titan of American gaming and hospitality.",
-  author: "Sagar Kumar",
-  time: "May 2026",
+const featuredLeader = {
+  rank: "#1 LEADER 2026",
+  edition: "Q3 2026 — AI Infrastructure Edition",
+  name: "Jensen Huang",
+  title: "President & CEO, NVIDIA Corporation · United States",
+  bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company. His vision of the AI-first computing paradigm has reshaped industries from autonomous vehicles to drug discovery. Under his leadership, NVIDIA's market capitalization has grown into one of the defining stories of the AI infrastructure era.",
   image: CeospotImg,
 };
+
+/* ============================================================
+   PRIDE TIMES 30 — LEADERS TO WATCH
+============================================================ */
+
+const leadersToWatch = [
+  {
+    rank: 1,
+    name: "Jensen Huang",
+    title: "President & CEO",
+    company: "NVIDIA Corporation",
+    bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company.",
+    edition: "Q3 2026 — AI Infrastructure Edition",
+    initials: "JH",
+  },
+  {
+    rank: 2,
+    name: "Sam Altman",
+    title: "CEO",
+    company: "OpenAI",
+    bio: "Sam Altman leads OpenAI, the company at the forefront of developing artificial general intelligence and bringing it into everyday products.",
+    edition: "Q2 2026 — AGI Edition",
+    initials: "SA",
+  },
+  {
+    rank: 3,
+    name: "Mukesh Ambani",
+    title: "Chairman & MD",
+    company: "Reliance Industries",
+    bio: "Asia's richest man has transformed Reliance Industries from a petrochemicals and refining conglomerate into a diversified force in telecom and retail.",
+    edition: "Q1 2026 — Green Energy Edition",
+    initials: "MA",
+  },
+  {
+    rank: 4,
+    name: "Sundar Pichai",
+    title: "CEO",
+    company: "Alphabet / Google",
+    bio: "Sundar Pichai leads Alphabet through its most transformative period since the founding of Google, weaving AI across search, cloud and devices.",
+    edition: "Q2 2026 — Search & AI Edition",
+    initials: "SP",
+  },
+  {
+    rank: 5,
+    name: "Satya Nadella",
+    title: "Chairman & CEO",
+    company: "Microsoft",
+    bio: "Satya Nadella's decade at Microsoft's helm has been defined by a relentless cloud-first, AI-first transformation of the company's product line.",
+    edition: "Q1 2026 — Cloud & Copilot Edition",
+    initials: "SN",
+  },
+  {
+    rank: 6,
+    name: "Elon Musk",
+    title: "CEO",
+    company: "Tesla / SpaceX / xAI",
+    bio: "Elon Musk remains the most consequential entrepreneur of his generation, simultaneously running Tesla, SpaceX and xAI's rapid model development.",
+    edition: "Q3 2026 — Space & EV Edition",
+    initials: "EM",
+  },
+  {
+    rank: 7,
+    name: "Tim Cook",
+    title: "CEO",
+    company: "Apple Inc.",
+    bio: "Tim Cook has stewarded Apple through its most profitable era, guiding its journey to becoming one of the world's most valuable companies.",
+    edition: "Q2 2026 — Apple Intelligence Edition",
+    initials: "TC",
+  },
+  {
+    rank: 8,
+    name: "Larry Fink",
+    title: "Chairman & CEO",
+    company: "BlackRock",
+    bio: "Larry Fink manages more money than any other person in history, directing BlackRock's roughly $11.6 trillion in assets under management.",
+    edition: "Q1 2026 — Asset Management Edition",
+    initials: "LF",
+  },
+];
 
 /* ============================================================
    CEO INTERVIEWS
@@ -222,34 +379,6 @@ const executiveMoves = [
 ];
 
 /* ============================================================
-   PT30
-============================================================ */
-
-const pt30Features = [
-  {
-    rank: "01",
-    name: "Jensen Huang",
-    role: "NVIDIA",
-    insight:
-      "Defining the AI infrastructure era through accelerated computing, robotics and data-center innovation.",
-  },
-  {
-    rank: "02",
-    name: "Satya Nadella",
-    role: "MICROSOFT",
-    insight:
-      "Leading enterprise AI adoption while reshaping Microsoft's cloud and productivity ecosystem.",
-  },
-  {
-    rank: "03",
-    name: "Sundar Pichai",
-    role: "ALPHABET",
-    insight:
-      "Driving AI integration across search, cloud, consumer products and emerging technology.",
-  },
-];
-
-/* ============================================================
    STORY ROW
 ============================================================ */
 
@@ -329,59 +458,115 @@ export function CeoSpotlightPage() {
         </header>
 
         {/* ====================================================
-            HERO
+            AD SLOT
         ==================================================== */}
 
-        <section className="mb-12">
-          <article className="group cursor-pointer">
+        <AdSlot />
 
-            <div className="relative overflow-hidden rounded-md border border-gray-200 bg-gray-100 shadow-sm">
+        {/* ====================================================
+            FEATURED LEADER (#1)
+        ==================================================== */}
+
+        <section className="mb-14">
+          <article className="group grid grid-cols-1 overflow-hidden rounded-md border border-gray-200 shadow-sm md:grid-cols-2">
+
+            <div className="relative overflow-hidden bg-gray-100">
+              <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-sm bg-red-600 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
+                {featuredLeader.rank}
+              </span>
+
               <ImageWithFallback
-                src={hero.image}
-                alt={hero.title}
-                className="h-[290px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.025] sm:h-[390px] md:h-[500px] lg:h-[570px]"
+                src={featuredLeader.image}
+                alt={featuredLeader.name}
+                className="h-[260px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] md:h-full md:min-h-[380px]"
               />
 
-              <div className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-inset ring-black/10" />
-
-              <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-
-              <div className="absolute bottom-5 left-5 sm:bottom-7 sm:left-7">
-                <span className="inline-flex items-center gap-2 rounded-sm bg-red-600 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white" />
-                  {hero.category}
-                </span>
-              </div>
+              <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/10" />
             </div>
 
-            <div className="mt-6 max-w-[1050px]">
-              <h2 className="font-serif text-[30px] font-bold leading-[1.04] tracking-[-0.02em] sm:text-4xl md:text-5xl lg:text-[56px]">
-                {hero.title}
+            <div className="flex flex-col justify-center bg-white p-6 sm:p-8 md:p-10">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                {featuredLeader.edition}
+              </p>
+
+              <h2 className="font-serif text-3xl font-bold text-red-600 sm:text-4xl">
+                {featuredLeader.name}
               </h2>
 
-              <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-[1fr_280px] md:gap-10">
-                <p className="text-sm leading-7 text-gray-600 md:text-[16px]">
-                  {hero.excerpt}
-                </p>
+              <p className="mt-1 text-sm text-gray-500">
+                {featuredLeader.title}
+              </p>
 
-                <div className="border-l-2 border-red-600 pl-4 md:self-start">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-gray-400">
-                    By
-                  </p>
+              <p className="mt-5 text-sm leading-7 text-gray-600">
+                {featuredLeader.bio}
+              </p>
 
-                  <p className="mt-1 text-sm font-semibold">
-                    {hero.author}
-                  </p>
-
-                  <p className="mt-2 flex items-center gap-1 text-[10px] text-gray-400">
-                    <Clock size={10} />
-                    {hero.time}
-                  </p>
-                </div>
-              </div>
+              <button className="mt-6 inline-flex w-fit items-center gap-2 rounded-sm bg-black px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-gray-800">
+                Read Full Profile
+                <ArrowUpRight size={13} />
+              </button>
             </div>
           </article>
         </section>
+
+        {/* ====================================================
+            PRIDE TIMES 30 — LEADERS TO WATCH
+        ==================================================== */}
+
+        <section className="mb-14">
+          <div className="mb-6 border-b border-black pb-3">
+            <h2 className="font-serif text-2xl font-bold tracking-tight md:text-3xl">
+              Pride Times 30 — Leaders to Watch 2026
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+            {leadersToWatch.map((leader) => (
+              <article
+                key={leader.rank}
+                className="group cursor-pointer overflow-hidden rounded-md border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-black hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
+              >
+                <div className="relative flex h-[190px] items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 to-gray-700">
+                  <span className="absolute left-3 top-3 rounded-sm bg-red-600 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">
+                    #{leader.rank} Leader
+                  </span>
+
+                  <span className="font-serif text-5xl font-bold text-white/90">
+                    {leader.initials}
+                  </span>
+
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-3 pt-8">
+                    <h3 className="font-serif text-lg font-bold leading-tight text-white">
+                      {leader.name}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="p-4">
+                  <p className="text-[11px] text-gray-400">{leader.title}</p>
+                  <p className="text-[13px] font-bold text-gray-900">
+                    {leader.company}
+                  </p>
+
+                  <p className="mt-2 text-[11px] leading-5 text-gray-600">
+                    {leader.bio}
+                  </p>
+
+                  <p className="mt-3 text-[9px] font-bold uppercase tracking-[0.1em] text-red-600">
+                    {leader.edition}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ====================================================
+            SPONSORED BANNER + NEWSLETTER
+        ==================================================== */}
+
+        <SponsoredBanner />
+        <NewsletterCTA />
 
         {/* ====================================================
             INTERVIEW SECTION
@@ -449,70 +634,6 @@ export function CeoSpotlightPage() {
                 </div>
               </article>
             ))}
-          </div>
-        </section>
-
-        {/* ====================================================
-            PT30
-        ==================================================== */}
-
-        <section className="mb-14 overflow-hidden rounded-md bg-[#090909] text-white">
-          <div className="p-6 sm:p-8 md:p-10">
-
-            <div className="mb-8 flex flex-col gap-4 border-b border-white/15 pb-6 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <div className="mb-2 flex items-center gap-2">
-                  <Award size={16} className="text-yellow-400" />
-
-                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-yellow-400">
-                    The Pride Times
-                  </span>
-                </div>
-
-                <h2 className="font-serif text-2xl font-bold md:text-3xl">
-                  PT30 Leadership Profiles
-                </h2>
-              </div>
-
-              <p className="max-w-xs text-[10px] leading-relaxed text-gray-500 sm:text-right">
-                The executives influencing technology, capital, industry and
-                the future of business.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {pt30Features.map((person) => (
-                <article
-                  key={person.rank}
-                  className="group relative overflow-hidden rounded-md border border-white/10 p-6 transition-colors hover:border-yellow-400"
-                >
-                  <div className="absolute right-3 top-0 font-serif text-[100px] font-bold leading-none text-white/[0.035]">
-                    {person.rank}
-                  </div>
-
-                  <div className="relative">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-gray-500">
-                      {person.role}
-                    </span>
-
-                    <h3 className="mt-2 font-serif text-2xl font-bold">
-                      {person.name}
-                    </h3>
-
-                    <div className="my-5 h-px w-8 bg-yellow-400" />
-
-                    <p className="text-xs leading-6 text-gray-400">
-                      {person.insight}
-                    </p>
-
-                    <button className="mt-6 flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.15em] text-yellow-400 transition-all group-hover:gap-2">
-                      View Profile
-                      <ArrowUpRight size={11} />
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -683,6 +804,14 @@ export function CeoSpotlightPage() {
 
           </div>
         </section>
+
+        {/* ====================================================
+            NEWSLETTER (closing reminder)
+        ==================================================== */}
+
+        <div className="mt-14">
+          <NewsletterCTA />
+        </div>
 
         {/* ====================================================
             FOOTER
