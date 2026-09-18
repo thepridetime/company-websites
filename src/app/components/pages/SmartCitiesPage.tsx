@@ -1,13 +1,5 @@
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import {
-  Clock,
-  Building2,
-  Wifi,
-  Leaf,
-  Car,
-  BarChart2,
-  Cpu,
-} from "lucide-react";
+import { Clock } from "lucide-react";
 
 import Smartc1Img from "../../../imports/Smartc1.png";
 import Smartc2Img from "../../../imports/Smartc2.png";
@@ -18,12 +10,10 @@ import Smartc4Img from "../../../imports/Smartc4.png";
    SECTION HEADER
 ========================================================= */
 
-function SH({ title }: { title: string }) {
+function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-6">
-      <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
-
-      <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
+    <div className="flex items-center justify-between border-b-2 border-black pb-2 mb-4">
+      <h2 className="font-serif text-lg md:text-xl font-bold text-gray-950">
         {title}
       </h2>
     </div>
@@ -31,591 +21,435 @@ function SH({ title }: { title: string }) {
 }
 
 /* =========================================================
-   HERO DATA
+   HERO
 ========================================================= */
 
 const hero = {
-  category: "URBAN FUTURES",
-  title:
-    "Smart Cities Market on Track for $873 Billion Valuation — Momentum Continues in 2026",
+  category: "SMART CITIES",
+  title: "Cities of Tomorrow: Building Smarter & Greener Urban Ecosystems",
   excerpt:
-    "The global Smart Cities market, projected to reach $873.7 billion by the end of 2026 based on a compound annual growth rate of 13.8% from a $457 billion base in 2021, is demonstrating strong momentum across transportation, utilities, public safety, and digital governance segments. The smart transportation sub-segment continues to command the fastest growth rate, driven by urban mobility platforms, autonomous vehicle infrastructure, and integrated traffic management systems. The energy component of smart utilities holds the largest individual market share, reflecting significant investment in smart metering, distributed grid management, and real-time demand response systems.",
+    "From Singapore's data-driven governance to Copenhagen's carbon-neutral neighborhoods, the blueprint for the 21st century city is taking shape.",
   author: "Sagar Kumar",
-  time: "June 2026",
+  time: "September 15, 2026",
   image: Smartc1Img,
 };
 
-const hero1 = {
-  category: "URBAN FUTURES",
-  title:
-    "Suffolk Technologies Backs Built-World Startups Through Smart City Incubator",
-  excerpt:
-    "Suffolk Technologies, the venture arm of construction giant Suffolk, has launched a new cohort of its built-world incubator program, targeting early-stage startups operating at the intersection of construction technology, smart buildings, and urban infrastructure. The program offers $150,000 in initial funding structured as a post-money SAFE in exchange for 4.5% equity, alongside access to Suffolk's network of industry advisors and major construction project sites.",
-  author: "Sagar Kumar",
-  time: "June 2026",
-  image: Smartc2Img,
-};
-
-const hero2 = {
-  category: "URBAN FUTURES",
-  title:
-    "De Nora Industrial Innovation Program Opens Global Applications",
-  excerpt:
-    "Italy's De Nora has opened a global call for startup applications to its industrial innovation program, offering up to EUR 50,000 per venture through a SAFE-based financing structure. The program targets startups working on industrial operations redesign, manufacturing optimization, automation, health and safety technology, and resource use optimization.",
-  author: "Sagar Kumar",
-  time: "June 2026",
-  image: Smartc3Img,
-};
-
-const hero3 = {
-  category: "URBAN FUTURES",
-  title:
-    "Smart Public Safety: AI-Driven Urban Security Systems Gain Adoption",
-  excerpt:
-    "AI-powered public safety platforms — encompassing gunshot detection, smart surveillance, and emergency response optimization — are seeing accelerated adoption across major metropolitan areas. Cities that have deployed integrated safety intelligence platforms report measurable reductions in emergency response times and improvements in crime pattern analysis.",
-  author: "Sagar Kumar",
-  time: "June 2026",
-  image: Smartc4Img,
-};
-
 /* =========================================================
-   CITY RANKINGS
+   MORE STORIES
 ========================================================= */
 
-const cityRankings = [
+const moreStories = [
   {
-    rank: 1,
-    city: "Singapore",
-    score: 98.4,
-    population: "5.8M",
-    tag: "Digital Leader",
+    category: "SMART CITIES",
+    title: "NEOM's The Line: 170km Linear City Begins First Phase Occupancy",
+    time: "5 hr ago",
+    image: Smartc2Img,
   },
   {
-    rank: 2,
-    city: "Copenhagen",
-    score: 96.7,
-    population: "0.8M",
-    tag: "Green Capital",
+    category: "URBAN FUTURES",
+    title: "Cities Accelerate Digital Infrastructure Investment",
+    time: "7 hr ago",
+    image: Smartc3Img,
   },
   {
-    rank: 3,
-    city: "Tokyo",
-    score: 95.2,
-    population: "14M",
-    tag: "Mobility Pioneer",
-  },
-  {
-    rank: 4,
-    city: "Amsterdam",
-    score: 93.8,
-    population: "0.9M",
-    tag: "Bike + Tech",
-  },
-  {
-    rank: 5,
-    city: "Seoul",
-    score: 92.4,
-    population: "10M",
-    tag: "5G Leader",
-  },
-  {
-    rank: 6,
-    city: "Dubai",
-    score: 91.3,
-    population: "3.4M",
-    tag: "AI Hub",
-  },
-  {
-    rank: 7,
-    city: "Bangalore",
-    score: 87.6,
-    population: "13M",
-    tag: "Tech Ecosystem",
+    category: "SMART CITIES",
+    title: "Urban Technology Reshapes the Future of City Planning",
+    time: "9 hr ago",
+    image: Smartc4Img,
   },
 ];
 
 /* =========================================================
-   NEWS DATA
+   LATEST NEWS
 ========================================================= */
 
-const govTechNews = [
+const latestNews = [
   {
-    id: 1,
+    category: "TECHNOLOGY",
+    badge: "HOT",
     title:
-      "IMD Smart City Index 2026 finds governance, transparency and infrastructure now matter more than tech deployment.",
-    time: "Just now",
+      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    excerpt:
+      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South...",
+    time: "12 min ago",
+    image: Smartc2Img,
   },
   {
-    id: 2,
+    category: "TECHNOLOGY",
+    badge: "HOT",
     title:
-      "Southeast Asia's first Smart City Expo opens in Kuala Lumpur, highlighting AI-powered urban innovation.",
-    time: "Just now",
+      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    excerpt:
+      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
+    time: "35 min ago",
+    image: Smartc3Img,
   },
   {
-    id: 3,
+    category: "TECHNOLOGY",
+    badge: "",
     title:
-      "U.S. local governments face a July 13 deadline to apply for federal grants for automated permitting systems.",
-    time: "Just now",
+      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    excerpt:
+      "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing...",
+    time: "2 hr ago",
+    image: Smartc4Img,
   },
   {
-    id: 4,
+    category: "TECHNOLOGY",
+    badge: "",
     title:
-      "London Climate Week hosts the SmartCitiesWorld Summit 2026.",
-    time: "1 hr ago",
+      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
+    excerpt:
+      "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative...",
+    time: "3 hr ago",
+    image: Smartc1Img,
   },
   {
-    id: 5,
+    category: "TECHNOLOGY",
+    badge: "",
     title:
-      "Estonia's E-Government Platform expands internationally as digital democracy tools gain adoption.",
-    time: "2 hrs ago",
+      "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    excerpt:
+      "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in 14 of 18 enterprise reasoning...",
+    time: "5 hr ago",
+    image: Smartc2Img,
   },
   {
-    id: 6,
+    category: "TECHNOLOGY",
+    badge: "",
     title:
-      "India's DigiCity Initiative connects hundreds of cities with real-time data dashboards.",
-    time: "4 hrs ago",
-  },
-];
-
-const mobilityNews = [
-  {
-    id: 1,
-    title:
-      "Miami-Dade Aviation Department begins testing an air-traffic management system for future air-taxi operations.",
-    time: "Just now",
-  },
-  {
-    id: 2,
-    title:
-      "Waymo's autonomous taxi fleet expands operations across major metropolitan markets.",
-    time: "1 hr ago",
-  },
-  {
-    id: 3,
-    title:
-      "Dubai advances plans for next-generation high-speed urban transportation infrastructure.",
-    time: "3 hrs ago",
-  },
-  {
-    id: 4,
-    title:
-      "Paris expands its electric bus network as cities accelerate zero-emission transportation.",
-    time: "5 hrs ago",
-  },
-  {
-    id: 5,
-    title:
-      "Berlin unveils plans for an on-demand autonomous shuttle network.",
-    time: "7 hrs ago",
-  },
-];
-
-const sustainabilityNews = [
-  {
-    id: 1,
-    title:
-      "Cities reassess climate-resilience funding as environmental programs face changing financial priorities.",
-    time: "Just now",
-  },
-  {
-    id: 2,
-    title:
-      "Urban pedestrian safety becomes a growing priority for city infrastructure planners.",
-    time: "Just now",
-  },
-  {
-    id: 3,
-    title:
-      "Cities accelerate carbon-neutrality programs through renewable energy and smart infrastructure.",
-    time: "2 hrs ago",
-  },
-  {
-    id: 4,
-    title:
-      "Singapore expands its Green Plan with new urban agriculture initiatives.",
-    time: "4 hrs ago",
-  },
-  {
-    id: 5,
-    title:
-      "African cities invest in smart water-grid systems to reduce infrastructure losses.",
-    time: "6 hrs ago",
-  },
-];
-
-const aiInfraCityNews = [
-  {
-    id: 1,
-    title:
-      "Dubai launches a Digital Twin Platform phase focused on urban planning, infrastructure and asset management.",
-    time: "Just now",
-  },
-  {
-    id: 2,
-    title:
-      "GCC infrastructure leaders say the region is moving AI deployment from individual projects to entire infrastructure portfolios.",
-    time: "Just now",
-  },
-  {
-    id: 3,
-    title:
-      "City leaders worldwide organize around the rising power and water burden of AI data centers.",
-    time: "1 hr ago",
-  },
-  {
-    id: 4,
-    title:
-      "Mayors begin treating compute capacity as a utility-planning issue rather than a conventional commercial real-estate decision.",
-    time: "3 hrs ago",
+      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    excerpt:
+      "The latest satellite constellation expansion brings high-speed internet to remote regions across Africa, South Asia, and Latin...",
+    time: "6 hr ago",
+    image: Smartc3Img,
   },
 ];
 
 /* =========================================================
-   FEATURE DATA
-========================================================= */
-
-const features = [
-  {
-    icon: Wifi,
-    title: "5G & Connectivity",
-    news:
-      "Cities accelerate 5G deployment as connected infrastructure becomes central to urban services.",
-  },
-  {
-    icon: Leaf,
-    title: "Green Infrastructure",
-    news:
-      "Urban planners expand green infrastructure, renewable energy and climate-resilience programs.",
-  },
-  {
-    icon: Car,
-    title: "Autonomous Mobility",
-    news:
-      "Self-driving transportation and autonomous delivery systems continue expanding across cities.",
-  },
-  {
-    icon: BarChart2,
-    title: "Data & IoT",
-    news:
-      "Connected sensors and real-time analytics are transforming the way cities monitor infrastructure.",
-  },
-];
-
-/* =========================================================
-   ARTICLE CARD
-========================================================= */
-
-function ArticleCard({
-  data,
-  large = false,
-}: {
-  data: typeof hero;
-  large?: boolean;
-}) {
-  return (
-    <article className="group cursor-pointer">
-      <div
-        className={`relative overflow-hidden rounded-xl bg-gray-100 shadow-sm group-hover:shadow-lg transition-shadow duration-300 ${
-          large ? "h-72 md:h-[440px]" : "h-64 md:h-80"
-        }`}
-      >
-        <ImageWithFallback
-          src={data.image}
-          alt={data.title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-        />
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-90" />
-
-        <span className="absolute left-4 bottom-4 bg-red-600 text-white px-3 py-1 text-[10px] font-bold tracking-[0.16em] uppercase rounded-md shadow-sm">
-          {data.category}
-        </span>
-      </div>
-
-      <div className="pt-5">
-        <h2
-          className={`font-serif font-bold leading-[1.15] text-gray-950 transition-colors duration-200 group-hover:text-red-600 ${
-            large
-              ? "text-[26px] md:text-[42px]"
-              : "text-xl md:text-2xl"
-          }`}
-        >
-          {data.title}
-        </h2>
-
-        <p className="mt-3 text-sm md:text-[15px] text-gray-600 leading-[1.75]">
-          {data.excerpt}
-        </p>
-
-        <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap items-center gap-4 text-xs text-gray-400">
-          <span className="font-medium text-gray-500">By {data.author}</span>
-
-          <span className="flex items-center gap-1.5">
-            <Clock size={11} strokeWidth={2.25} />
-            {data.time}
-          </span>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   NEWS COLUMN
-========================================================= */
-
-function NewsColumn({
-  title,
-  items,
-}: {
-  title: string;
-  items: { id: number; title: string; time: string }[];
-}) {
-  return (
-    <section>
-      <SH title={title} />
-
-      <div className="divide-y divide-gray-200">
-        {items.map((item, index) => (
-          <article
-            key={`${title}-${item.id}-${index}`}
-            className="group py-4 first:pt-0 cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
-          >
-            <h3 className="text-[14px] md:text-[15px] leading-[1.55] text-gray-800 transition-colors duration-200 group-hover:text-red-600">
-              {item.title}
-            </h3>
-
-            <div className="mt-2 flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-gray-400">
-              <Clock size={10} strokeWidth={2.25} />
-              {item.time}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   MAIN PAGE
+   PAGE
 ========================================================= */
 
 export function SmartCitiesPage() {
   return (
-    <div className="w-full bg-white text-gray-900 antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div className="w-full bg-white text-[#17140F]">
+      <main className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* =================================================
-            PAGE HEADER
+            PAGE TITLE
         ================================================= */}
 
-        <header className="border-b-4 border-black pb-5 mb-10">
-          <div className="flex items-center gap-3.5">
-            <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-white shrink-0 shadow-sm">
-              <Building2 size={20} strokeWidth={1.75} />
+        <section className="pt-5 md:pt-7">
+          <div className="border-t-[3px] border-[#e31b23] pt-4 md:pt-5">
+            <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] font-bold leading-tight">
+              Smart Cities
+            </h1>
+
+            <p className="mt-1 text-[12px] md:text-[13px] text-[#777]">
+              Urban technology, sustainable infrastructure, and future city
+              design.
+            </p>
+          </div>
+        </section>
+
+        {/* =================================================
+            TOP ADVERTISEMENT
+        ================================================= */}
+
+        <section className="mt-4 md:mt-5">
+          <div className="relative h-[58px] md:h-[72px] overflow-hidden bg-[#102c35] flex flex-col items-center justify-center text-center">
+            <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
+              Advertisement
+            </span>
+
+            <p className="text-[7px] md:text-[8px] tracking-[0.18em] uppercase text-[#65b9d5] font-bold">
+              GOOGLE ADSENSE
+            </p>
+
+            <p className="mt-0.5 text-[10px] md:text-[12px] text-white font-semibold">
+              Advertisement Space
+            </p>
+
+            <p className="text-[7px] md:text-[8px] text-[#73a9b8]">
+              728 × 90 • Leaderboard
+            </p>
+          </div>
+        </section>
+
+        {/* =================================================
+            HERO + SIDEBAR
+        ================================================= */}
+
+        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_215px] gap-4 md:gap-5 mt-4 md:mt-5">
+
+          {/* HERO */}
+
+          <article className="min-w-0">
+            <div className="relative overflow-hidden rounded-md h-[250px] sm:h-[330px] md:h-[400px] lg:h-[390px]">
+              <ImageWithFallback
+                src={hero.image}
+                alt={hero.title}
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-600">
-                Urban Intelligence
+            <div className="pt-2.5 md:pt-3">
+              <p className="text-[8px] md:text-[9px] font-bold tracking-[0.14em] uppercase text-[#e31b23]">
+                {hero.category}
               </p>
 
-              <h1 className="mt-1 font-serif text-3xl md:text-[42px] font-bold tracking-tight leading-tight">
-                Smart Cities & Urban Innovation
-              </h1>
+              <h2 className="mt-1 font-serif text-[20px] sm:text-[24px] md:text-[28px] lg:text-[29px] font-bold leading-[1.12] text-gray-950">
+                {hero.title}
+              </h2>
+
+              <p className="mt-2 text-[11px] md:text-[12px] leading-[1.5] text-[#666] max-w-[950px]">
+                {hero.excerpt}
+              </p>
+
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-[8px] md:text-[9px] text-[#999]">
+                <span>By {hero.author}</span>
+
+                <span>·</span>
+
+                <span>{hero.time}</span>
+
+                <span>·</span>
+
+                <span>2 hr ago</span>
+              </div>
             </div>
-          </div>
-        </header>
+          </article>
 
-        {/* =================================================
-            HERO + CITY RANKINGS
-        ================================================= */}
+          {/* RIGHT SIDEBAR */}
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-14">
+          <aside className="lg:border-l lg:border-[#dedede] lg:pl-4">
 
-          <div className="lg:col-span-2">
-            <ArticleCard data={hero} large />
-          </div>
+            {/* SPONSORED CONTENT */}
 
-          <aside className="lg:border-l lg:border-gray-200 lg:pl-8">
-            <SH title="Smart City Index 2026" />
+            <div className="border border-[#eee] rounded-md overflow-hidden">
+              <div className="px-2 py-1.5 flex items-center justify-between bg-[#faf9f4]">
+                <span className="text-[7px] font-bold tracking-[0.12em] uppercase text-[#999]">
+                  Sponsored Content
+                </span>
 
-            <div className="divide-y divide-gray-200">
-              {cityRankings.map((city) => (
-                <div
-                  key={city.rank}
-                  className="py-3.5 flex items-center gap-3.5 transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
-                >
-                  <span className="w-6 shrink-0 text-sm font-bold text-gray-300 tabular-nums">
-                    {String(city.rank).padStart(2, "0")}
-                  </span>
+                <span className="text-[7px] text-[#aaa]">
+                  Ad
+                </span>
+              </div>
 
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm text-gray-900">
-                      {city.city}
-                    </p>
+              <div className="h-[150px] md:h-[160px] bg-[#171d3b] flex flex-col items-center justify-center text-center px-3">
+                <p className="text-[8px] font-bold tracking-[0.12em] text-[#e7c829] uppercase">
+                  Featured Partner
+                </p>
 
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      {city.tag} · Pop {city.population}
-                    </p>
-                  </div>
+                <p className="mt-2 text-[12px] font-semibold text-white">
+                  Your Ad Here
+                </p>
 
-                  <span className="text-sm font-bold text-green-700 tabular-nums">
-                    {city.score}
-                  </span>
-                </div>
-              ))}
+                <p className="mt-1 text-[8px] text-gray-300">
+                  Reach 2M+ business readers
+                </p>
+              </div>
             </div>
 
-            <p className="mt-4 text-[11px] leading-5 text-gray-400">
-              Index scores represent the comparative smart-city performance
-              ranking presented on this page.
-            </p>
-          </aside>
-        </section>
+            {/* MORE STORIES */}
 
-        {/* =================================================
-            SECONDARY STORIES
-        ================================================= */}
+            <div className="mt-4">
+              <SectionHeader title="More Stories" />
 
-        <section className="mb-14">
-          <ArticleCard data={hero1} large />
-        </section>
-
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-14">
-          <ArticleCard data={hero2} />
-          <ArticleCard data={hero3} />
-        </section>
-
-        {/* =================================================
-            AI INFRASTRUCTURE & SMART CITIES
-        ================================================= */}
-
-        <section className="mb-14 border-t-2 border-black pt-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            <div className="lg:col-span-2">
-              <SH title="AI Infrastructure & Smart Cities" />
-
-              <div className="divide-y divide-gray-200">
-                {aiInfraCityNews.map((item) => (
+              <div className="space-y-3">
+                {moreStories.map((story) => (
                   <article
-                    key={item.id}
-                    className="group py-4 first:pt-0 cursor-pointer transition-colors duration-200 hover:bg-gray-50/70 -mx-2 px-2 rounded-md"
+                    key={story.title}
+                    className="flex gap-2.5 group cursor-pointer"
                   >
-                    <h3 className="text-[14px] md:text-[15px] leading-[1.55] text-gray-800 transition-colors duration-200 group-hover:text-red-600">
-                      {item.title}
-                    </h3>
+                    <div className="w-[54px] h-[42px] shrink-0 overflow-hidden rounded-sm bg-gray-100">
+                      <ImageWithFallback
+                        src={story.image}
+                        alt={story.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
 
-                    <div className="mt-2 flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-gray-400">
-                      <Clock size={10} strokeWidth={2.25} />
-                      {item.time}
+                    <div className="min-w-0">
+                      <p className="text-[7px] uppercase font-bold text-[#e31b23]">
+                        {story.category}
+                      </p>
+
+                      <h3 className="mt-0.5 font-serif text-[10px] md:text-[11px] leading-[1.25] font-bold group-hover:text-[#e31b23] transition-colors">
+                        {story.title}
+                      </h3>
+
+                      <p className="mt-1 text-[7px] text-[#aaa]">
+                        {story.time}
+                      </p>
                     </div>
                   </article>
                 ))}
               </div>
             </div>
-
-            <aside className="lg:border-l lg:border-gray-200 lg:pl-8">
-              <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-3">
-                <Cpu size={14} strokeWidth={2} className="text-red-600" />
-                <h2 className="text-[13px] font-bold uppercase tracking-[0.16em] text-gray-900">
-                  Executive Takeaway
-                </h2>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-4 shadow-sm">
-                <p className="text-[13px] leading-[1.6] text-gray-600">
-                  Cities with fast grid interconnection, transparent
-                  permitting, reliable water policy and strong cyber
-                  standards may become the preferred locations for the
-                  next wave of AI infrastructure.
-                </p>
-              </div>
-            </aside>
-          </div>
+          </aside>
         </section>
 
         {/* =================================================
-            FEATURE BOXES
+            LATEST SMART CITIES NEWS
         ================================================= */}
 
-        <section className="mb-14">
-          <SH title="Urban Technology Focus" />
+        <section className="mt-7 md:mt-9">
+          <SectionHeader title="Latest Smart Cities News" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {features.map(
-              ({ icon: Icon, title, news }) => (
-                <article
-                  key={title}
-                  className="group border border-gray-200 bg-gray-50/60 rounded-xl p-5 hover:bg-white hover:border-gray-900 hover:shadow-[0_2px_0_0_rgba(0,0,0,1)] transition-all duration-300"
-                >
-                  <div className="flex items-center justify-center w-9 h-9 rounded-full bg-black text-white mb-4 group-hover:bg-red-600 transition-colors duration-300">
-                    <Icon size={16} strokeWidth={1.75} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            {latestNews.map((news) => (
+              <article
+                key={news.title}
+                className="group border border-[#dedede] rounded-md overflow-hidden bg-white hover:shadow-md transition-shadow duration-300"
+              >
+                {/* IMAGE */}
+
+                <div className="relative h-[145px] sm:h-[135px] md:h-[145px] overflow-hidden bg-gray-100">
+                  <ImageWithFallback
+                    src={news.image}
+                    alt={news.title}
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  />
+                </div>
+
+                {/* CONTENT */}
+
+                <div className="p-2.5 md:p-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[7px] font-bold uppercase tracking-[0.08em] text-[#e31b23]">
+                      {news.category}
+                    </span>
+
+                    {news.badge && (
+                      <span className="bg-[#e31b23] text-white text-[6px] font-bold px-1.5 py-0.5 rounded-sm uppercase">
+                        {news.badge}
+                      </span>
+                    )}
                   </div>
 
-                  <p className="text-[11px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                    {title}
+                  <h3 className="mt-1.5 font-serif text-[13px] md:text-[14px] font-bold leading-[1.25] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+                    {news.title}
+                  </h3>
+
+                  <p className="mt-1.5 text-[9px] md:text-[10px] leading-[1.45] text-[#777]">
+                    {news.excerpt}
                   </p>
 
-                  <h3 className="mt-2 text-sm leading-[1.6] text-gray-600 group-hover:text-gray-950 transition-colors duration-200">
-                    {news}
-                  </h3>
-                </article>
-              )
-            )}
+                  <div className="mt-2 flex items-center justify-between text-[7px] text-[#aaa]">
+                    <span>By Sagar Kumar</span>
+
+                    <span className="flex items-center gap-1">
+                      <Clock size={8} />
+                      {news.time}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 
         {/* =================================================
-            NEWS SECTIONS
+            SECOND ADVERTISEMENT
         ================================================= */}
 
-        <section className="border-t-2 border-black pt-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <section className="mt-6 md:mt-7">
+          <div className="relative h-[58px] md:h-[72px] overflow-hidden bg-[#102c35] flex flex-col items-center justify-center text-center">
+            <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
+              Advertisement
+            </span>
 
-            <NewsColumn
-              title="GovTech & Digital Services"
-              items={govTechNews}
-            />
+            <p className="text-[7px] md:text-[8px] tracking-[0.18em] uppercase text-[#65b9d5] font-bold">
+              GOOGLE ADSENSE
+            </p>
 
-            <NewsColumn
-              title="Mobility & Transport"
-              items={mobilityNews}
-            />
+            <p className="mt-0.5 text-[10px] md:text-[12px] text-white font-semibold">
+              Business Solutions | Powered by The Pride Times
+            </p>
 
-            <NewsColumn
-              title="Green & Sustainable Cities"
-              items={sustainabilityNews}
-            />
-
+            <p className="text-[7px] md:text-[8px] text-[#73a9b8]">
+              728 × 90 • Leaderboard
+            </p>
           </div>
         </section>
 
         {/* =================================================
-            BOTTOM EDITORIAL BAR
+            SPONSORED EVENTS
         ================================================= */}
 
-        <section className="mt-14 border-t-4 border-black pt-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <section className="mt-5 md:mt-7 bg-[#fafafa] border border-[#eee] rounded-md p-3 md:p-4">
 
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-red-600">
-                The Pride Times
-              </p>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-[7px] font-bold uppercase tracking-[0.12em] border border-[#ddd] rounded px-1.5 py-1 text-[#aaa]">
+              Sponsorship
+            </span>
 
-              <p className="mt-1 text-sm text-gray-500">
-                Smart cities, infrastructure and the future of urban life.
-              </p>
-            </div>
+            <span className="text-[8px] text-[#aaa]">
+              Presented by our partners
+            </span>
+          </div>
 
-            <div className="text-[11px] uppercase tracking-wide text-gray-400">
-              Urban Futures · 2026
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+            {[
+              "Global Finance Summit 2026",
+              "Tech Leaders Forum",
+              "Energy Transition Conference",
+              "AI & Business World",
+            ].map((event) => (
+              <div
+                key={event}
+                className="min-h-[74px] border border-[#e2e2e2] bg-white rounded-md flex flex-col items-center justify-center text-center px-2"
+              >
+                <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
+                  <span className="text-[#e31b23] text-xs">✦</span>
+                </div>
 
+                <p className="text-[9px] font-bold text-gray-800">
+                  {event}
+                </p>
+
+                <p className="mt-0.5 text-[7px] text-[#aaa]">
+                  Sponsored Event
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 
-      </div>
+        {/* =================================================
+            NEWSLETTER
+        ================================================= */}
+
+        <section className="mt-6 md:mt-8 mb-10">
+          <div className="rounded-md bg-[#071a2d] px-5 py-7 md:py-8 text-center">
+            <h2 className="font-serif text-[18px] md:text-[20px] font-bold text-white">
+              Stay Ahead with The Pride Times
+            </h2>
+
+            <p className="mt-1 text-[9px] md:text-[10px] text-gray-300">
+              Daily briefings from Smart Cities delivered to your inbox.
+            </p>
+
+            <div className="mt-4 flex flex-col sm:flex-row justify-center gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="h-8 w-full sm:w-[190px] rounded border border-[#42566b] bg-[#1c344b] px-3 text-[9px] text-white placeholder:text-[#8796a6] outline-none focus:border-[#e31b23]"
+              />
+
+              <button
+                type="button"
+                className="h-8 px-4 rounded bg-[#e31b23] text-white text-[9px] font-bold hover:bg-[#c9151c] transition-colors"
+              >
+                Subscribe Free
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </main>
     </div>
   );
 }
