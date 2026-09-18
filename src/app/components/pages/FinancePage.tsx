@@ -1,34 +1,15 @@
+import { Clock, TrendingUp, TrendingDown, BarChart2, DollarSign, Globe, Briefcase } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { Clock, ChevronRight, TrendingUp, TrendingDown, BarChart2, DollarSign, Globe, Briefcase } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+
 import InsImg from "../../../imports/Insightimage.png";
 import LN4Img from "../../../imports/LN4image.png";
 import FIN3Img from "../../../imports/FIN3.png";
 import FIN4Img from "../../../imports/FIN4.png";
 import FIN5Img from "../../../imports/FIN5.png";
 
-function SectionHeader({ title, id }: { title: string; id?: string }) {
-  return (
-    <div id={id} className="finance-section-header">
-      <h2>{title}</h2>
-    </div>
-  );
-}
-
-const spData = [
-  { date: "Jan", value: 4800 },
-  { date: "Feb", value: 4950 },
-  { date: "Mar", value: 5100 },
-  { date: "Apr", value: 5050 },
-  { date: "May", value: 5400 },
-  { date: "Jun", value: 5350 },
-  { date: "Jul", value: 5600 },
-  { date: "Aug", value: 5750 },
-  { date: "Sep", value: 5650 },
-  { date: "Oct", value: 5800 },
-  { date: "Nov", value: 5750 },
-  { date: "Dec", value: 5892 },
-];
+/* =========================================================
+   MARKET DATA
+========================================================= */
 
 const fullMarkets = [
   { symbol: "DOW JONES", value: "42,318.45", change: "+0.82%", pts: "+343.89", up: true },
@@ -55,6 +36,10 @@ const fullMarkets = [
   { symbol: "US 2Y YIELD", value: "4.87%", change: "+0.03%", pts: "+0.03", up: true },
 ];
 
+/* =========================================================
+   HERO STORIES
+========================================================= */
+
 const financeHero = {
   category: "GLOBAL ECONOMY",
   title: "U.S. Equity Markets Rally on Strong Manufacturing Data ",
@@ -74,15 +59,17 @@ const financeHero1 = {
   time: "2 hours ago",
   image: LN4Img,
 };
+
 const financeHero2 = {
   category: "GLOBAL ECONOMY",
   title: "Fertitta Entertainment to Acquire Caesars Entertainment for $17.6 Billion  ",
   excerpt:
     "Tilman Fertitta's Fertitta Entertainment has announced a landmark agreement to acquire Caesars Entertainment in a deal valued at approximately $17.6 billion, inclusive of Caesars' existing debt. The transaction is one of the largest in the gaming and hospitality sector in recent memory and would create a dominant force in the North American integrated resort industry.Fertitta, whose portfolio includes the Golden Nugget casino chain and the Houston Rockets NBA franchise, has long targeted Caesars as a strategic acquisition. The deal is expected to face scrutiny from gaming regulators in multiple states as well as the Federal Trade Commission, though analysts believe the transaction structure has been designed to address antitrust concerns. ",
   author: "Sagar Kumar",
-    time: "2 hours ago",
+  time: "2 hours ago",
   image: FIN3Img,
 };
+
 const financeHero3 = {
   category: "GLOBAL ECONOMY",
   title: "Scotiabank to Acquire Maple Financial in Wealth Expansion Play  ",
@@ -92,6 +79,7 @@ const financeHero3 = {
   time: "2 hours ago",
   image: FIN4Img,
 };
+
 const financeHero4 = {
   category: "GLOBAL ECONOMY",
   title: "AIG Moves to Acquire Everest Insurance Operations in Colombia",
@@ -102,181 +90,441 @@ const financeHero4 = {
   image: FIN5Img,
 };
 
+/* =========================================================
+   BUSINESS STORIES
+========================================================= */
+
 const businessStories = [
   {
     id: 1,
     category: "MERGERS & ACQUISITIONS",
     title: "Amazon Acquires Nuclear Energy Company for $12B to Power AWS Data Centers",
     time: "1 hr ago",
-    image: "https://images.unsplash.com/photo-1679583721525-658d164e609b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxzdG9jayUyMG1hcmtldCUyMGZpbmFuY2UlMjB3YWxsJTIwc3RyZWV0fGVufDF8fHx8MTc3OTM4NTk4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+    image:
+      "https://images.unsplash.com/photo-1679583721525-658d164e609b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxzdG9jayUyMG1hcmtldCUyMGZpbmFuY2UlMjB3YWxsJTIwc3RyZWV0fGVufDF8fHx8MTc3OTM4NTk4NHww&ixlib=rb-4.1.0&q=80&w=1080",
   },
   {
     id: 2,
     category: "BANKING",
     title: "JPMorgan Reports Record $18.2B Quarterly Profit as Trading Revenue Surges",
     time: "3 hrs ago",
-    image: "https://images.unsplash.com/photo-1648275913341-7973ae7bc9b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxzdG9jayUyMG1hcmtldCUyMGZpbmFuY2UlMjB3YWxsJTIwc3RyZWV0fGVufDF8fHx8MTc3OTM4NTk4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+    image:
+      "https://images.unsplash.com/photo-1648275913341-7973ae7bc9b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxzdG9jayUyMG1hcmtldCUyMGZpbmFuY2UlMjB3YWxsJTIwc3RyZWV0fGVufDF8fHx8MTc3OTM4NTk4NHww&ixlib=rb-4.1.0&q=80&w=1080",
   },
 ];
 
+/* =========================================================
+   LEADERSHIP
+========================================================= */
+
 const leadershipStories = [
-  { id: 1, name: "Satya Nadella", title: "Microsoft CEO", quote: "AI will generate more value than the industrial revolution in a shorter time frame.", action: "Read Full Interview" },
-  { id: 2, name: "Mary Barra", title: "General Motors CEO", quote: "We're not just building cars anymore — we're building the future of mobility and energy.", action: "Read Full Interview" },
-  { id: 3, name: "Sundar Pichai", title: "Alphabet CEO", quote: "The AI opportunity is bigger than the internet, mobile, and cloud combined.", action: "Read Full Interview" },
+  {
+    id: 1,
+    name: "Satya Nadella",
+    title: "Microsoft CEO",
+    quote:
+      "AI will generate more value than the industrial revolution in a shorter time frame.",
+    action: "Read Full Interview",
+  },
+  {
+    id: 2,
+    name: "Mary Barra",
+    title: "General Motors CEO",
+    quote:
+      "We're not just building cars anymore — we're building the future of mobility and energy.",
+    action: "Read Full Interview",
+  },
+  {
+    id: 3,
+    name: "Sundar Pichai",
+    title: "Alphabet CEO",
+    quote:
+      "The AI opportunity is bigger than the internet, mobile, and cloud combined.",
+    action: "Read Full Interview",
+  },
 ];
+
+/* =========================================================
+   ECONOMY
+========================================================= */
 
 const economyTopics = [
-  { id: 1, title: "ECB raises rates amid renewed inflation concerns as AI infrastructure spending keeps market volatility elevated.", time: "Just now" },
-  { id: 2, title: "Fed Holds Rates at 4.75% — Markets Price in Three Cuts by Year-End", time: "2 hrs ago" },
-  { id: 3, title: "US Inflation Falls to 2.1%, Lowest Level Since Pre-Pandemic Era", time: "4 hrs ago" },
-  { id: 3, title: "China's GDP Growth Hits 5.1% in Q1, Beats Consensus Estimate", time: "5 hrs ago" },
-  { id: 4, title: "India's Foreign Exchange Reserves Cross $700 Billion for First Time", time: "6 hrs ago" },
-  { id: 5, title: "Eurozone Manufacturing PMI Rebounds to 52.4, Signaling Recovery", time: "8 hrs ago" },
-  { id: 6, title: "ASEAN Trade Volume Sets Record at $4.2 Trillion in 2025", time: "10 hrs ago" },
+  {
+    id: 1,
+    title:
+      "ECB raises rates amid renewed inflation concerns as AI infrastructure spending keeps market volatility elevated.",
+    time: "Just now",
+  },
+  {
+    id: 2,
+    title: "Fed Holds Rates at 4.75% — Markets Price in Three Cuts by Year-End",
+    time: "2 hrs ago",
+  },
+  {
+    id: 3,
+    title: "US Inflation Falls to 2.1%, Lowest Level Since Pre-Pandemic Era",
+    time: "4 hrs ago",
+  },
+  {
+    id: 3,
+    title: "China's GDP Growth Hits 5.1% in Q1, Beats Consensus Estimate",
+    time: "5 hrs ago",
+  },
+  {
+    id: 4,
+    title:
+      "India's Foreign Exchange Reserves Cross $700 Billion for First Time",
+    time: "6 hrs ago",
+  },
+  {
+    id: 5,
+    title:
+      "Eurozone Manufacturing PMI Rebounds to 52.4, Signaling Recovery",
+    time: "8 hrs ago",
+  },
+  {
+    id: 6,
+    title:
+      "ASEAN Trade Volume Sets Record at $4.2 Trillion in 2025",
+    time: "10 hrs ago",
+  },
 ];
 
-function FinanceHeroCard({ story, size = "large" }: { story: any; size?: "large" | "compact" }) {
-  if (size === "compact") {
-    return (
-      <article className="finance-story-card finance-story-card--compact">
-        <div className="finance-story-image-wrap">
-          <ImageWithFallback
-            src={story.image}
-            alt={story.title}
-            className="finance-story-image finance-story-image--compact"
-          />
-        </div>
-        <span className="finance-story-category">{story.category}</span>
-        <h3>{story.title}</h3>
-        <p className="finance-story-excerpt">{story.excerpt}</p>
-        <div className="finance-story-meta">
-          <span>By {story.author}</span>
-          <span><Clock size={10} /> {story.time}</span>
-        </div>
-      </article>
-    );
-  }
+/* =========================================================
+   SECTION HEADER
+========================================================= */
 
+function SectionHeader({
+  title,
+  action,
+}: {
+  title: string;
+  action?: string;
+}) {
   return (
-    <article className="finance-story-card finance-story-card--hero">
-      <div className="finance-story-image-wrap finance-story-image-wrap--hero">
+    <div className="finance-section-header">
+      <h2>{title}</h2>
+
+      {action && (
+        <button className="finance-see-all">
+          {action}
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* =========================================================
+   AD BANNER
+========================================================= */
+
+function AdBanner({ bottom = false }: { bottom?: boolean }) {
+  return (
+    <div className="finance-ad-banner">
+      <span className="finance-ad-label">GOOGLE ADSENSE</span>
+
+      <strong>
+        {bottom
+          ? "Business Solutions | Powered by The Pride Times"
+          : "Advertisement Space"}
+      </strong>
+
+      <small>728 × 90 • Leaderboard</small>
+
+      <span className="finance-ad-tag">Advertisement</span>
+    </div>
+  );
+}
+
+/* =========================================================
+   SPONSORED CONTENT
+========================================================= */
+
+function SponsoredContent() {
+  return (
+    <aside className="finance-sponsored">
+      <div className="finance-sponsored-label">
+        <span>SPONSORED CONTENT</span>
+        <span>Ad</span>
+      </div>
+
+      <div className="finance-sponsored-box">
+        <span>FEATURED PARTNER</span>
+        <strong>Your Ad Here</strong>
+        <small>Reach 2M+ business readers</small>
+      </div>
+
+      <SectionHeader title="MORE STORIES" />
+
+      <div className="finance-more-stories">
+        <div className="finance-more-story">
+          <div className="finance-more-thumb">
+            <ImageWithFallback
+              src={LN4Img}
+              alt={financeHero1.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div>
+            <span>FINANCE</span>
+            <h4>Berkshire Hathaway Acquires Home Builder Taylor Morrison</h4>
+            <small>2 hrs ago</small>
+          </div>
+        </div>
+
+        <div className="finance-more-story">
+          <div className="finance-more-thumb">
+            <ImageWithFallback
+              src={FIN3Img}
+              alt={financeHero2.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div>
+            <span>BUSINESS</span>
+            <h4>Fertitta Entertainment Announces Major Caesars Deal</h4>
+            <small>4 hrs ago</small>
+          </div>
+        </div>
+
+        <div className="finance-more-story">
+          <div className="finance-more-thumb">
+            <ImageWithFallback
+              src={FIN4Img}
+              alt={financeHero3.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div>
+            <span>MARKETS</span>
+            <h4>Scotiabank Expands Wealth Management Operations</h4>
+            <small>6 hrs ago</small>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+/* =========================================================
+   HERO ARTICLE
+========================================================= */
+
+function HeroArticle() {
+  return (
+    <article className="finance-main-story group">
+      <div className="finance-main-image-wrap">
         <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="finance-story-image finance-story-image--hero"
+          src={financeHero.image}
+          alt={financeHero.title}
+          className="finance-main-image"
         />
       </div>
-      <span className="finance-story-category">{story.category}</span>
-      <h1>{story.title}</h1>
-      <p className="finance-story-excerpt finance-story-excerpt--hero">{story.excerpt}</p>
-      <div className="finance-story-meta">
-        <span>By {story.author}</span>
-        <span><Clock size={10} /> {story.time}</span>
+
+      <span className="finance-category">
+        {financeHero.category}
+      </span>
+
+      <h1>{financeHero.title}</h1>
+
+      <p>{financeHero.excerpt}</p>
+
+      <div className="finance-meta">
+        <span>By {financeHero.author}</span>
+
+        <span>
+          <Clock size={10} strokeWidth={2} />
+          {financeHero.time}
+        </span>
       </div>
     </article>
   );
 }
 
+/* =========================================================
+   STORY CARD
+========================================================= */
+
+function StoryCard({
+  story,
+}: {
+  story: {
+    category: string;
+    title: string;
+    excerpt?: string;
+    author?: string;
+    time: string;
+    image: any;
+  };
+}) {
+  return (
+    <article className="finance-story-card group">
+      <div className="finance-story-image-wrap">
+        <ImageWithFallback
+          src={story.image}
+          alt={story.title}
+          className="finance-story-image"
+        />
+      </div>
+
+      <span className="finance-category">
+        {story.category}
+      </span>
+
+      <h3>{story.title}</h3>
+
+      {story.excerpt && (
+        <p>{story.excerpt}</p>
+      )}
+
+      <div className="finance-meta">
+        {story.author && (
+          <span>By {story.author}</span>
+        )}
+
+        <span>
+          <Clock size={10} strokeWidth={2} />
+          {story.time}
+        </span>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
 export function FinancePage() {
+  const latestStories = [
+    financeHero1,
+    financeHero2,
+    financeHero3,
+    financeHero4,
+    businessStories[0],
+    businessStories[1],
+  ];
+
   return (
     <main className="finance-page">
-      <div className="finance-container">
+      <div className="finance-page-inner">
 
-        {/* Bloomberg-style page masthead */}
-        <header className="finance-page-header">
+        {/* =================================================
+            PAGE HEADER
+        ================================================= */}
+
+        <header className="finance-heading">
           <div>
-            <span className="finance-eyebrow">Markets & Business</span>
-            <h1>Finance &amp; Business News</h1>
+            <h1>Finance</h1>
+
+            <p>
+              Markets, business, economy, corporate news, and global finance.
+            </p>
           </div>
-          <span className="finance-header-date">THE PRIDE TIMES • FINANCE</span>
         </header>
 
-        {/* Compact market navigation */}
-        <nav className="finance-topic-bar" aria-label="Finance topics">
-          {[
-            { icon: BarChart2, label: "Markets" },
-            { icon: DollarSign, label: "Economy" },
-            { icon: Globe, label: "Global Trade" },
-            { icon: Briefcase, label: "Corporate News" },
-          ].map(({ icon: Icon, label }) => (
-            <span key={label} className="finance-topic">
-              <Icon size={12} /> {label}
-            </span>
-          ))}
-        </nav>
+        {/* =================================================
+            ADVERTISEMENT
+        ================================================= */}
 
-        {/* Main editorial grid */}
-        <section className="finance-hero-grid">
-          <div className="finance-hero-main">
-            <FinanceHeroCard story={financeHero} size="large" />
+        <AdBanner />
+
+        {/* =================================================
+            HERO + SPONSORED SIDEBAR
+        ================================================= */}
+
+        <section className="finance-hero-layout">
+
+          <div className="finance-hero-column">
+            <HeroArticle />
           </div>
 
-          <aside className="finance-market-panel">
-            <div className="finance-market-heading">
-              <div>
-                <span>S&amp;P 500</span>
-                <strong>5,892.31</strong>
-              </div>
-              <span className="finance-positive">
-                <TrendingUp size={14} /> +1.14%
-              </span>
-            </div>
+          <SponsoredContent />
 
-            <div className="finance-chart">
-              <ResponsiveContainer width="100%" height={170}>
-                <LineChart data={spData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
-                  <XAxis dataKey="date" tick={{ fontSize: 9 }} />
-                  <YAxis tick={{ fontSize: 9 }} domain={["dataMin - 200", "dataMax + 100"]} />
-                  <Tooltip contentStyle={{ fontSize: 11 }} />
-                  <Line type="monotone" dataKey="value" stroke="#16a34a" strokeWidth={2} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-            <p className="finance-chart-caption">12-Month Performance (2025–2026)</p>
-
-            <div className="finance-market-strip">
-              {fullMarkets.slice(0, 5).map((m) => (
-                <div key={m.symbol} className="finance-mini-market">
-                  <span>{m.symbol}</span>
-                  <strong>{m.value}</strong>
-                  <em className={m.up ? "finance-positive" : "finance-negative"}>{m.change}</em>
-                </div>
-              ))}
-            </div>
-          </aside>
         </section>
 
-        {/* More headlines */}
+        {/* =================================================
+            LATEST FINANCE NEWS
+        ================================================= */}
+
         <section className="finance-section">
-          <SectionHeader title="More Headlines" />
-          <div className="finance-headline-grid">
-            <FinanceHeroCard story={financeHero1} size="compact" />
-            <FinanceHeroCard story={financeHero2} size="compact" />
-            <FinanceHeroCard story={financeHero3} size="compact" />
-            <FinanceHeroCard story={financeHero4} size="compact" />
+          <SectionHeader title="Latest Finance News" />
+
+          <div className="finance-news-grid">
+            {latestStories.map((story, index) => (
+              <StoryCard
+                key={`${story.title}-${index}`}
+                story={story}
+              />
+            ))}
           </div>
         </section>
 
-        {/* Pull quote */}
-        <section className="finance-quote">
-          <div className="finance-quote-mark" />
-          <div>
-            <p>
-              "M&amp;A is reopening, but unevenly. Capital is increasingly flowing across
-              industrials, financial services, energy, and health into businesses positioned
-              at the intersection of innovation, scale, and long-term growth."
-            </p>
-            <strong>— PwC Global M&amp;A Trends 2026</strong>
+        {/* =================================================
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <AdBanner bottom />
+
+        {/* =================================================
+            SPONSORSHIP
+        ================================================= */}
+
+        <section className="finance-sponsorship">
+          <div className="finance-sponsorship-heading">
+            <span>SPONSORSHIP</span>
+            <small>Presented by our partners</small>
+          </div>
+
+          <div className="finance-sponsor-grid">
+
+            <div className="finance-sponsor-card">
+              <div className="finance-sponsor-icon">
+                <BarChart2 size={18} />
+              </div>
+              <strong>Global Finance Summit 2026</strong>
+              <span>Sponsored Event</span>
+            </div>
+
+            <div className="finance-sponsor-card">
+              <div className="finance-sponsor-icon">
+                <Briefcase size={18} />
+              </div>
+              <strong>Tech Leaders Forum</strong>
+              <span>Sponsored Event</span>
+            </div>
+
+            <div className="finance-sponsor-card">
+              <div className="finance-sponsor-icon">
+                <DollarSign size={18} />
+              </div>
+              <strong>Energy Transition Conference</strong>
+              <span>Sponsored Event</span>
+            </div>
+
+            <div className="finance-sponsor-card">
+              <div className="finance-sponsor-icon">
+                <Globe size={18} />
+              </div>
+              <strong>AI & Business World</strong>
+              <span>Sponsored Event</span>
+            </div>
+
           </div>
         </section>
 
-        {/* Global markets */}
-        <section className="finance-section" id="markets">
-          <div className="finance-section-header finance-section-header--with-link">
-            <h2>Global Markets Overview</h2>
-            <a href="/markets">View All Markets</a>
-          </div>
+        {/* =================================================
+            GLOBAL MARKETS
+        ================================================= */}
+
+        <section className="finance-section">
+          <SectionHeader
+            title="Global Markets Overview"
+            action="View All Markets"
+          />
 
           <div className="finance-markets-table-wrap">
             <table className="finance-markets-table">
@@ -285,22 +533,45 @@ export function FinancePage() {
                   <th>Index / Asset</th>
                   <th>Price</th>
                   <th>Change</th>
-                  <th className="finance-points-col">Points</th>
+                  <th>Points</th>
                 </tr>
               </thead>
+
               <tbody>
-                {fullMarkets.map((m) => (
-                  <tr key={m.symbol}>
-                    <td>{m.symbol}</td>
-                    <td>{m.value}</td>
+                {fullMarkets.map((market) => (
+                  <tr key={market.symbol}>
+                    <td>{market.symbol}</td>
+
                     <td>
-                      <span className={m.up ? "finance-positive" : "finance-negative"}>
-                        {m.up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                        {m.change}
+                      {market.value}
+                    </td>
+
+                    <td>
+                      <span
+                        className={
+                          market.up
+                            ? "finance-up"
+                            : "finance-down"
+                        }
+                      >
+                        {market.up ? (
+                          <TrendingUp size={11} />
+                        ) : (
+                          <TrendingDown size={11} />
+                        )}
+
+                        {market.change}
                       </span>
                     </td>
-                    <td className={`finance-points-col ${m.up ? "finance-positive" : "finance-negative"}`}>
-                      {m.pts}
+
+                    <td
+                      className={
+                        market.up
+                          ? "finance-up"
+                          : "finance-down"
+                      }
+                    >
+                      {market.pts}
                     </td>
                   </tr>
                 ))}
@@ -309,418 +580,584 @@ export function FinancePage() {
           </div>
         </section>
 
-        {/* Business stories */}
+        {/* =================================================
+            BUSINESS + ECONOMY
+        ================================================= */}
+
+        <section className="finance-two-column">
+
+          <div>
+            <SectionHeader title="Business" />
+
+            <div className="finance-business-list">
+              {businessStories.map((story) => (
+                <article
+                  key={story.id}
+                  className="finance-business-story"
+                >
+                  <div className="finance-business-image">
+                    <ImageWithFallback
+                      src={story.image}
+                      alt={story.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="finance-category">
+                      {story.category}
+                    </span>
+
+                    <h3>{story.title}</h3>
+
+                    <span className="finance-meta">
+                      <Clock size={10} />
+                      {story.time}
+                    </span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <SectionHeader title="Economy & Policy" />
+
+            <div className="finance-economy-list">
+              {economyTopics.map((item, index) => (
+                <article
+                  key={`${item.id}-${index}`}
+                  className="finance-economy-item"
+                >
+                  <h3>{item.title}</h3>
+
+                  <span>
+                    <Clock size={10} />
+                    {item.time}
+                  </span>
+                </article>
+              ))}
+            </div>
+          </div>
+
+        </section>
+
+        {/* =================================================
+            LEADERSHIP
+        ================================================= */}
+
         <section className="finance-section">
-          <SectionHeader title="Business" />
-          <div className="finance-business-grid">
-            {businessStories.map((s) => (
-              <article key={s.id} className="finance-business-card">
-                <div className="finance-business-image-wrap">
-                  <ImageWithFallback
-                    src={s.image}
-                    alt={s.title}
-                    className="finance-business-image"
-                  />
+          <SectionHeader title="Leadership Voices" />
+
+          <div className="finance-leadership-grid">
+            {leadershipStories.map((leader) => (
+              <article
+                key={leader.id}
+                className="finance-leader-card"
+              >
+                <div className="finance-leader-avatar">
+                  {leader.name.charAt(0)}
                 </div>
-                <span className="finance-story-category">{s.category}</span>
-                <h3>{s.title}</h3>
-                <span className="finance-story-meta">
-                  <Clock size={10} /> {s.time}
-                </span>
+
+                <strong>{leader.name}</strong>
+
+                <span>{leader.title}</span>
+
+                <blockquote>
+                  "{leader.quote}"
+                </blockquote>
+
+                <button>
+                  {leader.action}
+                </button>
               </article>
             ))}
           </div>
         </section>
 
-        {/* Economy + Leadership */}
-        <section className="finance-bottom-grid">
-          <div className="finance-section">
-            <SectionHeader title="Economy & Policy" />
-            <div className="finance-economy-list">
-              {economyTopics.map((item) => (
-                <article key={`${item.id}-${item.time}`} className="finance-economy-item">
-                  <div>
-                    <h3>{item.title}</h3>
-                    <span><Clock size={10} /> {item.time}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
+        {/* =================================================
+            NEWSLETTER
+        ================================================= */}
 
-          <div className="finance-section" id="leadership">
-            <SectionHeader title="Leadership Voices" />
-            <div className="finance-leadership-list">
-              {leadershipStories.map((l) => (
-                <article key={l.id} className="finance-leader-card">
-                  <div className="finance-leader-head">
-                    <div className="finance-leader-avatar">
-                      {l.name[0]}
-                    </div>
-                    <div>
-                      <strong>{l.name}</strong>
-                      <span>{l.title}</span>
-                    </div>
-                  </div>
-                  <blockquote>"{l.quote}"</blockquote>
-                  <button>{l.action}</button>
-                </article>
-              ))}
-            </div>
+        <section className="finance-newsletter">
+          <h2>Stay Ahead with The Pride Times</h2>
+
+          <p>
+            Daily briefings on Finance delivered to your inbox.
+          </p>
+
+          <div className="finance-newsletter-form">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              aria-label="Email address"
+            />
+
+            <button>
+              Subscribe Free
+            </button>
           </div>
         </section>
 
-        <div className="finance-ad">Advertisement</div>
       </div>
 
-      {/* Page-scoped CSS: data/images remain untouched; only layout and styling change. */}
+      {/* =================================================
+          PAGE SCOPED CSS
+      ================================================= */}
+
       <style>{`
+
+        /* =====================================================
+           BASE
+        ===================================================== */
+
         .finance-page {
           width: 100%;
-          background: #fff;
-          color: #111;
+          min-height: 100vh;
+          background: #ffffff;
+          color: #17140f;
           font-family: Arial, Helvetica, sans-serif;
+          overflow-x: hidden;
         }
 
-        .finance-container {
-          width: min(1180px, calc(100% - 40px));
+        .finance-page-inner {
+          width: calc(100% - 88px);
           margin: 0 auto;
-          padding: 18px 0 42px;
+          padding: 22px 0 70px;
         }
 
-        .finance-page-header {
-          min-height: 72px;
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 24px;
-          padding-bottom: 12px;
-          border-bottom: 4px solid #111;
+        /* =====================================================
+           PAGE HEADER
+        ===================================================== */
+
+        .finance-heading {
+          border-top: 4px solid #e31b23;
+          padding: 17px 0 14px;
+          margin-bottom: 24px;
         }
 
-        .finance-eyebrow {
-          display: block;
-          margin-bottom: 4px;
+        .finance-heading h1 {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(34px, 4vw, 48px);
+          line-height: 1;
+          font-weight: 800;
+          letter-spacing: -0.04em;
+        }
+
+        .finance-heading p {
+          margin: 8px 0 0;
           color: #777;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: .13em;
-          text-transform: uppercase;
-        }
-
-        .finance-page-header h1 {
-          margin: 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(30px, 4vw, 48px);
-          line-height: .98;
-          font-weight: 800;
-          letter-spacing: -.035em;
-        }
-
-        .finance-header-date {
-          padding-bottom: 5px;
-          color: #666;
-          font-size: 9px;
-          font-weight: 700;
-          letter-spacing: .08em;
-          white-space: nowrap;
-        }
-
-        .finance-topic-bar {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          overflow-x: auto;
-          padding: 9px 0;
-          border-bottom: 1px solid #d9d9d9;
-        }
-
-        .finance-topic {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 6px 10px;
-          border: 1px solid #d5d5d5;
-          background: #f7f7f7;
-          color: #222;
-          font-size: 10px;
-          font-weight: 700;
-          white-space: nowrap;
-        }
-
-        .finance-hero-grid {
-          display: grid;
-          grid-template-columns: minmax(0, 1.75fr) minmax(280px, .8fr);
-          gap: 22px;
-          padding: 20px 0;
-          border-bottom: 1px solid #111;
-        }
-
-        .finance-story-image-wrap {
-          overflow: hidden;
-          background: #eee;
-        }
-
-        .finance-story-image {
-          display: block;
-          width: 100%;
-          object-fit: cover;
-          transition: transform .35s ease;
-        }
-
-        .finance-story-card:hover .finance-story-image,
-        .finance-business-card:hover .finance-business-image {
-          transform: scale(1.025);
-        }
-
-        .finance-story-image--hero {
-          height: 330px;
-        }
-
-        .finance-story-category {
-          display: block;
-          margin-top: 9px;
-          color: #d71920;
-          font-size: 9px;
-          font-weight: 800;
-          letter-spacing: .1em;
-          text-transform: uppercase;
-        }
-
-        .finance-story-card--hero h1 {
-          max-width: 900px;
-          margin: 5px 0 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: clamp(27px, 3.2vw, 42px);
-          line-height: 1.03;
-          font-weight: 800;
-          letter-spacing: -.025em;
-        }
-
-        .finance-story-excerpt {
-          color: #555;
-          font-size: 12px;
-          line-height: 1.45;
-        }
-
-        .finance-story-excerpt--hero {
-          max-width: 850px;
-          margin: 9px 0 0;
           font-size: 13px;
+          line-height: 1.5;
         }
 
-        .finance-story-meta {
+        /* =====================================================
+           AD
+        ===================================================== */
+
+        .finance-ad-banner {
+          position: relative;
+          min-height: 90px;
+          margin: 0 0 18px;
+          background:
+            linear-gradient(
+              90deg,
+              #102a31 0%,
+              #173b44 50%,
+              #2d5965 100%
+            );
+          color: white;
           display: flex;
+          flex-direction: column;
+          justify-content: center;
           align-items: center;
-          gap: 12px;
-          margin-top: 8px;
-          color: #888;
-          font-size: 9px;
-        }
-
-        .finance-story-meta span {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-        }
-
-        .finance-market-panel {
-          padding-left: 18px;
-          border-left: 1px solid #d8d8d8;
-        }
-
-        .finance-market-heading {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          padding-bottom: 9px;
-          border-bottom: 2px solid #111;
-        }
-
-        .finance-market-heading span:first-child {
-          display: block;
-          color: #666;
-          font-size: 9px;
-          font-weight: 700;
-          letter-spacing: .1em;
-        }
-
-        .finance-market-heading strong {
-          display: block;
-          margin-top: 2px;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 25px;
-        }
-
-        .finance-positive {
-          color: #159447 !important;
-        }
-
-        .finance-negative {
-          color: #d71920 !important;
-        }
-
-        .finance-market-heading .finance-positive {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding-top: 5px;
-          font-size: 11px;
-          font-weight: 700;
-        }
-
-        .finance-chart {
-          padding: 12px 0 0;
-        }
-
-        .finance-chart-caption {
-          margin: 0;
-          color: #999;
           text-align: center;
+        }
+
+        .finance-ad-label {
+          color: #53b6d1;
+          font-size: 8px;
+          font-weight: 800;
+          letter-spacing: 0.16em;
+        }
+
+        .finance-ad-banner strong {
+          margin-top: 5px;
+          font-size: 13px;
+          font-weight: 700;
+        }
+
+        .finance-ad-banner small {
+          margin-top: 3px;
+          color: #8eb9c5;
           font-size: 8px;
         }
 
-        .finance-market-strip {
-          margin-top: 12px;
-          border-top: 1px solid #ddd;
+        .finance-ad-tag {
+          position: absolute;
+          right: 4px;
+          top: 4px;
+          padding: 2px 4px;
+          color: #777;
+          background: white;
+          font-size: 7px;
         }
 
-        .finance-mini-market {
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .finance-hero-layout {
           display: grid;
-          grid-template-columns: 1fr auto auto;
-          gap: 8px;
+          grid-template-columns: minmax(0, 3.25fr) minmax(250px, 1fr);
+          gap: 18px;
+          margin-top: 14px;
+          padding-bottom: 42px;
+          border-bottom: 1px solid #222;
+        }
+
+        .finance-hero-column {
+          min-width: 0;
+        }
+
+        .finance-main-image-wrap {
+          width: 100%;
+          height: 365px;
+          overflow: hidden;
+          border-radius: 7px;
+          background: #eee;
+        }
+
+        .finance-main-image {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s ease;
+        }
+
+        .finance-main-story:hover .finance-main-image {
+          transform: scale(1.025);
+        }
+
+        .finance-category {
+          display: block;
+          margin-top: 9px;
+          color: #e31b23;
+          font-size: 9px;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .finance-main-story h1 {
+          margin: 5px 0 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: clamp(25px, 3vw, 35px);
+          line-height: 1.08;
+          font-weight: 800;
+          letter-spacing: -0.025em;
+        }
+
+        .finance-main-story p {
+          max-width: 1050px;
+          margin: 8px 0 0;
+          color: #666;
+          font-size: 13px;
+          line-height: 1.55;
+        }
+
+        .finance-meta {
+          display: flex;
           align-items: center;
-          padding: 7px 0;
-          border-bottom: 1px solid #eee;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 9px;
+          color: #999;
           font-size: 9px;
         }
 
-        .finance-mini-market span {
-          color: #555;
+        .finance-meta span {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        /* =====================================================
+           SPONSORED
+        ===================================================== */
+
+        .finance-sponsored {
+          min-width: 0;
+          border-left: 1px solid #ddd;
+          padding-left: 15px;
+        }
+
+        .finance-sponsored-label {
+          display: flex;
+          justify-content: space-between;
+          color: #999;
+          font-size: 7px;
           font-weight: 700;
+          letter-spacing: 0.08em;
         }
 
-        .finance-mini-market strong {
-          font-size: 10px;
+        .finance-sponsored-box {
+          height: 170px;
+          margin-top: 7px;
+          background: #121a38;
+          color: white;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
         }
 
-        .finance-mini-market em {
-          font-style: normal;
-          font-weight: 700;
+        .finance-sponsored-box span {
+          color: #f0ce39;
+          font-size: 8px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
         }
 
-        .finance-section {
-          padding: 20px 0;
+        .finance-sponsored-box strong {
+          margin-top: 8px;
+          font-size: 13px;
         }
+
+        .finance-sponsored-box small {
+          margin-top: 5px;
+          color: #b8bfd0;
+          font-size: 8px;
+        }
+
+        /* =====================================================
+           SECTION HEADER
+        ===================================================== */
 
         .finance-section-header {
           display: flex;
-          align-items: baseline;
+          align-items: center;
           justify-content: space-between;
           gap: 15px;
-          margin-bottom: 13px;
+          border-bottom: 2px solid #222;
           padding-bottom: 7px;
-          border-bottom: 2px solid #111;
+          margin-bottom: 13px;
         }
 
         .finance-section-header h2 {
           margin: 0;
           font-size: 13px;
           font-weight: 800;
-          letter-spacing: .06em;
-          text-transform: uppercase;
+          letter-spacing: 0.03em;
         }
 
-        .finance-section-header--with-link a {
-          color: #d71920;
+        .finance-see-all {
+          border: 0;
+          background: transparent;
+          color: #e31b23;
           font-size: 9px;
           font-weight: 700;
-          letter-spacing: .06em;
-          text-transform: uppercase;
-          text-decoration: none;
+          cursor: pointer;
         }
 
-        .finance-headline-grid {
+        /* =====================================================
+           MORE STORIES
+        ===================================================== */
+
+        .finance-sponsored .finance-section-header {
+          margin-top: 12px;
+          margin-bottom: 5px;
+        }
+
+        .finance-more-story {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 15px;
+          grid-template-columns: 60px minmax(0, 1fr);
+          gap: 9px;
+          padding: 9px 0;
+          border-bottom: 1px solid #ddd;
         }
 
-        .finance-story-card--compact {
-          min-width: 0;
+        .finance-more-thumb {
+          width: 60px;
+          height: 48px;
+          overflow: hidden;
+          border-radius: 3px;
+          background: #eee;
         }
 
-        .finance-story-image--compact {
-          height: 115px;
-        }
-
-        .finance-story-card--compact h3 {
-          margin: 4px 0 0;
-          font-size: 14px;
-          line-height: 1.12;
+        .finance-more-story span {
+          color: #e31b23;
+          font-size: 6px;
           font-weight: 800;
         }
 
-        .finance-story-card--compact .finance-story-excerpt {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          margin: 5px 0 0;
-        }
-
-        .finance-quote {
-          display: grid;
-          grid-template-columns: 7px 1fr;
-          gap: 18px;
-          margin: 3px 0 18px;
-          padding: 17px 20px 17px 0;
-          background: #f2f4f7;
-          border-top: 1px solid #c8c8c8;
-          border-bottom: 1px solid #c8c8c8;
-        }
-
-        .finance-quote-mark {
-          background: #d71920;
-        }
-
-        .finance-quote p {
-          max-width: 850px;
-          margin: 0;
-          font-family: Georgia, "Times New Roman", serif;
-          font-size: 15px;
-          line-height: 1.35;
-        }
-
-        .finance-quote strong {
-          display: block;
-          margin-top: 7px;
+        .finance-more-story h4 {
+          margin: 2px 0 0;
           font-size: 9px;
-          letter-spacing: .04em;
-          text-transform: uppercase;
+          line-height: 1.25;
         }
+
+        .finance-more-story small {
+          display: block;
+          margin-top: 3px;
+          color: #aaa;
+          font-size: 7px;
+        }
+
+        /* =====================================================
+           LATEST NEWS
+        ===================================================== */
+
+        .finance-section {
+          margin-top: 28px;
+        }
+
+        .finance-news-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .finance-story-card {
+          min-width: 0;
+        }
+
+        .finance-story-image-wrap {
+          width: 100%;
+          height: 165px;
+          overflow: hidden;
+          border-radius: 5px;
+          background: #eee;
+        }
+
+        .finance-story-image {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s ease;
+        }
+
+        .finance-story-card:hover .finance-story-image {
+          transform: scale(1.04);
+        }
+
+        .finance-story-card h3 {
+          margin: 4px 0 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 16px;
+          line-height: 1.15;
+          font-weight: 800;
+        }
+
+        .finance-story-card p {
+          margin: 5px 0 0;
+          color: #666;
+          font-size: 11px;
+          line-height: 1.45;
+        }
+
+        /* =====================================================
+           SPONSORSHIP
+        ===================================================== */
+
+        .finance-sponsorship {
+          margin-top: 24px;
+          padding: 15px;
+          background: #f7f7f7;
+          border-radius: 6px;
+        }
+
+        .finance-sponsorship-heading {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 13px;
+        }
+
+        .finance-sponsorship-heading span {
+          padding: 3px 6px;
+          border: 1px solid #ddd;
+          color: #999;
+          font-size: 7px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+        }
+
+        .finance-sponsorship-heading small {
+          color: #aaa;
+          font-size: 8px;
+        }
+
+        .finance-sponsor-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .finance-sponsor-card {
+          min-height: 95px;
+          background: white;
+          border: 1px solid #e3e3e3;
+          border-radius: 5px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          padding: 12px;
+        }
+
+        .finance-sponsor-icon {
+          width: 30px;
+          height: 30px;
+          margin-bottom: 8px;
+          border-radius: 50%;
+          background: #fff0f0;
+          color: #e31b23;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .finance-sponsor-card strong {
+          font-size: 9px;
+        }
+
+        .finance-sponsor-card span {
+          margin-top: 3px;
+          color: #aaa;
+          font-size: 7px;
+        }
+
+        /* =====================================================
+           MARKETS
+        ===================================================== */
 
         .finance-markets-table-wrap {
           overflow-x: auto;
-          border-top: 1px solid #111;
-          border-bottom: 1px solid #111;
+          border-top: 1px solid #222;
+          border-bottom: 1px solid #222;
         }
 
         .finance-markets-table {
           width: 100%;
           border-collapse: collapse;
+          min-width: 650px;
           font-size: 10px;
         }
 
         .finance-markets-table th {
-          padding: 8px 7px;
-          color: #666;
-          font-size: 8px;
-          font-weight: 700;
-          letter-spacing: .07em;
-          text-transform: uppercase;
+          padding: 9px;
           text-align: right;
-          border-bottom: 1px solid #bbb;
+          color: #777;
+          font-size: 8px;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          border-bottom: 1px solid #ccc;
         }
 
         .finance-markets-table th:first-child,
@@ -729,68 +1166,79 @@ export function FinancePage() {
         }
 
         .finance-markets-table td {
-          padding: 7px;
+          padding: 8px 9px;
           text-align: right;
-          border-bottom: 1px solid #ededed;
+          border-bottom: 1px solid #eee;
         }
 
         .finance-markets-table tbody tr:hover {
-          background: #f7f7f7;
+          background: #fafafa;
         }
 
-        .finance-markets-table td span {
+        .finance-up {
+          color: #14853c;
+          font-weight: 700;
           display: inline-flex;
           align-items: center;
           gap: 3px;
+        }
+
+        .finance-down {
+          color: #d71920;
           font-weight: 700;
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
         }
 
-        .finance-business-grid {
+        /* =====================================================
+           BUSINESS + ECONOMY
+        ===================================================== */
+
+        .finance-two-column {
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 20px;
+          grid-template-columns: 1fr 1fr;
+          gap: 35px;
+          margin-top: 32px;
+          padding-top: 10px;
+          border-top: 2px solid #222;
         }
 
-        .finance-business-card {
-          min-width: 0;
+        .finance-business-list {
+          display: grid;
+          gap: 14px;
         }
 
-        .finance-business-image-wrap {
-          overflow: hidden;
+        .finance-business-story {
+          display: grid;
+          grid-template-columns: 145px minmax(0, 1fr);
+          gap: 13px;
+          padding-bottom: 13px;
+          border-bottom: 1px solid #ddd;
         }
 
         .finance-business-image {
-          display: block;
-          width: 100%;
-          height: 190px;
-          object-fit: cover;
-          transition: transform .35s ease;
+          height: 95px;
+          overflow: hidden;
+          border-radius: 4px;
         }
 
-        .finance-business-card h3 {
-          margin: 4px 0 0;
+        .finance-business-story h3 {
+          margin: 4px 0;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 19px;
-          line-height: 1.08;
-          font-weight: 800;
-        }
-
-        .finance-bottom-grid {
-          display: grid;
-          grid-template-columns: 1.2fr .8fr;
-          gap: 28px;
-          border-top: 1px solid #111;
+          font-size: 15px;
+          line-height: 1.15;
         }
 
         .finance-economy-item {
-          padding: 9px 0;
-          border-bottom: 1px solid #e5e5e5;
+          padding: 10px 0;
+          border-bottom: 1px solid #ddd;
         }
 
         .finance-economy-item h3 {
           margin: 0;
           font-size: 12px;
-          line-height: 1.25;
+          line-height: 1.4;
           font-weight: 700;
         }
 
@@ -798,146 +1246,260 @@ export function FinancePage() {
           display: inline-flex;
           align-items: center;
           gap: 4px;
-          margin-top: 4px;
+          margin-top: 5px;
           color: #999;
           font-size: 8px;
         }
 
-        .finance-leadership-list {
+        /* =====================================================
+           LEADERSHIP
+        ===================================================== */
+
+        .finance-leadership-grid {
           display: grid;
-          gap: 10px;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 14px;
         }
 
         .finance-leader-card {
-          padding: 11px;
-          border: 1px solid #d7d7d7;
+          padding: 16px;
+          border: 1px solid #ddd;
           background: #fff;
         }
 
-        .finance-leader-head {
+        .finance-leader-avatar {
+          width: 36px;
+          height: 36px;
+          margin-bottom: 8px;
+          border-radius: 50%;
+          background: #f0f0f0;
           display: flex;
           align-items: center;
-          gap: 9px;
-        }
-
-        .finance-leader-avatar {
-          width: 32px;
-          height: 32px;
-          display: grid;
-          place-items: center;
-          flex: 0 0 32px;
-          background: #eee;
+          justify-content: center;
+          font-weight: 800;
           color: #555;
-          font-size: 12px;
-          font-weight: 700;
         }
 
-        .finance-leader-head strong,
-        .finance-leader-head span {
+        .finance-leader-card strong {
           display: block;
+          font-size: 12px;
         }
 
-        .finance-leader-head strong {
-          font-size: 11px;
-        }
-
-        .finance-leader-head span {
+        .finance-leader-card > span {
+          display: block;
           margin-top: 2px;
-          color: #777;
+          color: #999;
           font-size: 8px;
         }
 
         .finance-leader-card blockquote {
-          margin: 10px 0 7px;
-          padding-left: 9px;
-          border-left: 2px solid #d71920;
-          color: #555;
+          margin: 12px 0;
+          padding-left: 10px;
+          border-left: 2px solid #e31b23;
           font-family: Georgia, "Times New Roman", serif;
-          font-size: 11px;
-          line-height: 1.35;
+          font-size: 12px;
+          line-height: 1.45;
+          color: #555;
           font-style: italic;
         }
 
         .finance-leader-card button {
-          padding: 0;
           border: 0;
-          background: none;
-          color: #d71920;
+          background: transparent;
+          padding: 0;
+          color: #e31b23;
           font-size: 8px;
           font-weight: 700;
           cursor: pointer;
         }
 
-        .finance-ad {
-          height: 72px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px dashed #ccc;
-          color: #aaa;
-          font-size: 9px;
-          letter-spacing: .05em;
-          text-transform: uppercase;
+        /* =====================================================
+           NEWSLETTER
+        ===================================================== */
+
+        .finance-newsletter {
+          margin-top: 40px;
+          padding: 34px 20px;
+          border-radius: 6px;
+          background: #071a2d;
+          color: white;
+          text-align: center;
         }
 
-        @media (max-width: 900px) {
-          .finance-container {
-            width: min(100% - 28px, 760px);
+        .finance-newsletter h2 {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 22px;
+        }
+
+        .finance-newsletter p {
+          margin: 7px 0 16px;
+          color: #aeb9c4;
+          font-size: 10px;
+        }
+
+        .finance-newsletter-form {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          max-width: 520px;
+          margin: 0 auto;
+        }
+
+        .finance-newsletter-form input {
+          flex: 1;
+          min-width: 0;
+          height: 36px;
+          padding: 0 12px;
+          border: 1px solid #405265;
+          border-radius: 3px;
+          outline: none;
+          background: #1e3448;
+          color: white;
+          font-size: 10px;
+        }
+
+        .finance-newsletter-form button {
+          height: 36px;
+          padding: 0 16px;
+          border: 0;
+          border-radius: 3px;
+          background: #e31b23;
+          color: white;
+          font-size: 10px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        /* =====================================================
+           TABLET
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+          .finance-page-inner {
+            width: calc(100% - 40px);
           }
 
-          .finance-hero-grid {
+          .finance-hero-layout {
             grid-template-columns: 1fr;
           }
 
-          .finance-market-panel {
-            padding-left: 0;
+          .finance-sponsored {
             border-left: 0;
-            border-top: 1px solid #d8d8d8;
+            border-top: 1px solid #ddd;
+            padding-left: 0;
             padding-top: 18px;
           }
 
-          .finance-headline-grid {
+          .finance-sponsored-box {
+            max-width: 320px;
+          }
+
+          .finance-news-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
 
-          .finance-bottom-grid {
-            grid-template-columns: 1fr;
-            gap: 0;
+          .finance-sponsor-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
+
+          .finance-two-column {
+            grid-template-columns: 1fr;
+            gap: 30px;
+          }
+
         }
 
-        @media (max-width: 600px) {
-          .finance-container {
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 640px) {
+
+          .finance-page-inner {
             width: calc(100% - 22px);
-            padding-top: 10px;
+            padding-top: 12px;
           }
 
-          .finance-page-header {
-            display: block;
+          .finance-heading {
+            padding-top: 13px;
           }
 
-          .finance-header-date {
-            display: block;
-            margin-top: 8px;
+          .finance-heading h1 {
+            font-size: 34px;
           }
 
-          .finance-story-image--hero {
-            height: 230px;
+          .finance-heading p {
+            font-size: 11px;
           }
 
-          .finance-headline-grid,
-          .finance-business-grid {
+          .finance-ad-banner {
+            min-height: 78px;
+          }
+
+          .finance-main-image-wrap {
+            height: 235px;
+          }
+
+          .finance-main-story h1 {
+            font-size: 25px;
+          }
+
+          .finance-main-story p {
+            font-size: 11px;
+          }
+
+          .finance-news-grid {
             grid-template-columns: 1fr;
+            gap: 22px;
           }
 
-          .finance-story-image--compact {
+          .finance-story-image-wrap {
             height: 190px;
           }
 
-          .finance-points-col {
-            display: none;
+          .finance-sponsor-grid {
+            grid-template-columns: 1fr 1fr;
           }
+
+          .finance-business-story {
+            grid-template-columns: 105px minmax(0, 1fr);
+          }
+
+          .finance-business-image {
+            height: 82px;
+          }
+
+          .finance-business-story h3 {
+            font-size: 12px;
+          }
+
+          .finance-leadership-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .finance-newsletter {
+            padding: 28px 14px;
+          }
+
+          .finance-newsletter h2 {
+            font-size: 19px;
+          }
+
+          .finance-newsletter-form {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .finance-newsletter-form input,
+          .finance-newsletter-form button {
+            width: 100%;
+          }
+
         }
+
       `}</style>
     </main>
   );
