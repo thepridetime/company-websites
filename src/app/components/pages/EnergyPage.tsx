@@ -807,4 +807,4 @@ export function EnergyPage() {
 }
 
 
-This version contains **no ad banner, Google AdSense block, sponsored content, or sponsorship section**.
+
