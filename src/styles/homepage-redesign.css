@@ -916,14 +916,21 @@ footer .pt-logo-accent {
 
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 
-  padding: 40px 0 28px;
+  padding: 24px 0 18px;
+
+  /* More links were added over time (Markets, More columns), so
+     the panel can now be taller than the viewport on shorter
+     screens. Cap its height and let it scroll internally instead
+     of spilling past the bottom of the display. */
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
 }
 
 .pt-mega-menu-inner {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: 48px;
-  row-gap: 28px;
+  column-gap: 36px;
+  row-gap: 20px;
 }
 
 @media (max-width: 768px) {
@@ -943,9 +950,9 @@ footer .pt-logo-accent {
 
   text-transform: uppercase;
 
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 
-  padding-bottom: 10px;
+  padding-bottom: 7px;
 
   border-bottom: 1px solid #232323;
 }
@@ -965,8 +972,8 @@ footer .pt-logo-accent {
 }
 
 .pt-mega-menu-utility {
-  margin-top: 32px;
-  padding-top: 20px;
+  margin-top: 18px;
+  padding-top: 14px;
   border-top: 1px solid #232323;
 
   display: flex;
