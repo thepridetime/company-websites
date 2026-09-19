@@ -1,3 +1,4 @@
+
 import {
   Clock,
   Users,
@@ -13,53 +14,6 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 import CeospotImg from "../../../imports/Ceospot.png";
 
 /* ============================================================
-   AD SLOT — matches the site's inline ad unit style
-============================================================ */
-
-function AdSlot({
-  label = "728 × 90 · Leaderboard",
-  title = "Advertisement Space",
-}: {
-  label?: string;
-  title?: string;
-}) {
-  return (
-    <div className="relative mb-10 rounded-[2px] bg-gradient-to-br from-slate-800 to-teal-900 px-4 py-8 text-center text-white">
-      <span className="absolute right-3 top-2 text-[10px] uppercase tracking-wide text-gray-400">
-        Advertisement
-      </span>
-      <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-sky-400">
-        Google AdSense
-      </p>
-      <p className="font-semibold">{title}</p>
-      <p className="mt-1 text-xs text-sky-300/80">{label}</p>
-    </div>
-  );
-}
-
-/* ============================================================
-   SPONSORED BANNER — partner content strip
-============================================================ */
-
-function SponsoredBanner() {
-  return (
-    <div className="relative mb-10 rounded-[2px] border border-white/10 bg-[#0b1220] px-4 py-7 text-center text-white sm:py-8">
-      <span className="absolute left-3 top-2 text-[9px] uppercase tracking-[0.15em] text-gray-500">
-        Sponsored Content
-      </span>
-      <span className="absolute right-3 top-2 text-[9px] uppercase tracking-wide text-gray-500">
-        Ad
-      </span>
-      <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-yellow-400">
-        Executive Leadership Program — Partner Content
-      </p>
-      <p className="font-serif text-xl font-bold sm:text-2xl">Your Ad Here</p>
-      <p className="mt-1 text-xs text-gray-400">Reach 2M+ business readers</p>
-    </div>
-  );
-}
-
-/* ============================================================
    NEWSLETTER CTA
 ============================================================ */
 
@@ -69,10 +23,12 @@ function NewsletterCTA() {
       <h2 className="mb-2 font-serif text-2xl md:text-[30px]">
         Exclusive CEO Interviews
       </h2>
+
       <p className="mb-6 text-sm text-gray-400">
         Be first to read our in-depth leader profiles and executive
         briefings.
       </p>
+
       <form
         onSubmit={(e) => e.preventDefault()}
         className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
@@ -82,6 +38,7 @@ function NewsletterCTA() {
           placeholder="Enter your email"
           className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50"
         />
+
         <button
           type="submit"
           className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
@@ -458,18 +415,11 @@ export function CeoSpotlightPage() {
         </header>
 
         {/* ====================================================
-            AD SLOT
-        ==================================================== */}
-
-        <AdSlot />
-
-        {/* ====================================================
             FEATURED LEADER (#1)
         ==================================================== */}
 
         <section className="mb-14">
           <article className="group grid grid-cols-1 overflow-hidden rounded-md border border-gray-200 shadow-sm md:grid-cols-2">
-
             <div className="relative overflow-hidden bg-gray-100">
               <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-sm bg-red-600 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
                 {featuredLeader.rank}
@@ -543,7 +493,10 @@ export function CeoSpotlightPage() {
                 </div>
 
                 <div className="p-4">
-                  <p className="text-[11px] text-gray-400">{leader.title}</p>
+                  <p className="text-[11px] text-gray-400">
+                    {leader.title}
+                  </p>
+
                   <p className="text-[13px] font-bold text-gray-900">
                     {leader.company}
                   </p>
@@ -562,10 +515,9 @@ export function CeoSpotlightPage() {
         </section>
 
         {/* ====================================================
-            SPONSORED BANNER + NEWSLETTER
+            NEWSLETTER
         ==================================================== */}
 
-        <SponsoredBanner />
         <NewsletterCTA />
 
         {/* ====================================================
@@ -806,7 +758,7 @@ export function CeoSpotlightPage() {
         </section>
 
         {/* ====================================================
-            NEWSLETTER (closing reminder)
+            NEWSLETTER — CLOSING REMINDER
         ==================================================== */}
 
         <div className="mt-14">
@@ -828,3 +780,4 @@ export function CeoSpotlightPage() {
     </main>
   );
 }
+
