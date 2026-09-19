@@ -66,7 +66,7 @@ const megaMenuColumns = [
       { label: "Advertise", path: "/advertise" },
       { label: "Careers", path: "/careers" },
       { label: "Contact Us", path: "/contact" },
-      { label: "Press Room", path: "#" },
+      { label: "Press Room", path: "/press-room" },
     ],
   },
 ];
