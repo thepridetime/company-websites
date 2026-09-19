@@ -1,4 +1,4 @@
-import { Clock, Briefcase, ChevronRight } from "lucide-react";
+import { Clock, Briefcase } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 /* =========================================================
@@ -13,74 +13,6 @@ function SectionHeader({ title }: { title: string }) {
       <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
         {title}
       </h2>
-    </div>
-  );
-}
-
-/* =========================================================
-   AD SPACE
-========================================================= */
-
-function AdSpace({
-  label = "Advertisement Space",
-}: {
-  label?: string;
-}) {
-  return (
-    <div className="relative w-full overflow-hidden rounded-sm border border-gray-200 bg-gradient-to-r from-[#102b33] via-[#193944] to-[#28596a]">
-      <div className="flex min-h-[90px] flex-col items-center justify-center px-4 py-5 text-center">
-        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-sky-300">
-          Google AdSense
-        </span>
-
-        <span className="mt-1 text-sm sm:text-base font-semibold text-white">
-          {label}
-        </span>
-
-        <span className="mt-1 text-[8px] sm:text-[9px] text-sky-300">
-          728 × 90 • Leaderboard
-        </span>
-      </div>
-
-      <span className="absolute right-1.5 top-1 text-[7px] text-gray-300">
-        Advertisement
-      </span>
-    </div>
-  );
-}
-
-/* =========================================================
-   SIDEBAR SPONSORED AD
-========================================================= */
-
-function SponsoredAd() {
-  return (
-    <div className="rounded-md border border-gray-200 bg-[#faf9f4] overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-          Sponsored Content
-        </span>
-
-        <span className="text-[8px] text-gray-400">
-          Ad
-        </span>
-      </div>
-
-      <div className="mx-3 mb-3 flex h-[145px] items-center justify-center bg-[#10162f] px-4 text-center">
-        <div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-400">
-            Featured Partner
-          </p>
-
-          <p className="mt-3 text-base font-semibold text-white">
-            Your Ad Here
-          </p>
-
-          <p className="mt-2 text-[9px] leading-4 text-gray-300">
-            Reach 2M+ business readers
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
@@ -401,16 +333,6 @@ export function BusinessNewsPage() {
           </div>
         </header>
 
-
-        {/* =================================================
-            TOP ADVERTISEMENT
-        ================================================= */}
-
-        <div className="mb-7 md:mb-9">
-          <AdSpace />
-        </div>
-
-
         {/* =================================================
             HERO + SIDEBAR
         ================================================= */}
@@ -465,21 +387,15 @@ export function BusinessNewsPage() {
             </div>
           </article>
 
-
           {/* =================================================
               RIGHT SIDEBAR
           ================================================= */}
 
           <aside className="lg:pt-0">
-
-            <SponsoredAd />
-
             <MoreStories stories={corporateNews} />
-
           </aside>
 
         </section>
-
 
         {/* =================================================
             EARNINGS
@@ -560,7 +476,6 @@ export function BusinessNewsPage() {
 
         </section>
 
-
         {/* =================================================
             M&A TRACKER
         ================================================= */}
@@ -639,7 +554,6 @@ export function BusinessNewsPage() {
           </div>
 
         </section>
-
 
         {/* =================================================
             CORPORATE + STARTUPS
@@ -720,7 +634,6 @@ export function BusinessNewsPage() {
 
           </div>
 
-
           {/* =================================================
               STARTUPS & VENTURE
           ================================================= */}
@@ -790,69 +703,6 @@ export function BusinessNewsPage() {
           </div>
 
         </section>
-
-
-        {/* =================================================
-            SECOND ADVERTISEMENT
-        ================================================= */}
-
-        <div className="my-12 md:my-14">
-          <AdSpace label="Business Solutions | Powered by The Pride Times" />
-        </div>
-
-
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================= */}
-
-        <section className="rounded-md border border-gray-100 bg-gray-50 p-4 sm:p-5">
-
-          <div className="mb-4 flex items-center gap-2">
-
-            <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-              Sponsorship
-            </span>
-
-            <span className="text-[9px] text-gray-400">
-              Presented by our partners
-            </span>
-
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-
-            {[
-              "Global Finance Summit 2026",
-              "Tech Leaders Forum",
-              "Energy Transition Conference",
-              "AI & Business World",
-            ].map((item) => (
-
-              <div
-                key={item}
-                className="flex min-h-[90px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-4 text-center"
-              >
-
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
-                  <Briefcase size={13} />
-                </div>
-
-                <p className="mt-2 text-[10px] font-bold text-gray-900">
-                  {item}
-                </p>
-
-                <p className="mt-1 text-[8px] text-gray-400">
-                  Sponsored Event
-                </p>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </section>
-
 
         {/* =================================================
             NEWSLETTER
