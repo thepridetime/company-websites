@@ -1,4 +1,4 @@
-```tsx
+
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { getQuotes } from "../../../services/marketApi";
@@ -1774,4 +1774,4 @@ export function MarketsPage() {
     </main>
   );
 }
-```
+
