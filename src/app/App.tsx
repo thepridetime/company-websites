@@ -27,6 +27,7 @@ import { LeadershipPage } from "./components/pages/LeadershipPage";
 import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
 import { InternationalNewsPage } from "./components/pages/InternationalNewsPage";
+import { StartupSuccessPage } from "./components/pages/Startupsuccesspage";
 import { Privacy } from "./components/pages/Privacy";
 import { Terms } from "./components/pages/Terms";
 import { CookiePolicy } from "./components/pages/CookiePolicy";
@@ -240,6 +241,21 @@ export default function App() {
             element={
               <MagazineLayout>
                 <InternationalNewsPage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* Startup Success - Ads Disabled */}
+
+          <Route
+            path="/startup-success"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <StartupSuccessPage />
               </MagazineLayout>
             }
           />
