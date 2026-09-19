@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { getQuotes } from "../../../services/marketApi";
@@ -422,7 +421,6 @@ const forex: ForexRow[] = [
 
 /* ------------------------------------------------------------
    Mutual Funds
-   User requested sample data for this section.
 ------------------------------------------------------------ */
 
 const mutualFunds: FundRow[] = [
@@ -484,7 +482,6 @@ const mutualFunds: FundRow[] = [
 
 /* ------------------------------------------------------------
    ETFs
-   User requested sample data for this section.
 ------------------------------------------------------------ */
 
 const etfs: ETFRow[] = [
@@ -609,7 +606,6 @@ const bonds: BondRow[] = [
 
 /* ------------------------------------------------------------
    Global Markets
-   Grouped by region for a quick worldwide snapshot.
 ------------------------------------------------------------ */
 
 const globalMarkets: Region[] = [
@@ -1425,12 +1421,10 @@ export function MarketsPage() {
       : "Overview"
   );
 
-  /*
-    Keep the active tab in sync with the URL — this is what makes
-    the "Menu" mega-menu links (e.g. /markets?tab=Commodities)
-    actually land on the right section, including when the user
-    is already on /markets and clicks a different market link.
-  */
+  /* Keep the active tab in sync with the URL — this is what makes
+     the "Menu" mega-menu links (e.g. /markets?tab=Commodities)
+     actually land on the right section, including when the user
+     is already on /markets and clicks a different market link. */
   useEffect(() => {
     const tab = searchParams.get("tab");
 
@@ -1537,6 +1531,20 @@ export function MarketsPage() {
       <div className="mx-auto w-full px-5 pb-14 pt-8 sm:px-8 lg:px-10">
 
         {/* --------------------------------------------------
+            Page Header
+        -------------------------------------------------- */}
+
+        <header className="mb-8">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-[#111111]">
+            Markets Dashboard
+          </h1>
+
+          <p className="mt-2 text-[15px] text-[#666666]">
+            Real-time market data, indices, commodities, forex, crypto and more.
+          </p>
+        </header>
+
+        {/* --------------------------------------------------
             Market Navigation
         -------------------------------------------------- */}
 
@@ -1580,7 +1588,6 @@ export function MarketsPage() {
           ) : (
             <>
               {/* OVERVIEW */}
-
               {activeTab === "Overview" && (
                 <Overview
                   indices={displayIndices}
@@ -1590,7 +1597,6 @@ export function MarketsPage() {
               )}
 
               {/* STOCKS */}
-
               {activeTab === "Stocks" && (
                 <section>
                   <SectionHeading>
@@ -1604,7 +1610,6 @@ export function MarketsPage() {
               )}
 
               {/* INDICES */}
-
               {activeTab === "Indices" && (
                 <section>
                   <SectionHeading>
@@ -1618,7 +1623,6 @@ export function MarketsPage() {
               )}
 
               {/* CRYPTO */}
-
               {activeTab === "Crypto" && (
                 <section>
                   <SectionHeading>
@@ -1632,7 +1636,6 @@ export function MarketsPage() {
               )}
 
               {/* FOREX */}
-
               {activeTab === "Forex" && (
                 <section>
                   <SectionHeading>
@@ -1644,7 +1647,6 @@ export function MarketsPage() {
               )}
 
               {/* COMMODITIES */}
-
               {activeTab === "Commodities" && (
                 <section>
                   <SectionHeading>
@@ -1656,7 +1658,6 @@ export function MarketsPage() {
               )}
 
               {/* MUTUAL FUNDS */}
-
               {activeTab === "Mutual Funds" && (
                 <section>
                   <SectionHeading>
@@ -1668,7 +1669,6 @@ export function MarketsPage() {
               )}
 
               {/* ETFs */}
-
               {activeTab === "ETFs" && (
                 <section>
                   <SectionHeading>
@@ -1680,7 +1680,6 @@ export function MarketsPage() {
               )}
 
               {/* GOVERNMENT BONDS */}
-
               {activeTab === "Government Bonds" && (
                 <section>
                   <SectionHeading>
@@ -1692,7 +1691,6 @@ export function MarketsPage() {
               )}
 
               {/* GLOBAL MARKETS */}
-
               {activeTab === "Global Markets" && (
                 <section>
                   <SectionHeading>
@@ -1774,4 +1772,3 @@ export function MarketsPage() {
     </main>
   );
 }
-
