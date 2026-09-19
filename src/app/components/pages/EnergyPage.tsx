@@ -1,3 +1,4 @@
+
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Clock } from "lucide-react";
 import Ener1Img from "../../../imports/Energy1.png";
@@ -350,10 +351,6 @@ function StoryMeta({
 export function EnergyPage() {
   return (
     <main className="w-full min-h-screen bg-[#FAFAF7] text-[#17140F] overflow-x-hidden">
-      {/* =====================================================
-          FULL WIDTH PAGE CONTAINER
-      ===================================================== */}
-
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-5 md:py-7">
 
         {/* ===================================================
@@ -369,30 +366,6 @@ export function EnergyPage() {
             Oil &amp; gas, renewables, nuclear, and the global energy transition.
           </p>
         </header>
-
-        {/* ===================================================
-            TOP ADVERTISEMENT BANNER
-        =================================================== */}
-
-        <div className="w-full h-[72px] sm:h-[82px] mb-5 bg-gradient-to-r from-[#102B32] via-[#1D414A] to-[#315B69] flex items-center justify-center relative overflow-hidden">
-          <div className="text-center text-white">
-            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-[#55B5CE] font-bold">
-              GOOGLE ADSENSE
-            </p>
-
-            <p className="text-[12px] sm:text-[14px] font-semibold mt-1">
-              Advertisement Space
-            </p>
-
-            <p className="text-[8px] text-[#8BBBC6] mt-0.5">
-              728 × 90 • Leaderboard
-            </p>
-          </div>
-
-          <span className="absolute right-1 top-1 text-[7px] bg-white/70 text-gray-500 px-1">
-            Advertisement
-          </span>
-        </div>
 
         {/* ===================================================
             HERO AREA
@@ -428,36 +401,9 @@ export function EnergyPage() {
             </div>
           </article>
 
-          {/* RIGHT SIDEBAR */}
+          {/* MORE STORIES */}
 
           <aside className="min-w-0">
-
-            {/* SPONSORED CONTENT */}
-
-            <div className="border border-[#E3DED1] bg-[#F8F4E8] rounded-md p-2 mb-4">
-              <div className="text-[7px] uppercase tracking-widest text-[#8A887F] mb-2">
-                Sponsored Content
-              </div>
-
-              <div className="h-[145px] sm:h-[170px] xl:h-[185px] bg-[#111A3A] flex items-center justify-center text-center">
-                <div>
-                  <p className="text-[8px] text-[#E4C94C] uppercase font-bold tracking-widest">
-                    Featured Partner
-                  </p>
-
-                  <p className="text-white font-semibold text-[12px] mt-2">
-                    Your Ad Here
-                  </p>
-
-                  <p className="text-[8px] text-gray-300 mt-1">
-                    Reach 2M+ business readers
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* MORE STORIES */}
-
             <SectionHeader title="More Stories" />
 
             <div className="divide-y divide-[#DED9CE]">
@@ -490,7 +436,6 @@ export function EnergyPage() {
                 </article>
               ))}
             </div>
-
           </aside>
         </section>
 
@@ -502,8 +447,6 @@ export function EnergyPage() {
           <SectionHeader title="Latest Energy News" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-
-            {/* Existing renewable stories */}
 
             {renewableStories.map((story) => (
               <article
@@ -535,8 +478,6 @@ export function EnergyPage() {
               </article>
             ))}
 
-            {/* Existing hero 1 */}
-
             <article className="group cursor-pointer border border-[#E2DED5] bg-white rounded-md overflow-hidden hover:shadow-md transition-shadow duration-300">
               <div className="overflow-hidden h-[180px] sm:h-[190px] md:h-[205px] bg-gray-100">
                 <ImageWithFallback
@@ -558,8 +499,6 @@ export function EnergyPage() {
                 <StoryMeta time={hero1.time} />
               </div>
             </article>
-
-            {/* Existing hero 2 */}
 
             <article className="group cursor-pointer border border-[#E2DED5] bg-white rounded-md overflow-hidden hover:shadow-md transition-shadow duration-300">
               <div className="overflow-hidden h-[180px] sm:h-[190px] md:h-[205px] bg-gray-100">
@@ -587,80 +526,10 @@ export function EnergyPage() {
         </section>
 
         {/* ===================================================
-            SECOND ADVERTISEMENT BANNER
-        =================================================== */}
-
-        <div className="w-full h-[72px] sm:h-[82px] mb-8 bg-gradient-to-r from-[#102B32] via-[#1D414A] to-[#315B69] flex items-center justify-center relative overflow-hidden">
-          <div className="text-center text-white">
-            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-[#55B5CE] font-bold">
-              GOOGLE ADSENSE
-            </p>
-
-            <p className="text-[12px] sm:text-[14px] font-semibold mt-1">
-              Business Solutions | Powered by The Pride Times
-            </p>
-
-            <p className="text-[8px] text-[#8BBBC6] mt-0.5">
-              728 × 90 • Leaderboard
-            </p>
-          </div>
-
-          <span className="absolute right-1 top-1 text-[7px] bg-white/70 text-gray-500 px-1">
-            Advertisement
-          </span>
-        </div>
-
-        {/* ===================================================
-            SPONSORSHIP
-        =================================================== */}
-
-        <section className="bg-[#F5F3EE] border border-[#E6E1D7] rounded-md p-4 sm:p-5 mb-8">
-
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-[8px] uppercase tracking-[0.14em] bg-white border border-[#DED9CE] px-2 py-1 text-[#8A887F]">
-              Sponsorship
-            </span>
-
-            <span className="text-[9px] text-[#9A968D]">
-              Presented by our partners
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-
-            {[
-              "Global Finance Summit 2026",
-              "Tech Leaders Forum",
-              "Energy Transition Conference",
-              "AI & Business World",
-            ].map((title) => (
-              <div
-                key={title}
-                className="bg-white border border-[#E4DFD6] rounded-md h-[90px] flex flex-col items-center justify-center text-center"
-              >
-                <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
-                  <span className="text-[#D92323] text-[11px]">✦</span>
-                </div>
-
-                <p className="text-[9px] font-bold text-[#17140F]">
-                  {title}
-                </p>
-
-                <p className="text-[7px] text-[#99958B] mt-1">
-                  Sponsored Event
-                </p>
-              </div>
-            ))}
-
-          </div>
-        </section>
-
-        {/* ===================================================
             ENERGY MARKET REPORT
         =================================================== */}
 
         <section className="mb-10">
-
           <SectionHeader
             title="Energy Market Report"
             note="July 2026 Wrap"
@@ -694,7 +563,6 @@ export function EnergyPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
             {energyReportGroups.map((group) => (
               <div
                 key={group.code}
@@ -762,7 +630,6 @@ export function EnergyPage() {
                 </div>
               </div>
             ))}
-
           </div>
         </section>
 
@@ -864,7 +731,6 @@ export function EnergyPage() {
         =================================================== */}
 
         <section className="mb-10">
-
           <SectionHeader title="Sector Dispatches" />
 
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#D9D4C7]">
@@ -910,7 +776,7 @@ export function EnergyPage() {
         </section>
 
         {/* ===================================================
-            NEWSLETTER — LIKE SCREENSHOT
+            NEWSLETTER
         =================================================== */}
 
         <section className="w-full bg-[#071C30] rounded-md px-5 sm:px-8 py-8 sm:py-9 mb-2 text-center">
@@ -939,3 +805,6 @@ export function EnergyPage() {
     </main>
   );
 }
+
+
+This version contains **no ad banner, Google AdSense block, sponsored content, or sponsorship section**.
