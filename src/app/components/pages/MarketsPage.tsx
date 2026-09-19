@@ -2,21 +2,30 @@ import { useEffect, useState } from "react";
 import { getQuotes } from "../../../services/marketApi";
 
 /*
-  Markets Page
+  The Pride Times
   ------------------------------------------------------------
-  Editorial market-dashboard layout based on the supplied
-  reference design.
+  Markets Dashboard
 
-  Uses the project's existing market provider and keeps the
-  market information already defined for The Pride Times:
-  - Global indices
-  - Top stocks
-  - Cryptocurrency
-  - Market categories
-  - Existing live-refresh behaviour
+  Sections:
+  - Overview
+  - Stocks
+  - Indices
+  - Crypto
+  - Forex
+  - Commodities
+  - Mutual Funds
+  - ETFs
 
-  The surrounding site header/footer can continue to be supplied
-  by the application's existing layout.
+  Live provider:
+  - Indices
+  - Stocks
+  - Crypto
+
+  Static/reference data:
+  - Forex
+  - Commodities
+  - Mutual Funds
+  - ETFs
 */
 
 type MarketRow = {
@@ -31,6 +40,41 @@ type MarketRow = {
   ytd?: string;
 };
 
+type CommodityRow = {
+  name: string;
+  price: string;
+  change: string;
+  up: boolean;
+};
+
+type ForexRow = {
+  pair: string;
+  name: string;
+  rate: string;
+  change: string;
+  up: boolean;
+};
+
+type FundRow = {
+  symbol: string;
+  name: string;
+  nav: string;
+  change: string;
+  up: boolean;
+  aum: string;
+  return1y: string;
+};
+
+type ETFRow = {
+  symbol: string;
+  name: string;
+  price: string;
+  change: string;
+  up: boolean;
+  expenseRatio: string;
+  return1y: string;
+};
+
 type MarketData = {
   indices: MarketRow[];
   stocks: MarketRow[];
@@ -38,34 +82,449 @@ type MarketData = {
 };
 
 const fallbackIndices: MarketRow[] = [
-  { name: "S&P 500", value: "5,892.31", change: "+1.14%", up: true, ytd: "+18.4%" },
-  { name: "Nasdaq Composite", value: "19,245.78", change: "+1.56%", up: true, ytd: "+24.1%" },
-  { name: "Dow Jones Ind. Avg.", value: "42,318.45", change: "+0.82%", up: true, ytd: "+12.3%" },
-  { name: "Russell 2000", value: "2,134.56", change: "+0.45%", up: true, ytd: "+9.7%" },
-  { name: "FTSE 100", value: "8,241.70", change: "+0.19%", up: true, ytd: "+7.2%" },
-  { name: "Nikkei 225", value: "38,912.44", change: "-0.21%", up: false, ytd: "+14.8%" },
-  { name: "Hang Seng", value: "18,342.10", change: "-0.87%", up: false, ytd: "-3.4%" },
-  { name: "Nifty 50", value: "22,419.95", change: "-0.34%", up: false, ytd: "+11.2%" },
-  { name: "DAX", value: "18,612.80", change: "+0.54%", up: true, ytd: "+9.8%" },
-  { name: "CAC 40", value: "7,984.20", change: "+0.31%", up: true, ytd: "+6.5%" },
+  {
+    name: "S&P 500",
+    value: "5,892.31",
+    change: "+1.14%",
+    up: true,
+    ytd: "+18.4%",
+  },
+  {
+    name: "Nasdaq Composite",
+    value: "19,245.78",
+    change: "+1.56%",
+    up: true,
+    ytd: "+24.1%",
+  },
+  {
+    name: "Dow Jones Ind. Avg.",
+    value: "42,318.45",
+    change: "+0.82%",
+    up: true,
+    ytd: "+12.3%",
+  },
+  {
+    name: "Russell 2000",
+    value: "2,134.56",
+    change: "+0.45%",
+    up: true,
+    ytd: "+9.7%",
+  },
+  {
+    name: "FTSE 100",
+    value: "8,241.70",
+    change: "+0.19%",
+    up: true,
+    ytd: "+7.2%",
+  },
+  {
+    name: "Nikkei 225",
+    value: "38,912.44",
+    change: "-0.21%",
+    up: false,
+    ytd: "+14.8%",
+  },
+  {
+    name: "Hang Seng",
+    value: "18,342.10",
+    change: "-0.87%",
+    up: false,
+    ytd: "-3.4%",
+  },
+  {
+    name: "Nifty 50",
+    value: "22,419.95",
+    change: "-0.34%",
+    up: false,
+    ytd: "+11.2%",
+  },
+  {
+    name: "DAX",
+    value: "18,612.80",
+    change: "+0.54%",
+    up: true,
+    ytd: "+9.8%",
+  },
+  {
+    name: "CAC 40",
+    value: "7,984.20",
+    change: "+0.31%",
+    up: true,
+    ytd: "+6.5%",
+  },
 ];
 
 const fallbackStocks: MarketRow[] = [
-  { name: "AAPL", company: "Apple Inc.", value: "$232.15", change: "+0.62%", up: true, volume: "78.4M", marketCap: "$3.52T" },
-  { name: "MSFT", company: "Microsoft Corp.", value: "$421.30", change: "+0.35%", up: true, volume: "21.2M", marketCap: "$3.13T" },
-  { name: "NVDA", company: "NVIDIA Corp.", value: "$879.50", change: "+2.34%", up: true, volume: "143.8M", marketCap: "$2.16T" },
-  { name: "GOOGL", company: "Alphabet Inc.", value: "$168.44", change: "-0.21%", up: false, volume: "19.6M", marketCap: "$2.08T" },
-  { name: "AMZN", company: "Amazon.com Inc.", value: "$186.90", change: "+1.02%", up: true, volume: "32.1M", marketCap: "$1.97T" },
-  { name: "META", company: "Meta Platforms", value: "$493.28", change: "+1.88%", up: true, volume: "15.9M", marketCap: "$1.25T" },
-  { name: "TSLA", company: "Tesla Inc.", value: "$248.44", change: "+3.21%", up: true, volume: "88.5M", marketCap: "$791B" },
-  { name: "BRK.B", company: "Berkshire Hathaway", value: "$362.10", change: "-0.08%", up: false, volume: "4.2M", marketCap: "$785B" },
+  {
+    name: "AAPL",
+    company: "Apple Inc.",
+    value: "$232.15",
+    change: "+0.62%",
+    up: true,
+    volume: "78.4M",
+    marketCap: "$3.52T",
+  },
+  {
+    name: "MSFT",
+    company: "Microsoft Corp.",
+    value: "$421.30",
+    change: "+0.35%",
+    up: true,
+    volume: "21.2M",
+    marketCap: "$3.13T",
+  },
+  {
+    name: "NVDA",
+    company: "NVIDIA Corp.",
+    value: "$879.50",
+    change: "+2.34%",
+    up: true,
+    volume: "143.8M",
+    marketCap: "$2.16T",
+  },
+  {
+    name: "GOOGL",
+    company: "Alphabet Inc.",
+    value: "$168.44",
+    change: "-0.21%",
+    up: false,
+    volume: "19.6M",
+    marketCap: "$2.08T",
+  },
+  {
+    name: "AMZN",
+    company: "Amazon.com Inc.",
+    value: "$186.90",
+    change: "+1.02%",
+    up: true,
+    volume: "32.1M",
+    marketCap: "$1.97T",
+  },
+  {
+    name: "META",
+    company: "Meta Platforms",
+    value: "$493.28",
+    change: "+1.88%",
+    up: true,
+    volume: "15.9M",
+    marketCap: "$1.25T",
+  },
+  {
+    name: "TSLA",
+    company: "Tesla Inc.",
+    value: "$248.44",
+    change: "+3.21%",
+    up: true,
+    volume: "88.5M",
+    marketCap: "$791B",
+  },
+  {
+    name: "BRK.B",
+    company: "Berkshire Hathaway",
+    value: "$362.10",
+    change: "-0.08%",
+    up: false,
+    volume: "4.2M",
+    marketCap: "$785B",
+  },
 ];
 
 const fallbackCrypto: MarketRow[] = [
-  { name: "Bitcoin", value: "$612.40", change: "+1.14%", up: true, marketCap: "$89B" },
-  { name: "XRP", value: "$0.62", change: "+0.84%", up: true, marketCap: "$34B" },
-  { name: "Cardano", value: "$0.48", change: "-0.32%", up: false, marketCap: "$17B" },
+  {
+    name: "BTC",
+    company: "Bitcoin",
+    value: "$67,234",
+    change: "+3.45%",
+    up: true,
+    marketCap: "$1.32T",
+  },
+  {
+    name: "ETH",
+    company: "Ethereum",
+    value: "$3,456",
+    change: "+2.87%",
+    up: true,
+    marketCap: "$415B",
+  },
+  {
+    name: "SOL",
+    company: "Solana",
+    value: "$167.80",
+    change: "+4.56%",
+    up: true,
+    marketCap: "$78B",
+  },
+  {
+    name: "BNB",
+    company: "Binance Coin",
+    value: "$612.40",
+    change: "+1.22%",
+    up: true,
+    marketCap: "$89B",
+  },
+  {
+    name: "XRP",
+    company: "XRP",
+    value: "$0.62",
+    change: "-0.88%",
+    up: false,
+    marketCap: "$34B",
+  },
+  {
+    name: "ADA",
+    company: "Cardano",
+    value: "$0.48",
+    change: "+1.14%",
+    up: true,
+    marketCap: "$17B",
+  },
 ];
+
+/* ------------------------------------------------------------
+   Commodities
+------------------------------------------------------------ */
+
+const commodities: CommodityRow[] = [
+  {
+    name: "Crude Oil (WTI)",
+    price: "$88.16/bbl",
+    change: "+2.71%",
+    up: true,
+  },
+  {
+    name: "Brent Crude",
+    price: "$91.44/bbl",
+    change: "+2.34%",
+    up: true,
+  },
+  {
+    name: "Natural Gas",
+    price: "$2.84/MMBtu",
+    change: "-0.72%",
+    up: false,
+  },
+  {
+    name: "Gold",
+    price: "$2,341/oz",
+    change: "+0.63%",
+    up: true,
+  },
+  {
+    name: "Silver",
+    price: "$28.14/oz",
+    change: "+1.44%",
+    up: true,
+  },
+  {
+    name: "Copper",
+    price: "$4.38/lb",
+    change: "+0.92%",
+    up: true,
+  },
+  {
+    name: "Wheat",
+    price: "$564.25/bu",
+    change: "-1.12%",
+    up: false,
+  },
+  {
+    name: "Corn",
+    price: "$463.50/bu",
+    change: "+0.34%",
+    up: true,
+  },
+];
+
+/* ------------------------------------------------------------
+   Forex
+------------------------------------------------------------ */
+
+const forex: ForexRow[] = [
+  {
+    pair: "EUR/USD",
+    name: "Euro / US Dollar",
+    rate: "1.0842",
+    change: "+0.28%",
+    up: true,
+  },
+  {
+    pair: "GBP/USD",
+    name: "British Pound / US Dollar",
+    rate: "1.2718",
+    change: "+0.42%",
+    up: true,
+  },
+  {
+    pair: "USD/JPY",
+    name: "US Dollar / Japanese Yen",
+    rate: "156.82",
+    change: "-0.31%",
+    up: false,
+  },
+  {
+    pair: "USD/INR",
+    name: "US Dollar / Indian Rupee",
+    rate: "83.42",
+    change: "+0.12%",
+    up: true,
+  },
+  {
+    pair: "AUD/USD",
+    name: "Australian Dollar / US Dollar",
+    rate: "0.6614",
+    change: "+0.17%",
+    up: true,
+  },
+  {
+    pair: "USD/CAD",
+    name: "US Dollar / Canadian Dollar",
+    rate: "1.3612",
+    change: "-0.08%",
+    up: false,
+  },
+  {
+    pair: "USD/CHF",
+    name: "US Dollar / Swiss Franc",
+    rate: "0.8981",
+    change: "+0.06%",
+    up: true,
+  },
+  {
+    pair: "NZD/USD",
+    name: "New Zealand Dollar / US Dollar",
+    rate: "0.6128",
+    change: "+0.21%",
+    up: true,
+  },
+];
+
+/* ------------------------------------------------------------
+   Mutual Funds
+   User requested sample data for this section.
+------------------------------------------------------------ */
+
+const mutualFunds: FundRow[] = [
+  {
+    symbol: "VFIAX",
+    name: "Vanguard 500 Index Fund",
+    nav: "$548.21",
+    change: "+1.08%",
+    up: true,
+    aum: "$512B",
+    return1y: "+24.6%",
+  },
+  {
+    symbol: "FXAIX",
+    name: "Fidelity 500 Index Fund",
+    nav: "$211.74",
+    change: "+1.06%",
+    up: true,
+    aum: "$498B",
+    return1y: "+24.3%",
+  },
+  {
+    symbol: "SWPPX",
+    name: "Schwab S&P 500 Index Fund",
+    nav: "$82.64",
+    change: "+1.11%",
+    up: true,
+    aum: "$92B",
+    return1y: "+24.1%",
+  },
+  {
+    symbol: "VTSAX",
+    name: "Vanguard Total Stock Market",
+    nav: "$141.83",
+    change: "+0.94%",
+    up: true,
+    aum: "$446B",
+    return1y: "+22.8%",
+  },
+  {
+    symbol: "FZROX",
+    name: "Fidelity ZERO Total Market",
+    nav: "$19.42",
+    change: "+0.91%",
+    up: true,
+    aum: "$18B",
+    return1y: "+22.4%",
+  },
+  {
+    symbol: "VTIAX",
+    name: "Vanguard Total International",
+    nav: "$34.78",
+    change: "-0.18%",
+    up: false,
+    aum: "$61B",
+    return1y: "+9.7%",
+  },
+];
+
+/* ------------------------------------------------------------
+   ETFs
+   User requested sample data for this section.
+------------------------------------------------------------ */
+
+const etfs: ETFRow[] = [
+  {
+    symbol: "SPY",
+    name: "SPDR S&P 500 ETF Trust",
+    price: "$589.24",
+    change: "+1.12%",
+    up: true,
+    expenseRatio: "0.09%",
+    return1y: "+24.8%",
+  },
+  {
+    symbol: "VOO",
+    name: "Vanguard S&P 500 ETF",
+    price: "$542.16",
+    change: "+1.09%",
+    up: true,
+    expenseRatio: "0.03%",
+    return1y: "+24.5%",
+  },
+  {
+    symbol: "QQQ",
+    name: "Invesco QQQ Trust",
+    price: "$503.82",
+    change: "+1.67%",
+    up: true,
+    expenseRatio: "0.20%",
+    return1y: "+31.2%",
+  },
+  {
+    symbol: "VTI",
+    name: "Vanguard Total Stock Market ETF",
+    price: "$271.46",
+    change: "+0.94%",
+    up: true,
+    expenseRatio: "0.03%",
+    return1y: "+22.7%",
+  },
+  {
+    symbol: "IWM",
+    name: "iShares Russell 2000 ETF",
+    price: "$211.38",
+    change: "+0.45%",
+    up: true,
+    expenseRatio: "0.19%",
+    return1y: "+14.6%",
+  },
+  {
+    symbol: "GLD",
+    name: "SPDR Gold Shares",
+    price: "$217.62",
+    change: "+0.63%",
+    up: true,
+    expenseRatio: "0.40%",
+    return1y: "+18.3%",
+  },
+];
+
+/* ------------------------------------------------------------
+   Navigation
+------------------------------------------------------------ */
 
 const navItems = [
   "Overview",
@@ -78,16 +537,28 @@ const navItems = [
   "ETFs",
 ];
 
-function normalizeRows(rows: any[] | undefined, fallback: MarketRow[]): MarketRow[] {
-  if (!Array.isArray(rows) || rows.length === 0) return fallback;
+/* ------------------------------------------------------------
+   Helpers
+------------------------------------------------------------ */
+
+function normalizeRows(
+  rows: any[] | undefined,
+  fallback: MarketRow[]
+): MarketRow[] {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return fallback;
+  }
 
   return rows.map((row: any, index: number) => ({
     ...fallback[index],
     ...row,
     name: row?.name ?? fallback[index]?.name ?? "—",
-    value: row?.value ?? "—",
-    change: row?.change ?? "—",
-    up: typeof row?.up === "boolean" ? row.up : fallback[index]?.up ?? true,
+    value: row?.value ?? fallback[index]?.value ?? "—",
+    change: row?.change ?? fallback[index]?.change ?? "—",
+    up:
+      typeof row?.up === "boolean"
+        ? row.up
+        : fallback[index]?.up ?? true,
   }));
 }
 
@@ -101,18 +572,39 @@ function ChangeValue({
   return (
     <span
       className={`inline-flex items-center gap-1 font-semibold ${
-        up ? "text-[#08A86B]" : "text-[#E3262E]"
+        up ? "text-[#00A86B]" : "text-[#EF3434]"
       }`}
     >
-      <span className="text-[9px]">{up ? "▲" : "▼"}</span>
+      <span className="text-[9px]">
+        {up ? "▲" : "▼"}
+      </span>
+
       {change}
     </span>
   );
 }
 
-function AdBanner({ children }: { children: React.ReactNode }) {
+function SectionHeading({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="relative overflow-hidden border border-[#D7DDE0] bg-[#17333D]">
+    <div className="mb-5">
+      <h2 className="text-[22px] font-bold tracking-tight text-[#111111]">
+        {children}
+      </h2>
+    </div>
+  );
+}
+
+function AdBanner({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative overflow-hidden bg-[#17333D]">
       <div className="absolute right-2 top-1 text-[7px] text-white/60">
         Advertisement
       </div>
@@ -134,23 +626,515 @@ function AdBanner({ children }: { children: React.ReactNode }) {
   );
 }
 
-function SectionHeading({ children }: { children: React.ReactNode }) {
+/* ------------------------------------------------------------
+   Stocks Table
+------------------------------------------------------------ */
+
+function StocksTable({
+  stocks,
+}: {
+  stocks: MarketRow[];
+}) {
   return (
-    <div className="mb-3 flex items-center justify-between border-b border-[#17140F] pb-2">
-      <h2 className="font-serif text-[17px] font-bold tracking-tight text-[#17140F]">
-        {children}
-      </h2>
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[850px] border-collapse">
+        <thead>
+          <tr className="border-b-2 border-[#111111]">
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Symbol
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Company
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Price
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Change
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Volume
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Mkt Cap
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {stocks.map((row, index) => (
+            <tr
+              key={`${row.name}-${index}`}
+              className="border-b border-[#E6E6E6] transition-colors hover:bg-[#FAFAFA]"
+            >
+              <td className="py-4 text-[16px] font-bold text-[#E31B23]">
+                {row.name}
+              </td>
+
+              <td className="py-4 text-[16px]">
+                {row.company ?? "—"}
+              </td>
+
+              <td className="py-4 font-mono text-[15px] font-bold">
+                {row.value}
+              </td>
+
+              <td className="py-4 text-[15px]">
+                <ChangeValue
+                  change={row.change}
+                  up={row.up}
+                />
+              </td>
+
+              <td className="py-4 text-[15px] text-[#777777]">
+                {row.volume ?? "—"}
+              </td>
+
+              <td className="py-4 text-[15px] font-bold">
+                {row.marketCap ?? "—"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
 
+/* ------------------------------------------------------------
+   Indices Table
+------------------------------------------------------------ */
+
+function IndicesTable({
+  indices,
+}: {
+  indices: MarketRow[];
+}) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[750px] border-collapse">
+        <thead>
+          <tr className="border-b-2 border-[#111111]">
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Index
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Value
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Change
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              YTD Return
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {indices.map((row, index) => (
+            <tr
+              key={`${row.name}-${index}`}
+              className="border-b border-[#E6E6E6] transition-colors hover:bg-[#FAFAFA]"
+            >
+              <td className="py-4 text-[16px] font-semibold">
+                {row.name}
+              </td>
+
+              <td className="py-4 font-mono text-[15px]">
+                {row.value}
+              </td>
+
+              <td className="py-4 text-[15px]">
+                <ChangeValue
+                  change={row.change}
+                  up={row.up}
+                />
+              </td>
+
+              <td
+                className={`py-4 text-[15px] font-bold ${
+                  row.ytd?.startsWith("-")
+                    ? "text-[#EF3434]"
+                    : "text-[#00A86B]"
+                }`}
+              >
+                {row.ytd ?? "—"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   Crypto Cards
+------------------------------------------------------------ */
+
+function CryptoGrid({
+  crypto,
+}: {
+  crypto: MarketRow[];
+}) {
+  return (
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+      {crypto.map((row, index) => (
+        <article
+          key={`${row.name}-${index}`}
+          className="min-h-[175px] rounded-[10px] border border-[#D8D8D8] bg-white p-5 transition-shadow hover:shadow-md"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[20px] font-bold">
+                {row.name}
+              </p>
+
+              <p className="mt-3 text-[16px] text-[#555555]">
+                {row.company}
+              </p>
+            </div>
+
+            <ChangeValue
+              change={row.change}
+              up={row.up}
+            />
+          </div>
+
+          <p className="mt-2 text-[28px] font-bold tracking-tight">
+            {row.value}
+          </p>
+
+          <p className="mt-2 text-[13px] text-[#777777]">
+            Mkt Cap: {row.marketCap ?? "—"}
+          </p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   Commodities Table
+------------------------------------------------------------ */
+
+function CommoditiesTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[700px] border-collapse">
+        <thead>
+          <tr className="border-b-2 border-[#111111]">
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Commodity
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Price
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Change
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {commodities.map((row, index) => (
+            <tr
+              key={`${row.name}-${index}`}
+              className="border-b border-[#E6E6E6] hover:bg-[#FAFAFA]"
+            >
+              <td className="py-4 text-[16px]">
+                {row.name}
+              </td>
+
+              <td className="py-4 font-mono text-[15px] font-bold">
+                {row.price}
+              </td>
+
+              <td className="py-4 text-[15px]">
+                <ChangeValue
+                  change={row.change}
+                  up={row.up}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   Forex Table
+------------------------------------------------------------ */
+
+function ForexTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[750px] border-collapse">
+        <thead>
+          <tr className="border-b-2 border-[#111111]">
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Pair
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Currency
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Rate
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Change
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {forex.map((row, index) => (
+            <tr
+              key={`${row.pair}-${index}`}
+              className="border-b border-[#E6E6E6] hover:bg-[#FAFAFA]"
+            >
+              <td className="py-4 text-[16px] font-bold text-[#E31B23]">
+                {row.pair}
+              </td>
+
+              <td className="py-4 text-[15px]">
+                {row.name}
+              </td>
+
+              <td className="py-4 font-mono text-[15px] font-bold">
+                {row.rate}
+              </td>
+
+              <td className="py-4">
+                <ChangeValue
+                  change={row.change}
+                  up={row.up}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   Mutual Funds Table
+------------------------------------------------------------ */
+
+function MutualFundsTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[900px] border-collapse">
+        <thead>
+          <tr className="border-b-2 border-[#111111]">
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Fund
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Name
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              NAV
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Change
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              AUM
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              1Y Return
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {mutualFunds.map((row, index) => (
+            <tr
+              key={`${row.symbol}-${index}`}
+              className="border-b border-[#E6E6E6] hover:bg-[#FAFAFA]"
+            >
+              <td className="py-4 text-[16px] font-bold text-[#E31B23]">
+                {row.symbol}
+              </td>
+
+              <td className="py-4 text-[15px]">
+                {row.name}
+              </td>
+
+              <td className="py-4 font-mono text-[15px] font-bold">
+                {row.nav}
+              </td>
+
+              <td className="py-4">
+                <ChangeValue
+                  change={row.change}
+                  up={row.up}
+                />
+              </td>
+
+              <td className="py-4 text-[15px]">
+                {row.aum}
+              </td>
+
+              <td className="py-4 text-[15px] font-bold text-[#00A86B]">
+                {row.return1y}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   ETF Table
+------------------------------------------------------------ */
+
+function ETFsTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[900px] border-collapse">
+        <thead>
+          <tr className="border-b-2 border-[#111111]">
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Symbol
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              ETF
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Price
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Change
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Expense Ratio
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              1Y Return
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {etfs.map((row, index) => (
+            <tr
+              key={`${row.symbol}-${index}`}
+              className="border-b border-[#E6E6E6] hover:bg-[#FAFAFA]"
+            >
+              <td className="py-4 text-[16px] font-bold text-[#E31B23]">
+                {row.symbol}
+              </td>
+
+              <td className="py-4 text-[15px]">
+                {row.name}
+              </td>
+
+              <td className="py-4 font-mono text-[15px] font-bold">
+                {row.price}
+              </td>
+
+              <td className="py-4">
+                <ChangeValue
+                  change={row.change}
+                  up={row.up}
+                />
+              </td>
+
+              <td className="py-4 text-[15px]">
+                {row.expenseRatio}
+              </td>
+
+              <td className="py-4 text-[15px] font-bold text-[#00A86B]">
+                {row.return1y}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   Overview
+------------------------------------------------------------ */
+
+function Overview({
+  indices,
+  stocks,
+  crypto,
+}: {
+  indices: MarketRow[];
+  stocks: MarketRow[];
+  crypto: MarketRow[];
+}) {
+  return (
+    <div className="space-y-9">
+      <section>
+        <SectionHeading>Global Indices</SectionHeading>
+
+        <IndicesTable indices={indices} />
+      </section>
+
+      <section>
+        <SectionHeading>Top Stocks</SectionHeading>
+
+        <StocksTable stocks={stocks} />
+      </section>
+
+      <section>
+        <SectionHeading>Cryptocurrency</SectionHeading>
+
+        <CryptoGrid crypto={crypto} />
+      </section>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   Main Page
+------------------------------------------------------------ */
+
 export function MarketsPage() {
   const [activeTab, setActiveTab] = useState("Overview");
+
   const [marketData, setMarketData] = useState<MarketData>({
     indices: fallbackIndices,
     stocks: fallbackStocks,
     crypto: fallbackCrypto,
   });
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -163,12 +1147,26 @@ export function MarketsPage() {
         if (!mounted) return;
 
         setMarketData({
-          indices: normalizeRows(data?.indices, fallbackIndices),
-          stocks: normalizeRows(data?.stocks, fallbackStocks),
-          crypto: normalizeRows(data?.crypto, fallbackCrypto),
+          indices: normalizeRows(
+            data?.indices,
+            fallbackIndices
+          ),
+
+          stocks: normalizeRows(
+            data?.stocks,
+            fallbackStocks
+          ),
+
+          crypto: normalizeRows(
+            data?.crypto,
+            fallbackCrypto
+          ),
         });
       } catch (error) {
-        console.error("Unable to load market data:", error);
+        console.error(
+          "Unable to load market data:",
+          error
+        );
 
         if (mounted) {
           setMarketData({
@@ -178,13 +1176,18 @@ export function MarketsPage() {
           });
         }
       } finally {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
     loadData();
 
-    const interval = window.setInterval(loadData, 30000);
+    const interval = window.setInterval(
+      loadData,
+      30000
+    );
 
     return () => {
       mounted = false;
@@ -192,300 +1195,248 @@ export function MarketsPage() {
     };
   }, []);
 
-  const displayIndices = marketData.indices.length
-    ? marketData.indices
-    : fallbackIndices;
+  const displayIndices =
+    marketData.indices.length > 0
+      ? marketData.indices
+      : fallbackIndices;
 
-  const displayStocks = marketData.stocks.length
-    ? marketData.stocks
-    : fallbackStocks;
+  const displayStocks =
+    marketData.stocks.length > 0
+      ? marketData.stocks
+      : fallbackStocks;
 
-  const displayCrypto = marketData.crypto.length
-    ? marketData.crypto
-    : fallbackCrypto;
+  const displayCrypto =
+    marketData.crypto.length > 0
+      ? marketData.crypto
+      : fallbackCrypto;
 
   return (
-    <main className="min-h-screen bg-white text-[#17140F] antialiased">
-      <div className="mx-auto w-full max-w-[1180px] px-4 pb-14 pt-10 sm:px-6 lg:px-8">
-        {/* Page heading */}
-        <header className="border-t-[3px] border-[#E31B23] pt-4">
-          <h1 className="font-serif text-[28px] font-bold leading-none tracking-tight sm:text-[34px]">
-            Markets Dashboard
-          </h1>
+    <main className="min-h-screen bg-white text-[#111111] antialiased">
+      <div className="mx-auto w-full px-5 pb-14 pt-8 sm:px-8 lg:px-10">
+        {/* --------------------------------------------------
+            Advertisement
+        -------------------------------------------------- */}
 
-          <p className="mt-2 text-[11px] text-[#55534C] sm:text-[12px]">
-            Real-time market data, indices, commodities, forex, crypto and more.
-          </p>
-        </header>
-
-        {/* Advertisement */}
-        <div className="mt-4">
-          <AdBanner>Trade smarter with Pride Times Markets Intelligence</AdBanner>
+        <div className="mb-7">
+          <AdBanner>
+            Trade smarter with Pride Times Markets Intelligence
+          </AdBanner>
         </div>
 
-        {/* Market navigation */}
+        {/* --------------------------------------------------
+            Market Navigation
+        -------------------------------------------------- */}
+
         <nav
           aria-label="Markets navigation"
-          className="mt-3 flex overflow-x-auto border-b border-[#D9D4C7] no-scrollbar"
+          className="border-b border-[#D8D8D8]"
         >
-          {navItems.map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setActiveTab(item)}
-              className={`relative shrink-0 px-4 py-3 text-[11px] font-medium transition-colors ${
-                activeTab === item
-                  ? "text-[#E31B23]"
-                  : "text-[#55534C] hover:text-[#17140F]"
-              }`}
-            >
-              {item}
+          <div className="flex overflow-x-auto no-scrollbar">
+            {navItems.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setActiveTab(item)}
+                className={`relative shrink-0 px-5 py-4 text-[15px] font-medium transition-colors ${
+                  activeTab === item
+                    ? "text-[#E31B23]"
+                    : "text-[#333333] hover:text-[#111111]"
+                }`}
+              >
+                {item}
 
-              {activeTab === item && (
-                <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#E31B23]" />
-              )}
-            </button>
-          ))}
+                {activeTab === item && (
+                  <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#E31B23]" />
+                )}
+              </button>
+            ))}
+          </div>
         </nav>
 
-        {/* Main dashboard */}
-        <div className="mt-5">
+        {/* --------------------------------------------------
+            Dashboard Content
+        -------------------------------------------------- */}
+
+        <div className="mt-8">
           {loading ? (
-            <div className="border border-[#E5E2DB] py-16 text-center">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-[#8A887F]">
-                Loading market data…
+            <div className="border border-[#E5E5E5] py-20 text-center">
+              <p className="text-[12px] uppercase tracking-[0.14em] text-[#777777]">
+                Loading market data...
               </p>
             </div>
           ) : (
             <>
-              {/* Global indices */}
-              <section>
-                <SectionHeading>Global Indices</SectionHeading>
+              {/* OVERVIEW */}
+              {activeTab === "Overview" && (
+                <Overview
+                  indices={displayIndices}
+                  stocks={displayStocks}
+                  crypto={displayCrypto}
+                />
+              )}
 
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[680px] border-collapse">
-                    <thead>
-                      <tr className="border-b border-[#17140F]">
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Index
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Value
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Change
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          YTD Return
-                        </th>
-                      </tr>
-                    </thead>
+              {/* STOCKS */}
+              {activeTab === "Stocks" && (
+                <section>
+                  <SectionHeading>
+                    Top Stocks
+                  </SectionHeading>
 
-                    <tbody>
-                      {displayIndices.map((row, index) => (
-                        <tr
-                          key={`${row.name}-${index}`}
-                          className="border-b border-[#ECE9E2] hover:bg-[#FAFAF7]"
-                        >
-                          <td className="py-2.5 text-[11px] font-semibold text-[#17140F]">
-                            {row.name}
-                          </td>
+                  <StocksTable
+                    stocks={displayStocks}
+                  />
+                </section>
+              )}
 
-                          <td className="py-2.5 font-mono text-[11px] text-[#55534C]">
-                            {row.value}
-                          </td>
+              {/* INDICES */}
+              {activeTab === "Indices" && (
+                <section>
+                  <SectionHeading>
+                    Global Indices
+                  </SectionHeading>
 
-                          <td className="py-2.5 text-[11px]">
-                            <ChangeValue
-                              change={row.change}
-                              up={row.up}
-                            />
-                          </td>
+                  <IndicesTable
+                    indices={displayIndices}
+                  />
+                </section>
+              )}
 
-                          <td
-                            className={`py-2.5 text-[11px] font-semibold ${
-                              row.ytd?.startsWith("-")
-                                ? "text-[#E3262E]"
-                                : "text-[#08A86B]"
-                            }`}
-                          >
-                            {row.ytd ?? "—"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
+              {/* CRYPTO */}
+              {activeTab === "Crypto" && (
+                <section>
+                  <SectionHeading>
+                    Cryptocurrency
+                  </SectionHeading>
 
-              {/* Top stocks */}
-              <section className="mt-8">
-                <SectionHeading>Top Stocks</SectionHeading>
+                  <CryptoGrid
+                    crypto={displayCrypto}
+                  />
+                </section>
+              )}
 
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[800px] border-collapse">
-                    <thead>
-                      <tr className="border-b border-[#17140F]">
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Symbol
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Company
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Price
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Change
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Volume
-                        </th>
-                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Mkt Cap
-                        </th>
-                      </tr>
-                    </thead>
+              {/* FOREX */}
+              {activeTab === "Forex" && (
+                <section>
+                  <SectionHeading>
+                    Foreign Exchange
+                  </SectionHeading>
 
-                    <tbody>
-                      {displayStocks.map((row, index) => (
-                        <tr
-                          key={`${row.name}-${index}`}
-                          className="border-b border-[#ECE9E2] hover:bg-[#FAFAF7]"
-                        >
-                          <td className="py-2.5 text-[11px] font-semibold text-[#E31B23]">
-                            {row.name}
-                          </td>
+                  <ForexTable />
+                </section>
+              )}
 
-                          <td className="py-2.5 text-[11px] text-[#17140F]">
-                            {row.company ?? "—"}
-                          </td>
+              {/* COMMODITIES */}
+              {activeTab === "Commodities" && (
+                <section>
+                  <SectionHeading>
+                    Commodities
+                  </SectionHeading>
 
-                          <td className="py-2.5 font-mono text-[11px] font-semibold">
-                            {row.value}
-                          </td>
+                  <CommoditiesTable />
+                </section>
+              )}
 
-                          <td className="py-2.5 text-[11px]">
-                            <ChangeValue
-                              change={row.change}
-                              up={row.up}
-                            />
-                          </td>
+              {/* MUTUAL FUNDS */}
+              {activeTab === "Mutual Funds" && (
+                <section>
+                  <SectionHeading>
+                    Mutual Funds
+                  </SectionHeading>
 
-                          <td className="py-2.5 text-[11px] text-[#77736B]">
-                            {row.volume ?? "—"}
-                          </td>
+                  <MutualFundsTable />
+                </section>
+              )}
 
-                          <td className="py-2.5 text-[11px] font-semibold">
-                            {row.marketCap ?? "—"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
+              {/* ETFs */}
+              {activeTab === "ETFs" && (
+                <section>
+                  <SectionHeading>
+                    Exchange-Traded Funds
+                  </SectionHeading>
 
-              {/* Cryptocurrency */}
-              <section className="mt-8">
-                <SectionHeading>Cryptocurrency</SectionHeading>
-
-                <div className="grid grid-cols-1 border border-[#E5E2DB] sm:grid-cols-3">
-                  {displayCrypto.slice(0, 3).map((row, index) => (
-                    <article
-                      key={`${row.name}-${index}`}
-                      className={`p-4 ${
-                        index > 0 ? "border-t sm:border-l sm:border-t-0" : ""
-                      } border-[#E5E2DB]`}
-                    >
-                      <p className="text-[10px] text-[#77736B]">{row.name}</p>
-
-                      <p className="mt-1 font-serif text-[20px] font-bold">
-                        {row.value}
-                      </p>
-
-                      <div className="mt-1 flex items-center justify-between">
-                        <ChangeValue
-                          change={row.change}
-                          up={row.up}
-                        />
-
-                        <span className="text-[9px] text-[#8A887F]">
-                          Mkt Cap: {row.marketCap ?? "—"}
-                        </span>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-
-              {/* Existing market report information, condensed to the reference page */}
-              <section className="mt-8">
-                <SectionHeading>Markets Report</SectionHeading>
-
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  <article className="border border-[#E5E2DB] p-4">
-                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
-                      S&P 500 — July Close
-                    </p>
-                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
-                      -0.13%
-                    </p>
-                  </article>
-
-                  <article className="border border-[#E5E2DB] p-4">
-                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
-                      Russell 2000 — YTD Gain
-                    </p>
-                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
-                      +22%
-                    </p>
-                  </article>
-
-                  <article className="border border-[#E5E2DB] p-4">
-                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
-                      Nikkei 225 — July
-                    </p>
-                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
-                      -8.1%
-                    </p>
-                  </article>
-
-                  <article className="border border-[#E5E2DB] p-4">
-                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
-                      US 10Y Treasury Yield
-                    </p>
-                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
-                      4.75%
-                    </p>
-                  </article>
-                </div>
-              </section>
-
-              {/* Sponsored content */}
-              <div className="mt-8">
-                <div className="overflow-hidden rounded-[3px] border border-[#E2DED2] bg-[#10162E]">
-                  <div className="border-b border-[#D8D1B8] bg-[#F4F0DF] px-2 py-1 text-[7px] uppercase tracking-[0.1em] text-[#77736B]">
-                    Sponsored Content
-                  </div>
-
-                  <div className="flex min-h-[78px] flex-col items-center justify-center text-center">
-                    <span className="text-[8px] font-bold tracking-[0.15em] text-[#F1D100]">
-                      MARKETEDGE PRO — ADVANCED TRADING ANALYTICS
-                    </span>
-
-                    <span className="mt-1 text-[12px] font-semibold text-white">
-                      Your Ad Here
-                    </span>
-
-                    <span className="mt-1 text-[8px] text-white/60">
-                      Reach 2M+ business readers
-                    </span>
-                  </div>
-                </div>
-              </div>
+                  <ETFsTable />
+                </section>
+              )}
             </>
           )}
+        </div>
+
+        {/* --------------------------------------------------
+            Market Report
+        -------------------------------------------------- */}
+
+        {activeTab === "Overview" && !loading && (
+          <section className="mt-10">
+            <SectionHeading>
+              Markets Report
+            </SectionHeading>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <article className="border border-[#E5E5E5] p-5">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-[#777777]">
+                  S&P 500 — July Close
+                </p>
+
+                <p className="mt-2 text-[23px] font-bold text-[#E31B23]">
+                  -0.13%
+                </p>
+              </article>
+
+              <article className="border border-[#E5E5E5] p-5">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-[#777777]">
+                  Russell 2000 — YTD Gain
+                </p>
+
+                <p className="mt-2 text-[23px] font-bold text-[#00A86B]">
+                  +22%
+                </p>
+              </article>
+
+              <article className="border border-[#E5E5E5] p-5">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-[#777777]">
+                  Nikkei 225 — July
+                </p>
+
+                <p className="mt-2 text-[23px] font-bold text-[#E31B23]">
+                  -8.1%
+                </p>
+              </article>
+
+              <article className="border border-[#E5E5E5] p-5">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-[#777777]">
+                  US 10Y Treasury Yield
+                </p>
+
+                <p className="mt-2 text-[23px] font-bold text-[#E31B23]">
+                  4.75%
+                </p>
+              </article>
+            </div>
+          </section>
+        )}
+
+        {/* --------------------------------------------------
+            Sponsored Content
+        -------------------------------------------------- */}
+
+        <div className="mt-10 overflow-hidden rounded-[4px] border border-[#E2DED2]">
+          <div className="border-b border-[#D8D1B8] bg-[#F4F0DF] px-3 py-2 text-[8px] uppercase tracking-[0.1em] text-[#77736B]">
+            Sponsored Content
+          </div>
+
+          <div className="flex min-h-[78px] flex-col items-center justify-center bg-[#10162E] text-center">
+            <span className="text-[8px] font-bold tracking-[0.15em] text-[#F1D100]">
+              MARKETEDGE PRO — ADVANCED TRADING ANALYTICS
+            </span>
+
+            <span className="mt-1 text-[12px] font-semibold text-white">
+              Your Ad Here
+            </span>
+
+            <span className="mt-1 text-[8px] text-white/60">
+              Reach 2M+ business readers
+            </span>
+          </div>
         </div>
       </div>
 
