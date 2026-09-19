@@ -1,4 +1,5 @@
-import { Clock, Star } from "lucide-react";
+
+import { Clock } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Link } from "react-router";
 
@@ -11,6 +12,7 @@ function SH({ title }: { title: string }) {
     <div className="flex items-center justify-between border-t border-black pt-3 mb-5">
       <div className="flex items-center gap-2.5">
         <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
+
         <h2 className="text-[13px] md:text-sm font-bold text-gray-900">
           {title}
         </h2>
@@ -109,104 +111,6 @@ const editorPicks = [
 ];
 
 /* =========================================================
-   ADVERTISEMENT
-========================================================= */
-
-function Advertisement() {
-  return (
-    <div className="relative w-full h-[90px] md:h-[96px] bg-[#102d35] overflow-hidden">
-      <span className="absolute right-0 top-0 bg-white/80 text-[7px] md:text-[8px] text-gray-500 px-2 py-0.5">
-        Advertisement
-      </span>
-
-      <div className="h-full flex flex-col items-center justify-center text-white">
-        <span className="text-[8px] md:text-[9px] font-bold tracking-[0.2em] text-cyan-300">
-          GOOGLE ADSENSE
-        </span>
-
-        <span className="text-[12px] md:text-sm font-semibold mt-1">
-          Advertisement Space
-        </span>
-
-        <span className="text-[8px] md:text-[9px] text-cyan-200 mt-1">
-          728 × 90 • Leaderboard
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   SPONSORED SIDEBAR
-========================================================= */
-
-function SponsoredSidebar() {
-  return (
-    <aside className="w-full">
-      <div className="border border-gray-200 rounded-md overflow-hidden bg-white">
-        <div className="px-3 py-2 bg-[#faf8ef] text-[8px] font-bold uppercase tracking-[0.12em] text-gray-400">
-          Sponsored Content
-        </div>
-
-        <div className="p-3">
-          <div className="h-[150px] md:h-[165px] bg-[#111831] flex flex-col items-center justify-center text-center">
-            <span className="text-[8px] font-bold tracking-[0.18em] text-yellow-300">
-              FEATURED PARTNER
-            </span>
-
-            <span className="text-sm font-semibold text-white mt-2">
-              Your Ad Here
-            </span>
-
-            <span className="text-[9px] text-gray-300 mt-1">
-              Reach 2M+ business readers
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="border-b-2 border-black mt-5 pb-2">
-        <h3 className="text-[12px] font-bold uppercase tracking-wide">
-          More Stories
-        </h3>
-      </div>
-
-      <div className="divide-y divide-gray-200">
-        {featured.slice(1).map((story) => (
-          <Link
-            key={story.id}
-            to={story.path}
-            className="flex gap-3 py-3 group"
-          >
-            <div className="w-[72px] h-[52px] shrink-0 overflow-hidden rounded-[2px] bg-gray-100">
-              <ImageWithFallback
-                src={story.image}
-                alt={story.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-
-            <div className="min-w-0">
-              <span className="text-[7px] font-bold uppercase tracking-[0.12em] text-red-600">
-                {story.category}
-              </span>
-
-              <p className="text-[10px] md:text-[11px] font-semibold leading-[1.3] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                {story.title}
-              </p>
-
-              <span className="text-[8px] text-gray-400 mt-1 block">
-                {story.time}
-              </span>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </aside>
-  );
-}
-
-/* =========================================================
    STORY CARD
 ========================================================= */
 
@@ -253,58 +157,6 @@ function StoryCard({
         </div>
       </div>
     </Link>
-  );
-}
-
-/* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-function SponsoredEvents() {
-  const events = [
-    "Global Finance Summit 2026",
-    "Tech Leaders Forum",
-    "Energy Transition Conference",
-    "AI & Business World",
-  ];
-
-  return (
-    <section className="bg-[#f8f8f7] border border-gray-100 rounded-md p-4 md:p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="border border-gray-200 bg-white rounded px-2 py-1 text-[7px] font-bold uppercase tracking-[0.12em] text-gray-400">
-          Sponsorship
-        </span>
-
-        <span className="text-[9px] text-gray-400">
-          Presented by our partners
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {events.map((event) => (
-          <div
-            key={event}
-            className="bg-white border border-gray-200 rounded-md min-h-[95px] flex flex-col items-center justify-center text-center px-3"
-          >
-            <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
-              <Star
-                size={12}
-                className="text-red-500"
-                fill="currentColor"
-              />
-            </div>
-
-            <p className="text-[10px] font-bold text-gray-800">
-              {event}
-            </p>
-
-            <p className="text-[8px] text-gray-400 mt-1">
-              Sponsored Event
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -378,15 +230,7 @@ export function FeaturedPage() {
         </header>
 
         {/* =================================================
-            TOP ADVERTISEMENT
-        ================================================= */}
-
-        <div className="mb-6 md:mb-7">
-          <Advertisement />
-        </div>
-
-        {/* =================================================
-            MAIN HERO + SIDEBAR
+            MAIN HERO + MORE STORIES
         ================================================= */}
 
         <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,3.5fr)_minmax(260px,1fr)] gap-6 md:gap-8 mb-10 md:mb-12">
@@ -420,6 +264,7 @@ export function FeaturedPage() {
               </p>
 
               <div className="flex flex-wrap items-center gap-3 mt-3 text-[9px] md:text-[10px] text-gray-400">
+
                 <span className="font-medium text-gray-500">
                   By {featured[0].author}
                 </span>
@@ -430,14 +275,59 @@ export function FeaturedPage() {
                   <Clock size={9} strokeWidth={2.25} />
                   {featured[0].time}
                 </span>
+
               </div>
 
             </div>
           </Link>
 
-          {/* SIDEBAR */}
+          {/* MORE STORIES */}
 
-          <SponsoredSidebar />
+          <aside>
+
+            <div className="border-b-2 border-black pb-2">
+              <h3 className="text-[12px] font-bold uppercase tracking-wide">
+                More Stories
+              </h3>
+            </div>
+
+            <div className="divide-y divide-gray-200">
+
+              {featured.slice(1).map((story) => (
+                <Link
+                  key={story.id}
+                  to={story.path}
+                  className="flex gap-3 py-3 group"
+                >
+                  <div className="w-[72px] h-[52px] shrink-0 overflow-hidden rounded-[2px] bg-gray-100">
+                    <ImageWithFallback
+                      src={story.image}
+                      alt={story.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="min-w-0">
+
+                    <span className="text-[7px] font-bold uppercase tracking-[0.12em] text-red-600">
+                      {story.category}
+                    </span>
+
+                    <p className="text-[10px] md:text-[11px] font-semibold leading-[1.3] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                      {story.title}
+                    </p>
+
+                    <span className="text-[8px] text-gray-400 mt-1 block">
+                      {story.time}
+                    </span>
+
+                  </div>
+                </Link>
+              ))}
+
+            </div>
+
+          </aside>
 
         </section>
 
@@ -463,7 +353,7 @@ export function FeaturedPage() {
         </section>
 
         {/* =================================================
-            SECONDARY STORIES
+            EDITOR'S PICKS
         ================================================= */}
 
         <section className="mb-10 md:mb-12">
@@ -498,22 +388,6 @@ export function FeaturedPage() {
         </section>
 
         {/* =================================================
-            SECOND ADVERTISEMENT
-        ================================================= */}
-
-        <div className="mb-6 md:mb-7">
-          <Advertisement />
-        </div>
-
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================= */}
-
-        <div className="mb-7 md:mb-8">
-          <SponsoredEvents />
-        </div>
-
-        {/* =================================================
             NEWSLETTER
         ================================================= */}
 
@@ -526,3 +400,6 @@ export function FeaturedPage() {
     </main>
   );
 }
+
+
+
