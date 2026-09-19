@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 import { getQuotes } from "../../../services/marketApi";
 
 /*
@@ -1127,7 +1128,39 @@ function Overview({
 ------------------------------------------------------------ */
 
 export function MarketsPage() {
-  const [activeTab, setActiveTab] = useState("Overview");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const tabFromUrl = searchParams.get("tab");
+
+  const [activeTab, setActiveTab] = useState(
+    tabFromUrl && navItems.includes(tabFromUrl)
+      ? tabFromUrl
+      : "Overview"
+  );
+
+  /* Keep the active tab in sync with the URL — this is what makes
+     the "Menu" mega-menu links (e.g. /markets?tab=Commodities)
+     actually land on the right section, including when the user
+     is already on /markets and clicks a different market link. */
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+
+    if (tab && navItems.includes(tab)) {
+      setActiveTab(tab);
+    } else if (!tab) {
+      setActiveTab("Overview");
+    }
+  }, [searchParams]);
+
+  function handleTabChange(item: string) {
+    setActiveTab(item);
+
+    if (item === "Overview") {
+      setSearchParams({});
+    } else {
+      setSearchParams({ tab: item });
+    }
+  }
 
   const [marketData, setMarketData] = useState<MarketData>({
     indices: fallbackIndices,
@@ -1236,7 +1269,7 @@ export function MarketsPage() {
               <button
                 key={item}
                 type="button"
-                onClick={() => setActiveTab(item)}
+                onClick={() => handleTabChange(item)}
                 className={`relative shrink-0 px-5 py-4 text-[15px] font-medium transition-colors ${
                   activeTab === item
                     ? "text-[#E31B23]"
