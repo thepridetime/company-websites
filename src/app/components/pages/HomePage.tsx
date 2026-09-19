@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -39,95 +38,6 @@ type MarketItem = {
   change: string;
   up: boolean;
 };
-
-/* =========================================================
-   AD SPACE
-========================================================= */
-
-function AdSpace({
-  title = "The Pride Times Premium",
-}: {
-  title?: string;
-}) {
-  return (
-    <div
-      className="
-        w-full
-        h-[92px]
-        sm:h-[100px]
-        md:h-[110px]
-        bg-gradient-to-r
-        from-[#071a2d]
-        via-[#12384a]
-        to-[#28586a]
-        rounded-md
-        flex
-        items-center
-        justify-center
-        relative
-        overflow-hidden
-        my-8
-      "
-    >
-      <span
-        className="
-          absolute
-          top-1.5
-          right-2
-          text-[8px]
-          sm:text-[9px]
-          font-semibold
-          text-white/70
-          uppercase
-          tracking-wide
-        "
-      >
-        Advertisement
-      </span>
-
-      <div className="text-center px-4">
-        <span
-          className="
-            block
-            text-[8px]
-            sm:text-[9px]
-            font-bold
-            uppercase
-            tracking-[0.2em]
-            text-sky-300
-            mb-1
-          "
-        >
-          Google Adsense
-        </span>
-
-        <h3
-          className="
-            text-[11px]
-            sm:text-sm
-            md:text-base
-            font-bold
-            text-white
-          "
-        >
-          {title}
-        </h3>
-
-        <p
-          className="
-            text-[8px]
-            sm:text-[9px]
-            font-medium
-            text-white/70
-            mt-1
-          "
-        >
-          728 × 90 • Leaderboard
-        </p>
-      </div>
-    </div>
-  );
-}
 
 /* =========================================================
    HERO STORY
@@ -712,12 +622,6 @@ export function HomePage() {
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
-
-          {/* =================================================
-              TOP ADVERTISEMENT
-          ================================================= */}
-
-          <AdSpace title="The Pride Times Premium — Deep Analysis, Exclusive Access" />
 
           {/* =================================================
               HERO SECTION
@@ -1498,12 +1402,6 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              MID PAGE ADVERTISEMENT
-          ================================================= */}
-
-          <AdSpace title="Invest Smarter — The Pride Times Premium" />
-
-          {/* =================================================
               EDITOR'S PICKS + MAGAZINE
           ================================================= */}
 
@@ -1933,12 +1831,6 @@ export function HomePage() {
 
           </section>
 
-          {/* =================================================
-              BOTTOM PREMIUM ADVERTISEMENT
-          ================================================= */}
-
-          <AdSpace title="The Pride Times Premium — Deep Analysis, Exclusive Access" />
-
         </main>
       </div>
 
@@ -1969,4 +1861,3 @@ export function HomePage() {
     </div>
   );
 }
-
