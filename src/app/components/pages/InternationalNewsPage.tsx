@@ -40,25 +40,6 @@ const hero: HeroStory = {
     "https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?w=1600&h=900&fit=crop",
 };
 
-const moreStories: Story[] = [
-  {
-    id: 1,
-    category: "INTERNATIONAL BUSINESS",
-    title: "India Overtakes Germany as World's 3rd Largest Economy",
-    time: "2 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&h=250&fit=crop",
-  },
-  {
-    id: 2,
-    category: "INTERNATIONAL BUSINESS",
-    title: "EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce",
-    time: "3 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=250&fit=crop",
-  },
-];
-
 const latestStories: Story[] = [
   {
     id: 1,
@@ -271,113 +252,6 @@ function SectionHeader({
 }
 
 /* =========================================================
-   AD BANNER
-========================================================= */
-
-function AdBanner({ bottom = false }: { bottom?: boolean }) {
-  return (
-    <div
-      className={`relative w-full overflow-hidden ${
-        bottom ? "mt-8 mb-8" : "mb-5 md:mb-6"
-      }`}
-    >
-      <div className="h-[88px] md:h-[90px] w-full bg-[#102a32] flex flex-col items-center justify-center text-center">
-        <span className="text-[8px] md:text-[9px] font-bold tracking-[0.18em] text-cyan-400 uppercase">
-          GOOGLE ADSENSE
-        </span>
-
-        <span className="mt-1 text-[12px] md:text-sm font-semibold text-white">
-          {bottom
-            ? "Business Solutions | Powered by The Pride Times"
-            : "Advertisement Space"}
-        </span>
-
-        <span className="mt-1 text-[8px] md:text-[9px] text-cyan-300">
-          728 × 90 • Leaderboard
-        </span>
-      </div>
-
-      <span className="absolute right-1 top-1 text-[7px] text-gray-500 bg-white/70 px-1">
-        Advertisement
-      </span>
-    </div>
-  );
-}
-
-/* =========================================================
-   SPONSORED CONTENT
-========================================================= */
-
-function SponsoredContent() {
-  return (
-    <aside className="w-full">
-      <div className="border border-[#eee9db] bg-[#fbfaf4] p-2">
-        <div className="flex items-center justify-between mb-2 px-1">
-          <span className="text-[8px] font-semibold uppercase tracking-widest text-gray-400">
-            Sponsored Content
-          </span>
-
-          <span className="text-[8px] text-gray-400">Ad</span>
-        </div>
-
-        <div className="h-[160px] md:h-[168px] bg-[#171d3d] flex flex-col items-center justify-center text-center">
-          <span className="text-[8px] font-bold tracking-widest text-yellow-400 uppercase">
-            Featured Partner
-          </span>
-
-          <h3 className="text-white font-semibold text-sm mt-2">
-            Your Ad Here
-          </h3>
-
-          <p className="text-[9px] text-gray-300 mt-2">
-            Reach 2M+ business readers
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-4">
-        <div className="border-b-2 border-black pb-2">
-          <h3 className="text-[12px] font-bold uppercase tracking-wide">
-            More Stories
-          </h3>
-        </div>
-
-        <div>
-          {moreStories.map((story) => (
-            <article
-              key={story.id}
-              className="flex gap-3 py-3 border-b border-gray-200 group cursor-pointer"
-            >
-              <div className="w-[72px] h-[48px] shrink-0 overflow-hidden rounded-sm">
-                <ImageWithFallback
-                  src={story.image || ""}
-                  alt={story.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="min-w-0">
-                <span className="text-[7px] font-bold text-red-600 uppercase tracking-wide">
-                  {story.category}
-                </span>
-
-                <h4 className="text-[10px] md:text-[11px] font-semibold leading-tight mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </h4>
-
-                <span className="text-[8px] text-gray-400 mt-1 block">
-                  {story.time}
-                </span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </aside>
-  );
-}
-
-/* =========================================================
    HERO
 ========================================================= */
 
@@ -506,54 +380,6 @@ function RegionalStories({
 }
 
 /* =========================================================
-   SPONSORSHIP
-========================================================= */
-
-function SponsorshipSection() {
-  const events = [
-    "Global Finance Summit 2026",
-    "Tech Leaders Forum",
-    "Energy Transition Conference",
-    "AI & Business World",
-  ];
-
-  return (
-    <section className="mt-5 rounded-[6px] bg-[#f7f7f7] border border-gray-100 p-4 md:p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="border border-gray-300 rounded px-2 py-1 text-[7px] font-semibold uppercase tracking-widest text-gray-400">
-          Sponsorship
-        </span>
-
-        <span className="text-[9px] text-gray-400">
-          Presented by our partners
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {events.map((event) => (
-          <div
-            key={event}
-            className="bg-white border border-gray-200 rounded-[4px] min-h-[90px] flex flex-col items-center justify-center text-center px-3"
-          >
-            <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
-              <span className="text-red-500 text-xs">◆</span>
-            </div>
-
-            <h3 className="text-[9px] md:text-[10px] font-semibold text-gray-800">
-              {event}
-            </h3>
-
-            <span className="text-[8px] text-gray-400 mt-1">
-              Sponsored Event
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
    NEWSLETTER
 ========================================================= */
 
@@ -622,23 +448,11 @@ export function InternationalNewsPage() {
         </header>
 
         {/* =================================================
-            TOP ADVERTISEMENT
+            HERO
         ================================================= */}
 
-        <AdBanner />
-
-        {/* =================================================
-            HERO + SPONSORED CONTENT
-        ================================================= */}
-
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,3.3fr)_minmax(260px,1fr)] gap-5 xl:gap-6 mb-8">
-          <div className="min-w-0">
-            <HeroStoryCard story={hero} />
-          </div>
-
-          <div className="min-w-0">
-            <SponsoredContent />
-          </div>
+        <section className="mb-8">
+          <HeroStoryCard story={hero} />
         </section>
 
         {/* =================================================
@@ -659,16 +473,10 @@ export function InternationalNewsPage() {
         </section>
 
         {/* =================================================
-            SECOND ADVERTISEMENT
-        ================================================= */}
-
-        <AdBanner bottom />
-
-        {/* =================================================
             REGIONAL COVERAGE
         ================================================= */}
 
-        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-7 border-t-2 border-black pt-5">
+        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-7 border-t-2 border-black pt-5 mt-8">
           <RegionalStories
             title="Europe"
             icon={<Landmark size={15} />}
@@ -693,12 +501,6 @@ export function InternationalNewsPage() {
             stories={menaAfricaStories}
           />
         </section>
-
-        {/* =================================================
-            SPONSORSHIP
-        ================================================= */}
-
-        <SponsorshipSection />
 
         {/* =================================================
             NEWSLETTER
