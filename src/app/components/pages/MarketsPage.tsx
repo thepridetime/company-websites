@@ -76,6 +76,26 @@ type ETFRow = {
   return1y: string;
 };
 
+type BondRow = {
+  name: string;
+  yield: string;
+  price: string;
+  change: string;
+  up: boolean;
+};
+
+type RegionMarket = {
+  name: string;
+  value: string;
+  change: string;
+  up: boolean;
+};
+
+type Region = {
+  region: string;
+  markets: RegionMarket[];
+};
+
 type MarketData = {
   indices: MarketRow[];
   stocks: MarketRow[];
@@ -524,6 +544,113 @@ const etfs: ETFRow[] = [
 ];
 
 /* ------------------------------------------------------------
+   Government Bonds
+------------------------------------------------------------ */
+
+const bonds: BondRow[] = [
+  {
+    name: "US 2-Year Treasury",
+    yield: "4.92%",
+    price: "$99.15",
+    change: "-0.02%",
+    up: false,
+  },
+  {
+    name: "US 10-Year Treasury",
+    yield: "4.75%",
+    price: "$98.42",
+    change: "+0.03%",
+    up: true,
+  },
+  {
+    name: "US 30-Year Treasury",
+    yield: "4.68%",
+    price: "$96.80",
+    change: "+0.05%",
+    up: true,
+  },
+  {
+    name: "UK 10-Year Gilt",
+    yield: "4.21%",
+    price: "$97.30",
+    change: "+0.04%",
+    up: true,
+  },
+  {
+    name: "German 10-Year Bund",
+    yield: "2.45%",
+    price: "$99.90",
+    change: "-0.01%",
+    up: false,
+  },
+  {
+    name: "France 10-Year OAT",
+    yield: "2.98%",
+    price: "$98.20",
+    change: "+0.02%",
+    up: true,
+  },
+  {
+    name: "Japan 10-Year JGB",
+    yield: "1.02%",
+    price: "$100.10",
+    change: "+0.02%",
+    up: true,
+  },
+  {
+    name: "India 10-Year G-Sec",
+    yield: "7.05%",
+    price: "$98.60",
+    change: "+0.03%",
+    up: true,
+  },
+];
+
+/* ------------------------------------------------------------
+   Global Markets
+   Grouped by region for a quick worldwide snapshot.
+------------------------------------------------------------ */
+
+const globalMarkets: Region[] = [
+  {
+    region: "Americas",
+    markets: [
+      { name: "S&P 500 (US)", value: "5,892.31", change: "+1.14%", up: true },
+      { name: "Dow Jones (US)", value: "42,318.45", change: "+0.82%", up: true },
+      { name: "Bovespa (Brazil)", value: "128,450.20", change: "+0.65%", up: true },
+      { name: "S&P/TSX (Canada)", value: "23,610.40", change: "-0.18%", up: false },
+    ],
+  },
+  {
+    region: "Europe",
+    markets: [
+      { name: "FTSE 100 (UK)", value: "8,241.70", change: "+0.19%", up: true },
+      { name: "DAX (Germany)", value: "18,612.80", change: "+0.54%", up: true },
+      { name: "CAC 40 (France)", value: "7,984.20", change: "+0.31%", up: true },
+      { name: "IBEX 35 (Spain)", value: "11,240.60", change: "-0.12%", up: false },
+    ],
+  },
+  {
+    region: "Asia-Pacific",
+    markets: [
+      { name: "Nikkei 225 (Japan)", value: "38,912.44", change: "-0.21%", up: false },
+      { name: "Hang Seng (Hong Kong)", value: "18,342.10", change: "-0.87%", up: false },
+      { name: "Nifty 50 (India)", value: "22,419.95", change: "-0.34%", up: false },
+      { name: "ASX 200 (Australia)", value: "8,102.30", change: "+0.28%", up: true },
+    ],
+  },
+  {
+    region: "Middle East & Africa",
+    markets: [
+      { name: "Tadawul (Saudi Arabia)", value: "12,180.40", change: "+0.38%", up: true },
+      { name: "JSE All Share (South Africa)", value: "81,250.60", change: "-0.22%", up: false },
+      { name: "EGX 30 (Egypt)", value: "29,840.10", change: "+0.51%", up: true },
+      { name: "DFM (Dubai)", value: "4,320.85", change: "+0.44%", up: true },
+    ],
+  },
+];
+
+/* ------------------------------------------------------------
    Navigation
 ------------------------------------------------------------ */
 
@@ -536,6 +663,8 @@ const navItems = [
   "Commodities",
   "Mutual Funds",
   "ETFs",
+  "Government Bonds",
+  "Global Markets",
 ];
 
 /* ------------------------------------------------------------
@@ -1088,6 +1217,111 @@ function ETFsTable() {
 }
 
 /* ------------------------------------------------------------
+   Government Bonds Table
+------------------------------------------------------------ */
+
+function BondsTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[700px] border-collapse">
+        <thead>
+          <tr className="border-b-2 border-[#111111]">
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Bond
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Yield
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Price
+            </th>
+
+            <th className="py-3 text-left text-[13px] font-bold uppercase">
+              Change
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {bonds.map((row, index) => (
+            <tr
+              key={`${row.name}-${index}`}
+              className="border-b border-[#E6E6E6] hover:bg-[#FAFAFA]"
+            >
+              <td className="py-4 text-[16px] font-semibold">
+                {row.name}
+              </td>
+
+              <td className="py-4 font-mono text-[15px] font-bold text-[#E31B23]">
+                {row.yield}
+              </td>
+
+              <td className="py-4 font-mono text-[15px]">
+                {row.price}
+              </td>
+
+              <td className="py-4 text-[15px]">
+                <ChangeValue
+                  change={row.change}
+                  up={row.up}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
+   Global Markets — regional grid
+------------------------------------------------------------ */
+
+function GlobalMarketsGrid() {
+  return (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {globalMarkets.map((region) => (
+        <div
+          key={region.region}
+          className="border border-[#E5E5E5] p-5"
+        >
+          <h3 className="mb-3 text-[15px] font-bold uppercase tracking-[0.08em] text-[#111111]">
+            {region.region}
+          </h3>
+
+          <div>
+            {region.markets.map((row, index) => (
+              <div
+                key={`${row.name}-${index}`}
+                className="flex items-center justify-between gap-4 border-t border-[#EEEEEE] py-3 first:border-t-0"
+              >
+                <span className="text-[14px] text-[#333333]">
+                  {row.name}
+                </span>
+
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-[14px] font-bold">
+                    {row.value}
+                  </span>
+
+                  <ChangeValue
+                    change={row.change}
+                    up={row.up}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
    Overview
 ------------------------------------------------------------ */
 
@@ -1388,6 +1622,28 @@ export function MarketsPage() {
                   </SectionHeading>
 
                   <ETFsTable />
+                </section>
+              )}
+
+              {/* GOVERNMENT BONDS */}
+              {activeTab === "Government Bonds" && (
+                <section>
+                  <SectionHeading>
+                    Government Bonds
+                  </SectionHeading>
+
+                  <BondsTable />
+                </section>
+              )}
+
+              {/* GLOBAL MARKETS */}
+              {activeTab === "Global Markets" && (
+                <section>
+                  <SectionHeading>
+                    Global Markets
+                  </SectionHeading>
+
+                  <GlobalMarketsGrid />
                 </section>
               )}
             </>
