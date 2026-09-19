@@ -1,3 +1,4 @@
+```tsx
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { getQuotes } from "../../../services/marketApi";
@@ -615,37 +616,117 @@ const globalMarkets: Region[] = [
   {
     region: "Americas",
     markets: [
-      { name: "S&P 500 (US)", value: "5,892.31", change: "+1.14%", up: true },
-      { name: "Dow Jones (US)", value: "42,318.45", change: "+0.82%", up: true },
-      { name: "Bovespa (Brazil)", value: "128,450.20", change: "+0.65%", up: true },
-      { name: "S&P/TSX (Canada)", value: "23,610.40", change: "-0.18%", up: false },
+      {
+        name: "S&P 500 (US)",
+        value: "5,892.31",
+        change: "+1.14%",
+        up: true,
+      },
+      {
+        name: "Dow Jones (US)",
+        value: "42,318.45",
+        change: "+0.82%",
+        up: true,
+      },
+      {
+        name: "Bovespa (Brazil)",
+        value: "128,450.20",
+        change: "+0.65%",
+        up: true,
+      },
+      {
+        name: "S&P/TSX (Canada)",
+        value: "23,610.40",
+        change: "-0.18%",
+        up: false,
+      },
     ],
   },
   {
     region: "Europe",
     markets: [
-      { name: "FTSE 100 (UK)", value: "8,241.70", change: "+0.19%", up: true },
-      { name: "DAX (Germany)", value: "18,612.80", change: "+0.54%", up: true },
-      { name: "CAC 40 (France)", value: "7,984.20", change: "+0.31%", up: true },
-      { name: "IBEX 35 (Spain)", value: "11,240.60", change: "-0.12%", up: false },
+      {
+        name: "FTSE 100 (UK)",
+        value: "8,241.70",
+        change: "+0.19%",
+        up: true,
+      },
+      {
+        name: "DAX (Germany)",
+        value: "18,612.80",
+        change: "+0.54%",
+        up: true,
+      },
+      {
+        name: "CAC 40 (France)",
+        value: "7,984.20",
+        change: "+0.31%",
+        up: true,
+      },
+      {
+        name: "IBEX 35 (Spain)",
+        value: "11,240.60",
+        change: "-0.12%",
+        up: false,
+      },
     ],
   },
   {
     region: "Asia-Pacific",
     markets: [
-      { name: "Nikkei 225 (Japan)", value: "38,912.44", change: "-0.21%", up: false },
-      { name: "Hang Seng (Hong Kong)", value: "18,342.10", change: "-0.87%", up: false },
-      { name: "Nifty 50 (India)", value: "22,419.95", change: "-0.34%", up: false },
-      { name: "ASX 200 (Australia)", value: "8,102.30", change: "+0.28%", up: true },
+      {
+        name: "Nikkei 225 (Japan)",
+        value: "38,912.44",
+        change: "-0.21%",
+        up: false,
+      },
+      {
+        name: "Hang Seng (Hong Kong)",
+        value: "18,342.10",
+        change: "-0.87%",
+        up: false,
+      },
+      {
+        name: "Nifty 50 (India)",
+        value: "22,419.95",
+        change: "-0.34%",
+        up: false,
+      },
+      {
+        name: "ASX 200 (Australia)",
+        value: "8,102.30",
+        change: "+0.28%",
+        up: true,
+      },
     ],
   },
   {
     region: "Middle East & Africa",
     markets: [
-      { name: "Tadawul (Saudi Arabia)", value: "12,180.40", change: "+0.38%", up: true },
-      { name: "JSE All Share (South Africa)", value: "81,250.60", change: "-0.22%", up: false },
-      { name: "EGX 30 (Egypt)", value: "29,840.10", change: "+0.51%", up: true },
-      { name: "DFM (Dubai)", value: "4,320.85", change: "+0.44%", up: true },
+      {
+        name: "Tadawul (Saudi Arabia)",
+        value: "12,180.40",
+        change: "+0.38%",
+        up: true,
+      },
+      {
+        name: "JSE All Share (South Africa)",
+        value: "81,250.60",
+        change: "-0.22%",
+        up: false,
+      },
+      {
+        name: "EGX 30 (Egypt)",
+        value: "29,840.10",
+        change: "+0.51%",
+        up: true,
+      },
+      {
+        name: "DFM (Dubai)",
+        value: "4,320.85",
+        change: "+0.44%",
+        up: true,
+      },
     ],
   },
 ];
@@ -724,34 +805,6 @@ function SectionHeading({
       <h2 className="text-[22px] font-bold tracking-tight text-[#111111]">
         {children}
       </h2>
-    </div>
-  );
-}
-
-function AdBanner({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="relative overflow-hidden bg-[#17333D]">
-      <div className="absolute right-2 top-1 text-[7px] text-white/60">
-        Advertisement
-      </div>
-
-      <div className="flex min-h-[74px] flex-col items-center justify-center px-4 text-center">
-        <span className="mb-1 text-[8px] font-bold tracking-[0.18em] text-[#55A8BD]">
-          GOOGLE ADSENSE
-        </span>
-
-        <span className="font-sans text-[12px] font-semibold text-white sm:text-[14px]">
-          {children}
-        </span>
-
-        <span className="mt-1 text-[8px] tracking-wide text-[#8BB6C1]">
-          728 × 90 • Leaderboard
-        </span>
-      </div>
     </div>
   );
 }
@@ -1372,10 +1425,12 @@ export function MarketsPage() {
       : "Overview"
   );
 
-  /* Keep the active tab in sync with the URL — this is what makes
-     the "Menu" mega-menu links (e.g. /markets?tab=Commodities)
-     actually land on the right section, including when the user
-     is already on /markets and clicks a different market link. */
+  /*
+    Keep the active tab in sync with the URL — this is what makes
+    the "Menu" mega-menu links (e.g. /markets?tab=Commodities)
+    actually land on the right section, including when the user
+    is already on /markets and clicks a different market link.
+  */
   useEffect(() => {
     const tab = searchParams.get("tab");
 
@@ -1480,15 +1535,6 @@ export function MarketsPage() {
   return (
     <main className="min-h-screen bg-white text-[#111111] antialiased">
       <div className="mx-auto w-full px-5 pb-14 pt-8 sm:px-8 lg:px-10">
-        {/* --------------------------------------------------
-            Advertisement
-        -------------------------------------------------- */}
-
-        <div className="mb-7">
-          <AdBanner>
-            Trade smarter with Pride Times Markets Intelligence
-          </AdBanner>
-        </div>
 
         {/* --------------------------------------------------
             Market Navigation
@@ -1534,6 +1580,7 @@ export function MarketsPage() {
           ) : (
             <>
               {/* OVERVIEW */}
+
               {activeTab === "Overview" && (
                 <Overview
                   indices={displayIndices}
@@ -1543,6 +1590,7 @@ export function MarketsPage() {
               )}
 
               {/* STOCKS */}
+
               {activeTab === "Stocks" && (
                 <section>
                   <SectionHeading>
@@ -1556,6 +1604,7 @@ export function MarketsPage() {
               )}
 
               {/* INDICES */}
+
               {activeTab === "Indices" && (
                 <section>
                   <SectionHeading>
@@ -1569,6 +1618,7 @@ export function MarketsPage() {
               )}
 
               {/* CRYPTO */}
+
               {activeTab === "Crypto" && (
                 <section>
                   <SectionHeading>
@@ -1582,6 +1632,7 @@ export function MarketsPage() {
               )}
 
               {/* FOREX */}
+
               {activeTab === "Forex" && (
                 <section>
                   <SectionHeading>
@@ -1593,6 +1644,7 @@ export function MarketsPage() {
               )}
 
               {/* COMMODITIES */}
+
               {activeTab === "Commodities" && (
                 <section>
                   <SectionHeading>
@@ -1604,6 +1656,7 @@ export function MarketsPage() {
               )}
 
               {/* MUTUAL FUNDS */}
+
               {activeTab === "Mutual Funds" && (
                 <section>
                   <SectionHeading>
@@ -1615,6 +1668,7 @@ export function MarketsPage() {
               )}
 
               {/* ETFs */}
+
               {activeTab === "ETFs" && (
                 <section>
                   <SectionHeading>
@@ -1626,6 +1680,7 @@ export function MarketsPage() {
               )}
 
               {/* GOVERNMENT BONDS */}
+
               {activeTab === "Government Bonds" && (
                 <section>
                   <SectionHeading>
@@ -1637,6 +1692,7 @@ export function MarketsPage() {
               )}
 
               {/* GLOBAL MARKETS */}
+
               {activeTab === "Global Markets" && (
                 <section>
                   <SectionHeading>
@@ -1703,30 +1759,6 @@ export function MarketsPage() {
             </div>
           </section>
         )}
-
-        {/* --------------------------------------------------
-            Sponsored Content
-        -------------------------------------------------- */}
-
-        <div className="mt-10 overflow-hidden rounded-[4px] border border-[#E2DED2]">
-          <div className="border-b border-[#D8D1B8] bg-[#F4F0DF] px-3 py-2 text-[8px] uppercase tracking-[0.1em] text-[#77736B]">
-            Sponsored Content
-          </div>
-
-          <div className="flex min-h-[78px] flex-col items-center justify-center bg-[#10162E] text-center">
-            <span className="text-[8px] font-bold tracking-[0.15em] text-[#F1D100]">
-              MARKETEDGE PRO — ADVANCED TRADING ANALYTICS
-            </span>
-
-            <span className="mt-1 text-[12px] font-semibold text-white">
-              Your Ad Here
-            </span>
-
-            <span className="mt-1 text-[8px] text-white/60">
-              Reach 2M+ business readers
-            </span>
-          </div>
-        </div>
       </div>
 
       <style>{`
@@ -1742,3 +1774,4 @@ export function MarketsPage() {
     </main>
   );
 }
+```
