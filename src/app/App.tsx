@@ -36,6 +36,7 @@ import { AboutUsPage } from "./components/pages/AboutUsPage";
 import { AdvertisePage } from "./components/pages/AdvertisePage";
 import { CareersPage } from "./components/pages/CareersPage";
 import { ContactPage } from "./components/pages/ContactPage";
+import { PressRoomPage } from "./components/pages/PressRoomPage";
 
 // Auth
 import { LoginPage } from "./components/auth/LoginPage";
@@ -125,6 +126,7 @@ export default function App() {
           <Route path="/advertise" element={<MagazineLayout><AdvertisePage /></MagazineLayout>} />
           <Route path="/careers" element={<MagazineLayout><CareersPage /></MagazineLayout>} />
           <Route path="/contact" element={<MagazineLayout><ContactPage /></MagazineLayout>} />
+          <Route path="/press-room" element={<MagazineLayout><PressRoomPage /></MagazineLayout>} />
           {/* "More" catch-all → redirect to featured */}
           <Route path="/more" element={<MagazineLayout><FeaturedPage /></MagazineLayout>} />
         </Routes>
