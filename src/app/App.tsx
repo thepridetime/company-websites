@@ -34,6 +34,7 @@ import { ResetPasswordPage } from "./components/pages/ResetPasswordPage";
 import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
 import { AboutUsPage } from "./components/pages/AboutUsPage";
 import { AdvertisePage } from "./components/pages/AdvertisePage";
+import { CareersPage } from "./components/pages/CareersPage";
 
 // Auth
 import { LoginPage } from "./components/auth/LoginPage";
@@ -121,6 +122,7 @@ export default function App() {
           <Route path="/ceospotlight" element={<MagazineLayout><CeoSpotlightPage /></MagazineLayout>} />
           <Route path="/about-us" element={<MagazineLayout><AboutUsPage /></MagazineLayout>} />
           <Route path="/advertise" element={<MagazineLayout><AdvertisePage /></MagazineLayout>} />
+          <Route path="/careers" element={<MagazineLayout><CareersPage /></MagazineLayout>} />
           {/* "More" catch-all → redirect to featured */}
           <Route path="/more" element={<MagazineLayout><FeaturedPage /></MagazineLayout>} />
         </Routes>
