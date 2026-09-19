@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -68,16 +69,15 @@ function AdSpace({
         my-8
       "
     >
-      {/* Advertisement Label */}
-
       <span
         className="
           absolute
           top-1.5
           right-2
-          text-[7px]
-          sm:text-[8px]
-          text-white/50
+          text-[8px]
+          sm:text-[9px]
+          font-semibold
+          text-white/70
           uppercase
           tracking-wide
         "
@@ -85,14 +85,12 @@ function AdSpace({
         Advertisement
       </span>
 
-      {/* Ad Content */}
-
       <div className="text-center px-4">
         <span
           className="
             block
-            text-[7px]
-            sm:text-[8px]
+            text-[8px]
+            sm:text-[9px]
             font-bold
             uppercase
             tracking-[0.2em]
@@ -108,7 +106,7 @@ function AdSpace({
             text-[11px]
             sm:text-sm
             md:text-base
-            font-semibold
+            font-bold
             text-white
           "
         >
@@ -117,9 +115,10 @@ function AdSpace({
 
         <p
           className="
-            text-[7px]
-            sm:text-[8px]
-            text-white/60
+            text-[8px]
+            sm:text-[9px]
+            font-medium
+            text-white/70
             mt-1
           "
         >
@@ -636,7 +635,7 @@ function ChangeChip({
 }) {
   return (
     <span
-      className={`text-[10px] font-semibold tabular-nums flex items-center gap-1 ${
+      className={`text-[10px] font-bold tabular-nums flex items-center gap-1 ${
         up ? "text-green-600" : "text-red-600"
       }`}
     >
@@ -711,9 +710,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         <main className="pt-4 md:pt-6 pb-16">
 
           {/* =================================================
@@ -824,6 +821,7 @@ export function HomePage() {
                   className="
                     text-[12px]
                     md:text-[13px]
+                    font-medium
                     text-gray-200
                     leading-[1.6]
                     mt-3
@@ -919,7 +917,8 @@ export function HomePage() {
                 <p
                   className="
                     text-[12px]
-                    text-gray-600
+                    font-semibold
+                    text-gray-700
                     mt-2
                     leading-[1.6]
                     line-clamp-3
@@ -1004,7 +1003,8 @@ export function HomePage() {
                       items-center
                       gap-1
                       text-[10px]
-                      text-gray-400
+                      font-semibold
+                      text-gray-600
                       mt-2
                     "
                   >
@@ -1043,13 +1043,13 @@ export function HomePage() {
                         onClick={() => setActiveMarketTab(tab)}
                         className={`
                           text-[9px]
-                          font-semibold
+                          font-bold
                           uppercase
                           tracking-wide
                           ${
                             activeMarketTab === tab
                               ? "text-red-600"
-                              : "text-gray-400 hover:text-gray-700"
+                              : "text-gray-500 hover:text-gray-900"
                           }
                         `}
                       >
@@ -1081,8 +1081,8 @@ export function HomePage() {
                         <span
                           className="
                             text-[10px]
-                            font-semibold
-                            text-gray-800
+                            font-bold
+                            text-gray-900
                           "
                         >
                           {market.symbol}
@@ -1093,7 +1093,8 @@ export function HomePage() {
                           <span
                             className="
                               text-[10px]
-                              text-gray-500
+                              font-semibold
+                              text-gray-700
                               tabular-nums
                             "
                           >
@@ -1161,7 +1162,8 @@ export function HomePage() {
                       px-3
                       py-1
                       text-[9px]
-                      font-medium
+                      font-semibold
+                      text-gray-700
                       hover:border-gray-500
                       transition-colors
                     "
@@ -1233,7 +1235,7 @@ export function HomePage() {
                   <h3
                     className="
                       text-[13px]
-                      font-semibold
+                      font-bold
                       leading-[1.4]
                       mt-2.5
                       text-gray-900
@@ -1287,10 +1289,10 @@ export function HomePage() {
                         <span
                           className="
                             shrink-0
-                            text-[9px]
-                            font-semibold
+                            text-[10px]
+                            font-bold
                             text-red-600
-                            w-[42px]
+                            w-[48px]
                           "
                         >
                           {item.time}
@@ -1299,9 +1301,9 @@ export function HomePage() {
                         <span
                           className="
                             text-[11px]
-                            font-medium
-                            leading-[1.4]
-                            text-gray-800
+                            font-semibold
+                            leading-[1.45]
+                            text-gray-900
                             group-hover:text-red-600
                             transition-colors
                           "
@@ -1373,7 +1375,7 @@ export function HomePage() {
                     onClick={() => setActiveNewsTab(tab)}
                     className={`
                       text-[10px]
-                      font-semibold
+                      font-bold
                       whitespace-nowrap
                       uppercase
                       tracking-wide
@@ -1381,7 +1383,7 @@ export function HomePage() {
                       ${
                         activeNewsTab === tab
                           ? "text-red-600"
-                          : "text-gray-400 hover:text-gray-700"
+                          : "text-gray-500 hover:text-gray-900"
                       }
                     `}
                   >
@@ -1445,7 +1447,7 @@ export function HomePage() {
                     <span
                       className="
                         block
-                        text-[8px]
+                        text-[9px]
                         font-bold
                         text-red-600
                         uppercase
@@ -1459,8 +1461,8 @@ export function HomePage() {
                     <h3
                       className="
                         text-[12px]
-                        font-semibold
-                        leading-[1.35]
+                        font-bold
+                        leading-[1.4]
                         text-gray-900
                         group-hover:text-red-600
                         transition-colors
@@ -1475,8 +1477,9 @@ export function HomePage() {
                         flex
                         items-center
                         gap-1
-                        text-[9px]
-                        text-gray-400
+                        text-[10px]
+                        font-semibold
+                        text-gray-600
                         mt-2.5
                       "
                     >
@@ -1544,8 +1547,8 @@ export function HomePage() {
                 <Link
                   to="/leadership"
                   className="
-                    text-[9px]
-                    font-semibold
+                    text-[10px]
+                    font-bold
                     text-red-600
                     flex
                     items-center
@@ -1605,7 +1608,7 @@ export function HomePage() {
 
                       <span
                         className="
-                          text-[8px]
+                          text-[9px]
                           font-bold
                           text-red-600
                           uppercase
@@ -1635,9 +1638,10 @@ export function HomePage() {
                         className="
                           hidden
                           sm:block
-                          text-[10px]
-                          text-gray-500
-                          leading-[1.5]
+                          text-[11px]
+                          font-medium
+                          text-gray-700
+                          leading-[1.55]
                           mt-1
                           line-clamp-2
                         "
@@ -1650,8 +1654,9 @@ export function HomePage() {
                           flex
                           items-center
                           gap-1
-                          text-[9px]
-                          text-gray-400
+                          text-[10px]
+                          font-semibold
+                          text-gray-600
                           mt-1.5
                         "
                       >
@@ -1699,8 +1704,8 @@ export function HomePage() {
                 <Link
                   to="/magazine"
                   className="
-                    text-[9px]
-                    font-semibold
+                    text-[10px]
+                    font-bold
                     text-red-600
                   "
                 >
@@ -1741,11 +1746,11 @@ export function HomePage() {
 
                   <span
                     className="
-                      text-[8px]
+                      text-[9px]
                       font-bold
                       uppercase
                       tracking-[0.16em]
-                      text-gray-500
+                      text-gray-300
                     "
                   >
                     Pride Times Magazine
@@ -1766,8 +1771,9 @@ export function HomePage() {
                   <p
                     className="
                       text-[11px]
-                      text-gray-400
-                      leading-[1.5]
+                      font-medium
+                      text-gray-300
+                      leading-[1.55]
                       mt-1.5
                     "
                   >
@@ -1834,8 +1840,8 @@ export function HomePage() {
               <Link
                 to="/billionaires"
                 className="
-                  text-[9px]
-                  font-semibold
+                  text-[10px]
+                  font-bold
                   text-red-600
                   flex
                   items-center
@@ -1879,7 +1885,7 @@ export function HomePage() {
                       font-serif
                       text-2xl
                       font-bold
-                      text-gray-200
+                      text-gray-300
                       tabular-nums
                       shrink-0
                       w-8
@@ -1899,7 +1905,7 @@ export function HomePage() {
                     >
                       {leader.name}
 
-                      <span className="font-normal text-gray-400">
+                      <span className="font-semibold text-gray-600">
                         {" "}
                         · {leader.company}
                       </span>
@@ -1907,9 +1913,10 @@ export function HomePage() {
 
                     <p
                       className="
-                        text-[10px]
-                        text-gray-500
-                        leading-[1.5]
+                        text-[11px]
+                        font-medium
+                        text-gray-700
+                        leading-[1.55]
                         mt-1
                       "
                     >
@@ -1962,3 +1969,4 @@ export function HomePage() {
     </div>
   );
 }
+
