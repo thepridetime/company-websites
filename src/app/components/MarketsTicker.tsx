@@ -27,11 +27,8 @@ const megaMenuColumns = [
     title: "Markets",
     links: [
       { label: "Stocks", path: "/markets?tab=Stocks" },
-      { label: "Indices", path: "/markets?tab=Indices" },
       { label: "Commodities", path: "/markets?tab=Commodities" },
       { label: "Forex", path: "/markets?tab=Forex" },
-      { label: "Crypto", path: "/markets?tab=Crypto" },
-      { label: "Mutual Funds", path: "/markets?tab=Mutual Funds" },
       { label: "ETFs", path: "/markets?tab=ETFs" },
       { label: "Government Bonds", path: "/markets?tab=Government Bonds" },
       { label: "Global Markets", path: "/markets?tab=Global Markets" },
@@ -52,7 +49,6 @@ const megaMenuColumns = [
   {
     title: "More",
     links: [
-      { label: "Featured", path: "/featured" },
       { label: "Business News", path: "/business-news" },
       { label: "International Business", path: "/international-news" },
       { label: "Startup Success", path: "/startup-success" },
@@ -96,21 +92,25 @@ export function MarketsTicker() {
             value: item.value,
             change: parseChange(item.change),
           })),
+
           ...data.stocks.map((item: any) => ({
             symbol: item.symbol ?? item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
+
           ...data.crypto.map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
+
           ...data.commodities.map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
+
           ...data.indianIndices.map((item: any) => ({
             symbol: item.name,
             value: item.value,
@@ -134,8 +134,7 @@ export function MarketsTicker() {
     return () => clearInterval(interval);
   }, []);
 
-  // Close the mega-menu after a longer pause than the simple nav dropdowns,
-  // since there's more to read/click through here.
+  // Close the mega-menu after a longer pause than the simple nav dropdowns.
   useEffect(() => {
     if (!showSecurities) return;
 
@@ -177,12 +176,6 @@ export function MarketsTicker() {
   };
 
   // ── Continuous auto-scroll (Bloomberg-style moving ticker) ──
-  // Cards are duplicated in the render below so the strip can loop
-  // seamlessly: once we've scrolled past the first copy, we silently
-  // snap back to 0 and keep going, so it never appears to jump or stop.
-  // Driven by a CSS transform (not scrollLeft) so sub-pixel movement is
-  // rendered smoothly by the compositor instead of being rounded to
-  // whole pixels every frame, which is what caused the visible jitter.
   useEffect(() => {
     if (cards.length === 0) return;
 
@@ -227,14 +220,7 @@ export function MarketsTicker() {
     <div className="pt-securities-bar w-full relative">
       <div className="pt-container flex items-stretch">
 
-        {/* ── Top Securities — Bloomberg-style mega-menu trigger ──
-            The dropdown itself is NOT nested in here — see below.
-            An absolutely positioned element sizes itself against its
-            nearest `position` ancestor, and this wrapper (needed only
-            so the button's own tiny dropdown arrow rotates in place)
-            is only as wide as the "Menu" button. Nesting the full-bleed
-            panel inside it made the panel inherit that narrow width
-            instead of the full bar. */}
+        {/* Top Securities — Bloomberg-style mega-menu trigger */}
 
         <div className="relative flex-shrink-0 flex items-center">
           <button
@@ -284,8 +270,7 @@ export function MarketsTicker() {
           </button>
         </div>
 
-        {/* ── Continuously auto-scrolling market cards,
-             always visible in the navbar ── */}
+        {/* Continuously auto-scrolling market cards */}
 
         <div
           className="relative flex items-center flex-1 min-w-0 pl-3 gap-2"
@@ -312,10 +297,6 @@ export function MarketsTicker() {
               ref={trackRef}
               className="flex items-center gap-4 w-max will-change-transform"
             >
-              {/* Cards are rendered twice back-to-back so the auto-scroll
-                  loop can snap from the end of the first copy to the start
-                  of the second without any visible jump. */}
-
               {[...cards, ...cards].map((card, i) => (
                 <div
                   key={`${card.symbol}-${i}`}
@@ -364,14 +345,9 @@ export function MarketsTicker() {
       </div>
 
       {showSecurities && (
-        /* Direct child of the full-width `.pt-securities-bar`
-           so inset-x-0 stretches this edge-to-edge across
-           the real viewport width. */
-
         <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
           <div className="pt-container">
             <div className="pt-mega-menu-inner">
-
               {megaMenuColumns.map((column) => (
                 <div key={column.title}>
                   <h4 className="pt-mega-menu-heading">
@@ -394,7 +370,6 @@ export function MarketsTicker() {
                   </ul>
                 </div>
               ))}
-
             </div>
 
             <div className="pt-mega-menu-utility">
