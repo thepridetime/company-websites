@@ -1,410 +1,504 @@
+import { useEffect, useState } from "react";
+import { getQuotes } from "../../../services/marketApi";
 
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
-import {
-  TrendingUp,
-  TrendingDown,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import { getQuotes } from "../../services/marketApi";
+/*
+  Markets Page
+  ------------------------------------------------------------
+  Editorial market-dashboard layout based on the supplied
+  reference design.
 
-interface TickerCard {
-  symbol: string;
+  Uses the project's existing market provider and keeps the
+  market information already defined for The Pride Times:
+  - Global indices
+  - Top stocks
+  - Cryptocurrency
+  - Market categories
+  - Existing live-refresh behaviour
+
+  The surrounding site header/footer can continue to be supplied
+  by the application's existing layout.
+*/
+
+type MarketRow = {
+  name: string;
   value: string;
-  change: number;
-}
+  change: string;
+  up: boolean;
+  pts?: string;
+  company?: string;
+  volume?: string;
+  marketCap?: string;
+  ytd?: string;
+};
 
-function parseChange(value: unknown): number | null {
-  const parsed = Number.parseFloat(String(value ?? "").replace("%", ""));
-  return Number.isFinite(parsed) ? parsed : null;
-}
+type MarketData = {
+  indices: MarketRow[];
+  stocks: MarketRow[];
+  crypto: MarketRow[];
+};
 
-/* Bloomberg-style mega-menu columns for "Top Securities".
-   All paths point at routes that already exist in App.tsx. */
-const megaMenuColumns = [
-  {
-    title: "Markets",
-    links: [
-      { label: "Stocks", path: "/markets?tab=Stocks" },
-      { label: "Commodities", path: "/markets?tab=Commodities" },
-      { label: "Forex", path: "/markets?tab=Forex" },
-      { label: "ETFs", path: "/markets?tab=ETFs" },
-      { label: "Government Bonds", path: "/markets?tab=Government Bonds" },
-      { label: "Global Markets", path: "/markets?tab=Global Markets" },
-    ],
-  },
-  {
-    title: "Industries",
-    links: [
-      { label: "Technology", path: "/technology" },
-      { label: "Cybersecurity", path: "/cybersecurity" },
-      { label: "Energy", path: "/energy" },
-      { label: "Healthcare", path: "/healthcare" },
-      { label: "Manufacturing", path: "/manufacturing" },
-      { label: "Smart Cities", path: "/smart-cities" },
-      { label: "Supply Chain", path: "/supply-chain" },
-    ],
-  },
-  {
-    title: "More",
-    links: [
-      { label: "Business News", path: "/business-news" },
-      { label: "International Business", path: "/international-news" },
-      { label: "Startup Success", path: "/startup-success" },
-      { label: "CEO Spotlight", path: "/ceospotlight" },
-      { label: "Magazines", path: "/magazine" },
-      { label: "Innovation", path: "/innovation" },
-      { label: "White House Watch", path: "/white-house-watch" },
-      { label: "World & Geopolitics", path: "/world" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About Us", path: "/about-us" },
-      { label: "Advertise", path: "/advertise" },
-      { label: "Careers", path: "/careers" },
-      { label: "Contact Us", path: "/contact" },
-      { label: "Press Room", path: "/press-room" },
-    ],
-  },
+const fallbackIndices: MarketRow[] = [
+  { name: "S&P 500", value: "5,892.31", change: "+1.14%", up: true, ytd: "+18.4%" },
+  { name: "Nasdaq Composite", value: "19,245.78", change: "+1.56%", up: true, ytd: "+24.1%" },
+  { name: "Dow Jones Ind. Avg.", value: "42,318.45", change: "+0.82%", up: true, ytd: "+12.3%" },
+  { name: "Russell 2000", value: "2,134.56", change: "+0.45%", up: true, ytd: "+9.7%" },
+  { name: "FTSE 100", value: "8,241.70", change: "+0.19%", up: true, ytd: "+7.2%" },
+  { name: "Nikkei 225", value: "38,912.44", change: "-0.21%", up: false, ytd: "+14.8%" },
+  { name: "Hang Seng", value: "18,342.10", change: "-0.87%", up: false, ytd: "-3.4%" },
+  { name: "Nifty 50", value: "22,419.95", change: "-0.34%", up: false, ytd: "+11.2%" },
+  { name: "DAX", value: "18,612.80", change: "+0.54%", up: true, ytd: "+9.8%" },
+  { name: "CAC 40", value: "7,984.20", change: "+0.31%", up: true, ytd: "+6.5%" },
 ];
 
-export function MarketsTicker() {
-  const [cards, setCards] = useState<TickerCard[]>([]);
-  const [showSecurities, setShowSecurities] = useState(false);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const offsetRef = useRef(0);
-  const isPausedRef = useRef(false);
-  const rafRef = useRef<number | null>(null);
+const fallbackStocks: MarketRow[] = [
+  { name: "AAPL", company: "Apple Inc.", value: "$232.15", change: "+0.62%", up: true, volume: "78.4M", marketCap: "$3.52T" },
+  { name: "MSFT", company: "Microsoft Corp.", value: "$421.30", change: "+0.35%", up: true, volume: "21.2M", marketCap: "$3.13T" },
+  { name: "NVDA", company: "NVIDIA Corp.", value: "$879.50", change: "+2.34%", up: true, volume: "143.8M", marketCap: "$2.16T" },
+  { name: "GOOGL", company: "Alphabet Inc.", value: "$168.44", change: "-0.21%", up: false, volume: "19.6M", marketCap: "$2.08T" },
+  { name: "AMZN", company: "Amazon.com Inc.", value: "$186.90", change: "+1.02%", up: true, volume: "32.1M", marketCap: "$1.97T" },
+  { name: "META", company: "Meta Platforms", value: "$493.28", change: "+1.88%", up: true, volume: "15.9M", marketCap: "$1.25T" },
+  { name: "TSLA", company: "Tesla Inc.", value: "$248.44", change: "+3.21%", up: true, volume: "88.5M", marketCap: "$791B" },
+  { name: "BRK.B", company: "Berkshire Hathaway", value: "$362.10", change: "-0.08%", up: false, volume: "4.2M", marketCap: "$785B" },
+];
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await getQuotes();
+const fallbackCrypto: MarketRow[] = [
+  { name: "Bitcoin", value: "$612.40", change: "+1.14%", up: true, marketCap: "$89B" },
+  { name: "XRP", value: "$0.62", change: "+0.84%", up: true, marketCap: "$34B" },
+  { name: "Cardano", value: "$0.48", change: "-0.32%", up: false, marketCap: "$17B" },
+];
 
-        // Map real API data into Bloomberg-style cards.
-        // No hardcoded values — everything comes from tickerData.
-        const tickerData: (TickerCard | null)[] = [
-          ...data.usIndices.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: parseChange(item.change),
-          })),
+const navItems = [
+  "Overview",
+  "Stocks",
+  "Indices",
+  "Crypto",
+  "Forex",
+  "Commodities",
+  "Mutual Funds",
+  "ETFs",
+];
 
-          ...data.stocks.map((item: any) => ({
-            symbol: item.symbol ?? item.name,
-            value: item.value,
-            change: parseChange(item.change),
-          })),
+function normalizeRows(rows: any[] | undefined, fallback: MarketRow[]): MarketRow[] {
+  if (!Array.isArray(rows) || rows.length === 0) return fallback;
 
-          ...data.crypto.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: parseChange(item.change),
-          })),
+  return rows.map((row: any, index: number) => ({
+    ...fallback[index],
+    ...row,
+    name: row?.name ?? fallback[index]?.name ?? "—",
+    value: row?.value ?? "—",
+    change: row?.change ?? "—",
+    up: typeof row?.up === "boolean" ? row.up : fallback[index]?.up ?? true,
+  }));
+}
 
-          ...data.commodities.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: parseChange(item.change),
-          })),
-
-          ...data.indianIndices.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: parseChange(item.change),
-          })),
-        ].filter(
-          (item): item is TickerCard =>
-            item !== null && item.change !== null
-        );
-
-        setCards(tickerData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    loadData();
-
-    const interval = setInterval(loadData, 60000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Close the mega-menu after a longer pause than the simple nav dropdowns.
-  useEffect(() => {
-    if (!showSecurities) return;
-
-    const timer = setTimeout(
-      () => setShowSecurities(false),
-      9000
-    );
-
-    return () => clearTimeout(timer);
-  }, [showSecurities]);
-
-  const scrollByAmount = (direction: "left" | "right") => {
-    const el = trackRef.current;
-
-    if (!el) return;
-
-    const amount = (172 + 16) * 2;
-    const halfway = el.scrollWidth / 2;
-
-    offsetRef.current +=
-      direction === "left" ? -amount : amount;
-
-    if (offsetRef.current < 0) {
-      offsetRef.current += halfway;
-    }
-
-    if (offsetRef.current >= halfway) {
-      offsetRef.current -= halfway;
-    }
-
-    el.style.transition = "transform 0.4s ease";
-    el.style.transform = `translateX(-${offsetRef.current}px)`;
-
-    window.setTimeout(() => {
-      if (el) {
-        el.style.transition = "none";
-      }
-    }, 400);
-  };
-
-  // ── Continuous auto-scroll (Bloomberg-style moving ticker) ──
-  useEffect(() => {
-    if (cards.length === 0) return;
-
-    const speed = 0.5;
-
-    const step = () => {
-      const el = trackRef.current;
-
-      if (el && !isPausedRef.current) {
-        const halfway = el.scrollWidth / 2;
-
-        offsetRef.current += speed;
-
-        if (offsetRef.current >= halfway) {
-          offsetRef.current -= halfway;
-        }
-
-        el.style.transform = `translateX(-${offsetRef.current}px)`;
-      }
-
-      rafRef.current = requestAnimationFrame(step);
-    };
-
-    rafRef.current = requestAnimationFrame(step);
-
-    return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
-    };
-  }, [cards]);
-
-  const pauseAutoScroll = () => {
-    isPausedRef.current = true;
-  };
-
-  const resumeAutoScroll = () => {
-    isPausedRef.current = false;
-  };
-
+function ChangeValue({
+  change,
+  up,
+}: {
+  change: string;
+  up: boolean;
+}) {
   return (
-    <div className="pt-securities-bar w-full relative">
-      <div className="pt-container flex items-stretch">
+    <span
+      className={`inline-flex items-center gap-1 font-semibold ${
+        up ? "text-[#08A86B]" : "text-[#E3262E]"
+      }`}
+    >
+      <span className="text-[9px]">{up ? "▲" : "▼"}</span>
+      {change}
+    </span>
+  );
+}
 
-        {/* Top Securities — Bloomberg-style mega-menu trigger */}
-
-        <div className="relative flex-shrink-0 flex items-center">
-          <button
-            type="button"
-            onClick={() => setShowSecurities(!showSecurities)}
-            aria-label="Top Securities menu"
-            aria-expanded={showSecurities}
-            style={{
-              width: "95px",
-              height: "40px",
-              backgroundColor: "#ffffff",
-              border: "1px solid #d9d9d9",
-              borderRadius: "6px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "7px",
-              padding: "0",
-              margin: "0",
-              color: "#000000",
-              fontSize: "16px",
-              fontWeight: 700,
-              lineHeight: "1",
-              fontFamily: "Arial, Helvetica, sans-serif",
-              cursor: "pointer",
-              flexShrink: 0,
-              boxSizing: "border-box",
-            }}
-          >
-            <span>Menu</span>
-
-            <span
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: "4px solid transparent",
-                borderRight: "4px solid transparent",
-                borderTop: "5px solid #000000",
-                display: "inline-block",
-                marginTop: "2px",
-                transform: showSecurities
-                  ? "rotate(180deg)"
-                  : "none",
-                transition: "transform 0.15s ease",
-              }}
-            />
-          </button>
-        </div>
-
-        {/* Continuously auto-scrolling market cards */}
-
-        <div
-          className="relative flex items-center flex-1 min-w-0 pl-3 gap-2"
-          onMouseEnter={pauseAutoScroll}
-          onMouseLeave={resumeAutoScroll}
-        >
-          <button
-            className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
-            onClick={() => {
-              pauseAutoScroll();
-              scrollByAmount("left");
-            }}
-            aria-label="Scroll left"
-          >
-            <ChevronLeft size={16} />
-          </button>
-
-          <div
-            className="overflow-hidden py-2 flex-1"
-            onTouchStart={pauseAutoScroll}
-            onTouchEnd={resumeAutoScroll}
-          >
-            <div
-              ref={trackRef}
-              className="flex items-center gap-4 w-max will-change-transform"
-            >
-              {[...cards, ...cards].map((card, i) => (
-                <div
-                  key={`${card.symbol}-${i}`}
-                  className="pt-market-card flex items-center gap-2 flex-shrink-0"
-                >
-                  <span className="text-xs text-gray-400 font-medium truncate">
-                    {card.symbol}
-                  </span>
-
-                  <span className="text-sm font-semibold">
-                    {card.value}
-                  </span>
-
-                  <span
-                    className={`flex items-center gap-0.5 text-xs font-medium ${
-                      card.change >= 0
-                        ? "pt-market-card-positive"
-                        : "pt-market-card-negative"
-                    }`}
-                  >
-                    {card.change >= 0 ? (
-                      <TrendingUp size={11} />
-                    ) : (
-                      <TrendingDown size={11} />
-                    )}
-
-                    {card.change >= 0 ? "+" : ""}
-                    {card.change}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <button
-            className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
-            onClick={() => {
-              pauseAutoScroll();
-              scrollByAmount("right");
-            }}
-            aria-label="Scroll right"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+function AdBanner({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative overflow-hidden border border-[#D7DDE0] bg-[#17333D]">
+      <div className="absolute right-2 top-1 text-[7px] text-white/60">
+        Advertisement
       </div>
 
-      {showSecurities && (
-        <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
-          <div className="pt-container">
-            <div className="pt-mega-menu-inner">
-              {megaMenuColumns.map((column) => (
-                <div key={column.title}>
-                  <h4 className="pt-mega-menu-heading">
-                    {column.title}
-                  </h4>
+      <div className="flex min-h-[74px] flex-col items-center justify-center px-4 text-center">
+        <span className="mb-1 text-[8px] font-bold tracking-[0.18em] text-[#55A8BD]">
+          GOOGLE ADSENSE
+        </span>
 
-                  <ul className="flex flex-col gap-2">
-                    {column.links.map((link) => (
-                      <li key={link.label}>
-                        <Link
-                          to={link.path}
-                          onClick={() =>
-                            setShowSecurities(false)
-                          }
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+        <span className="font-sans text-[12px] font-semibold text-white sm:text-[14px]">
+          {children}
+        </span>
 
-            <div className="pt-mega-menu-utility">
-              <Link
-                to="/signup"
-                onClick={() => setShowSecurities(false)}
-              >
-                Sign Up
-              </Link>
-
-              <Link
-                to="/magazine"
-                onClick={() => setShowSecurities(false)}
-              >
-                Digital Edition
-              </Link>
-
-              <Link
-                to="/Privacy"
-                onClick={() => setShowSecurities(false)}
-              >
-                Privacy Policy
-              </Link>
-
-              <Link
-                to="/terms"
-                onClick={() => setShowSecurities(false)}
-              >
-                Terms of Use
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+        <span className="mt-1 text-[8px] tracking-wide text-[#8BB6C1]">
+          728 × 90 • Leaderboard
+        </span>
+      </div>
     </div>
   );
 }
 
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-3 flex items-center justify-between border-b border-[#17140F] pb-2">
+      <h2 className="font-serif text-[17px] font-bold tracking-tight text-[#17140F]">
+        {children}
+      </h2>
+    </div>
+  );
+}
+
+export function MarketsPage() {
+  const [activeTab, setActiveTab] = useState("Overview");
+  const [marketData, setMarketData] = useState<MarketData>({
+    indices: fallbackIndices,
+    stocks: fallbackStocks,
+    crypto: fallbackCrypto,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadData() {
+      try {
+        const data = await getQuotes();
+
+        if (!mounted) return;
+
+        setMarketData({
+          indices: normalizeRows(data?.indices, fallbackIndices),
+          stocks: normalizeRows(data?.stocks, fallbackStocks),
+          crypto: normalizeRows(data?.crypto, fallbackCrypto),
+        });
+      } catch (error) {
+        console.error("Unable to load market data:", error);
+
+        if (mounted) {
+          setMarketData({
+            indices: fallbackIndices,
+            stocks: fallbackStocks,
+            crypto: fallbackCrypto,
+          });
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    loadData();
+
+    const interval = window.setInterval(loadData, 30000);
+
+    return () => {
+      mounted = false;
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  const displayIndices = marketData.indices.length
+    ? marketData.indices
+    : fallbackIndices;
+
+  const displayStocks = marketData.stocks.length
+    ? marketData.stocks
+    : fallbackStocks;
+
+  const displayCrypto = marketData.crypto.length
+    ? marketData.crypto
+    : fallbackCrypto;
+
+  return (
+    <main className="min-h-screen bg-white text-[#17140F] antialiased">
+      <div className="mx-auto w-full max-w-[1180px] px-4 pb-14 pt-10 sm:px-6 lg:px-8">
+        {/* Page heading */}
+        <header className="border-t-[3px] border-[#E31B23] pt-4">
+          <h1 className="font-serif text-[28px] font-bold leading-none tracking-tight sm:text-[34px]">
+            Markets Dashboard
+          </h1>
+
+          <p className="mt-2 text-[11px] text-[#55534C] sm:text-[12px]">
+            Real-time market data, indices, commodities, forex, crypto and more.
+          </p>
+        </header>
+
+        {/* Advertisement */}
+        <div className="mt-4">
+          <AdBanner>Trade smarter with Pride Times Markets Intelligence</AdBanner>
+        </div>
+
+        {/* Market navigation */}
+        <nav
+          aria-label="Markets navigation"
+          className="mt-3 flex overflow-x-auto border-b border-[#D9D4C7] no-scrollbar"
+        >
+          {navItems.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setActiveTab(item)}
+              className={`relative shrink-0 px-4 py-3 text-[11px] font-medium transition-colors ${
+                activeTab === item
+                  ? "text-[#E31B23]"
+                  : "text-[#55534C] hover:text-[#17140F]"
+              }`}
+            >
+              {item}
+
+              {activeTab === item && (
+                <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#E31B23]" />
+              )}
+            </button>
+          ))}
+        </nav>
+
+        {/* Main dashboard */}
+        <div className="mt-5">
+          {loading ? (
+            <div className="border border-[#E5E2DB] py-16 text-center">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-[#8A887F]">
+                Loading market data…
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Global indices */}
+              <section>
+                <SectionHeading>Global Indices</SectionHeading>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[680px] border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#17140F]">
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Index
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Value
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Change
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          YTD Return
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {displayIndices.map((row, index) => (
+                        <tr
+                          key={`${row.name}-${index}`}
+                          className="border-b border-[#ECE9E2] hover:bg-[#FAFAF7]"
+                        >
+                          <td className="py-2.5 text-[11px] font-semibold text-[#17140F]">
+                            {row.name}
+                          </td>
+
+                          <td className="py-2.5 font-mono text-[11px] text-[#55534C]">
+                            {row.value}
+                          </td>
+
+                          <td className="py-2.5 text-[11px]">
+                            <ChangeValue
+                              change={row.change}
+                              up={row.up}
+                            />
+                          </td>
+
+                          <td
+                            className={`py-2.5 text-[11px] font-semibold ${
+                              row.ytd?.startsWith("-")
+                                ? "text-[#E3262E]"
+                                : "text-[#08A86B]"
+                            }`}
+                          >
+                            {row.ytd ?? "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {/* Top stocks */}
+              <section className="mt-8">
+                <SectionHeading>Top Stocks</SectionHeading>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[800px] border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#17140F]">
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Symbol
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Company
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Price
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Change
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Volume
+                        </th>
+                        <th className="py-2 text-left text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Mkt Cap
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {displayStocks.map((row, index) => (
+                        <tr
+                          key={`${row.name}-${index}`}
+                          className="border-b border-[#ECE9E2] hover:bg-[#FAFAF7]"
+                        >
+                          <td className="py-2.5 text-[11px] font-semibold text-[#E31B23]">
+                            {row.name}
+                          </td>
+
+                          <td className="py-2.5 text-[11px] text-[#17140F]">
+                            {row.company ?? "—"}
+                          </td>
+
+                          <td className="py-2.5 font-mono text-[11px] font-semibold">
+                            {row.value}
+                          </td>
+
+                          <td className="py-2.5 text-[11px]">
+                            <ChangeValue
+                              change={row.change}
+                              up={row.up}
+                            />
+                          </td>
+
+                          <td className="py-2.5 text-[11px] text-[#77736B]">
+                            {row.volume ?? "—"}
+                          </td>
+
+                          <td className="py-2.5 text-[11px] font-semibold">
+                            {row.marketCap ?? "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {/* Cryptocurrency */}
+              <section className="mt-8">
+                <SectionHeading>Cryptocurrency</SectionHeading>
+
+                <div className="grid grid-cols-1 border border-[#E5E2DB] sm:grid-cols-3">
+                  {displayCrypto.slice(0, 3).map((row, index) => (
+                    <article
+                      key={`${row.name}-${index}`}
+                      className={`p-4 ${
+                        index > 0 ? "border-t sm:border-l sm:border-t-0" : ""
+                      } border-[#E5E2DB]`}
+                    >
+                      <p className="text-[10px] text-[#77736B]">{row.name}</p>
+
+                      <p className="mt-1 font-serif text-[20px] font-bold">
+                        {row.value}
+                      </p>
+
+                      <div className="mt-1 flex items-center justify-between">
+                        <ChangeValue
+                          change={row.change}
+                          up={row.up}
+                        />
+
+                        <span className="text-[9px] text-[#8A887F]">
+                          Mkt Cap: {row.marketCap ?? "—"}
+                        </span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              {/* Existing market report information, condensed to the reference page */}
+              <section className="mt-8">
+                <SectionHeading>Markets Report</SectionHeading>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      S&P 500 — July Close
+                    </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      -0.13%
+                    </p>
+                  </article>
+
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      Russell 2000 — YTD Gain
+                    </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      +22%
+                    </p>
+                  </article>
+
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      Nikkei 225 — July
+                    </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      -8.1%
+                    </p>
+                  </article>
+
+                  <article className="border border-[#E5E2DB] p-4">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#8A887F]">
+                      US 10Y Treasury Yield
+                    </p>
+                    <p className="mt-1 font-serif text-[21px] font-bold text-[#E31B23]">
+                      4.75%
+                    </p>
+                  </article>
+                </div>
+              </section>
+
+              {/* Sponsored content */}
+              <div className="mt-8">
+                <div className="overflow-hidden rounded-[3px] border border-[#E2DED2] bg-[#10162E]">
+                  <div className="border-b border-[#D8D1B8] bg-[#F4F0DF] px-2 py-1 text-[7px] uppercase tracking-[0.1em] text-[#77736B]">
+                    Sponsored Content
+                  </div>
+
+                  <div className="flex min-h-[78px] flex-col items-center justify-center text-center">
+                    <span className="text-[8px] font-bold tracking-[0.15em] text-[#F1D100]">
+                      MARKETEDGE PRO — ADVANCED TRADING ANALYTICS
+                    </span>
+
+                    <span className="mt-1 text-[12px] font-semibold text-white">
+                      Your Ad Here
+                    </span>
+
+                    <span className="mt-1 text-[8px] text-white/60">
+                      Reach 2M+ business readers
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+    </main>
+  );
+}
