@@ -18,6 +18,7 @@ import Pt30Img from "../../../imports/pt30image.png";
 import Ln1Img from "../../../imports/Ln1.png";
 
 import { getQuotes } from "../../../services/marketApi";
+import { TimeAgo } from "../../utils/timeAgo";
 
 /* =========================================================
    TYPES
@@ -27,7 +28,7 @@ type NewsItem = {
   id: number;
   hot: boolean;
   title: string;
-  time: string;
+  publishedAt: string;
   image: string;
   link: string;
 };
@@ -65,7 +66,7 @@ const centerStories = [
       "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending",
     excerpt:
       "PwC's 2026 Global Digital Trust Insights survey reveals that cybersecurity has risen to the top tier of board-level concerns across major industries.",
-    time: "25 min ago",
+    publishedAt: "2026-09-21T09:54:00Z",
     image: LN3Img,
     link: "/cybersecurity",
   },
@@ -76,7 +77,7 @@ const centerStories = [
       "U.S. Equity Markets Rally on Strong Manufacturing Data",
     excerpt:
       "U.S. equity markets extended a recovery rally into the first week of June, driven by stronger-than-expected domestic factory data.",
-    time: "1 hr ago",
+    publishedAt: "2026-09-21T09:19:00Z",
     image: InsImg,
     link: "/markets",
   },
@@ -118,7 +119,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-      time: "12 min ago",
+      publishedAt: "2026-09-21T10:07:00Z",
       image: Ln1Img,
       link: "/technology",
     },
@@ -127,7 +128,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "U.S. Equity Markets Rally on Strong Manufacturing Data",
-      time: "35 min ago",
+      publishedAt: "2026-09-21T09:44:00Z",
       image: HeroImg,
       link: "/markets",
     },
@@ -136,7 +137,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending",
-      time: "1 hr ago",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
       link: "/cybersecurity",
     },
@@ -145,7 +146,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Data Centers and AI Workloads Force Energy Policy Reversals Globally",
-      time: "2 hr ago",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN4Img,
       link: "/energy",
     },
@@ -154,7 +155,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "Alphabet Plans $80B AI Infrastructure Stock Offering as Hyperscaler Capex Tops $700B",
-      time: "Just now",
+      publishedAt: "2026-09-21T10:19:00Z",
       image: Ln1Img,
       link: "/technology",
     },
@@ -166,7 +167,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "S&P 500 Hits All-Time High as Markets Digest Fresh Data",
-      time: "10 min ago",
+      publishedAt: "2026-09-21T10:09:00Z",
       image: HeroImg,
       link: "/markets",
     },
@@ -175,7 +176,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Global Investors Reassess Risk Across Major Asset Classes",
-      time: "40 min ago",
+      publishedAt: "2026-09-21T09:39:00Z",
       image: InsImg,
       link: "/markets",
     },
@@ -184,7 +185,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Asian Markets Respond to New Manufacturing Signals",
-      time: "1 hr ago",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
       link: "/markets",
     },
@@ -193,7 +194,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Digital Assets Continue to Attract Institutional Interest",
-      time: "2 hr ago",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN4Img,
       link: "/markets",
     },
@@ -205,7 +206,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "Global Markets Rally as Investors Digest Latest Economic Data",
-      time: "20 min ago",
+      publishedAt: "2026-09-21T09:59:00Z",
       image: HeroImg,
       link: "/finance",
     },
@@ -214,7 +215,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Central Banks Signal Cautious Approach to Interest Rates",
-      time: "45 min ago",
+      publishedAt: "2026-09-21T09:34:00Z",
       image: InsImg,
       link: "/finance",
     },
@@ -223,7 +224,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Banking Sector Posts Stronger Quarterly Results",
-      time: "2 hr ago",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN3Img,
       link: "/finance",
     },
@@ -232,7 +233,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Global Investors Increase Exposure to Emerging Markets",
-      time: "3 hr ago",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: LN4Img,
       link: "/finance",
     },
@@ -244,7 +245,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "Technology Leaders Accelerate Global Expansion Plans",
-      time: "15 min ago",
+      publishedAt: "2026-09-21T10:04:00Z",
       image: HeroImg,
       link: "/business-news",
     },
@@ -253,7 +254,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Global Logistics Industry Enters a New Investment Cycle",
-      time: "1 hr ago",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: InsImg,
       link: "/business-news",
     },
@@ -262,7 +263,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Major Companies Increase Spending on AI Infrastructure",
-      time: "2 hr ago",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN3Img,
       link: "/business-news",
     },
@@ -271,7 +272,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Indian Businesses Expand Their Global Technology Footprint",
-      time: "3 hr ago",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: LN4Img,
       link: "/business-news",
     },
@@ -283,7 +284,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-      time: "5 min ago",
+      publishedAt: "2026-09-21T10:14:00Z",
       image: Ln1Img,
       link: "/technology",
     },
@@ -292,7 +293,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "Alphabet Plans $80B AI Infrastructure Stock Offering as Hyperscaler Capex Tops $700B",
-      time: "12 min ago",
+      publishedAt: "2026-09-21T10:07:00Z",
       image: HeroImg,
       link: "/technology",
     },
@@ -301,7 +302,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Intel Attempts Inference-Chip Comeback as AI Compute Wars Intensify",
-      time: "30 min ago",
+      publishedAt: "2026-09-21T09:49:00Z",
       image: InsImg,
       link: "/technology",
     },
@@ -310,7 +311,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "SoftBank Bets Big on European Data Centers",
-      time: "1 hr ago",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
       link: "/technology",
     },
@@ -319,7 +320,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Quantum Computing Startup Reaches New Qubit Milestone",
-      time: "2 hr ago",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN4Img,
       link: "/technology",
     },
@@ -331,7 +332,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: true,
       title:
         "Data Centers and AI Workloads Force Energy Policy Reversals Globally",
-      time: "25 min ago",
+      publishedAt: "2026-09-21T09:54:00Z",
       image: LN4Img,
       link: "/energy",
     },
@@ -340,7 +341,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "China's Dominant Position in Clean-Tech Supply Chains Creates New Risk Calculus",
-      time: "1 hr ago",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: HeroImg,
       link: "/energy",
     },
@@ -349,7 +350,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Energy Resiliency Becomes a Strategic Priority for Businesses",
-      time: "2 hr ago",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: InsImg,
       link: "/energy",
     },
@@ -358,7 +359,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Asia's LNG Demand Reshapes Global Energy Markets",
-      time: "3 hr ago",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: LN3Img,
       link: "/energy",
     },
@@ -370,7 +371,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Healthcare Innovation Continues to Transform Patient Care",
-      time: "1 hr ago",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
       link: "/healthcare",
     },
@@ -379,7 +380,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Smart Cities Move Toward More Connected Infrastructure",
-      time: "2 hr ago",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: HeroImg,
       link: "/smart-cities",
     },
@@ -388,7 +389,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "Global Supply Chains Adapt to a Changing Business Environment",
-      time: "3 hr ago",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: InsImg,
       link: "/supply-chain",
     },
@@ -397,7 +398,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       hot: false,
       title:
         "AI Governance Becomes a Major Corporate Priority",
-      time: "4 hr ago",
+      publishedAt: "2026-09-21T06:19:00Z",
       image: LN4Img,
       link: "/technology",
     },
@@ -416,7 +417,7 @@ const editorsPicks = [
       "The Intelligence Age: How CEOs Are Navigating Transformation",
     excerpt:
       "Leadership perspectives reveal how executives are approaching one of the most consequential technology transitions in modern business.",
-    time: "3 hr ago",
+    publishedAt: "2026-09-21T07:19:00Z",
     image: EdipickImg,
     link: "/leadership",
   },
@@ -427,7 +428,7 @@ const editorsPicks = [
       "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
     excerpt:
       "AI infrastructure is expanding beyond traditional data centers as robotics becomes a growing part of the technology ecosystem.",
-    time: "12 min ago",
+    publishedAt: "2026-09-21T10:07:00Z",
     image: Ln1Img,
     link: "/technology",
   },
@@ -438,7 +439,7 @@ const editorsPicks = [
       "U.S. Equity Markets Rally on Strong Manufacturing Data",
     excerpt:
       "Stronger manufacturing activity provides fresh momentum for U.S. equity markets.",
-    time: "35 min ago",
+    publishedAt: "2026-09-21T09:44:00Z",
     image: HeroImg,
     link: "/markets",
   },
@@ -545,7 +546,7 @@ function ChangeChip({
 }) {
   return (
     <span
-      className={`text-[10px] font-bold tabular-nums flex items-center gap-1 ${
+      className={`text-[10px] font-semibold tabular-nums flex items-center gap-1 ${
         up ? "text-green-600" : "text-red-600"
       }`}
     >
@@ -620,7 +621,9 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         <main className="pt-4 md:pt-6 pb-16">
 
           {/* =================================================
@@ -725,7 +728,6 @@ export function HomePage() {
                   className="
                     text-[12px]
                     md:text-[13px]
-                    font-medium
                     text-gray-200
                     leading-[1.6]
                     mt-3
@@ -821,8 +823,7 @@ export function HomePage() {
                 <p
                   className="
                     text-[12px]
-                    font-semibold
-                    text-gray-700
+                    text-gray-600
                     mt-2
                     leading-[1.6]
                     line-clamp-3
@@ -907,13 +908,12 @@ export function HomePage() {
                       items-center
                       gap-1
                       text-[10px]
-                      font-semibold
-                      text-gray-600
+                      text-gray-400
                       mt-2
                     "
                   >
                     <Clock size={9} />
-                    {centerStories[1].time}
+                    <TimeAgo iso={centerStories[1].publishedAt} />
                   </span>
 
                 </div>
@@ -947,13 +947,13 @@ export function HomePage() {
                         onClick={() => setActiveMarketTab(tab)}
                         className={`
                           text-[9px]
-                          font-bold
+                          font-semibold
                           uppercase
                           tracking-wide
                           ${
                             activeMarketTab === tab
                               ? "text-red-600"
-                              : "text-gray-500 hover:text-gray-900"
+                              : "text-gray-400 hover:text-gray-700"
                           }
                         `}
                       >
@@ -985,8 +985,8 @@ export function HomePage() {
                         <span
                           className="
                             text-[10px]
-                            font-bold
-                            text-gray-900
+                            font-semibold
+                            text-gray-800
                           "
                         >
                           {market.symbol}
@@ -997,8 +997,7 @@ export function HomePage() {
                           <span
                             className="
                               text-[10px]
-                              font-semibold
-                              text-gray-700
+                              text-gray-500
                               tabular-nums
                             "
                           >
@@ -1066,8 +1065,7 @@ export function HomePage() {
                       px-3
                       py-1
                       text-[9px]
-                      font-semibold
-                      text-gray-700
+                      font-medium
                       hover:border-gray-500
                       transition-colors
                     "
@@ -1139,7 +1137,7 @@ export function HomePage() {
                   <h3
                     className="
                       text-[13px]
-                      font-bold
+                      font-semibold
                       leading-[1.4]
                       mt-2.5
                       text-gray-900
@@ -1193,21 +1191,21 @@ export function HomePage() {
                         <span
                           className="
                             shrink-0
-                            text-[10px]
-                            font-bold
+                            text-[9px]
+                            font-semibold
                             text-red-600
-                            w-[48px]
+                            w-[42px]
                           "
                         >
-                          {item.time}
+                          <TimeAgo iso={item.publishedAt} />
                         </span>
 
                         <span
                           className="
                             text-[11px]
-                            font-semibold
-                            leading-[1.45]
-                            text-gray-900
+                            font-medium
+                            leading-[1.4]
+                            text-gray-800
                             group-hover:text-red-600
                             transition-colors
                           "
@@ -1279,7 +1277,7 @@ export function HomePage() {
                     onClick={() => setActiveNewsTab(tab)}
                     className={`
                       text-[10px]
-                      font-bold
+                      font-semibold
                       whitespace-nowrap
                       uppercase
                       tracking-wide
@@ -1287,7 +1285,7 @@ export function HomePage() {
                       ${
                         activeNewsTab === tab
                           ? "text-red-600"
-                          : "text-gray-500 hover:text-gray-900"
+                          : "text-gray-400 hover:text-gray-700"
                       }
                     `}
                   >
@@ -1351,7 +1349,7 @@ export function HomePage() {
                     <span
                       className="
                         block
-                        text-[9px]
+                        text-[8px]
                         font-bold
                         text-red-600
                         uppercase
@@ -1365,8 +1363,8 @@ export function HomePage() {
                     <h3
                       className="
                         text-[12px]
-                        font-bold
-                        leading-[1.4]
+                        font-semibold
+                        leading-[1.35]
                         text-gray-900
                         group-hover:text-red-600
                         transition-colors
@@ -1381,14 +1379,13 @@ export function HomePage() {
                         flex
                         items-center
                         gap-1
-                        text-[10px]
-                        font-semibold
-                        text-gray-600
+                        text-[9px]
+                        text-gray-400
                         mt-2.5
                       "
                     >
                       <Clock size={9} />
-                      {story.time}
+                      <TimeAgo iso={story.publishedAt} />
                     </span>
 
                   </div>
@@ -1445,8 +1442,8 @@ export function HomePage() {
                 <Link
                   to="/leadership"
                   className="
-                    text-[10px]
-                    font-bold
+                    text-[9px]
+                    font-semibold
                     text-red-600
                     flex
                     items-center
@@ -1506,7 +1503,7 @@ export function HomePage() {
 
                       <span
                         className="
-                          text-[9px]
+                          text-[8px]
                           font-bold
                           text-red-600
                           uppercase
@@ -1536,10 +1533,9 @@ export function HomePage() {
                         className="
                           hidden
                           sm:block
-                          text-[11px]
-                          font-medium
-                          text-gray-700
-                          leading-[1.55]
+                          text-[10px]
+                          text-gray-500
+                          leading-[1.5]
                           mt-1
                           line-clamp-2
                         "
@@ -1552,14 +1548,13 @@ export function HomePage() {
                           flex
                           items-center
                           gap-1
-                          text-[10px]
-                          font-semibold
-                          text-gray-600
+                          text-[9px]
+                          text-gray-400
                           mt-1.5
                         "
                       >
                         <Clock size={8} />
-                        {pick.time}
+                        <TimeAgo iso={pick.publishedAt} />
                       </span>
 
                     </div>
@@ -1602,8 +1597,8 @@ export function HomePage() {
                 <Link
                   to="/magazine"
                   className="
-                    text-[10px]
-                    font-bold
+                    text-[9px]
+                    font-semibold
                     text-red-600
                   "
                 >
@@ -1644,11 +1639,11 @@ export function HomePage() {
 
                   <span
                     className="
-                      text-[9px]
+                      text-[8px]
                       font-bold
                       uppercase
                       tracking-[0.16em]
-                      text-gray-300
+                      text-gray-500
                     "
                   >
                     Pride Times Magazine
@@ -1669,9 +1664,8 @@ export function HomePage() {
                   <p
                     className="
                       text-[11px]
-                      font-medium
-                      text-gray-300
-                      leading-[1.55]
+                      text-gray-400
+                      leading-[1.5]
                       mt-1.5
                     "
                   >
@@ -1738,8 +1732,8 @@ export function HomePage() {
               <Link
                 to="/billionaires"
                 className="
-                  text-[10px]
-                  font-bold
+                  text-[9px]
+                  font-semibold
                   text-red-600
                   flex
                   items-center
@@ -1783,7 +1777,7 @@ export function HomePage() {
                       font-serif
                       text-2xl
                       font-bold
-                      text-gray-300
+                      text-gray-200
                       tabular-nums
                       shrink-0
                       w-8
@@ -1803,7 +1797,7 @@ export function HomePage() {
                     >
                       {leader.name}
 
-                      <span className="font-semibold text-gray-600">
+                      <span className="font-normal text-gray-400">
                         {" "}
                         · {leader.company}
                       </span>
@@ -1811,10 +1805,9 @@ export function HomePage() {
 
                     <p
                       className="
-                        text-[11px]
-                        font-medium
-                        text-gray-700
-                        leading-[1.55]
+                        text-[10px]
+                        text-gray-500
+                        leading-[1.5]
                         mt-1
                       "
                     >
