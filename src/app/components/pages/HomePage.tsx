@@ -47,11 +47,11 @@ type MarketItem = {
 const heroStory = {
   category: "TOP STORY",
   title:
-    "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
   excerpt:
-    "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Korea, expanding its already well-established relationship with China's Unitree.",
+    "India's derivatives trading activity has fallen sharply as tax changes weigh on the market, according to Bloomberg News.",
   image: HeroImg,
-  link: "/technology",
+  link: "/markets",
 };
 
 /* =========================================================
@@ -61,25 +61,25 @@ const heroStory = {
 const centerStories = [
   {
     id: 1,
-    tag: "CYBERSECURITY",
+    tag: "MARKETS",
     title:
-      "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending",
+      "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
     excerpt:
-      "PwC's 2026 Global Digital Trust Insights survey reveals that cybersecurity has risen to the top tier of board-level concerns across major industries.",
-    publishedAt: "2026-09-21T09:54:00Z",
+      "Bloomberg reports that India's derivatives trading activity has dropped sharply as higher trading taxes weigh on market participation.",
+    publishedAt: "2026-09-22T10:00:00Z",
     image: LN3Img,
-    link: "/cybersecurity",
+    link: "/markets",
   },
   {
     id: 2,
-    tag: "FINANCE",
+    tag: "BUSINESS",
     title:
-      "U.S. Equity Markets Rally on Strong Manufacturing Data",
+      "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
     excerpt:
-      "U.S. equity markets extended a recovery rally into the first week of June, driven by stronger-than-expected domestic factory data.",
-    publishedAt: "2026-09-21T09:19:00Z",
+      "JPMorgan CEO Jamie Dimon said India's long-term prospects remain strong while pointing to tax rules, regulation and policy uncertainty as concerns for investors.",
+    publishedAt: "2026-09-22T11:26:00Z",
     image: InsImg,
-    link: "/markets",
+    link: "/business-news",
   },
 ];
 
@@ -89,7 +89,7 @@ const centerStories = [
 
 const videoFeature = {
   title:
-    "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    "Alibaba Unveils AI Chip to Drive Global Data Centre Buildout",
   image: HeroImg,
   link: "/technology",
 };
@@ -118,17 +118,17 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-      publishedAt: "2026-09-21T10:07:00Z",
+        "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
+      publishedAt: "2026-09-22T10:00:00Z",
       image: Ln1Img,
-      link: "/technology",
+      link: "/markets",
     },
     {
       id: 2,
-      hot: false,
+      hot: true,
       title:
-        "U.S. Equity Markets Rally on Strong Manufacturing Data",
-      publishedAt: "2026-09-21T09:44:00Z",
+        "Standstill in India Gold Imports Drags On, Threatens Supply",
+      publishedAt: "2026-09-22T08:00:00Z",
       image: HeroImg,
       link: "/markets",
     },
@@ -136,28 +136,28 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending",
-      publishedAt: "2026-09-21T09:19:00Z",
+        "Modi, Lam Meet as India and Vietnam Deepen AI, Defense Ties",
+      publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
-      link: "/cybersecurity",
+      link: "/business-news",
     },
     {
       id: 4,
       hot: false,
       title:
-        "Data Centers and AI Workloads Force Energy Policy Reversals Globally",
-      publishedAt: "2026-09-21T08:19:00Z",
+        "Indian Small-Caps Rally 21% From March Lows to Enter Bull Market",
+      publishedAt: "2026-09-22T06:00:00Z",
       image: LN4Img,
-      link: "/energy",
+      link: "/markets",
     },
     {
       id: 5,
       hot: true,
       title:
-        "Alphabet Plans $80B AI Infrastructure Stock Offering as Hyperscaler Capex Tops $700B",
-      publishedAt: "2026-09-21T10:19:00Z",
+        "Sebi Taps AI in Growing Fight Against Market Manipulation and Fraud",
+      publishedAt: "2026-09-22T09:24:00Z",
       image: Ln1Img,
-      link: "/technology",
+      link: "/markets",
     },
   ],
 
@@ -166,8 +166,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "S&P 500 Hits All-Time High as Markets Digest Fresh Data",
-      publishedAt: "2026-09-21T10:09:00Z",
+        "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
+      publishedAt: "2026-09-22T10:00:00Z",
       image: HeroImg,
       link: "/markets",
     },
@@ -175,8 +175,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Global Investors Reassess Risk Across Major Asset Classes",
-      publishedAt: "2026-09-21T09:39:00Z",
+        "Indian Small-Caps Rally 21% From March Lows to Enter Bull Market",
+      publishedAt: "2026-09-22T06:00:00Z",
       image: InsImg,
       link: "/markets",
     },
@@ -184,8 +184,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Asian Markets Respond to New Manufacturing Signals",
-      publishedAt: "2026-09-21T09:19:00Z",
+        "Asia's Beaten-Up Currencies Gain Traction After Defensive Moves",
+      publishedAt: "2026-09-22T04:00:00Z",
       image: LN3Img,
       link: "/markets",
     },
@@ -193,8 +193,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Digital Assets Continue to Attract Institutional Interest",
-      publishedAt: "2026-09-21T08:19:00Z",
+        "Stocks Rally, Brent Below $100 as Iran Hopes Mount",
+      publishedAt: "2026-09-22T02:00:00Z",
       image: LN4Img,
       link: "/markets",
     },
@@ -205,8 +205,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Global Markets Rally as Investors Digest Latest Economic Data",
-      publishedAt: "2026-09-21T09:59:00Z",
+        "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
+      publishedAt: "2026-09-22T11:26:00Z",
       image: HeroImg,
       link: "/finance",
     },
@@ -214,8 +214,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Central Banks Signal Cautious Approach to Interest Rates",
-      publishedAt: "2026-09-21T09:34:00Z",
+        "India Clears Loan Guarantee Plan as War Hurts Firms, Airlines",
+      publishedAt: "2026-09-21T22:00:00Z",
       image: InsImg,
       link: "/finance",
     },
@@ -223,8 +223,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Banking Sector Posts Stronger Quarterly Results",
-      publishedAt: "2026-09-21T08:19:00Z",
+        "JPMorgan's Dimon Backs Chandrasekaran, Warns Tata Rift Could Hit Investment",
+      publishedAt: "2026-09-22T08:36:00Z",
       image: LN3Img,
       link: "/finance",
     },
@@ -232,8 +232,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Global Investors Increase Exposure to Emerging Markets",
-      publishedAt: "2026-09-21T07:19:00Z",
+        "Standstill in India Gold Imports Drags On, Threatens Supply",
+      publishedAt: "2026-09-22T08:00:00Z",
       image: LN4Img,
       link: "/finance",
     },
@@ -244,8 +244,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Technology Leaders Accelerate Global Expansion Plans",
-      publishedAt: "2026-09-21T10:04:00Z",
+        "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
+      publishedAt: "2026-09-22T11:26:00Z",
       image: HeroImg,
       link: "/business-news",
     },
@@ -253,8 +253,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Global Logistics Industry Enters a New Investment Cycle",
-      publishedAt: "2026-09-21T09:19:00Z",
+        "Berger Paints Ramps Up Expansion to Fend Off Birla Opus, JSW Dulux",
+      publishedAt: "2026-09-22T09:23:00Z",
       image: InsImg,
       link: "/business-news",
     },
@@ -262,8 +262,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Major Companies Increase Spending on AI Infrastructure",
-      publishedAt: "2026-09-21T08:19:00Z",
+        "JPMorgan's Dimon Backs Chandrasekaran, Warns Tata Rift Could Hit Investment",
+      publishedAt: "2026-09-22T08:36:00Z",
       image: LN3Img,
       link: "/business-news",
     },
@@ -271,8 +271,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Indian Businesses Expand Their Global Technology Footprint",
-      publishedAt: "2026-09-21T07:19:00Z",
+        "Factory Floor or Family Office? India's Rich Youngsters Alarm Elders",
+      publishedAt: "2026-09-22T09:10:00Z",
       image: LN4Img,
       link: "/business-news",
     },
@@ -283,8 +283,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-      publishedAt: "2026-09-21T10:14:00Z",
+        "Alibaba Unveils AI Chip to Drive Global Data Centre Buildout",
+      publishedAt: "2026-09-22T09:08:00Z",
       image: Ln1Img,
       link: "/technology",
     },
@@ -292,8 +292,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: true,
       title:
-        "Alphabet Plans $80B AI Infrastructure Stock Offering as Hyperscaler Capex Tops $700B",
-      publishedAt: "2026-09-21T10:07:00Z",
+        "Microsoft's Satya Nadella to Join OpenAI, Nvidia Leaders at Trump-Xi Dinner",
+      publishedAt: "2026-09-22T08:08:00Z",
       image: HeroImg,
       link: "/technology",
     },
@@ -301,8 +301,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Intel Attempts Inference-Chip Comeback as AI Compute Wars Intensify",
-      publishedAt: "2026-09-21T09:49:00Z",
+        "Sebi Taps AI in Growing Fight Against Market Manipulation and Fraud",
+      publishedAt: "2026-09-22T09:24:00Z",
       image: InsImg,
       link: "/technology",
     },
@@ -310,8 +310,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "SoftBank Bets Big on European Data Centers",
-      publishedAt: "2026-09-21T09:19:00Z",
+        "Alibaba Targets 20 Gigawatts of Global Data Centre Capacity by 2032",
+      publishedAt: "2026-09-22T09:08:00Z",
       image: LN3Img,
       link: "/technology",
     },
@@ -319,8 +319,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 5,
       hot: false,
       title:
-        "Quantum Computing Startup Reaches New Qubit Milestone",
-      publishedAt: "2026-09-21T08:19:00Z",
+        "India and Vietnam Deepen AI and Defense Ties as Leaders Meet",
+      publishedAt: "2026-09-22T07:00:00Z",
       image: LN4Img,
       link: "/technology",
     },
@@ -331,8 +331,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Data Centers and AI Workloads Force Energy Policy Reversals Globally",
-      publishedAt: "2026-09-21T09:54:00Z",
+        "Stocks Rally, Brent Below $100 as Iran Hopes Mount",
+      publishedAt: "2026-09-22T02:00:00Z",
       image: LN4Img,
       link: "/energy",
     },
@@ -340,8 +340,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "China's Dominant Position in Clean-Tech Supply Chains Creates New Risk Calculus",
-      publishedAt: "2026-09-21T09:19:00Z",
+        "India Clears Loan Guarantee Plan as War Hurts Firms, Airlines",
+      publishedAt: "2026-09-21T22:00:00Z",
       image: HeroImg,
       link: "/energy",
     },
@@ -349,8 +349,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Energy Resiliency Becomes a Strategic Priority for Businesses",
-      publishedAt: "2026-09-21T08:19:00Z",
+        "India's ReNew Energy Trims Solar Output Due to Grid Constraints",
+      publishedAt: "2026-09-22T00:00:00Z",
       image: InsImg,
       link: "/energy",
     },
@@ -358,8 +358,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Asia's LNG Demand Reshapes Global Energy Markets",
-      publishedAt: "2026-09-21T07:19:00Z",
+        "Gold and Silver Surge on Iran War Optimism, Weaker Dollar",
+      publishedAt: "2026-09-22T01:00:00Z",
       image: LN3Img,
       link: "/energy",
     },
@@ -370,35 +370,35 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: false,
       title:
-        "Healthcare Innovation Continues to Transform Patient Care",
-      publishedAt: "2026-09-21T09:19:00Z",
+        "Modi, Lam Meet as India and Vietnam Deepen AI, Defense Ties",
+      publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
-      link: "/healthcare",
+      link: "/business-news",
     },
     {
       id: 2,
       hot: false,
       title:
-        "Smart Cities Move Toward More Connected Infrastructure",
-      publishedAt: "2026-09-21T08:19:00Z",
+        "Factory Floor or Family Office? India's Rich Youngsters Alarm Elders",
+      publishedAt: "2026-09-22T09:10:00Z",
       image: HeroImg,
-      link: "/smart-cities",
+      link: "/business-news",
     },
     {
       id: 3,
       hot: false,
       title:
-        "Global Supply Chains Adapt to a Changing Business Environment",
-      publishedAt: "2026-09-21T07:19:00Z",
+        "India's ReNew Energy Trims Solar Output Due to Grid Constraints",
+      publishedAt: "2026-09-22T00:00:00Z",
       image: InsImg,
-      link: "/supply-chain",
+      link: "/energy",
     },
     {
       id: 4,
       hot: false,
       title:
-        "AI Governance Becomes a Major Corporate Priority",
-      publishedAt: "2026-09-21T06:19:00Z",
+        "Sebi Taps AI in Growing Fight Against Market Manipulation and Fraud",
+      publishedAt: "2026-09-22T09:24:00Z",
       image: LN4Img,
       link: "/technology",
     },
@@ -412,36 +412,36 @@ const latestNewsData: Record<string, NewsItem[]> = {
 const editorsPicks = [
   {
     id: 1,
-    category: "LEADERSHIP",
+    category: "MARKETS",
     title:
-      "The Intelligence Age: How CEOs Are Navigating Transformation",
+      "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
     excerpt:
-      "Leadership perspectives reveal how executives are approaching one of the most consequential technology transitions in modern business.",
-    publishedAt: "2026-09-21T07:19:00Z",
+      "Bloomberg reports that derivatives trading activity in India has fallen sharply as taxes weigh on the market.",
+    publishedAt: "2026-09-22T10:00:00Z",
     image: EdipickImg,
-    link: "/leadership",
+    link: "/markets",
   },
   {
     id: 2,
     category: "TECHNOLOGY",
     title:
-      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+      "Alibaba Unveils AI Chip to Drive Global Data Centre Buildout",
     excerpt:
-      "AI infrastructure is expanding beyond traditional data centers as robotics becomes a growing part of the technology ecosystem.",
-    publishedAt: "2026-09-21T10:07:00Z",
+      "Alibaba introduced a new AI accelerator and outlined plans to expand global data-centre capacity as AI demand grows.",
+    publishedAt: "2026-09-22T09:08:00Z",
     image: Ln1Img,
     link: "/technology",
   },
   {
     id: 3,
-    category: "FINANCE",
+    category: "BUSINESS",
     title:
-      "U.S. Equity Markets Rally on Strong Manufacturing Data",
+      "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
     excerpt:
-      "Stronger manufacturing activity provides fresh momentum for U.S. equity markets.",
-    publishedAt: "2026-09-21T09:44:00Z",
+      "Jamie Dimon said India's long-term prospects are strong while highlighting tax rules, regulation and policy uncertainty.",
+    publishedAt: "2026-09-22T11:26:00Z",
     image: HeroImg,
-    link: "/markets",
+    link: "/business-news",
   },
 ];
 
