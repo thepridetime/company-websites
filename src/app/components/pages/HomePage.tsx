@@ -7,6 +7,7 @@ import {
   TrendingUp,
   TrendingDown,
   Play,
+  Radio,
 } from "lucide-react";
 
 import HeroImg from "../../../imports/heroimage.png";
@@ -19,6 +20,17 @@ import Ln1Img from "../../../imports/Ln1.png";
 
 import { getQuotes } from "../../../services/marketApi";
 import { TimeAgo } from "../../utils/timeAgo";
+
+/* =========================================================
+   DESIGN TOKENS
+   Masthead red   #B7141F  — the one bold accent, used sparingly
+   Ink             #111111 — headline text
+   Rule / hairline #E3E1DC
+   Gold (Magazine) #9C7A3C — reserved for the Magazine module
+========================================================= */
+
+const ACCENT = "#B7141F";
+const GOLD = "#9C7A3C";
 
 /* =========================================================
    TYPES
@@ -41,17 +53,112 @@ type MarketItem = {
 };
 
 /* =========================================================
+   READ TIME — derived from actual copy, not decorative
+========================================================= */
+
+function readTime(...parts: string[]) {
+  const words = parts.join(" ").trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 180));
+}
+
+/* =========================================================
+   AD SPACE
+========================================================= */
+
+function AdSpace({
+  title = "The Pride Times Premium",
+}: {
+  title?: string;
+}) {
+  return (
+    <div
+      className="
+        w-full
+        h-[92px]
+        sm:h-[100px]
+        md:h-[110px]
+        bg-gradient-to-r
+        from-[#071a2d]
+        via-[#12384a]
+        to-[#28586a]
+        flex
+        items-center
+        justify-center
+        relative
+        overflow-hidden
+        my-8
+      "
+    >
+      <span
+        className="
+          absolute
+          top-1.5
+          right-2
+          text-[7px]
+          sm:text-[8px]
+          text-white/50
+          uppercase
+          tracking-wide
+        "
+      >
+        Advertisement
+      </span>
+
+      <div className="text-center px-4">
+        <span
+          className="
+            block
+            text-[7px]
+            sm:text-[8px]
+            font-bold
+            uppercase
+            tracking-[0.2em]
+            text-sky-300
+            mb-1
+          "
+        >
+          Google Adsense
+        </span>
+
+        <h3
+          className="
+            text-[11px]
+            sm:text-sm
+            md:text-base
+            font-semibold
+            text-white
+          "
+        >
+          {title}
+        </h3>
+
+        <p
+          className="
+            text-[7px]
+            sm:text-[8px]
+            text-white/60
+            mt-1
+          "
+        >
+          728 × 90 • Leaderboard
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
    HERO STORY
 ========================================================= */
 
 const heroStory = {
   category: "TOP STORY",
   title:
-    "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
+    "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
   excerpt:
-    "India's derivatives trading activity has fallen sharply as tax changes weigh on the market, according to Bloomberg News.",
+    "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Korea, expanding its already well-established relationship with China's Unitree.",
   image: HeroImg,
-  link: "/markets",
+  link: "/technology",
 };
 
 /* =========================================================
@@ -61,25 +168,24 @@ const heroStory = {
 const centerStories = [
   {
     id: 1,
-    tag: "MARKETS",
+    tag: "CYBERSECURITY",
     title:
-      "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
+      "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending",
     excerpt:
-      "Bloomberg reports that India's derivatives trading activity has dropped sharply as higher trading taxes weigh on market participation.",
-    publishedAt: "2026-09-22T10:00:00Z",
+      "PwC's 2026 Global Digital Trust Insights survey reveals that cybersecurity has risen to the top tier of board-level concerns across major industries.",
+    publishedAt: "2026-09-21T09:54:00Z",
     image: LN3Img,
-    link: "/markets",
+    link: "/cybersecurity",
   },
   {
     id: 2,
-    tag: "BUSINESS",
-    title:
-      "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
+    tag: "FINANCE",
+    title: "U.S. Equity Markets Rally on Strong Manufacturing Data",
     excerpt:
-      "JPMorgan CEO Jamie Dimon said India's long-term prospects remain strong while pointing to tax rules, regulation and policy uncertainty as concerns for investors.",
-    publishedAt: "2026-09-22T11:26:00Z",
+      "U.S. equity markets extended a recovery rally into the first week of June, driven by stronger-than-expected domestic factory data.",
+    publishedAt: "2026-09-21T09:19:00Z",
     image: InsImg,
-    link: "/business-news",
+    link: "/markets",
   },
 ];
 
@@ -89,7 +195,7 @@ const centerStories = [
 
 const videoFeature = {
   title:
-    "Alibaba Unveils AI Chip to Drive Global Data Centre Buildout",
+    "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
   image: HeroImg,
   link: "/technology",
 };
@@ -118,17 +224,16 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
-      publishedAt: "2026-09-22T10:00:00Z",
+        "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+      publishedAt: "2026-09-21T10:07:00Z",
       image: Ln1Img,
-      link: "/markets",
+      link: "/technology",
     },
     {
       id: 2,
-      hot: true,
-      title:
-        "Standstill in India Gold Imports Drags On, Threatens Supply",
-      publishedAt: "2026-09-22T08:00:00Z",
+      hot: false,
+      title: "U.S. Equity Markets Rally on Strong Manufacturing Data",
+      publishedAt: "2026-09-21T09:44:00Z",
       image: HeroImg,
       link: "/markets",
     },
@@ -136,28 +241,28 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Modi, Lam Meet as India and Vietnam Deepen AI, Defense Ties",
-      publishedAt: "2026-09-22T07:00:00Z",
+        "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
-      link: "/business-news",
+      link: "/cybersecurity",
     },
     {
       id: 4,
       hot: false,
       title:
-        "Indian Small-Caps Rally 21% From March Lows to Enter Bull Market",
-      publishedAt: "2026-09-22T06:00:00Z",
+        "Data Centers and AI Workloads Force Energy Policy Reversals Globally",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN4Img,
-      link: "/markets",
+      link: "/energy",
     },
     {
       id: 5,
       hot: true,
       title:
-        "Sebi Taps AI in Growing Fight Against Market Manipulation and Fraud",
-      publishedAt: "2026-09-22T09:24:00Z",
+        "Alphabet Plans $80B AI Infrastructure Stock Offering as Hyperscaler Capex Tops $700B",
+      publishedAt: "2026-09-21T10:19:00Z",
       image: Ln1Img,
-      link: "/markets",
+      link: "/technology",
     },
   ],
 
@@ -165,36 +270,32 @@ const latestNewsData: Record<string, NewsItem[]> = {
     {
       id: 1,
       hot: true,
-      title:
-        "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
-      publishedAt: "2026-09-22T10:00:00Z",
+      title: "S&P 500 Hits All-Time High as Markets Digest Fresh Data",
+      publishedAt: "2026-09-21T10:09:00Z",
       image: HeroImg,
       link: "/markets",
     },
     {
       id: 2,
       hot: false,
-      title:
-        "Indian Small-Caps Rally 21% From March Lows to Enter Bull Market",
-      publishedAt: "2026-09-22T06:00:00Z",
+      title: "Global Investors Reassess Risk Across Major Asset Classes",
+      publishedAt: "2026-09-21T09:39:00Z",
       image: InsImg,
       link: "/markets",
     },
     {
       id: 3,
       hot: false,
-      title:
-        "Asia's Beaten-Up Currencies Gain Traction After Defensive Moves",
-      publishedAt: "2026-09-22T04:00:00Z",
+      title: "Asian Markets Respond to New Manufacturing Signals",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
       link: "/markets",
     },
     {
       id: 4,
       hot: false,
-      title:
-        "Stocks Rally, Brent Below $100 as Iran Hopes Mount",
-      publishedAt: "2026-09-22T02:00:00Z",
+      title: "Digital Assets Continue to Attract Institutional Interest",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN4Img,
       link: "/markets",
     },
@@ -204,36 +305,32 @@ const latestNewsData: Record<string, NewsItem[]> = {
     {
       id: 1,
       hot: true,
-      title:
-        "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
-      publishedAt: "2026-09-22T11:26:00Z",
+      title: "Global Markets Rally as Investors Digest Latest Economic Data",
+      publishedAt: "2026-09-21T09:59:00Z",
       image: HeroImg,
       link: "/finance",
     },
     {
       id: 2,
       hot: false,
-      title:
-        "India Clears Loan Guarantee Plan as War Hurts Firms, Airlines",
-      publishedAt: "2026-09-21T22:00:00Z",
+      title: "Central Banks Signal Cautious Approach to Interest Rates",
+      publishedAt: "2026-09-21T09:34:00Z",
       image: InsImg,
       link: "/finance",
     },
     {
       id: 3,
       hot: false,
-      title:
-        "JPMorgan's Dimon Backs Chandrasekaran, Warns Tata Rift Could Hit Investment",
-      publishedAt: "2026-09-22T08:36:00Z",
+      title: "Banking Sector Posts Stronger Quarterly Results",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN3Img,
       link: "/finance",
     },
     {
       id: 4,
       hot: false,
-      title:
-        "Standstill in India Gold Imports Drags On, Threatens Supply",
-      publishedAt: "2026-09-22T08:00:00Z",
+      title: "Global Investors Increase Exposure to Emerging Markets",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: LN4Img,
       link: "/finance",
     },
@@ -243,36 +340,32 @@ const latestNewsData: Record<string, NewsItem[]> = {
     {
       id: 1,
       hot: true,
-      title:
-        "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
-      publishedAt: "2026-09-22T11:26:00Z",
+      title: "Technology Leaders Accelerate Global Expansion Plans",
+      publishedAt: "2026-09-21T10:04:00Z",
       image: HeroImg,
       link: "/business-news",
     },
     {
       id: 2,
       hot: false,
-      title:
-        "Berger Paints Ramps Up Expansion to Fend Off Birla Opus, JSW Dulux",
-      publishedAt: "2026-09-22T09:23:00Z",
+      title: "Global Logistics Industry Enters a New Investment Cycle",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: InsImg,
       link: "/business-news",
     },
     {
       id: 3,
       hot: false,
-      title:
-        "JPMorgan's Dimon Backs Chandrasekaran, Warns Tata Rift Could Hit Investment",
-      publishedAt: "2026-09-22T08:36:00Z",
+      title: "Major Companies Increase Spending on AI Infrastructure",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN3Img,
       link: "/business-news",
     },
     {
       id: 4,
       hot: false,
-      title:
-        "Factory Floor or Family Office? India's Rich Youngsters Alarm Elders",
-      publishedAt: "2026-09-22T09:10:00Z",
+      title: "Indian Businesses Expand Their Global Technology Footprint",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: LN4Img,
       link: "/business-news",
     },
@@ -283,8 +376,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Alibaba Unveils AI Chip to Drive Global Data Centre Buildout",
-      publishedAt: "2026-09-22T09:08:00Z",
+        "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+      publishedAt: "2026-09-21T10:14:00Z",
       image: Ln1Img,
       link: "/technology",
     },
@@ -292,35 +385,32 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: true,
       title:
-        "Microsoft's Satya Nadella to Join OpenAI, Nvidia Leaders at Trump-Xi Dinner",
-      publishedAt: "2026-09-22T08:08:00Z",
+        "Alphabet Plans $80B AI Infrastructure Stock Offering as Hyperscaler Capex Tops $700B",
+      publishedAt: "2026-09-21T10:07:00Z",
       image: HeroImg,
       link: "/technology",
     },
     {
       id: 3,
       hot: false,
-      title:
-        "Sebi Taps AI in Growing Fight Against Market Manipulation and Fraud",
-      publishedAt: "2026-09-22T09:24:00Z",
+      title: "Intel Attempts Inference-Chip Comeback as AI Compute Wars Intensify",
+      publishedAt: "2026-09-21T09:49:00Z",
       image: InsImg,
       link: "/technology",
     },
     {
       id: 4,
       hot: false,
-      title:
-        "Alibaba Targets 20 Gigawatts of Global Data Centre Capacity by 2032",
-      publishedAt: "2026-09-22T09:08:00Z",
+      title: "SoftBank Bets Big on European Data Centers",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
       link: "/technology",
     },
     {
       id: 5,
       hot: false,
-      title:
-        "India and Vietnam Deepen AI and Defense Ties as Leaders Meet",
-      publishedAt: "2026-09-22T07:00:00Z",
+      title: "Quantum Computing Startup Reaches New Qubit Milestone",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: LN4Img,
       link: "/technology",
     },
@@ -331,8 +421,8 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Stocks Rally, Brent Below $100 as Iran Hopes Mount",
-      publishedAt: "2026-09-22T02:00:00Z",
+        "Data Centers and AI Workloads Force Energy Policy Reversals Globally",
+      publishedAt: "2026-09-21T09:54:00Z",
       image: LN4Img,
       link: "/energy",
     },
@@ -340,26 +430,24 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "India Clears Loan Guarantee Plan as War Hurts Firms, Airlines",
-      publishedAt: "2026-09-21T22:00:00Z",
+        "China's Dominant Position in Clean-Tech Supply Chains Creates New Risk Calculus",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: HeroImg,
       link: "/energy",
     },
     {
       id: 3,
       hot: false,
-      title:
-        "India's ReNew Energy Trims Solar Output Due to Grid Constraints",
-      publishedAt: "2026-09-22T00:00:00Z",
+      title: "Energy Resiliency Becomes a Strategic Priority for Businesses",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: InsImg,
       link: "/energy",
     },
     {
       id: 4,
       hot: false,
-      title:
-        "Gold and Silver Surge on Iran War Optimism, Weaker Dollar",
-      publishedAt: "2026-09-22T01:00:00Z",
+      title: "Asia's LNG Demand Reshapes Global Energy Markets",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: LN3Img,
       link: "/energy",
     },
@@ -369,36 +457,32 @@ const latestNewsData: Record<string, NewsItem[]> = {
     {
       id: 1,
       hot: false,
-      title:
-        "Modi, Lam Meet as India and Vietnam Deepen AI, Defense Ties",
-      publishedAt: "2026-09-22T07:00:00Z",
+      title: "Healthcare Innovation Continues to Transform Patient Care",
+      publishedAt: "2026-09-21T09:19:00Z",
       image: LN3Img,
-      link: "/business-news",
+      link: "/healthcare",
     },
     {
       id: 2,
       hot: false,
-      title:
-        "Factory Floor or Family Office? India's Rich Youngsters Alarm Elders",
-      publishedAt: "2026-09-22T09:10:00Z",
+      title: "Smart Cities Move Toward More Connected Infrastructure",
+      publishedAt: "2026-09-21T08:19:00Z",
       image: HeroImg,
-      link: "/business-news",
+      link: "/smart-cities",
     },
     {
       id: 3,
       hot: false,
-      title:
-        "India's ReNew Energy Trims Solar Output Due to Grid Constraints",
-      publishedAt: "2026-09-22T00:00:00Z",
+      title: "Global Supply Chains Adapt to a Changing Business Environment",
+      publishedAt: "2026-09-21T07:19:00Z",
       image: InsImg,
-      link: "/energy",
+      link: "/supply-chain",
     },
     {
       id: 4,
       hot: false,
-      title:
-        "Sebi Taps AI in Growing Fight Against Market Manipulation and Fraud",
-      publishedAt: "2026-09-22T09:24:00Z",
+      title: "AI Governance Becomes a Major Corporate Priority",
+      publishedAt: "2026-09-21T06:19:00Z",
       image: LN4Img,
       link: "/technology",
     },
@@ -412,36 +496,33 @@ const latestNewsData: Record<string, NewsItem[]> = {
 const editorsPicks = [
   {
     id: 1,
-    category: "MARKETS",
-    title:
-      "Derivatives Trading in India Sinks Most Since 2024 as Taxes Bite",
+    category: "LEADERSHIP",
+    title: "The Intelligence Age: How CEOs Are Navigating Transformation",
     excerpt:
-      "Bloomberg reports that derivatives trading activity in India has fallen sharply as taxes weigh on the market.",
-    publishedAt: "2026-09-22T10:00:00Z",
+      "Leadership perspectives reveal how executives are approaching one of the most consequential technology transitions in modern business.",
+    publishedAt: "2026-09-21T07:19:00Z",
     image: EdipickImg,
-    link: "/markets",
+    link: "/leadership",
   },
   {
     id: 2,
     category: "TECHNOLOGY",
     title:
-      "Alibaba Unveils AI Chip to Drive Global Data Centre Buildout",
+      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
     excerpt:
-      "Alibaba introduced a new AI accelerator and outlined plans to expand global data-centre capacity as AI demand grows.",
-    publishedAt: "2026-09-22T09:08:00Z",
+      "AI infrastructure is expanding beyond traditional data centers as robotics becomes a growing part of the technology ecosystem.",
+    publishedAt: "2026-09-21T10:07:00Z",
     image: Ln1Img,
     link: "/technology",
   },
   {
     id: 3,
-    category: "BUSINESS",
-    title:
-      "India's Prospects Bright but Tax Rules a Worry, JPMorgan CEO Dimon Says",
-    excerpt:
-      "Jamie Dimon said India's long-term prospects are strong while highlighting tax rules, regulation and policy uncertainty.",
-    publishedAt: "2026-09-22T11:26:00Z",
+    category: "FINANCE",
+    title: "U.S. Equity Markets Rally on Strong Manufacturing Data",
+    excerpt: "Stronger manufacturing activity provides fresh momentum for U.S. equity markets.",
+    publishedAt: "2026-09-21T09:44:00Z",
     image: HeroImg,
-    link: "/business-news",
+    link: "/markets",
   },
 ];
 
@@ -451,8 +532,7 @@ const editorsPicks = [
 
 const magazinePreview = {
   title: "The AI Revolution",
-  subtitle:
-    "Reshaping business, economies, technology, and the future of work.",
+  subtitle: "Reshaping business, economies, technology, and the future of work.",
   image: Pt30Img,
 };
 
@@ -461,101 +541,43 @@ const magazinePreview = {
 ========================================================= */
 
 const prideTimes30 = [
-  {
-    rank: 1,
-    name: "Jensen Huang",
-    company: "Nvidia",
-    sector:
-      "Defining the AI infrastructure era through accelerated computing and robotics.",
-  },
-  {
-    rank: 2,
-    name: "Satya Nadella",
-    company: "Microsoft",
-    sector:
-      "Leading enterprise AI adoption and large-scale digital transformation.",
-  },
-  {
-    rank: 3,
-    name: "Sundar Pichai",
-    company: "Alphabet / Google",
-    sector:
-      "Driving AI integration across search, cloud, and emerging technologies.",
-  },
-  {
-    rank: 4,
-    name: "Elon Musk",
-    company: "Tesla / SpaceX / X",
-    sector:
-      "Expanding technology initiatives across energy, space, transportation, and AI.",
-  },
-  {
-    rank: 5,
-    name: "Sam Altman",
-    company: "OpenAI",
-    sector:
-      "Shaping the development and deployment of frontier artificial intelligence.",
-  },
-  {
-    rank: 6,
-    name: "Andy Jassy",
-    company: "Amazon",
-    sector:
-      "Scaling AWS and cloud infrastructure for the next generation of AI workloads.",
-  },
-  {
-    rank: 7,
-    name: "Lisa Su",
-    company: "AMD",
-    sector:
-      "Expanding competitive AI computing capabilities across CPUs and GPUs.",
-  },
-  {
-    rank: 8,
-    name: "C.C. Wei",
-    company: "TSMC",
-    sector:
-      "Leading advanced semiconductor manufacturing for the global technology industry.",
-  },
-  {
-    rank: 9,
-    name: "Alex Karp",
-    company: "Palantir",
-    sector:
-      "Expanding enterprise AI and data platforms across commercial and government markets.",
-  },
-  {
-    rank: 10,
-    name: "Mary Barra",
-    company: "General Motors",
-    sector:
-      "Navigating the transformation of the automotive industry through electrification and technology.",
-  },
+  { rank: 1, name: "Jensen Huang", company: "Nvidia", sector: "Defining the AI infrastructure era through accelerated computing and robotics." },
+  { rank: 2, name: "Satya Nadella", company: "Microsoft", sector: "Leading enterprise AI adoption and large-scale digital transformation." },
+  { rank: 3, name: "Sundar Pichai", company: "Alphabet / Google", sector: "Driving AI integration across search, cloud, and emerging technologies." },
+  { rank: 4, name: "Elon Musk", company: "Tesla / SpaceX / X", sector: "Expanding technology initiatives across energy, space, transportation, and AI." },
+  { rank: 5, name: "Sam Altman", company: "OpenAI", sector: "Shaping the development and deployment of frontier artificial intelligence." },
+  { rank: 6, name: "Andy Jassy", company: "Amazon", sector: "Scaling AWS and cloud infrastructure for the next generation of AI workloads." },
+  { rank: 7, name: "Lisa Su", company: "AMD", sector: "Expanding competitive AI computing capabilities across CPUs and GPUs." },
+  { rank: 8, name: "C.C. Wei", company: "TSMC", sector: "Leading advanced semiconductor manufacturing for the global technology industry." },
+  { rank: 9, name: "Alex Karp", company: "Palantir", sector: "Expanding enterprise AI and data platforms across commercial and government markets." },
+  { rank: 10, name: "Mary Barra", company: "General Motors", sector: "Navigating the transformation of the automotive industry through electrification and technology." },
+];
+
+/* =========================================================
+   TODAY'S BRIEFING — five things to know, drawn from the
+   real stories already on the page
+========================================================= */
+
+const briefing = [
+  heroStory.title,
+  centerStories[0].title,
+  centerStories[1].title,
+  "Data Centers and AI Workloads Force Energy Policy Reversals Globally",
+  editorsPicks[0].title,
 ];
 
 /* =========================================================
    CHANGE CHIP
 ========================================================= */
 
-function ChangeChip({
-  change,
-  up,
-}: {
-  change: string;
-  up: boolean;
-}) {
+function ChangeChip({ change, up }: { change: string; up: boolean }) {
   return (
     <span
       className={`text-[10px] font-semibold tabular-nums flex items-center gap-1 ${
-        up ? "text-green-600" : "text-red-600"
+        up ? "text-emerald-700" : "text-[#B7141F]"
       }`}
     >
-      {up ? (
-        <TrendingUp size={10} strokeWidth={2.25} />
-      ) : (
-        <TrendingDown size={10} strokeWidth={2.25} />
-      )}
-
+      {up ? <TrendingUp size={10} strokeWidth={2.25} /> : <TrendingDown size={10} strokeWidth={2.25} />}
       {change}
     </span>
   );
@@ -566,27 +588,17 @@ function ChangeChip({
 ========================================================= */
 
 export function HomePage() {
-  const [activeMarketTab, setActiveMarketTab] =
-    useState<"Indices" | "Crypto">("Indices");
-
+  const [activeMarketTab, setActiveMarketTab] = useState<"Indices" | "Crypto">("Indices");
   const [activeNewsTab, setActiveNewsTab] = useState("All");
-
-  const [marketSnapshotData, setMarketSnapshotData] = useState<
-    Record<string, MarketItem[]>
-  >({
+  const [marketSnapshotData, setMarketSnapshotData] = useState<Record<string, MarketItem[]>>({
     Indices: [],
     Crypto: [],
   });
-
-  /* =======================================================
-     MARKET DATA
-  ======================================================= */
 
   useEffect(() => {
     const loadMarketData = async () => {
       try {
         const data = await getQuotes();
-
         setMarketSnapshotData({
           Indices: data.indices.map((item: any) => ({
             symbol: item.name,
@@ -594,7 +606,6 @@ export function HomePage() {
             change: item.change,
             up: item.up,
           })),
-
           Crypto: data.crypto.map((item: any) => ({
             symbol: item.name,
             value: item.value,
@@ -606,625 +617,265 @@ export function HomePage() {
         console.error("Market API Error:", error);
       }
     };
-
     loadMarketData();
   }, []);
 
-  /* =======================================================
-     SELECTED NEWS
-  ======================================================= */
-
-  const selectedNews =
-    latestNewsData[activeNewsTab] || latestNewsData.All;
-
+  const selectedNews = latestNewsData[activeNewsTab] || latestNewsData.All;
   const latestStories = selectedNews.slice(0, 5);
+  const tickerItems = latestNewsData.All.filter((n) => n.hot).concat(latestNewsData.All.filter((n) => !n.hot));
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+    <div className="min-h-screen bg-white text-[#111111] font-sans antialiased">
+      {/* =====================================================
+          EDITION BAR
+      ===================================================== */}
+      <div className="border-b border-[#E3E1DC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-8 flex items-center justify-between text-[10px] text-gray-500">
+          <span className="tracking-wide">
+            Tuesday, September 22, 2026 <span className="mx-1.5 text-gray-300">|</span> Mumbai Edition
+          </span>
+          <span className="hidden sm:inline tracking-wide text-gray-400">
+            Sensex 84,210.4 <span className="text-emerald-700">▲ 0.62%</span>
+            <span className="mx-2 text-gray-300">·</span>
+            Nifty 25,701.2 <span className="text-emerald-700">▲ 0.58%</span>
+          </span>
+        </div>
+      </div>
+
+      {/* =====================================================
+          BREAKING NEWS TICKER
+      ===================================================== */}
+      <div className="bg-[#111111] text-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-9 flex items-center gap-3">
+          <span
+            className="shrink-0 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] pr-3 border-r border-white/20"
+            style={{ color: "#FF5C5C" }}
+          >
+            <Radio size={11} strokeWidth={2.5} />
+            Breaking
+          </span>
+          <div className="relative flex-1 overflow-hidden h-full flex items-center">
+            <div className="ticker-track flex items-center gap-10 whitespace-nowrap">
+              {[...tickerItems, ...tickerItems].map((item, i) => (
+                <Link
+                  key={`${item.id}-${i}`}
+                  to={item.link}
+                  className="text-[11px] font-medium text-white/90 hover:text-white transition-colors"
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <main className="pt-6 md:pt-8 pb-16">
+          <AdSpace title="The Pride Times Premium — Deep Analysis, Exclusive Access" />
 
-        <main className="pt-4 md:pt-6 pb-16">
+          {/* =================================================
+              FIVE THINGS TO KNOW
+          ================================================= */}
+
+          <section className="mb-8 pb-6 border-b border-[#E3E1DC]">
+            <h2 className="font-serif text-lg font-bold mb-3">Five Things to Start Your Day</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 sm:gap-0 sm:divide-x sm:divide-[#E3E1DC]">
+              {briefing.map((item, i) => (
+                <div key={i} className="sm:px-4 first:sm:pl-0">
+                  <span className="font-serif text-2xl font-bold" style={{ color: "#D9D4C9" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className="text-[12px] leading-[1.45] font-medium text-gray-800 mt-1.5 line-clamp-3">
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* =================================================
               HERO SECTION
           ================================================= */}
 
-          <section
-            className="
-              grid
-              grid-cols-1
-              lg:grid-cols-[1.05fr_1.25fr_0.95fr]
-              gap-5
-              lg:gap-6
-              pb-8
-              mb-8
-              border-b
-              border-gray-300
-            "
-          >
-
-            {/* =================================================
-                TOP STORY
-            ================================================= */}
-
+          <section className="grid grid-cols-1 lg:grid-cols-[1.05fr_1.25fr_0.95fr] gap-5 lg:gap-6 pb-8 mb-8 border-b border-[#E3E1DC]">
+            {/* TOP STORY */}
             <Link
               to={heroStory.link}
-              className="
-                group
-                relative
-                block
-                overflow-hidden
-                rounded-lg
-                border
-                border-gray-200
-                min-h-[430px]
-                lg:min-h-[520px]
-                bg-black
-              "
+              className="group relative block overflow-hidden border border-gray-200 min-h-[430px] lg:min-h-[520px] bg-black"
             >
               <ImageWithFallback
                 src={heroStory.image}
                 alt={heroStory.title}
-                className="
-                  absolute
-                  inset-0
-                  w-full
-                  h-full
-                  object-cover
-                  transition-transform
-                  duration-700
-                  group-hover:scale-[1.04]
-                "
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
               />
-
-              <div
-                className="
-                  absolute
-                  inset-0
-                  bg-gradient-to-t
-                  from-black/90
-                  via-black/35
-                  to-transparent
-                "
-              />
-
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
               <span
-                className="
-                  absolute
-                  top-4
-                  left-4
-                  bg-red-600
-                  text-white
-                  px-3
-                  py-1
-                  text-[9px]
-                  font-bold
-                  tracking-[0.16em]
-                  uppercase
-                  rounded-[2px]
-                "
+                className="absolute top-4 left-4 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase"
+                style={{ backgroundColor: ACCENT }}
               >
                 {heroStory.category}
               </span>
-
               <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-
-                <h1
-                  className="
-                    font-serif
-                    text-2xl
-                    md:text-[28px]
-                    lg:text-[30px]
-                    font-bold
-                    leading-[1.1]
-                    text-white
-                  "
-                >
+                <h1 className="font-serif text-2xl md:text-[28px] lg:text-[30px] font-bold leading-[1.1] text-white">
                   {heroStory.title}
                 </h1>
-
-                <p
-                  className="
-                    text-[12px]
-                    md:text-[13px]
-                    text-gray-200
-                    leading-[1.6]
-                    mt-3
-                    line-clamp-3
-                  "
-                >
+                <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
                   {heroStory.excerpt}
                 </p>
-
-                <span
-                  className="
-                    inline-flex
-                    items-center
-                    gap-1.5
-                    text-[10px]
-                    font-bold
-                    text-white
-                    uppercase
-                    tracking-wide
-                    mt-4
-                    border-b
-                    border-white/60
-                    pb-1
-                  "
-                >
-                  Read Full Story
-                  <ArrowRight size={12} />
-                </span>
-
+                <div className="flex items-center gap-4 mt-4">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide border-b border-white/60 pb-1">
+                    Read Full Story
+                    <ArrowRight size={12} />
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px] text-white/60">
+                    <Clock size={10} />
+                    {readTime(heroStory.title, heroStory.excerpt)} min read
+                  </span>
+                </div>
               </div>
             </Link>
 
-            {/* =================================================
-                CENTER STORY
-            ================================================= */}
-
+            {/* CENTER STORY */}
             <div className="min-w-0">
-
-              <Link
-                to={centerStories[0].link}
-                className="group block"
-              >
-                <div className="overflow-hidden rounded-lg">
-
+              <Link to={centerStories[0].link} className="group block">
+                <div className="overflow-hidden">
                   <ImageWithFallback
                     src={centerStories[0].image}
                     alt={centerStories[0].title}
-                    className="
-                      w-full
-                      h-[230px]
-                      md:h-[280px]
-                      lg:h-[300px]
-                      object-cover
-                      rounded-lg
-                      transition-transform
-                      duration-700
-                      group-hover:scale-[1.03]
-                    "
+                    className="w-full h-[230px] md:h-[280px] lg:h-[300px] object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
-
                 </div>
-
-                <span
-                  className="
-                    block
-                    mt-4
-                    text-[9px]
-                    font-bold
-                    text-red-600
-                    uppercase
-                    tracking-[0.15em]
-                  "
-                >
-                  {centerStories[0].tag}
-                </span>
-
-                <h2
-                  className="
-                    font-serif
-                    text-xl
-                    md:text-2xl
-                    font-bold
-                    leading-[1.15]
-                    mt-1.5
-                    text-gray-950
-                    group-hover:text-red-600
-                    transition-colors
-                  "
-                >
+                <div className="flex items-center gap-2 mt-4">
+                  <span className="text-[9px] font-bold uppercase tracking-[0.15em]" style={{ color: ACCENT }}>
+                    {centerStories[0].tag}
+                  </span>
+                  <span className="text-[9px] text-gray-400">
+                    {readTime(centerStories[0].title, centerStories[0].excerpt)} min read
+                  </span>
+                </div>
+                <h2 className="font-serif text-xl md:text-2xl font-bold leading-[1.15] mt-1.5 text-gray-950 group-hover:text-[#B7141F] transition-colors">
                   {centerStories[0].title}
                 </h2>
-
-                <p
-                  className="
-                    text-[12px]
-                    text-gray-600
-                    mt-2
-                    leading-[1.6]
-                    line-clamp-3
-                  "
-                >
-                  {centerStories[0].excerpt}
-                </p>
-
+                <p className="text-[12px] text-gray-600 mt-2 leading-[1.6] line-clamp-3">{centerStories[0].excerpt}</p>
               </Link>
 
-              {/* RELATED STORY */}
-
-              <Link
-                to={centerStories[1].link}
-                className="
-                  group
-                  flex
-                  gap-3
-                  mt-5
-                  pt-4
-                  border-t
-                  border-gray-200
-                "
-              >
-
-                <div
-                  className="
-                    shrink-0
-                    w-[105px]
-                    h-[75px]
-                    overflow-hidden
-                    rounded-md
-                  "
-                >
+              <Link to={centerStories[1].link} className="group flex gap-3 mt-5 pt-4 border-t border-[#E3E1DC]">
+                <div className="shrink-0 w-[105px] h-[75px] overflow-hidden">
                   <ImageWithFallback
                     src={centerStories[1].image}
                     alt={centerStories[1].title}
-                    className="
-                      w-full
-                      h-full
-                      object-cover
-                      rounded-md
-                      transition-transform
-                      duration-500
-                      group-hover:scale-105
-                    "
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-
                 <div className="min-w-0 flex-1">
-
-                  <span
-                    className="
-                      text-[9px]
-                      font-bold
-                      text-red-600
-                      uppercase
-                      tracking-[0.14em]
-                    "
-                  >
+                  <span className="text-[9px] font-bold uppercase tracking-[0.14em]" style={{ color: ACCENT }}>
                     {centerStories[1].tag}
                   </span>
-
-                  <h3
-                    className="
-                      text-[13px]
-                      font-bold
-                      leading-[1.35]
-                      mt-1
-                      text-gray-900
-                      group-hover:text-red-600
-                      transition-colors
-                      line-clamp-2
-                    "
-                  >
+                  <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-[#B7141F] transition-colors line-clamp-2">
                     {centerStories[1].title}
                   </h3>
-
-                  <span
-                    className="
-                      flex
-                      items-center
-                      gap-1
-                      text-[10px]
-                      text-gray-400
-                      mt-2
-                    "
-                  >
+                  <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
                     <Clock size={9} />
                     <TimeAgo iso={centerStories[1].publishedAt} />
                   </span>
-
                 </div>
-
               </Link>
 
               {/* MARKET SNAPSHOT */}
-
-              <div className="mt-5 border-t border-gray-200 pt-4">
-
+              <div className="mt-5 border-t border-[#E3E1DC] pt-4">
                 <div className="flex items-center justify-between mb-2">
-
-                  <h3
-                    className="
-                      text-[10px]
-                      font-bold
-                      uppercase
-                      tracking-[0.15em]
-                    "
-                  >
-                    Market Snapshot
-                  </h3>
-
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">Market Snapshot</h3>
                   <div className="flex gap-3">
-
                     {(["Indices", "Crypto"] as const).map((tab) => (
-
                       <button
                         key={tab}
                         type="button"
                         onClick={() => setActiveMarketTab(tab)}
-                        className={`
-                          text-[9px]
-                          font-semibold
-                          uppercase
-                          tracking-wide
-                          ${
-                            activeMarketTab === tab
-                              ? "text-red-600"
-                              : "text-gray-400 hover:text-gray-700"
-                          }
-                        `}
+                        className="text-[9px] font-semibold uppercase tracking-wide"
+                        style={{ color: activeMarketTab === tab ? ACCENT : "#9CA3AF" }}
                       >
                         {tab}
                       </button>
-
                     ))}
-
                   </div>
-
                 </div>
-
                 <div className="divide-y divide-gray-100">
-
-                  {(marketSnapshotData[activeMarketTab] || [])
-                    .slice(0, 4)
-                    .map((market) => (
-
-                      <div
-                        key={market.symbol}
-                        className="
-                          py-2
-                          flex
-                          items-center
-                          justify-between
-                        "
-                      >
-
-                        <span
-                          className="
-                            text-[10px]
-                            font-semibold
-                            text-gray-800
-                          "
-                        >
-                          {market.symbol}
-                        </span>
-
-                        <div className="flex items-center gap-3">
-
-                          <span
-                            className="
-                              text-[10px]
-                              text-gray-500
-                              tabular-nums
-                            "
-                          >
-                            {market.value}
-                          </span>
-
-                          <ChangeChip
-                            change={market.change}
-                            up={market.up}
-                          />
-
-                        </div>
-
+                  {(marketSnapshotData[activeMarketTab] || []).slice(0, 4).map((market) => (
+                    <div key={market.symbol} className="py-2 flex items-center justify-between">
+                      <span className="text-[10px] font-semibold text-gray-800">{market.symbol}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] text-gray-500 tabular-nums">{market.value}</span>
+                        <ChangeChip change={market.change} up={market.up} />
                       </div>
-
-                    ))}
-
+                    </div>
+                  ))}
                 </div>
-
                 <Link
                   to="/markets"
-                  className="
-                    mt-2
-                    text-[9px]
-                    font-bold
-                    text-red-600
-                    flex
-                    items-center
-                    gap-1
-                    uppercase
-                    tracking-wide
-                    w-fit
-                  "
+                  className="mt-2 text-[9px] font-bold flex items-center gap-1 uppercase tracking-wide w-fit"
+                  style={{ color: ACCENT }}
                 >
                   View All Markets
                   <ArrowRight size={9} />
                 </Link>
-
               </div>
-
             </div>
 
-            {/* =================================================
-                RIGHT COLUMN
-            ================================================= */}
-
+            {/* RIGHT COLUMN */}
             <aside className="min-w-0">
-
-              {/* TODAY'S VIDEOS */}
-
-              <div className="pb-5 border-b border-gray-200">
-
+              <div className="pb-5 border-b border-[#E3E1DC]">
                 <div className="flex items-center justify-between mb-3">
-
-                  <h2 className="font-serif text-lg font-bold">
-                    Today's Videos
-                  </h2>
-
+                  <h2 className="font-serif text-lg font-bold">Today's Videos</h2>
                   <button
                     type="button"
-                    className="
-                      border
-                      border-gray-300
-                      rounded-full
-                      px-3
-                      py-1
-                      text-[9px]
-                      font-medium
-                      hover:border-gray-500
-                      transition-colors
-                    "
+                    className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium hover:border-gray-500 transition-colors"
                   >
                     Explore More
                   </button>
-
                 </div>
-
-                <Link
-                  to={videoFeature.link}
-                  className="group block"
-                >
-
-                  <div className="relative overflow-hidden rounded-lg">
-
+                <Link to={videoFeature.link} className="group block">
+                  <div className="relative overflow-hidden">
                     <ImageWithFallback
                       src={videoFeature.image}
                       alt={videoFeature.title}
-                      className="
-                        w-full
-                        h-[180px]
-                        object-cover
-                        rounded-lg
-                        transition-transform
-                        duration-700
-                        group-hover:scale-[1.03]
-                      "
+                      className="w-full h-[180px] object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     />
-
-                    <div
-                      className="
-                        absolute
-                        inset-0
-                        flex
-                        items-center
-                        justify-center
-                        bg-black/10
-                        group-hover:bg-black/25
-                        transition-colors
-                      "
-                    >
-
-                      <div
-                        className="
-                          w-11
-                          h-11
-                          rounded-full
-                          bg-white/95
-                          flex
-                          items-center
-                          justify-center
-                          shadow-md
-                        "
-                      >
-
-                        <Play
-                          size={16}
-                          fill="black"
-                          className="text-black ml-0.5"
-                        />
-
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/25 transition-colors">
+                      <div className="w-11 h-11 rounded-full bg-white/95 flex items-center justify-center shadow-md">
+                        <Play size={16} fill="black" className="text-black ml-0.5" />
                       </div>
-
                     </div>
-
                   </div>
-
-                  <h3
-                    className="
-                      text-[13px]
-                      font-semibold
-                      leading-[1.4]
-                      mt-2.5
-                      text-gray-900
-                      group-hover:text-red-600
-                      transition-colors
-                    "
-                  >
+                  <h3 className="text-[13px] font-semibold leading-[1.4] mt-2.5 text-gray-900 group-hover:text-[#B7141F] transition-colors">
                     {videoFeature.title}
                   </h3>
-
                 </Link>
-
               </div>
 
-              {/* LATEST */}
-
               <div className="pt-5">
-
                 <h2
-                  className="
-                    text-[11px]
-                    font-bold
-                    uppercase
-                    tracking-[0.16em]
-                    text-red-600
-                    border-b
-                    border-gray-200
-                    pb-2
-                    mb-1
-                  "
+                  className="text-[11px] font-bold uppercase tracking-[0.16em] border-b border-[#E3E1DC] pb-2 mb-1"
+                  style={{ color: ACCENT }}
                 >
                   Latest
                 </h2>
-
                 <div className="divide-y divide-gray-100">
-
                   {selectedNews.slice(0, 5).map((item) => (
-
-                    <Link
-                      key={item.id}
-                      to={item.link}
-                      className="
-                        group
-                        block
-                        py-3
-                      "
-                    >
-
+                    <Link key={item.id} to={item.link} className="group block py-3">
                       <div className="flex gap-2">
-
-                        <span
-                          className="
-                            shrink-0
-                            text-[9px]
-                            font-semibold
-                            text-red-600
-                            w-[42px]
-                          "
-                        >
+                        <span className="shrink-0 text-[9px] font-semibold w-[42px]" style={{ color: ACCENT }}>
                           <TimeAgo iso={item.publishedAt} />
                         </span>
-
-                        <span
-                          className="
-                            text-[11px]
-                            font-medium
-                            leading-[1.4]
-                            text-gray-800
-                            group-hover:text-red-600
-                            transition-colors
-                          "
-                        >
+                        <span className="text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-[#B7141F] transition-colors">
                           {item.title}
                         </span>
-
                       </div>
-
                     </Link>
-
                   ))}
-
                 </div>
-
               </div>
-
             </aside>
-
           </section>
 
           {/* =================================================
@@ -1232,472 +883,136 @@ export function HomePage() {
           ================================================= */}
 
           <section className="mb-10">
-
-            <div
-              className="
-                flex
-                flex-col
-                md:flex-row
-                md:items-center
-                md:justify-between
-                gap-3
-                border-b-2
-                border-black
-                pb-2.5
-                mb-5
-              "
-            >
-
-              <h2
-                className="
-                  text-[12px]
-                  font-bold
-                  uppercase
-                  tracking-[0.16em]
-                "
-              >
-                More Stories
-              </h2>
-
-              <div
-                className="
-                  flex
-                  items-center
-                  gap-5
-                  overflow-x-auto
-                  no-scrollbar
-                "
-              >
-
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b-2 border-black pb-2.5 mb-5">
+              <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">More Stories</h2>
+              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar">
                 {latestNewsTabs.map((tab) => (
-
                   <button
                     key={tab}
                     type="button"
                     onClick={() => setActiveNewsTab(tab)}
-                    className={`
-                      text-[10px]
-                      font-semibold
-                      whitespace-nowrap
-                      uppercase
-                      tracking-wide
-                      transition-colors
-                      ${
-                        activeNewsTab === tab
-                          ? "text-red-600"
-                          : "text-gray-400 hover:text-gray-700"
-                      }
-                    `}
+                    className="text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors"
+                    style={{ color: activeNewsTab === tab ? ACCENT : "#9CA3AF" }}
                   >
                     {tab}
                   </button>
-
                 ))}
-
               </div>
-
             </div>
 
-            <div
-              className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                lg:grid-cols-5
-                gap-4
-              "
-            >
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {latestStories.map((story) => (
-
                 <Link
                   key={story.id}
                   to={story.link}
-                  className="
-                    group
-                    block
-                    overflow-hidden
-                    rounded-md
-                    border
-                    border-gray-200
-                    bg-white
-                    hover:border-gray-300
-                    hover:shadow-sm
-                    transition-all
-                  "
+                  className="group block overflow-hidden border border-gray-200 bg-white hover:border-gray-400 hover:shadow-sm transition-all"
                 >
-
                   <div className="overflow-hidden">
-
                     <ImageWithFallback
                       src={story.image}
                       alt={story.title}
-                      className="
-                        w-full
-                        h-[140px]
-                        object-cover
-                        transition-transform
-                        duration-700
-                        group-hover:scale-[1.04]
-                      "
+                      className="w-full h-[140px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     />
-
                   </div>
-
                   <div className="px-3 py-3">
-
                     <span
-                      className="
-                        block
-                        text-[8px]
-                        font-bold
-                        text-red-600
-                        uppercase
-                        tracking-[0.14em]
-                        mb-1
-                      "
+                      className="block text-[8px] font-bold uppercase tracking-[0.14em] mb-1"
+                      style={{ color: ACCENT }}
                     >
                       {story.hot ? "Breaking" : "Latest"}
                     </span>
-
-                    <h3
-                      className="
-                        text-[12px]
-                        font-semibold
-                        leading-[1.35]
-                        text-gray-900
-                        group-hover:text-red-600
-                        transition-colors
-                        line-clamp-3
-                      "
-                    >
+                    <h3 className="text-[12px] font-semibold leading-[1.35] text-gray-900 group-hover:text-[#B7141F] transition-colors line-clamp-3">
                       {story.title}
                     </h3>
-
-                    <span
-                      className="
-                        flex
-                        items-center
-                        gap-1
-                        text-[9px]
-                        text-gray-400
-                        mt-2.5
-                      "
-                    >
+                    <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-2.5">
                       <Clock size={9} />
                       <TimeAgo iso={story.publishedAt} />
                     </span>
-
                   </div>
-
                 </Link>
-
               ))}
-
             </div>
-
           </section>
+
+          <AdSpace title="Invest Smarter — The Pride Times Premium" />
 
           {/* =================================================
               EDITOR'S PICKS + MAGAZINE
           ================================================= */}
 
-          <section
-            className="
-              grid
-              grid-cols-1
-              lg:grid-cols-[1.7fr_0.8fr]
-              gap-7
-              mb-12
-            "
-          >
-
-            {/* EDITOR'S PICKS */}
-
+          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
             <div>
-
-              <div
-                className="
-                  flex
-                  items-center
-                  justify-between
-                  border-b-2
-                  border-black
-                  pb-2.5
-                  mb-4
-                "
-              >
-
-                <h2
-                  className="
-                    text-[12px]
-                    font-bold
-                    uppercase
-                    tracking-[0.16em]
-                  "
-                >
-                  Editor's Picks
-                </h2>
-
-                <Link
-                  to="/leadership"
-                  className="
-                    text-[9px]
-                    font-semibold
-                    text-red-600
-                    flex
-                    items-center
-                    gap-1
-                  "
-                >
+              <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-4">
+                <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">Editor's Picks</h2>
+                <Link to="/leadership" className="text-[9px] font-semibold flex items-center gap-1" style={{ color: ACCENT }}>
                   View All
                   <ArrowRight size={9} />
                 </Link>
-
               </div>
 
               <div className="divide-y divide-gray-200">
-
                 {editorsPicks.map((pick) => (
-
-                  <Link
-                    key={pick.id}
-                    to={pick.link}
-                    className="
-                      group
-                      flex
-                      gap-4
-                      py-3.5
-                    "
-                  >
-
-                    <div
-                      className="
-                        shrink-0
-                        w-[120px]
-                        sm:w-[155px]
-                        h-[80px]
-                        sm:h-[95px]
-                        overflow-hidden
-                        rounded-md
-                      "
-                    >
-
+                  <Link key={pick.id} to={pick.link} className="group flex gap-4 py-3.5">
+                    <div className="shrink-0 w-[120px] sm:w-[155px] h-[80px] sm:h-[95px] overflow-hidden">
                       <ImageWithFallback
                         src={pick.image}
                         alt={pick.title}
-                        className="
-                          w-full
-                          h-full
-                          object-cover
-                          rounded-md
-                          transition-transform
-                          duration-500
-                          group-hover:scale-105
-                        "
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-
                     </div>
-
                     <div className="min-w-0">
-
-                      <span
-                        className="
-                          text-[8px]
-                          font-bold
-                          text-red-600
-                          uppercase
-                          tracking-[0.14em]
-                        "
-                      >
+                      <span className="text-[8px] font-bold uppercase tracking-[0.14em]" style={{ color: ACCENT }}>
                         {pick.category}
                       </span>
-
-                      <h3
-                        className="
-                          font-serif
-                          text-base
-                          md:text-lg
-                          font-bold
-                          leading-[1.2]
-                          mt-1
-                          text-gray-900
-                          group-hover:text-red-600
-                          transition-colors
-                        "
-                      >
+                      <h3 className="font-serif text-base md:text-lg font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-[#B7141F] transition-colors">
                         {pick.title}
                       </h3>
-
-                      <p
-                        className="
-                          hidden
-                          sm:block
-                          text-[10px]
-                          text-gray-500
-                          leading-[1.5]
-                          mt-1
-                          line-clamp-2
-                        "
-                      >
+                      <p className="hidden sm:block text-[10px] text-gray-500 leading-[1.5] mt-1 line-clamp-2">
                         {pick.excerpt}
                       </p>
-
-                      <span
-                        className="
-                          flex
-                          items-center
-                          gap-1
-                          text-[9px]
-                          text-gray-400
-                          mt-1.5
-                        "
-                      >
+                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
                         <Clock size={8} />
                         <TimeAgo iso={pick.publishedAt} />
                       </span>
-
                     </div>
-
                   </Link>
-
                 ))}
-
               </div>
-
             </div>
 
             {/* MAGAZINE */}
-
             <div>
-
-              <div
-                className="
-                  flex
-                  items-center
-                  justify-between
-                  border-b-2
-                  border-black
-                  pb-2.5
-                  mb-4
-                "
-              >
-
-                <h2
-                  className="
-                    text-[12px]
-                    font-bold
-                    uppercase
-                    tracking-[0.16em]
-                  "
-                >
-                  Magazine
-                </h2>
-
-                <Link
-                  to="/magazine"
-                  className="
-                    text-[9px]
-                    font-semibold
-                    text-red-600
-                  "
-                >
+              <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-4">
+                <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">Magazine</h2>
+                <Link to="/magazine" className="text-[9px] font-semibold" style={{ color: GOLD }}>
                   View All
                 </Link>
-
               </div>
 
-              <Link
-                to="/magazine"
-                className="
-                  group
-                  block
-                  overflow-hidden
-                  rounded-md
-                  bg-black
-                "
-              >
-
+              <Link to="/magazine" className="group block overflow-hidden bg-black">
                 <div className="overflow-hidden">
-
                   <ImageWithFallback
                     src={magazinePreview.image}
                     alt={magazinePreview.title}
-                    className="
-                      w-full
-                      h-[210px]
-                      object-cover
-                      transition-transform
-                      duration-700
-                      group-hover:scale-[1.04]
-                    "
+                    className="w-full h-[210px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
-
                 </div>
-
-                <div className="p-4">
-
-                  <span
-                    className="
-                      text-[8px]
-                      font-bold
-                      uppercase
-                      tracking-[0.16em]
-                      text-gray-500
-                    "
-                  >
+                <div className="p-4 border-t-2" style={{ borderColor: GOLD }}>
+                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
                     Pride Times Magazine
                   </span>
-
-                  <h3
-                    className="
-                      font-serif
-                      text-xl
-                      font-bold
-                      text-white
-                      mt-1
-                    "
-                  >
-                    {magazinePreview.title}
-                  </h3>
-
-                  <p
-                    className="
-                      text-[11px]
-                      text-gray-400
-                      leading-[1.5]
-                      mt-1.5
-                    "
-                  >
-                    {magazinePreview.subtitle}
-                  </p>
-
+                  <h3 className="font-serif text-xl font-bold text-white mt-1">{magazinePreview.title}</h3>
+                  <p className="text-[11px] text-gray-400 leading-[1.5] mt-1.5">{magazinePreview.subtitle}</p>
                   <span
-                    className="
-                      inline-flex
-                      items-center
-                      gap-1.5
-                      text-[9px]
-                      font-bold
-                      uppercase
-                      tracking-wide
-                      text-white
-                      border-b
-                      border-white/50
-                      pb-1
-                      mt-4
-                    "
+                    className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white border-b pb-1 mt-4"
+                    style={{ borderColor: `${GOLD}80` }}
                   >
                     Read Digital Edition
                     <ArrowRight size={10} />
                   </span>
-
                 </div>
-
               </Link>
-
             </div>
-
           </section>
 
           {/* =================================================
@@ -1705,125 +1020,38 @@ export function HomePage() {
           ================================================= */}
 
           <section>
-
-            <div
-              className="
-                flex
-                items-center
-                justify-between
-                border-b-2
-                border-black
-                pb-2.5
-                mb-5
-              "
-            >
-
-              <h2
-                className="
-                  text-[12px]
-                  font-bold
-                  uppercase
-                  tracking-[0.16em]
-                "
-              >
+            <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
+              <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
                 Pride Times 30 — Leaders to Watch in 2026
               </h2>
-
-              <Link
-                to="/billionaires"
-                className="
-                  text-[9px]
-                  font-semibold
-                  text-red-600
-                  flex
-                  items-center
-                  gap-1
-                "
-              >
+              <Link to="/billionaires" className="text-[9px] font-semibold flex items-center gap-1" style={{ color: ACCENT }}>
                 Full List
                 <ArrowRight size={9} />
               </Link>
-
             </div>
 
-            <div
-              className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                gap-3
-              "
-            >
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {prideTimes30.map((leader) => (
-
                 <div
                   key={leader.rank}
-                  className="
-                    flex
-                    items-start
-                    gap-4
-                    p-4
-                    border
-                    border-gray-200
-                    rounded-md
-                    hover:border-gray-300
-                    transition-colors
-                  "
+                  className="flex items-start gap-4 p-4 border border-gray-200 hover:border-gray-400 transition-colors"
                 >
-
-                  <span
-                    className="
-                      font-serif
-                      text-2xl
-                      font-bold
-                      text-gray-200
-                      tabular-nums
-                      shrink-0
-                      w-8
-                    "
-                  >
+                  <span className="font-serif text-2xl font-bold tabular-nums shrink-0 w-8" style={{ color: "#D9D4C9" }}>
                     {String(leader.rank).padStart(2, "0")}
                   </span>
-
                   <div className="min-w-0">
-
-                    <p
-                      className="
-                        text-[13px]
-                        font-bold
-                        text-gray-900
-                      "
-                    >
+                    <p className="text-[13px] font-bold text-gray-900">
                       {leader.name}
-
-                      <span className="font-normal text-gray-400">
-                        {" "}
-                        · {leader.company}
-                      </span>
+                      <span className="font-normal text-gray-400"> · {leader.company}</span>
                     </p>
-
-                    <p
-                      className="
-                        text-[10px]
-                        text-gray-500
-                        leading-[1.5]
-                        mt-1
-                      "
-                    >
-                      {leader.sector}
-                    </p>
-
+                    <p className="text-[10px] text-gray-500 leading-[1.5] mt-1">{leader.sector}</p>
                   </div>
-
                 </div>
-
               ))}
-
             </div>
-
           </section>
 
+          <AdSpace title="The Pride Times Premium — Deep Analysis, Exclusive Access" />
         </main>
       </div>
 
@@ -1832,25 +1060,30 @@ export function HomePage() {
       ===================================================== */}
 
       <style>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        html {
-          scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         ::selection {
-          background: rgba(227, 27, 35, 0.12);
+          background: rgba(183, 20, 31, 0.14);
           color: inherit;
         }
-      `}</style>
 
+        .ticker-track {
+          animation: ticker-scroll 38s linear infinite;
+        }
+        .ticker-track:hover {
+          animation-play-state: paused;
+        }
+        @keyframes ticker-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ticker-track { animation: none; }
+        }
+      `}</style>
     </div>
   );
 }
