@@ -1,4 +1,4 @@
-
+import { TimeAgo } from "../../utils/timeAgo";
 import {
   Clock,
   Users,
@@ -13,6 +13,8 @@ import {
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import CeospotImg from "../../../imports/Ceospot.png";
 
+
+
 /* ============================================================
    NEWSLETTER CTA
 ============================================================ */
@@ -23,12 +25,10 @@ function NewsletterCTA() {
       <h2 className="mb-2 font-serif text-2xl md:text-[30px]">
         Exclusive CEO Interviews
       </h2>
-
       <p className="mb-6 text-sm text-gray-400">
         Be first to read our in-depth leader profiles and executive
         briefings.
       </p>
-
       <form
         onSubmit={(e) => e.preventDefault()}
         className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
@@ -38,7 +38,6 @@ function NewsletterCTA() {
           placeholder="Enter your email"
           className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50"
         />
-
         <button
           type="submit"
           className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
@@ -274,25 +273,25 @@ const leadershipOpinions = [
     id: 1,
     title:
       "On AI and Investing: Why I Still Trust Human Judgment Over Algorithms",
-    time: "1 day ago",
+    publishedAt: "2026-09-20T10:19:00Z",
   },
   {
     id: 2,
     title:
       "The Debt Cycle Is Approaching Its Peak — And Leaders Must Prepare Now",
-    time: "2 days ago",
+    publishedAt: "2026-09-19T10:19:00Z",
   },
   {
     id: 3,
     title:
       "Why AGI Will Arrive Before 2030 — And Why That's Not Something to Fear",
-    time: "3 days ago",
+    publishedAt: "2026-09-18T10:19:00Z",
   },
   {
     id: 4,
     title:
       "India's Moment Has Arrived — The Next 25 Years Belong to Us",
-    time: "4 days ago",
+    publishedAt: "2026-09-17T10:19:00Z",
   },
 ];
 
@@ -307,7 +306,7 @@ const executiveMoves = [
     role: "DISNEY",
     move:
       "Returns as Disney CEO for a third term after renewed shareholder pressure.",
-    time: "3 hrs ago",
+    publishedAt: "2026-09-21T07:19:00Z",
   },
   {
     id: 2,
@@ -315,7 +314,7 @@ const executiveMoves = [
     role: "ECB",
     move:
       "ECB leadership transition draws attention as potential successors emerge.",
-    time: "5 hrs ago",
+    publishedAt: "2026-09-21T05:19:00Z",
   },
   {
     id: 3,
@@ -323,7 +322,7 @@ const executiveMoves = [
     role: "ADOBE",
     move:
       "Adobe CEO receives a major compensation package following a record year.",
-    time: "7 hrs ago",
+    publishedAt: "2026-09-21T03:19:00Z",
   },
   {
     id: 4,
@@ -331,7 +330,7 @@ const executiveMoves = [
     role: "IBM",
     move:
       "IBM CEO outlines a strategic review of the company's consulting operations.",
-    time: "9 hrs ago",
+    publishedAt: "2026-09-21T01:19:00Z",
   },
 ];
 
@@ -363,7 +362,7 @@ function StoryRow({
 
         <span className="mt-2 flex items-center gap-1 text-[10px] uppercase tracking-wide text-gray-400">
           <Clock size={9} />
-          {time}
+          <TimeAgo iso={time} />
         </span>
       </div>
     </article>
@@ -415,11 +414,18 @@ export function CeoSpotlightPage() {
         </header>
 
         {/* ====================================================
+            AD SLOT
+        ==================================================== */}
+
+        <AdSlot />
+
+        {/* ====================================================
             FEATURED LEADER (#1)
         ==================================================== */}
 
         <section className="mb-14">
           <article className="group grid grid-cols-1 overflow-hidden rounded-md border border-gray-200 shadow-sm md:grid-cols-2">
+
             <div className="relative overflow-hidden bg-gray-100">
               <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-sm bg-red-600 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
                 {featuredLeader.rank}
@@ -493,10 +499,7 @@ export function CeoSpotlightPage() {
                 </div>
 
                 <div className="p-4">
-                  <p className="text-[11px] text-gray-400">
-                    {leader.title}
-                  </p>
-
+                  <p className="text-[11px] text-gray-400">{leader.title}</p>
                   <p className="text-[13px] font-bold text-gray-900">
                     {leader.company}
                   </p>
@@ -515,7 +518,7 @@ export function CeoSpotlightPage() {
         </section>
 
         {/* ====================================================
-            NEWSLETTER
+            SPONSORED BANNER + NEWSLETTER
         ==================================================== */}
 
         <NewsletterCTA />
@@ -646,7 +649,7 @@ export function CeoSpotlightPage() {
                 <StoryRow
                   key={opinion.id}
                   title={opinion.title}
-                  time={opinion.time}
+                  time={opinion.publishedAt}
                   index={index}
                 />
               ))}
@@ -679,7 +682,7 @@ export function CeoSpotlightPage() {
                     </span>
 
                     <span className="text-[9px] text-gray-400">
-                      {move.time}
+                      <TimeAgo iso={move.publishedAt} />
                     </span>
                   </div>
 
@@ -758,7 +761,7 @@ export function CeoSpotlightPage() {
         </section>
 
         {/* ====================================================
-            NEWSLETTER — CLOSING REMINDER
+            NEWSLETTER (closing reminder)
         ==================================================== */}
 
         <div className="mt-14">
@@ -780,4 +783,3 @@ export function CeoSpotlightPage() {
     </main>
   );
 }
-
