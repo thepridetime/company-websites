@@ -1,3 +1,4 @@
+import { TimeAgo } from "../../utils/timeAgo";
 import { Clock, Globe } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
@@ -17,7 +18,7 @@ const worldHero = {
   excerpt:
     "High-stakes bilateral talks expected to cover energy cooperation, defense contracts, and the Kingdom's Vision 2030 investment partnership with European firms.",
   author: "Sagar Kumar",
-  time: "17 min ago",
+  publishedAt: "2026-09-21T10:02:00Z",
   image:
     "https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1400&auto=format&fit=crop&q=85",
 };
@@ -32,7 +33,7 @@ const moreStories = [
     category: "WORLD & GEOPOLITICS",
     title:
       "NATO Deploys 50,000 Additional Troops Along Eastern Flank",
-    time: "25 min ago",
+    publishedAt: "2026-09-21T09:54:00Z",
     image:
       "https://images.unsplash.com/photo-1521292270410-a8c4d716d518?w=300&auto=format&fit=crop&q=80",
   },
@@ -41,7 +42,7 @@ const moreStories = [
     category: "WORLD & GEOPOLITICS",
     title:
       "South China Sea: Philippines and US Begin Joint Naval Patrols",
-    time: "1 hr ago",
+    publishedAt: "2026-09-21T09:19:00Z",
     image:
       "https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=300&auto=format&fit=crop&q=80",
   },
@@ -50,7 +51,7 @@ const moreStories = [
     category: "WORLD & GEOPOLITICS",
     title:
       "UN Security Council Passes Historic AI Governance Resolution",
-    time: "2 hrs ago",
+    publishedAt: "2026-09-21T08:19:00Z",
     image:
       "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=300&auto=format&fit=crop&q=80",
   },
@@ -59,7 +60,7 @@ const moreStories = [
     category: "WORLD & GEOPOLITICS",
     title:
       "Iran Nuclear Talks Resume in Vienna: Deal Framework Emerging",
-    time: "3 hrs ago",
+    publishedAt: "2026-09-21T07:19:00Z",
     image:
       "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=300&auto=format&fit=crop&q=80",
   },
@@ -78,7 +79,7 @@ const latestNews = [
       "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
     excerpt:
       "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and Southeast Asia.",
-    time: "12 min ago",
+    publishedAt: "2026-09-21T10:07:00Z",
     image:
       "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=700&auto=format&fit=crop&q=85",
   },
@@ -90,7 +91,7 @@ const latestNews = [
       "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
     excerpt:
       "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
+    publishedAt: "2026-09-21T09:44:00Z",
     image:
       "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=700&auto=format&fit=crop&q=85",
   },
@@ -102,7 +103,7 @@ const latestNews = [
       "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
     excerpt:
       "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing.",
-    time: "2 hr ago",
+    publishedAt: "2026-09-21T08:19:00Z",
     image:
       "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=700&auto=format&fit=crop&q=85",
   },
@@ -114,7 +115,7 @@ const latestNews = [
       "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
     excerpt:
       "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative intelligence.",
-    time: "3 hr ago",
+    publishedAt: "2026-09-21T07:19:00Z",
     image:
       "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700&auto=format&fit=crop&q=85",
   },
@@ -126,7 +127,7 @@ const latestNews = [
       "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
     excerpt:
       "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in enterprise reasoning tests.",
-    time: "5 hr ago",
+    publishedAt: "2026-09-21T05:19:00Z",
     image:
       "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=700&auto=format&fit=crop&q=85",
   },
@@ -138,7 +139,7 @@ const latestNews = [
       "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
     excerpt:
       "The latest satellite constellation expansion brings high-speed internet to remote regions across Africa, South Asia, and Latin America.",
-    time: "6 hr ago",
+    publishedAt: "2026-09-21T04:19:00Z",
     image:
       "https://images.unsplash.com/photo-1517976547714-720226b864c1?w=700&auto=format&fit=crop&q=85",
   },
@@ -276,7 +277,7 @@ function MoreStories() {
               </h4>
 
               <span className="text-[8px] text-gray-400 mt-1 block">
-                {story.time}
+                <TimeAgo iso={story.publishedAt} />
               </span>
             </div>
           </article>
@@ -333,7 +334,7 @@ function NewsCard({
 
           <span className="flex items-center gap-1 text-[8px] text-gray-400">
             <Clock size={8} />
-            {story.time}
+            <TimeAgo iso={story.publishedAt} />
           </span>
         </div>
       </div>
@@ -492,7 +493,7 @@ export function WorldPage() {
 
                 <span className="flex items-center gap-1">
                   <Clock size={9} />
-                  {worldHero.time}
+                  <TimeAgo iso={worldHero.publishedAt} />
                 </span>
               </div>
             </div>
