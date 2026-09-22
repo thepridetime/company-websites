@@ -1,3 +1,4 @@
+import { TimeAgo } from "../../utils/timeAgo";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { TrendingUp, TrendingDown, Flag, Star } from "lucide-react";
 
@@ -56,11 +57,11 @@ const indiaRichest = [
 ];
 
 const billionaireNews = [
-  { id: 1, title: "Elon Musk Adds $15B to Net Worth in Single Day After Tesla Earnings Beat", time: "2 hrs ago" },
-  { id: 2, title: "Gautam Adani's Green Energy Division Secures $7.5B International Funding", time: "4 hrs ago" },
-  { id: 3, title: "Jeff Bezos Commits $5B to Ocean Conservation Through Bezos Earth Fund", time: "6 hrs ago" },
-  { id: 4, title: "Mark Zuckerberg Becomes Third Person to Hold $175B+ Net Worth", time: "8 hrs ago" },
-  { id: 5, title: "Warren Buffett's Berkshire Hathaway Reveals $45B Mystery Investment", time: "10 hrs ago" },
+  { id: 1, title: "Elon Musk Adds $15B to Net Worth in Single Day After Tesla Earnings Beat", publishedAt: "2026-09-21T08:19:00Z" },
+  { id: 2, title: "Gautam Adani's Green Energy Division Secures $7.5B International Funding", publishedAt: "2026-09-21T06:19:00Z" },
+  { id: 3, title: "Jeff Bezos Commits $5B to Ocean Conservation Through Bezos Earth Fund", publishedAt: "2026-09-21T04:19:00Z" },
+  { id: 4, title: "Mark Zuckerberg Becomes Third Person to Hold $175B+ Net Worth", publishedAt: "2026-09-21T02:19:00Z" },
+  { id: 5, title: "Warren Buffett's Berkshire Hathaway Reveals $45B Mystery Investment", publishedAt: "2026-09-21T00:19:00Z" },
 ];
 
 const risingBillionaires = [
@@ -235,7 +236,7 @@ export function BillionairesPage() {
                 {billionaireNews.slice(0, 4).map((item) => (
                   <div key={item.id} className="py-2.5 group cursor-pointer">
                     <p className="text-xs leading-snug group-hover:text-red-600 transition-colors">{item.title}</p>
-                    <span className="text-xs text-gray-400">{item.time}</span>
+                    <span className="text-xs text-gray-400"><TimeAgo iso={item.publishedAt} /></span>
                   </div>
                 ))}
               </div>
