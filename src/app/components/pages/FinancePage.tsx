@@ -1,3 +1,4 @@
+import { TimeAgo } from "../../utils/timeAgo";
 import { Clock, TrendingUp, TrendingDown, BarChart2, DollarSign, Globe, Briefcase } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
@@ -46,7 +47,7 @@ const financeHero = {
   excerpt:
     "U.S. equity markets extended a recovery rally into the first week of June, driven by stronger-than-expected domestic factory data and a continued surge in technology stocks. The ISM Manufacturing Index reached 54 for May, up 1.3 points from April's reading and exceeding the consensus Dow Jones estimate of 53.2. New orders rose 2.7 points to 56.8, while imports jumped to 53. The energy sector was the only other S&P 500 segment to finish in the green alongside technology on June 1.The performance underscores the resilience of U.S. corporate earnings despite ongoing global trade uncertainties and evolving tariff structures. Investors have rotated capital into sectors with strong AI and infrastructure exposure, with Nvidia, Microsoft, and a cluster of data center-linked names leading the rally. ",
   author: "Sagar Kumar",
-  time: "2 hours ago",
+  publishedAt: "2026-09-21T08:19:00Z",
   image: InsImg,
 };
 
@@ -56,7 +57,7 @@ const financeHero1 = {
   excerpt:
     "Warren Buffett's Berkshire Hathaway has agreed to acquire Taylor Morrison Home Corporation in an all-cash deal valued at approximately $6.8 billion, marking the conglomerate's most significant real estate bet in years. The transaction reflects Berkshire's conviction that U.S. housing demand — particularly in the sunbelt and suburban markets — will remain structurally robust amid ongoing population growth and undersupply.Taylor Morrison operates in 11 states and is among the top 10 homebuilders in the United States by revenue. Berkshire's acquisition is expected to close in the second half of 2026, subject to regulatory approvals.  ",
   author: "Sagar Kumar",
-  time: "2 hours ago",
+  publishedAt: "2026-09-21T08:19:00Z",
   image: LN4Img,
 };
 
@@ -66,7 +67,7 @@ const financeHero2 = {
   excerpt:
     "Tilman Fertitta's Fertitta Entertainment has announced a landmark agreement to acquire Caesars Entertainment in a deal valued at approximately $17.6 billion, inclusive of Caesars' existing debt. The transaction is one of the largest in the gaming and hospitality sector in recent memory and would create a dominant force in the North American integrated resort industry.Fertitta, whose portfolio includes the Golden Nugget casino chain and the Houston Rockets NBA franchise, has long targeted Caesars as a strategic acquisition. The deal is expected to face scrutiny from gaming regulators in multiple states as well as the Federal Trade Commission, though analysts believe the transaction structure has been designed to address antitrust concerns. ",
   author: "Sagar Kumar",
-  time: "2 hours ago",
+  publishedAt: "2026-09-21T08:19:00Z",
   image: FIN3Img,
 };
 
@@ -76,7 +77,7 @@ const financeHero3 = {
   excerpt:
     "Canada's Bank of Nova Scotia (Scotiabank) has entered a definitive agreement to acquire Maple Financial Group, a Toronto-based wealth and capital markets firm. The acquisition advances Scotiabank's strategic goal of deepening its domestic wealth management franchise after several years of international retrenchment. The combined business is expected to deliver meaningful cross-selling opportunities across Scotiabank's eight million-plus Canadian retail and commercial clients. ",
   author: "Sagar Kumar",
-  time: "2 hours ago",
+  publishedAt: "2026-09-21T08:19:00Z",
   image: FIN4Img,
 };
 
@@ -86,7 +87,7 @@ const financeHero4 = {
   excerpt:
     "American International Group has announced an agreement to acquire Everest Group's insurance operations in Colombia, extending AIG's presence in Latin America's growing insurance market. The move follows AIG's earlier acquisition of strategic stakes in Convex Group and Onex Corporation, reflecting a broader strategy to diversify revenue streams through specialty and alternative investment channels.  ",
   author: "Sagar Kumar",
-  time: "2 hours ago",
+  publishedAt: "2026-09-21T08:19:00Z",
   image: FIN5Img,
 };
 
@@ -99,7 +100,7 @@ const businessStories = [
     id: 1,
     category: "MERGERS & ACQUISITIONS",
     title: "Amazon Acquires Nuclear Energy Company for $12B to Power AWS Data Centers",
-    time: "1 hr ago",
+    publishedAt: "2026-09-21T09:19:00Z",
     image:
       "https://images.unsplash.com/photo-1679583721525-658d164e609b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxzdG9jayUyMG1hcmtldCUyMGZpbmFuY2UlMjB3YWxsJTIwc3RyZWV0fGVufDF8fHx8MTc3OTM4NTk4NHww&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -107,7 +108,7 @@ const businessStories = [
     id: 2,
     category: "BANKING",
     title: "JPMorgan Reports Record $18.2B Quarterly Profit as Trading Revenue Surges",
-    time: "3 hrs ago",
+    publishedAt: "2026-09-21T07:19:00Z",
     image:
       "https://images.unsplash.com/photo-1648275913341-7973ae7bc9b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxzdG9jayUyMG1hcmtldCUyMGZpbmFuY2UlMjB3YWxsJTIwc3RyZWV0fGVufDF8fHx8MTc3OTM4NTk4NHww&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -153,40 +154,40 @@ const economyTopics = [
     id: 1,
     title:
       "ECB raises rates amid renewed inflation concerns as AI infrastructure spending keeps market volatility elevated.",
-    time: "Just now",
+    publishedAt: "2026-09-21T10:19:00Z",
   },
   {
     id: 2,
     title: "Fed Holds Rates at 4.75% — Markets Price in Three Cuts by Year-End",
-    time: "2 hrs ago",
+    publishedAt: "2026-09-21T08:19:00Z",
   },
   {
     id: 3,
     title: "US Inflation Falls to 2.1%, Lowest Level Since Pre-Pandemic Era",
-    time: "4 hrs ago",
+    publishedAt: "2026-09-21T06:19:00Z",
   },
   {
     id: 3,
     title: "China's GDP Growth Hits 5.1% in Q1, Beats Consensus Estimate",
-    time: "5 hrs ago",
+    publishedAt: "2026-09-21T05:19:00Z",
   },
   {
     id: 4,
     title:
       "India's Foreign Exchange Reserves Cross $700 Billion for First Time",
-    time: "6 hrs ago",
+    publishedAt: "2026-09-21T04:19:00Z",
   },
   {
     id: 5,
     title:
       "Eurozone Manufacturing PMI Rebounds to 52.4, Signaling Recovery",
-    time: "8 hrs ago",
+    publishedAt: "2026-09-21T02:19:00Z",
   },
   {
     id: 6,
     title:
       "ASEAN Trade Volume Sets Record at $4.2 Trillion in 2025",
-    time: "10 hrs ago",
+    publishedAt: "2026-09-21T00:19:00Z",
   },
 ];
 
@@ -337,7 +338,7 @@ function HeroArticle() {
 
         <span>
           <Clock size={10} strokeWidth={2} />
-          {financeHero.time}
+          <TimeAgo iso={financeHero.publishedAt} />
         </span>
       </div>
     </article>
@@ -356,7 +357,7 @@ function StoryCard({
     title: string;
     excerpt?: string;
     author?: string;
-    time: string;
+    publishedAt: string;
     image: any;
   };
 }) {
@@ -387,7 +388,7 @@ function StoryCard({
 
         <span>
           <Clock size={10} strokeWidth={2} />
-          {story.time}
+          <TimeAgo iso={story.publishedAt} />
         </span>
       </div>
     </article>
@@ -612,7 +613,7 @@ export function FinancePage() {
 
                     <span className="finance-meta">
                       <Clock size={10} />
-                      {story.time}
+                      <TimeAgo iso={story.publishedAt} />
                     </span>
                   </div>
                 </article>
@@ -633,7 +634,7 @@ export function FinancePage() {
 
                   <span>
                     <Clock size={10} />
-                    {item.time}
+                    <TimeAgo iso={item.publishedAt} />
                   </span>
                 </article>
               ))}
