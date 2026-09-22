@@ -1,4 +1,5 @@
-import { Clock, Briefcase } from "lucide-react";
+import { TimeAgo } from "../../utils/timeAgo";
+import { Clock, Briefcase, ChevronRight } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 /* =========================================================
@@ -18,6 +19,74 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 /* =========================================================
+   AD SPACE
+========================================================= */
+
+function AdSpace({
+  label = "Advertisement Space",
+}: {
+  label?: string;
+}) {
+  return (
+    <div className="relative w-full overflow-hidden rounded-sm border border-gray-200 bg-gradient-to-r from-[#102b33] via-[#193944] to-[#28596a]">
+      <div className="flex min-h-[90px] flex-col items-center justify-center px-4 py-5 text-center">
+        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-sky-300">
+          Google AdSense
+        </span>
+
+        <span className="mt-1 text-sm sm:text-base font-semibold text-white">
+          {label}
+        </span>
+
+        <span className="mt-1 text-[8px] sm:text-[9px] text-sky-300">
+          728 × 90 • Leaderboard
+        </span>
+      </div>
+
+      <span className="absolute right-1.5 top-1 text-[7px] text-gray-300">
+        Advertisement
+      </span>
+    </div>
+  );
+}
+
+/* =========================================================
+   SIDEBAR SPONSORED AD
+========================================================= */
+
+function SponsoredAd() {
+  return (
+    <div className="rounded-md border border-gray-200 bg-[#faf9f4] overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2">
+        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+          Sponsored Content
+        </span>
+
+        <span className="text-[8px] text-gray-400">
+          Ad
+        </span>
+      </div>
+
+      <div className="mx-3 mb-3 flex h-[145px] items-center justify-center bg-[#10162f] px-4 text-center">
+        <div>
+          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-400">
+            Featured Partner
+          </p>
+
+          <p className="mt-3 text-base font-semibold text-white">
+            Your Ad Here
+          </p>
+
+          <p className="mt-2 text-[9px] leading-4 text-gray-300">
+            Reach 2M+ business readers
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
    MORE STORIES SIDEBAR
 ========================================================= */
 
@@ -26,7 +95,7 @@ function MoreStories({
 }: {
   stories: {
     title: string;
-    time: string;
+    publishedAt: string;
     category?: string;
   }[];
 }) {
@@ -64,7 +133,7 @@ function MoreStories({
 
                 <span className="mt-1 flex items-center gap-1 text-[9px] text-gray-400">
                   <Clock size={9} />
-                  {story.time}
+                  <TimeAgo iso={story.publishedAt} />
                 </span>
               </div>
             </div>
@@ -86,7 +155,7 @@ const hero = {
   excerpt:
     "Microsoft, Google, Amazon, Meta and Apple have collectively committed $2.3 trillion in AI investment through 2030. Every sector — from banking to retail, healthcare to manufacturing — is being redrawn. The companies that win this race will dominate the 21st century economy.",
   author: "Sagar Kumar",
-  time: "2 hours ago",
+  publishedAt: "2026-09-21T08:19:00Z",
   image:
     "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
 };
@@ -196,42 +265,42 @@ const corporateNews = [
     id: 1,
     title:
       "LVMH Posts €21B Revenue — Luxury Demand Defies Global Economic Uncertainty",
-    time: "1 hr ago",
+    publishedAt: "2026-09-21T09:19:00Z",
     category: "LUXURY",
   },
   {
     id: 2,
     title:
       "Walmart Launches AI-Powered Supply Chain Platform — 50,000 Suppliers Enrolled",
-    time: "2 hrs ago",
+    publishedAt: "2026-09-21T08:19:00Z",
     category: "RETAIL",
   },
   {
     id: 3,
     title:
       "Saudi Aramco Overtakes Apple as World's Most Profitable Company in Q1 2026",
-    time: "3 hrs ago",
+    publishedAt: "2026-09-21T07:19:00Z",
     category: "ENERGY",
   },
   {
     id: 4,
     title:
       "Boeing's 737 MAX Returns to Full Delivery Schedule After 18-Month Production Fix",
-    time: "4 hrs ago",
+    publishedAt: "2026-09-21T06:19:00Z",
     category: "AEROSPACE",
   },
   {
     id: 5,
     title:
       "Reliance Jio Surpasses 500 Million Subscribers — World's Largest Telecom by Users",
-    time: "5 hrs ago",
+    publishedAt: "2026-09-21T05:19:00Z",
     category: "TELECOM",
   },
   {
     id: 6,
     title:
       "Goldman Sachs CEO David Solomon Takes Personal Pay Cut After Criticism of $30B Losses",
-    time: "6 hrs ago",
+    publishedAt: "2026-09-21T04:19:00Z",
     category: "BANKING",
   },
 ];
@@ -241,25 +310,25 @@ const startupNews = [
     id: 1,
     title:
       "Anthropic Raises $4B Series E at $40B Valuation — AI Safety Startup Now Among World's Most Valuable",
-    time: "2 hrs ago",
+    publishedAt: "2026-09-21T08:19:00Z",
   },
   {
     id: 2,
     title:
       "Indian SaaS Startup Freshworks Acquires Two US Companies in $1.2B Deal",
-    time: "4 hrs ago",
+    publishedAt: "2026-09-21T06:19:00Z",
   },
   {
     id: 3,
     title:
       "Rapido Raises $250M as India's Bike-Taxi Market Explodes to 50M Monthly Rides",
-    time: "6 hrs ago",
+    publishedAt: "2026-09-21T04:19:00Z",
   },
   {
     id: 4,
     title:
       "SpaceX Valuation Hits $350B — Overtakes Boeing and Airbus Combined",
-    time: "8 hrs ago",
+    publishedAt: "2026-09-21T02:19:00Z",
   },
 ];
 
@@ -333,6 +402,16 @@ export function BusinessNewsPage() {
           </div>
         </header>
 
+
+        {/* =================================================
+            TOP ADVERTISEMENT
+        ================================================= */}
+
+        <div className="mb-7 md:mb-9">
+          <AdSpace />
+        </div>
+
+
         {/* =================================================
             HERO + SIDEBAR
         ================================================= */}
@@ -379,7 +458,7 @@ export function BusinessNewsPage() {
 
                 <span className="flex items-center gap-1.5">
                   <Clock size={11} strokeWidth={2.25} />
-                  {hero.time}
+                  <TimeAgo iso={hero.publishedAt} />
                 </span>
 
               </div>
@@ -387,15 +466,21 @@ export function BusinessNewsPage() {
             </div>
           </article>
 
+
           {/* =================================================
               RIGHT SIDEBAR
           ================================================= */}
 
           <aside className="lg:pt-0">
+
+            <SponsoredAd />
+
             <MoreStories stories={corporateNews} />
+
           </aside>
 
         </section>
+
 
         {/* =================================================
             EARNINGS
@@ -476,6 +561,7 @@ export function BusinessNewsPage() {
 
         </section>
 
+
         {/* =================================================
             M&A TRACKER
         ================================================= */}
@@ -555,6 +641,7 @@ export function BusinessNewsPage() {
 
         </section>
 
+
         {/* =================================================
             CORPORATE + STARTUPS
         ================================================= */}
@@ -623,7 +710,7 @@ export function BusinessNewsPage() {
                     "
                   >
                     <Clock size={10} strokeWidth={2.25} />
-                    {n.time}
+                    <TimeAgo iso={n.publishedAt} />
                   </span>
 
                 </article>
@@ -633,6 +720,7 @@ export function BusinessNewsPage() {
             </div>
 
           </div>
+
 
           {/* =================================================
               STARTUPS & VENTURE
@@ -691,7 +779,7 @@ export function BusinessNewsPage() {
                     "
                   >
                     <Clock size={10} strokeWidth={2.25} />
-                    {n.time}
+                    <TimeAgo iso={n.publishedAt} />
                   </span>
 
                 </article>
@@ -703,6 +791,69 @@ export function BusinessNewsPage() {
           </div>
 
         </section>
+
+
+        {/* =================================================
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <div className="my-12 md:my-14">
+          <AdSpace label="Business Solutions | Powered by The Pride Times" />
+        </div>
+
+
+        {/* =================================================
+            SPONSORED EVENTS
+        ================================================= */}
+
+        <section className="rounded-md border border-gray-100 bg-gray-50 p-4 sm:p-5">
+
+          <div className="mb-4 flex items-center gap-2">
+
+            <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+              Sponsorship
+            </span>
+
+            <span className="text-[9px] text-gray-400">
+              Presented by our partners
+            </span>
+
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+            {[
+              "Global Finance Summit 2026",
+              "Tech Leaders Forum",
+              "Energy Transition Conference",
+              "AI & Business World",
+            ].map((item) => (
+
+              <div
+                key={item}
+                className="flex min-h-[90px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-4 text-center"
+              >
+
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+                  <Briefcase size={13} />
+                </div>
+
+                <p className="mt-2 text-[10px] font-bold text-gray-900">
+                  {item}
+                </p>
+
+                <p className="mt-1 text-[8px] text-gray-400">
+                  Sponsored Event
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
 
         {/* =================================================
             NEWSLETTER
