@@ -1,4 +1,5 @@
 
+import { TimeAgo } from "../../utils/timeAgo";
 import { Clock } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Link } from "react-router";
@@ -12,7 +13,6 @@ function SH({ title }: { title: string }) {
     <div className="flex items-center justify-between border-t border-black pt-3 mb-5">
       <div className="flex items-center gap-2.5">
         <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
-
         <h2 className="text-[13px] md:text-sm font-bold text-gray-900">
           {title}
         </h2>
@@ -34,7 +34,7 @@ const featured = [
     excerpt:
       "From Silicon Valley to Shenzhen, every sector is being transformed by AI. Pride Times investigates the winners, the losers, and the trillion-dollar stakes.",
     author: "Sagar Kumar",
-    time: "Today",
+    publishedAt: "2026-09-21T07:19:00Z",
     image:
       "https://images.unsplash.com/photo-1760629863094-5b1e8d1aae74?w=800&h=500&fit=crop",
     path: "/technology",
@@ -47,7 +47,7 @@ const featured = [
     excerpt:
       "Prime Minister Modi's economic ambition is unprecedented. Pride Times examines the infrastructure gap, the talent pipeline, and the geopolitical tailwinds and headwinds.",
     author: "Sagar Kumar",
-    time: "Yesterday",
+    publishedAt: "2026-09-20T10:19:00Z",
     image:
       "https://images.unsplash.com/photo-1761233138997-44d9b002a08f?w=800&h=500&fit=crop",
     path: "/finance",
@@ -60,7 +60,7 @@ const featured = [
     excerpt:
       "A 14-month investigation reveals that power grids, water systems, and financial networks in 40+ countries have been silently compromised by state-sponsored actors.",
     author: "Sagar Kumar",
-    time: "2 days ago",
+    publishedAt: "2026-09-19T10:19:00Z",
     image:
       "https://images.unsplash.com/photo-1768839721176-2fa91fdce725?w=800&h=500&fit=crop",
     path: "/cybersecurity",
@@ -73,7 +73,7 @@ const editorPicks = [
     category: "LEADERSHIP",
     title:
       "How Satya Nadella Transformed Microsoft from 'Dying Giant' to World's Most Valuable AI Company",
-    time: "3 days ago",
+    publishedAt: "2026-09-18T10:19:00Z",
     path: "/leadership",
   },
   {
@@ -81,7 +81,7 @@ const editorPicks = [
     category: "ENERGY",
     title:
       "The Solar Revolution: How One Technology Disrupted the Energy Sector Faster Than Any Technology in History",
-    time: "4 days ago",
+    publishedAt: "2026-09-17T10:19:00Z",
     path: "/energy",
   },
   {
@@ -89,7 +89,7 @@ const editorPicks = [
     category: "BILLIONAIRES",
     title:
       "Inside the Mind of Elon Musk: What Drives the World's Richest Man and Most Consequential CEO",
-    time: "5 days ago",
+    publishedAt: "2026-09-16T10:19:00Z",
     path: "/billionaires",
   },
   {
@@ -97,7 +97,7 @@ const editorPicks = [
     category: "HEALTHCARE",
     title:
       "The End of Disease? How mRNA Technology is Opening the Door to Universal Cancer Vaccines by 2030",
-    time: "6 days ago",
+    publishedAt: "2026-09-15T10:19:00Z",
     path: "/healthcare",
   },
   {
@@ -105,10 +105,58 @@ const editorPicks = [
     category: "SMART CITIES",
     title:
       "The City of the Future Is Already Here — If You Know Where to Look",
-    time: "1 week ago",
+    publishedAt: "2026-09-14T10:19:00Z",
     path: "/smart-cities",
   },
 ];
+
+/* =========================================================
+   MORE STORIES SIDEBAR
+========================================================= */
+
+function MoreStoriesSidebar() {
+  return (
+    <aside className="w-full">
+      <div className="border-b-2 border-black pb-2">
+        <h3 className="text-[12px] font-bold uppercase tracking-wide">
+          More Stories
+        </h3>
+      </div>
+
+      <div className="divide-y divide-gray-200">
+        {featured.slice(1).map((story) => (
+          <Link
+            key={story.id}
+            to={story.path}
+            className="flex gap-3 py-3 group"
+          >
+            <div className="w-[72px] h-[52px] shrink-0 overflow-hidden rounded-[2px] bg-gray-100">
+              <ImageWithFallback
+                src={story.image}
+                alt={story.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+
+            <div className="min-w-0">
+              <span className="text-[7px] font-bold uppercase tracking-[0.12em] text-red-600">
+                {story.category}
+              </span>
+
+              <p className="text-[10px] md:text-[11px] font-semibold leading-[1.3] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                {story.title}
+              </p>
+
+              <span className="text-[8px] text-gray-400 mt-1 block">
+                <TimeAgo iso={story.publishedAt} />
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </aside>
+  );
+}
 
 /* =========================================================
    STORY CARD
@@ -152,7 +200,7 @@ function StoryCard({
 
           <span className="flex items-center gap-1 text-[9px] text-gray-400">
             <Clock size={9} strokeWidth={2} />
-            {story.time}
+            <TimeAgo iso={story.publishedAt} />
           </span>
         </div>
       </div>
@@ -230,7 +278,7 @@ export function FeaturedPage() {
         </header>
 
         {/* =================================================
-            MAIN HERO + MORE STORIES
+            MAIN HERO + SIDEBAR
         ================================================= */}
 
         <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,3.5fr)_minmax(260px,1fr)] gap-6 md:gap-8 mb-10 md:mb-12">
@@ -264,7 +312,6 @@ export function FeaturedPage() {
               </p>
 
               <div className="flex flex-wrap items-center gap-3 mt-3 text-[9px] md:text-[10px] text-gray-400">
-
                 <span className="font-medium text-gray-500">
                   By {featured[0].author}
                 </span>
@@ -273,61 +320,16 @@ export function FeaturedPage() {
 
                 <span className="flex items-center gap-1.5">
                   <Clock size={9} strokeWidth={2.25} />
-                  {featured[0].time}
+                  <TimeAgo iso={featured[0].publishedAt} />
                 </span>
-
               </div>
 
             </div>
           </Link>
 
-          {/* MORE STORIES */}
+          {/* SIDEBAR */}
 
-          <aside>
-
-            <div className="border-b-2 border-black pb-2">
-              <h3 className="text-[12px] font-bold uppercase tracking-wide">
-                More Stories
-              </h3>
-            </div>
-
-            <div className="divide-y divide-gray-200">
-
-              {featured.slice(1).map((story) => (
-                <Link
-                  key={story.id}
-                  to={story.path}
-                  className="flex gap-3 py-3 group"
-                >
-                  <div className="w-[72px] h-[52px] shrink-0 overflow-hidden rounded-[2px] bg-gray-100">
-                    <ImageWithFallback
-                      src={story.image}
-                      alt={story.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <div className="min-w-0">
-
-                    <span className="text-[7px] font-bold uppercase tracking-[0.12em] text-red-600">
-                      {story.category}
-                    </span>
-
-                    <p className="text-[10px] md:text-[11px] font-semibold leading-[1.3] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                      {story.title}
-                    </p>
-
-                    <span className="text-[8px] text-gray-400 mt-1 block">
-                      {story.time}
-                    </span>
-
-                  </div>
-                </Link>
-              ))}
-
-            </div>
-
-          </aside>
+          <MoreStoriesSidebar />
 
         </section>
 
@@ -353,7 +355,7 @@ export function FeaturedPage() {
         </section>
 
         {/* =================================================
-            EDITOR'S PICKS
+            SECONDARY STORIES
         ================================================= */}
 
         <section className="mb-10 md:mb-12">
@@ -378,7 +380,7 @@ export function FeaturedPage() {
 
                 <div className="flex items-center gap-1.5 mt-4 pt-3 border-t border-gray-100 text-[9px] text-gray-400">
                   <Clock size={9} strokeWidth={2} />
-                  {story.time}
+                  <TimeAgo iso={story.publishedAt} />
                 </div>
               </Link>
             ))}
