@@ -1,21 +1,6 @@
 import { TimeAgo } from "../../utils/timeAgo";
-import {
-  Clock,
-  ChevronRight,
-  ArrowRight,
-  Shield,
-  Cpu,
-  Zap,
-  Heart,
-  Factory,
-  Building2,
-  Truck,
-} from "lucide-react";
-
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-
-import HeroImg from "../../../imports/heroimage.png";
-import Hero1Img from "../../../imports/Techheroimage.png";
+import { Clock, ChevronRight } from "lucide-react";
 
 /* =========================================================
    SECTION HEADER
@@ -23,717 +8,1028 @@ import Hero1Img from "../../../imports/Techheroimage.png";
 
 function SectionHeader({
   title,
-  link,
+  id,
 }: {
   title: string;
-  link?: string;
+  id?: string;
 }) {
   return (
-    <div className="flex items-center justify-between border-t-2 border-black border-b border-gray-300 py-2.5 mb-6">
-      <div className="flex items-center gap-2">
-        <span className="w-1.5 h-1.5 bg-red-700 rounded-full" />
+    <div
+      id={id}
+      className="flex items-center justify-between border-b-2 border-[#17140F] pb-2.5 mb-5"
+    >
+      <h2 className="font-serif text-[21px] md:text-[24px] font-bold text-[#17140F]">
+        {title}
+      </h2>
 
-        <h2 className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.15em]">
-          {title}
-        </h2>
+      <button className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-red-600 transition-colors">
+        See All
+        <ChevronRight size={12} />
+      </button>
+    </div>
+  );
+}
+
+/* =========================================================
+   TECHNOLOGY HERO DATA
+========================================================= */
+
+const hero = {
+  category: "TECHNOLOGY",
+  title: "Pagaya Closes $460 Million Revolving Personal Loan Facility",
+  excerpt:
+    "Pagaya has closed a $460 million revolving personal loan facility, highlighting continued activity in technology-driven financial services and alternative lending markets.",
+  author: "Bloomberg News",
+  publishedAt: "2026-09-22T10:00:00Z",
+  image:
+    "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=80",
+};
+
+const hero1 = {
+  category: "AI",
+  title: "AI Startup Heidi Doubles Valuation to $900 Million in New Round",
+  excerpt:
+    "AI startup Heidi has raised new funding that doubles its valuation to $900 million, highlighting continued investor interest in artificial intelligence startups.",
+  author: "Bloomberg News",
+  publishedAt: "2026-09-22T09:30:00Z",
+  image:
+    "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1000&q=80",
+};
+
+const hero2 = {
+  category: "AI",
+  title: "Anthropic CEO Dario Amodei to Brief UN Security Council on AI",
+  excerpt:
+    "Anthropic CEO Dario Amodei is set to brief the United Nations Security Council on artificial intelligence as governments continue examining the opportunities and risks surrounding advanced AI systems.",
+  author: "Bloomberg News",
+  publishedAt: "2026-09-22T08:30:00Z",
+  image:
+    "https://images.unsplash.com/photo-1633412802994-5c058f151b66?auto=format&fit=crop&w=1000&q=80",
+};
+
+/* =========================================================
+   TECHNOLOGY MORE STORIES
+========================================================= */
+
+const threatAlerts = [
+  {
+    id: 1,
+    severity: "TECH",
+    title:
+      "Data Center Firm Acceleration, Becker Seek $720 Million in IPO",
+    publishedAt: "2026-09-22T08:19:00Z",
+  },
+  {
+    id: 2,
+    severity: "BUSINESS",
+    title:
+      "DoorDash to Pay $132 Million to NYC, Workers Over Missing Wages",
+    publishedAt: "2026-09-22T07:19:00Z",
+  },
+  {
+    id: 3,
+    severity: "TECH",
+    title:
+      "Peloton Debuts Three New Treadmills, Including $2,195 Foldable Model",
+    publishedAt: "2026-09-22T06:19:00Z",
+  },
+  {
+    id: 4,
+    severity: "MARKETS",
+    title:
+      "SoftBank Draws Over $20 Billion of Early Interest in Junk Bond",
+    publishedAt: "2026-09-22T05:19:00Z",
+  },
+  {
+    id: 5,
+    severity: "AI",
+    title:
+      "AI Cloud Startup Verda Raises $189 Million in Funding Round",
+    publishedAt: "2026-09-22T04:19:00Z",
+  },
+];
+
+/* =========================================================
+   LATEST TECHNOLOGY NEWS
+========================================================= */
+
+const stories = [
+  {
+    id: 1,
+    category: "TECHNOLOGY",
+    title:
+      "Pagaya Closes $460 Million Revolving Personal Loan Facility",
+    publishedAt: "2026-09-22T10:00:00Z",
+    image:
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 2,
+    category: "AI",
+    title:
+      "AI Startup Heidi Doubles Valuation to $900 Million in New Round",
+    publishedAt: "2026-09-22T09:30:00Z",
+    image:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 3,
+    category: "AI",
+    title:
+      "Anthropic CEO Dario Amodei to Brief UN Security Council on AI",
+    publishedAt: "2026-09-22T08:30:00Z",
+    image:
+      "https://images.unsplash.com/photo-1633412802994-5c058f151b66?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 4,
+    category: "DATA CENTERS",
+    title:
+      "Data Center Firm Acceleration, Becker Seek $720 Million in IPO",
+    publishedAt: "2026-09-22T08:00:00Z",
+    image:
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 5,
+    category: "BUSINESS",
+    title:
+      "DoorDash to Pay $132 Million to NYC, Workers Over Missing Wages",
+    publishedAt: "2026-09-22T07:19:00Z",
+    image:
+      "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 6,
+    category: "TECHNOLOGY",
+    title:
+      "Peloton Debuts Three New Treadmills, Including $2,195 Foldable Model",
+    publishedAt: "2026-09-22T06:19:00Z",
+    image:
+      "https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 7,
+    category: "MARKETS",
+    title:
+      "SoftBank Draws Over $20 Billion of Early Interest in Junk Bond",
+    publishedAt: "2026-09-22T05:19:00Z",
+    image:
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 8,
+    category: "TECHNOLOGY",
+    title:
+      "Chinese App Founder Sells $110 Million in Shares to Pay Taxman",
+    publishedAt: "2026-09-22T04:30:00Z",
+    image:
+      "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 9,
+    category: "AI",
+    title:
+      "AI Cloud Startup Verda Raises $189 Million in Funding Round",
+    publishedAt: "2026-09-22T04:00:00Z",
+    image:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=80",
+  },
+];
+
+/* =========================================================
+   TECHNOLOGY & AI
+========================================================= */
+
+const aiInfraStories = [
+  {
+    id: 1,
+    title:
+      "Chinese App Founder Sells $110 Million in Shares to Pay Taxman",
+    publishedAt: "2026-09-22T05:00:00Z",
+  },
+  {
+    id: 2,
+    title:
+      "AI Cloud Startup Verda Raises $189 Million in Funding Round",
+    publishedAt: "2026-09-22T04:00:00Z",
+  },
+  {
+    id: 3,
+    title:
+      "Trump's Nvidia Deal Turns Armenia Into Surprising AI Hotspot",
+    publishedAt: "2026-09-22T03:00:00Z",
+  },
+  {
+    id: 4,
+    title:
+      "SoftBank Draws Over $20 Billion of Early Interest in Junk Bond",
+    publishedAt: "2026-09-22T02:00:00Z",
+  },
+  {
+    id: 5,
+    title:
+      "Peloton Debuts Three New Treadmills, Including $2,195 Foldable Model",
+    publishedAt: "2026-09-22T01:00:00Z",
+  },
+];
+
+/* =========================================================
+   TECHNOLOGY WATCH
+========================================================= */
+
+const zeroTrustNote = {
+  title: "Technology Watch: The AI Infrastructure Race",
+  body:
+    "The expansion of artificial intelligence is increasing demand for computing infrastructure, data centers and specialized hardware. Technology companies are balancing rapid AI investment with financing requirements, regulatory scrutiny and the growing cost of operating advanced systems.",
+};
+
+/* =========================================================
+   TECHNOLOGY MARKET MATRIX
+========================================================= */
+
+const responseMatrix = [
+  {
+    threat: "AI Infrastructure",
+    control: "Compute Capacity",
+    risk: "Capital Intensity",
+    cadence: "Expanding",
+  },
+  {
+    threat: "AI Startups",
+    control: "Venture Funding",
+    risk: "Valuation Pressure",
+    cadence: "Ongoing",
+  },
+  {
+    threat: "Data Centers",
+    control: "Power + Capacity",
+    risk: "Infrastructure Costs",
+    cadence: "High Priority",
+  },
+  {
+    threat: "Cloud Computing",
+    control: "Enterprise Demand",
+    risk: "Margin Pressure",
+    cadence: "Quarterly",
+  },
+  {
+    threat: "Consumer Technology",
+    control: "Product Innovation",
+    risk: "Demand Shifts",
+    cadence: "Emerging",
+  },
+];
+
+/* =========================================================
+   TECHNOLOGY BUSINESS NEWS
+========================================================= */
+
+const defenseNews = [
+  {
+    id: 1,
+    title:
+      "Pagaya Closes $460 Million Revolving Personal Loan Facility",
+    publishedAt: "2026-09-22T10:00:00Z",
+  },
+  {
+    id: 2,
+    title:
+      "AI Startup Heidi Doubles Valuation to $900 Million in New Round",
+    publishedAt: "2026-09-22T09:30:00Z",
+  },
+  {
+    id: 3,
+    title:
+      "Anthropic CEO Dario Amodei to Brief UN Security Council on AI",
+    publishedAt: "2026-09-22T08:30:00Z",
+  },
+  {
+    id: 4,
+    title:
+      "Data Center Firm Acceleration, Becker Seek $720 Million in IPO",
+    publishedAt: "2026-09-22T08:00:00Z",
+  },
+  {
+    id: 5,
+    title:
+      "Trump's Nvidia Deal Turns Armenia Into Surprising AI Hotspot",
+    publishedAt: "2026-09-22T03:00:00Z",
+  },
+];
+
+/* =========================================================
+   TECHNOLOGY STOCKS
+========================================================= */
+
+const marketData = [
+  {
+    company: "Nvidia",
+    ticker: "NVDA",
+    price: "$184.30",
+    change: "+2.4%",
+    up: true,
+  },
+  {
+    company: "Microsoft",
+    ticker: "MSFT",
+    price: "$511.20",
+    change: "+1.7%",
+    up: true,
+  },
+  {
+    company: "Apple",
+    ticker: "AAPL",
+    price: "$245.80",
+    change: "+0.9%",
+    up: true,
+  },
+  {
+    company: "Amazon",
+    ticker: "AMZN",
+    price: "$231.40",
+    change: "-0.4%",
+    up: false,
+  },
+  {
+    company: "Meta Platforms",
+    ticker: "META",
+    price: "$774.60",
+    change: "+1.3%",
+    up: true,
+  },
+];
+
+/* =========================================================
+   SPONSORSHIP CARDS
+========================================================= */
+
+const sponsorships = [
+  "Global Finance Summit 2026",
+  "Tech Leaders Forum",
+  "Energy Transition Conference",
+  "AI & Business World",
+];
+
+/* =========================================================
+   SECONDARY ARTICLE
+========================================================= */
+
+function SecondaryArticle({
+  data,
+}: {
+  data: typeof hero1;
+}) {
+  return (
+    <article className="group cursor-pointer">
+      <div className="overflow-hidden rounded-md bg-gray-100 mb-3">
+        <ImageWithFallback
+          src={data.image}
+          alt={data.title}
+          className="w-full h-[220px] md:h-[260px] lg:h-[300px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+        />
       </div>
 
-      {link && (
-        <a
-          href={link}
-          className="text-[9px] uppercase tracking-[0.12em] text-gray-500 hover:text-red-700 flex items-center gap-1"
-        >
-          See All
-          <ChevronRight size={11} />
-        </a>
-      )}
-    </div>
+      <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+        {data.category}
+      </span>
+
+      <h2 className="mt-1.5 font-serif text-[20px] md:text-[24px] lg:text-[26px] font-bold leading-[1.12] text-[#17140F] group-hover:text-red-600 transition-colors">
+        {data.title}
+      </h2>
+
+      <p className="mt-2.5 text-[12px] md:text-[13px] leading-[1.6] text-[#55534C]">
+        {data.excerpt}
+      </p>
+
+      <div className="flex items-center gap-3 mt-3 text-[10px] text-gray-400">
+        <span className="font-medium text-gray-500">
+          By {data.author}
+        </span>
+
+        <span className="h-3 w-px bg-gray-300" />
+
+        <span className="flex items-center gap-1.5">
+          <Clock size={9} />
+          <TimeAgo iso={data.publishedAt} />
+        </span>
+      </div>
+    </article>
   );
 }
 
 /* =========================================================
-   HERO STORIES
-   ONLY TWO STORIES
+   PAGE
 ========================================================= */
 
-const leadStory = {
-  category: "ARTIFICIAL INTELLIGENCE",
-  title:
-    "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-  excerpt:
-    "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Korea, expanding its already well-established relationship with China's Unitree. The chipmaker's shares climbed approximately 6% during the June 1 session, bringing its year-to-date gains to roughly 20%.",
-  author: "Sagar Kumar",
-  publishedAt: "1 June 2026",
-  image: HeroImg,
-};
-
-const secondaryStory = {
-  category: "ARTIFICIAL INTELLIGENCE",
-  title:
-    "Intel Attempts Inference-Chip Comeback as AI Compute Wars Intensify",
-  excerpt:
-    "Intel has unveiled a renewed push into the inference accelerator market, positioning its next-generation Gaudi chips as a cost-effective alternative for enterprises deploying large-scale AI models.",
-  author: "Sagar Kumar",
-  publishedAt: "1 June 2026",
-  image: Hero1Img,
-};
-
-/* =========================================================
-   CATEGORY NAVIGATION
-========================================================= */
-
-const techCategories = [
-  { icon: Cpu, label: "AI & Machine Learning" },
-  { icon: Shield, label: "Cybersecurity" },
-  { icon: Zap, label: "Energy Tech" },
-  { icon: Heart, label: "HealthTech" },
-  { icon: Factory, label: "Manufacturing" },
-  { icon: Building2, label: "Smart Cities" },
-  { icon: Truck, label: "Supply Chain" },
-];
-
-/* =========================================================
-   AI STORIES
-========================================================= */
-
-const aiStories = [
-  {
-    id: 1,
-    title:
-      "SpaceX prices IPO at $135 per share, raising $75B at a $1.77T valuation in the largest IPO ever.",
-    excerpt:
-      "The share listing positions SpaceX among the world's five largest companies while underscoring investor appetite for AI infrastructure and space-tech capital.",
-    publishedAt: "2026-09-21T10:19:00Z",
-    image:
-      "https://images.unsplash.com/photo-1517976547714-720226b864c1?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 2,
-    title:
-      "SpaceX agrees to acquire AI coding startup Cursor for $60B, folding the asset into xAI.",
-    excerpt:
-      "The all-stock deal is expected to close in Q3 2026 and signals a major move into coding agents.",
-    publishedAt: "2026-09-21T10:19:00Z",
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 3,
-    title:
-      "Anthropic surpasses OpenAI with a $30B run rate and prepares a confidential IPO filing.",
-    excerpt:
-      "Enterprise API and agentic product usage continue to drive rapid growth across the AI industry.",
-    publishedAt: "2026-09-21T10:19:00Z",
-    image:
-      "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 4,
-    title:
-      "Nvidia unveils the RTX Spark Superchip at Computex, pairing Blackwell RTX graphics with Grace CPU for AI PCs.",
-    excerpt:
-      "The new chip brings powerful AI processing capabilities to desktops and professional workstations.",
-    publishedAt: "2026-09-21T10:19:00Z",
-    image:
-      "https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 5,
-    title:
-      "NVIDIA's Blackwell Ultra GPU Delivers 40x Speed Boost for LLM Training",
-    excerpt:
-      "The architecture changes what is possible in real-time AI inference at scale.",
-    publishedAt: "2026-09-21T08:19:00Z",
-    image:
-      "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=1400&q=85",
-  },
-  {
-    id: 6,
-    title:
-      "Google DeepMind Achieves Breakthrough in Protein Structure Prediction for Drug Discovery",
-    excerpt:
-      "New AI models are opening new possibilities for pharmaceutical research.",
-    publishedAt: "2026-09-21T06:19:00Z",
-    image:
-      "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1400&q=85",
-  },
-];
-
-/* =========================================================
-   CYBERSECURITY
-========================================================= */
-
-const cyberStories = [
-  {
-    id: 1,
-    title:
-      "Florida sues OpenAI and Sam Altman, alleging ChatGPT caused harm as regulators warn growth is being prioritized over safety.",
-    publishedAt: "2026-09-21T10:19:00Z",
-  },
-  {
-    id: 2,
-    title:
-      "White House pressure reportedly pulled back Anthropic's most capable models amid concerns over high-risk AI systems.",
-    publishedAt: "2026-09-21T10:19:00Z",
-  },
-  {
-    id: 3,
-    title:
-      "Zero-Day Exploit Threatens 2 Billion Android Devices Globally",
-    publishedAt: "2026-09-21T07:19:00Z",
-  },
-  {
-    id: 4,
-    title:
-      "US CISA Issues Emergency Directive After Critical Infrastructure Breach",
-    publishedAt: "2026-09-21T05:19:00Z",
-  },
-  {
-    id: 5,
-    title:
-      "Quantum Encryption Startup Raises $400M Series C to Secure Financial Networks",
-    publishedAt: "2026-09-21T03:19:00Z",
-  },
-  {
-    id: 6,
-    title:
-      "Ransomware Attacks Hit Record High in Q1 2026, Costing Enterprises $12B",
-    publishedAt: "2026-09-21T01:19:00Z",
-  },
-];
-
-/* =========================================================
-   ENERGY
-========================================================= */
-
-const energyStories = [
-  {
-    id: 1,
-    title:
-      "Ohio suspends a major data-center tax incentive after AI infrastructure costs surge, deepening grid and community pushback.",
-    publishedAt: "2026-09-21T10:19:00Z",
-  },
-  {
-    id: 2,
-    title:
-      "Analysts say 30-50% of planned U.S. AI data centers may miss 2026 timelines or be canceled over transformer shortages, grid delays, and local opposition.",
-    publishedAt: "2026-09-21T10:19:00Z",
-  },
-  {
-    id: 3,
-    title:
-      "Global Solar Capacity Crosses 5 Terawatts — a Historic Milestone for Clean Energy",
-    publishedAt: "2026-09-21T08:19:00Z",
-  },
-  {
-    id: 4,
-    title:
-      "Hydrogen Fuel Cell Trucks Begin Commercial Operations on Trans-European Routes",
-    publishedAt: "2026-09-21T06:19:00Z",
-  },
-  {
-    id: 5,
-    title:
-      "Saudi Arabia's NEOM Project Reveals 100% Renewable Powered Megacity Grid",
-    publishedAt: "2026-09-21T04:19:00Z",
-  },
-];
-
-/* =========================================================
-   HEALTHCARE
-========================================================= */
-
-const healthcareStories = [
-  {
-    id: 1,
-    title:
-      "CRISPR Gene Editing Achieves 98% Success Rate in Clinical Trials for Sickle Cell Disease",
-    publishedAt: "2026-09-21T09:19:00Z",
-  },
-  {
-    id: 2,
-    title:
-      "AI Diagnostics Platform Outperforms Radiologists in Early Cancer Detection Study",
-    publishedAt: "2026-09-21T07:19:00Z",
-  },
-  {
-    id: 3,
-    title:
-      "WHO Declares End to Decade-Long Battle with Antibiotic-Resistant Superbugs",
-    publishedAt: "2026-09-21T02:19:00Z",
-  },
-];
-
-/* =========================================================
-   MANUFACTURING
-========================================================= */
-
-const manufacturingStories = [
-  {
-    id: 1,
-    title:
-      "DriveNets raises $410M backed by AMD to expand software-defined networking for AI data centers.",
-    publishedAt: "2026-09-21T10:19:00Z",
-  },
-  {
-    id: 2,
-    title:
-      "Tesla's Gigafactory India Begins Production of Next-Gen 4680 Battery Cells",
-    publishedAt: "2026-09-21T08:19:00Z",
-  },
-  {
-    id: 3,
-    title:
-      "3D-Printed Steel Bridges Deploy in Rotterdam, Cutting Construction Costs by 65%",
-    publishedAt: "2026-09-21T05:19:00Z",
-  },
-  {
-    id: 4,
-    title:
-      "South Korea's Hyundai Robotics Ships 50,000 Humanoid Factory Workers Globally",
-    publishedAt: "2026-09-21T03:19:00Z",
-  },
-];
-
-/* =========================================================
-   SMART CITIES
-========================================================= */
-
-const smartCityStories = [
-  {
-    id: 1,
-    title:
-      "Dubai's Digital Twin City Platform Reduces Emergency Response Times by 40%",
-    publishedAt: "2026-09-21T07:19:00Z",
-  },
-  {
-    id: 2,
-    title:
-      "Tokyo Smart Traffic System Eliminates Rush Hour Congestion in Pilot District",
-    publishedAt: "2026-09-21T04:19:00Z",
-  },
-  {
-    id: 3,
-    title:
-      "Copenhagen Becomes First Carbon-Negative Capital City Through Smart Grid Innovations",
-    publishedAt: "2026-09-21T01:19:00Z",
-  },
-];
-
-/* =========================================================
-   SUPPLY CHAIN
-========================================================= */
-
-const supplyChainStories = [
-  {
-    id: 1,
-    title:
-      "Manufacturers Rebuild Supply Chains Around Unified Data, AI Scenario Modeling and Supplier Collaboration",
-    publishedAt: "2026-09-21T10:19:00Z",
-  },
-  {
-    id: 2,
-    title:
-      "91% of Mid-Market Manufacturers Use Generative AI in Supply-Chain Operations, but Operating Models Lag",
-    publishedAt: "2026-09-21T10:04:00Z",
-  },
-  {
-    id: 3,
-    title:
-      "Tanker Traffic Through the Strait of Hormuz Jumps After US-Iran Shipping Lane Reopening Deal",
-    publishedAt: "2026-09-21T09:19:00Z",
-  },
-  {
-    id: 4,
-    title:
-      "Cargo Volumes Are Normalizing in 2026 After Companies Frontloaded Goods Ahead of New Tariffs",
-    publishedAt: "2026-09-21T08:19:00Z",
-  },
-  {
-    id: 5,
-    title:
-      "Rising Corporate Debt Pushes Companies to Stress-Test Suppliers and Diversify Fragile Logistics Corridors",
-    publishedAt: "2026-09-21T07:19:00Z",
-  },
-  {
-    id: 6,
-    title:
-      "ISG Launches a Study of Service Providers Supporting Manufacturers Through Supply-Chain Restructuring",
-    publishedAt: "2026-09-21T06:19:00Z",
-  },
-];
-
-/* =========================================================
-   UNIQUE SECTION IMAGES
-========================================================= */
-
-const sectionImages = {
-  cybersecurity:
-    "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=85",
-
-  energy:
-    "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1400&q=85",
-
-  healthcare:
-    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1400&q=85",
-
-  manufacturing:
-    "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1400&q=85",
-
-  smartCities:
-    "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1400&q=85",
-
-  supplyChain:
-    "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1400&q=85",
-};
-
-/* =========================================================
-   SMALL STORY LIST
-========================================================= */
-
-function SmallStoryList({
-  stories,
-}: {
-  stories: Array<{
-    id: number;
-    title: string;
-    publishedAt: string;
-  }>;
-}) {
+export function CybersecurityPage() {
   return (
-    <div>
-      {stories.map((story, index) => (
-        <article
-          key={`${story.id}-${index}`}
-          className="py-4 border-b border-gray-200 cursor-pointer group px-1 hover:bg-gray-50 transition-colors"
-        >
-          <div className="flex gap-3">
-            <span className="font-serif text-[18px] font-bold text-gray-300 leading-none min-w-[24px]">
-              {String(index + 1).padStart(2, "0")}
-            </span>
+    <main className="w-full bg-white text-[#17140F] antialiased">
 
-            <div>
-              <h3 className="text-[13px] md:text-[14px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-700 transition-colors">
-                {story.title}
-              </h3>
+      {/* =====================================================
+          MAIN FULL WIDTH CONTAINER
+      ===================================================== */}
 
-              <span className="text-[9px] text-gray-400 flex items-center gap-1 mt-2">
-                <Clock size={9} />
-                <TimeAgo iso={story.publishedAt} />
-              </span>
-            </div>
-          </div>
-        </article>
-      ))}
-    </div>
-  );
-}
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
 
+        {/* =================================================
+            PAGE TITLE
+        ================================================= */}
 
-/* =========================================================
-   TECHNOLOGY PAGE
-   Layout inspired by the supplied editorial reference image.
-   Existing Technology content and image sources are preserved.
-========================================================= */
+        <header className="pt-5 md:pt-7 pb-4">
+          <div className="border-t-[3px] border-red-600 pt-4">
 
-export function TechnologyPage() {
-  const latestStories = aiStories.slice(0, 6);
-
-  return (
-    <main className="min-h-screen bg-[#f7f7f5] text-[#111]">
-      <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
-
-        {/* PAGE HEADER */}
-        <header className="border-t-[3px] border-red-600 pt-5 sm:pt-6 pb-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="font-serif text-[28px] sm:text-[34px] md:text-[40px] font-black leading-none tracking-[-0.03em]">
+            <h1 className="font-serif text-[32px] sm:text-[36px] md:text-[40px] lg:text-[44px] xl:text-[48px] font-bold leading-none">
               Technology
             </h1>
-            <p className="text-[10px] sm:text-[11px] text-gray-500">
-              Artificial intelligence, cybersecurity, robotics, biotechnology and the technologies reshaping the global economy.
+
+            <p className="mt-2 text-[12px] md:text-[13px] text-[#77736D]">
+              AI, technology companies, startups, data centers, markets and
+              the future of business.
             </p>
+
           </div>
         </header>
 
-        {/* HERO + SIDEBAR */}
-        <section className="grid grid-cols-1 gap-4 border-b-2 border-black pb-6 lg:grid-cols-[minmax(0,1fr)_270px]">
+        {/* =================================================
+            TOP ADVERTISEMENT
+        ================================================= */}
 
-          {/* LEAD STORY */}
-          <article className="group min-w-0">
-            <div className="relative overflow-hidden rounded-md bg-gray-200">
+        <div className="w-full h-[70px] md:h-[78px] bg-[#17313A] flex items-center justify-center my-4 md:my-5 relative overflow-hidden">
+
+          <div className="text-center text-white">
+
+            <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+              GOOGLE ADSENSE
+            </p>
+
+            <p className="mt-1 text-[13px] md:text-[15px] font-semibold">
+              Advertisement Space
+            </p>
+
+            <p className="mt-0.5 text-[8px] text-cyan-200">
+              728 × 90 • Leaderboard
+            </p>
+
+          </div>
+
+          <span className="absolute top-1 right-1 text-[7px] bg-white/80 text-gray-500 px-1.5 py-0.5">
+            Advertisement
+          </span>
+
+        </div>
+
+        {/* =================================================
+            MAIN HERO + MORE STORIES
+        ================================================= */}
+
+        <section className="grid grid-cols-1 xl:grid-cols-[minmax(0,3.25fr)_minmax(280px,1fr)] gap-5 lg:gap-7 mt-4 md:mt-6">
+
+          {/* =================================================
+              MAIN HERO
+          ================================================= */}
+
+          <article className="group cursor-pointer">
+
+            <div className="overflow-hidden rounded-lg bg-gray-100">
+
               <ImageWithFallback
-                src={leadStory.image}
-                alt={leadStory.title}
-                className="h-[250px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02] sm:h-[330px] md:h-[390px] lg:h-[390px]"
+                src={hero.image}
+                alt={hero.title}
+                className="w-full h-[260px] sm:h-[350px] md:h-[440px] lg:h-[500px] xl:h-[520px] object-cover transition-transform duration-700 group-hover:scale-[1.025]"
               />
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
+
             </div>
 
             <div className="pt-3">
-              <span className="text-[7px] font-bold uppercase tracking-[0.18em] text-red-700">
-                {leadStory.category}
+
+              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                {hero.category}
               </span>
 
-              <h2 className="mt-1 font-serif text-[23px] font-black leading-[1.03] tracking-[-0.02em] sm:text-[28px] md:text-[34px] lg:text-[36px]">
-                {leadStory.title}
+              <h2 className="mt-1.5 font-serif text-[25px] sm:text-[29px] md:text-[33px] lg:text-[36px] xl:text-[38px] font-bold leading-[1.08] tracking-tight text-[#17140F] group-hover:text-red-600 transition-colors">
+                {hero.title}
               </h2>
 
-              <p className="mt-2 max-w-[900px] text-[10px] leading-[1.55] text-gray-600 sm:text-[11px]">
-                {leadStory.excerpt}
+              <p className="mt-2.5 text-[12px] md:text-[13px] lg:text-[14px] leading-[1.6] text-[#66625D] max-w-[1100px]">
+                {hero.excerpt}
               </p>
 
-              <div className="mt-2 flex flex-wrap items-center gap-3 text-[7px] uppercase tracking-wider text-gray-500 sm:text-[8px]">
-                <span className="font-bold text-gray-800">
-                  By {leadStory.author}
+              <div className="flex flex-wrap items-center gap-3 mt-3 text-[10px] text-gray-400">
+
+                <span className="font-medium text-gray-500">
+                  By {hero.author}
                 </span>
-                <span className="flex items-center gap-1">
+
+                <span className="h-3 w-px bg-gray-300" />
+
+                <span className="flex items-center gap-1.5">
                   <Clock size={9} />
-                  <TimeAgo iso={leadStory.publishedAt} />
+                  <TimeAgo iso={hero.publishedAt} />
                 </span>
+
               </div>
+
             </div>
+
           </article>
 
-          {/* RIGHT RAIL */}
-          <aside className="border-t border-gray-300 pt-3 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0">
-            <div className="border-b border-black pb-1">
-              <h3 className="text-[9px] font-black uppercase tracking-[0.1em]">
+          {/* =================================================
+              RIGHT SIDEBAR
+          ================================================= */}
+
+          <aside className="xl:border-l xl:border-gray-300 xl:pl-6">
+
+            {/* SPONSORED BOX */}
+
+            <div className="border border-gray-200 rounded-md overflow-hidden mb-5">
+
+              <div className="px-3 py-2 bg-[#F7F4EC]">
+
+                <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-gray-500">
+                  Sponsored Content
+                </span>
+
+              </div>
+
+              <div className="h-[150px] md:h-[170px] bg-[#101731] flex items-center justify-center text-center px-4">
+
+                <div>
+
+                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-yellow-400">
+                    Featured Partner
+                  </p>
+
+                  <p className="text-white text-[14px] font-semibold mt-2">
+                    Your Ad Here
+                  </p>
+
+                  <p className="text-gray-300 text-[9px] mt-1">
+                    Reach 2M+ business readers
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* MORE STORIES */}
+
+            <div className="border-b-2 border-[#17140F] pb-2 mb-1">
+
+              <h3 className="font-bold text-[14px] uppercase tracking-wide">
                 More Stories
               </h3>
+
             </div>
 
-            <div>
-              {aiStories.slice(0, 2).map((story, index) => (
+            <div className="divide-y divide-gray-200">
+
+              {threatAlerts.slice(0, 4).map((story) => (
+
                 <article
-                  key={`rail-${story.id}`}
-                  className="group flex gap-2 border-b border-gray-200 py-2.5"
+                  key={story.id}
+                  className="py-3 group cursor-pointer"
                 >
-                  <div className="h-[52px] w-[72px] shrink-0 overflow-hidden rounded-sm">
-                    <ImageWithFallback
-                      src={story.image}
-                      alt={story.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[6px] font-bold uppercase tracking-wider text-red-700">
-                      Technology
-                    </span>
-                    <h4 className="mt-0.5 font-serif text-[10px] font-bold leading-[1.15] group-hover:underline">
-                      {index === 0 ? leadStory.title : story.title}
-                    </h4>
-                    <p className="mt-1 text-[6px] text-gray-400">
-                      <TimeAgo iso={story.publishedAt} />
-                    </p>
-                  </div>
+
+                  <span
+                    className={`inline-block text-[7px] font-bold uppercase tracking-wider px-1.5 py-0.5 ${
+                      story.severity === "TECH"
+                        ? "bg-blue-600 text-white"
+                        : story.severity === "AI"
+                        ? "bg-purple-600 text-white"
+                        : story.severity === "BUSINESS"
+                        ? "bg-red-600 text-white"
+                        : "bg-amber-400 text-black"
+                    }`}
+                  >
+                    {story.severity}
+                  </span>
+
+                  <h4 className="mt-1.5 text-[11px] md:text-[12px] font-bold leading-[1.35] text-gray-900 group-hover:text-red-600 transition-colors">
+                    {story.title}
+                  </h4>
+
+                  <span className="flex items-center gap-1 mt-1 text-[8px] text-gray-400">
+                    <Clock size={8} />
+                    <TimeAgo iso={story.publishedAt} />
+                  </span>
+
                 </article>
+
               ))}
+
             </div>
+
           </aside>
+
         </section>
 
-        {/* SECONDARY HERO STORY */}
-        <section className="grid grid-cols-1 gap-5 border-b border-gray-300 py-5 md:grid-cols-[1.3fr_1fr]">
-          <article className="group">
-            <div className="overflow-hidden rounded-md">
-              <ImageWithFallback
-                src={secondaryStory.image}
-                alt={secondaryStory.title}
-                className="h-[190px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.025] sm:h-[240px] md:h-[255px]"
-              />
-            </div>
-          </article>
+        {/* =================================================
+            LATEST TECHNOLOGY NEWS
+        ================================================= */}
 
-          <article className="flex flex-col justify-center">
-            <span className="text-[7px] font-bold uppercase tracking-[0.18em] text-red-700">
-              {secondaryStory.category}
-            </span>
-            <h2 className="mt-1 font-serif text-[21px] font-black leading-[1.05] sm:text-[25px] md:text-[29px]">
-              {secondaryStory.title}
-            </h2>
-            <p className="mt-2 text-[10px] leading-[1.55] text-gray-600 sm:text-[11px]">
-              {secondaryStory.excerpt}
-            </p>
-            <div className="mt-3 flex items-center gap-2 text-[7px] uppercase tracking-wider text-gray-500">
-              <span className="font-bold text-gray-800">
-                By {secondaryStory.author}
-              </span>
-              <span>•</span>
-              <span><TimeAgo iso={secondaryStory.publishedAt} /></span>
-            </div>
-          </article>
-        </section>
+        <section className="mt-12 md:mt-14">
 
-        {/* LATEST TECHNOLOGY NEWS */}
-        <section className="py-6 sm:py-7">
-          <div className="mb-4 flex items-center justify-between border-t-2 border-black pt-2">
-            <h2 className="text-[13px] font-black sm:text-[15px]">
-              Latest Technology News
-            </h2>
-            <span className="hidden text-[7px] uppercase tracking-[0.14em] text-gray-500 sm:block">
-              Artificial Intelligence • Innovation • Industry
-            </span>
-          </div>
+          <SectionHeader title="Latest Technology News" />
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {latestStories.map((story, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 lg:gap-x-7 gap-y-8">
+
+            {stories.map((story) => (
+
               <article
-                key={`latest-${story.id}`}
-                className="group overflow-hidden rounded-md border border-gray-200 bg-white"
+                key={story.id}
+                className="group cursor-pointer"
               >
-                <div className="overflow-hidden">
+
+                <div className="overflow-hidden rounded-md bg-gray-100">
+
                   <ImageWithFallback
                     src={story.image}
                     alt={story.title}
-                    className="h-[165px] w-full object-cover transition-transform duration-500 group-hover:scale-[1.035] sm:h-[150px] lg:h-[155px]"
+                    className="w-full h-[180px] sm:h-[190px] md:h-[205px] lg:h-[215px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
+
                 </div>
 
-                <div className="p-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[6px] font-bold uppercase tracking-[0.14em] text-red-700">
-                      {index < 4 ? "Technology" : "AI"}
-                    </span>
-                    {index < 4 && (
-                      <span className="bg-red-600 px-1.5 py-0.5 text-[5px] font-bold uppercase tracking-wider text-white">
-                        Hot
-                      </span>
-                    )}
-                  </div>
+                <div className="pt-2.5">
 
-                  <h3 className="mt-1 font-serif text-[13px] font-bold leading-[1.12] sm:text-[14px]">
+                  <span className="text-[8px] font-bold uppercase tracking-[0.13em] text-red-600">
+                    {story.category}
+                  </span>
+
+                  <h3 className="mt-1.5 font-serif text-[17px] md:text-[18px] font-bold leading-[1.18] text-[#17140F] group-hover:text-red-600 transition-colors">
                     {story.title}
                   </h3>
 
-                  <p className="mt-1.5 line-clamp-2 text-[8px] leading-[1.45] text-gray-500 sm:text-[9px]">
-                    {story.excerpt}
+                  <div className="flex items-center gap-1.5 mt-2 text-[9px] text-gray-400">
+
+                    <Clock size={8} />
+
+                    <TimeAgo iso={story.publishedAt} />
+
+                  </div>
+
+                </div>
+
+              </article>
+
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <div className="w-full h-[68px] md:h-[76px] bg-[#17313A] flex items-center justify-center my-10 md:my-12 relative">
+
+          <div className="text-center text-white">
+
+            <p className="text-[8px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+              GOOGLE ADSENSE
+            </p>
+
+            <p className="mt-1 text-[12px] md:text-[14px] font-semibold">
+              Business Solutions | Powered by The Pride Times
+            </p>
+
+            <p className="text-[8px] text-cyan-200 mt-0.5">
+              728 × 90 • Leaderboard
+            </p>
+
+          </div>
+
+          <span className="absolute top-1 right-1 text-[7px] bg-white/80 text-gray-500 px-1.5 py-0.5">
+            Advertisement
+          </span>
+
+        </div>
+
+        {/* =================================================
+            SPONSORSHIP
+        ================================================= */}
+
+        <section className="bg-[#F7F7F5] rounded-lg border border-gray-100 p-4 md:p-5 mb-10">
+
+          <div className="mb-4">
+
+            <span className="text-[8px] font-bold uppercase tracking-[0.15em] text-gray-500 border border-gray-200 bg-white px-2 py-1 rounded-sm">
+              Sponsorship
+            </span>
+
+            <span className="ml-2 text-[9px] text-gray-400">
+              Presented by our partners
+            </span>
+
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+            {sponsorships.map((item) => (
+
+              <div
+                key={item}
+                className="bg-white border border-gray-200 rounded-md min-h-[90px] flex flex-col items-center justify-center text-center px-3"
+              >
+
+                <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center mb-2">
+
+                  <span className="text-red-500 text-sm font-bold">
+                    ✦
+                  </span>
+
+                </div>
+
+                <p className="text-[10px] md:text-[11px] font-bold text-gray-900">
+                  {item}
+                </p>
+
+                <p className="text-[8px] text-gray-400 mt-1">
+                  Sponsored Event
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            TECHNOLOGY & AI
+        ================================================= */}
+
+        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] gap-8 md:gap-10 border-t-2 border-black pt-8 mb-12">
+
+          <div>
+
+            <SectionHeader title="Technology & AI" />
+
+            <div className="divide-y divide-gray-200">
+
+              {aiInfraStories.map((story) => (
+
+                <article
+                  key={story.id}
+                  className="py-4 first:pt-0 group cursor-pointer"
+                >
+
+                  <p className="text-[13px] md:text-[14px] font-semibold leading-[1.5] text-gray-900 group-hover:text-red-600 transition-colors">
+                    {story.title}
                   </p>
 
-                  <div className="mt-2 flex items-center gap-1 text-[6px] text-gray-400">
+                  <span className="flex items-center gap-1.5 mt-1.5 text-[9px] text-gray-400">
+
                     <Clock size={8} />
+
                     <TimeAgo iso={story.publishedAt} />
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
 
-        {/* CATEGORY SECTIONS */}
-        <section className="grid grid-cols-1 gap-0 border-t-2 border-black lg:grid-cols-2">
-
-          <div className="py-6 lg:pr-6 lg:border-r lg:border-gray-300">
-            <SectionHeader title="Cybersecurity" />
-            <div className="mb-4 overflow-hidden rounded-md">
-              <ImageWithFallback
-                src={sectionImages.cybersecurity}
-                alt="Cybersecurity technology"
-                className="h-[190px] w-full object-cover transition-transform duration-500 hover:scale-[1.02] sm:h-[230px]"
-              />
-            </div>
-            <SmallStoryList stories={cyberStories.slice(0, 4)} />
-          </div>
-
-          <div className="py-6 lg:pl-6">
-            <SectionHeader title="Energy Technology" />
-            <div className="mb-4 overflow-hidden rounded-md">
-              <ImageWithFallback
-                src={sectionImages.energy}
-                alt="Energy technology"
-                className="h-[190px] w-full object-cover transition-transform duration-500 hover:scale-[1.02] sm:h-[230px]"
-              />
-            </div>
-            <SmallStoryList stories={energyStories.slice(0, 4)} />
-          </div>
-        </section>
-
-        <section className="border-t-2 border-black py-7" id="healthcare">
-          <SectionHeader title="Healthcare & BioTech" />
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.25fr_1fr]">
-            <article className="group overflow-hidden rounded-md">
-              <div className="relative">
-                <ImageWithFallback
-                  src={sectionImages.healthcare}
-                  alt="Healthcare and biotechnology"
-                  className="h-[240px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02] sm:h-[320px]"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-4 pt-20">
-                  <span className="text-[7px] font-bold uppercase tracking-[0.15em] text-white">
-                    Healthcare Innovation
                   </span>
-                  <h3 className="mt-1 font-serif text-[18px] font-bold leading-tight text-white sm:text-[23px]">
-                    {healthcareStories[0].title}
+
+                </article>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* TECHNOLOGY WATCH */}
+
+          <aside className="lg:border-l lg:border-gray-300 lg:pl-7">
+
+            <div className="border-b-2 border-black pb-2 mb-4">
+
+              <h3 className="font-bold text-[13px] uppercase tracking-wide">
+                Technology Watch
+              </h3>
+
+            </div>
+
+            <div className="bg-gray-50 border border-gray-100 rounded-md p-5">
+
+              <h4 className="font-bold text-[13px] leading-[1.35]">
+                {zeroTrustNote.title}
+              </h4>
+
+              <p className="text-[12px] leading-[1.65] text-gray-600 mt-3">
+                {zeroTrustNote.body}
+              </p>
+
+            </div>
+
+          </aside>
+
+        </section>
+
+        {/* =================================================
+            TECHNOLOGY MARKET WATCH
+        ================================================= */}
+
+        <section className="mb-12">
+
+          <SectionHeader title="Technology Market Watch" />
+
+          <div className="overflow-x-auto border border-gray-200 rounded-md">
+
+            <table className="w-full min-w-[720px] border-collapse">
+
+              <thead>
+
+                <tr className="border-b-2 border-black">
+
+                  <th className="text-left px-4 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Technology
+                  </th>
+
+                  <th className="text-left px-3 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Driver
+                  </th>
+
+                  <th className="text-left px-3 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Market Risk
+                  </th>
+
+                  <th className="text-right px-4 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Outlook
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody className="divide-y divide-gray-100">
+
+                {responseMatrix.map((item) => (
+
+                  <tr
+                    key={item.threat}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+
+                    <td className="px-4 py-3.5 text-[12px] font-semibold">
+                      {item.threat}
+                    </td>
+
+                    <td className="px-3 py-3.5 text-[12px] text-gray-600">
+                      {item.control}
+                    </td>
+
+                    <td className="px-3 py-3.5 text-[11px] text-gray-500">
+                      {item.risk}
+                    </td>
+
+                    <td className="px-4 py-3.5 text-right">
+
+                      <span className="inline-block bg-gray-100 rounded px-2 py-1 text-[9px] font-bold uppercase text-gray-500">
+                        {item.cadence}
+                      </span>
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            TECHNOLOGY BUSINESS + STOCKS
+        ================================================= */}
+
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 border-t-2 border-black pt-8 mb-12">
+
+          {/* TECHNOLOGY BUSINESS */}
+
+          <div>
+
+            <SectionHeader title="Technology Business" />
+
+            <div className="divide-y divide-gray-200">
+
+              {defenseNews.map((item) => (
+
+                <article
+                  key={item.id}
+                  className="py-4 first:pt-0 group cursor-pointer"
+                >
+
+                  <h3 className="text-[13px] md:text-[14px] font-semibold leading-[1.45] group-hover:text-red-600 transition-colors">
+                    {item.title}
                   </h3>
+
+                  <span className="flex items-center gap-1.5 mt-1.5 text-[9px] text-gray-400">
+
+                    <Clock size={8} />
+
+                    <TimeAgo iso={item.publishedAt} />
+
+                  </span>
+
+                </article>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* TECHNOLOGY STOCKS */}
+
+          <div>
+
+            <SectionHeader title="Technology Stocks" />
+
+            <div className="divide-y divide-gray-200">
+
+              {marketData.map((stock) => (
+
+                <div
+                  key={stock.ticker}
+                  className="py-4 first:pt-0 flex items-center justify-between"
+                >
+
+                  <div>
+
+                    <p className="text-[13px] md:text-[14px] font-semibold">
+                      {stock.company}
+                    </p>
+
+                    <p className="text-[9px] text-gray-400 uppercase tracking-wider mt-0.5">
+                      {stock.ticker}
+                    </p>
+
+                  </div>
+
+                  <div className="text-right">
+
+                    <p className="text-[13px] font-semibold">
+                      {stock.price}
+                    </p>
+
+                    <p
+                      className={`text-[10px] font-bold mt-0.5 ${
+                        stock.up
+                          ? "text-green-700"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {stock.change}
+                    </p>
+
+                  </div>
+
                 </div>
-              </div>
-            </article>
 
-            <div>
-              <SmallStoryList stories={healthcareStories.slice(1)} />
-              <div className="mt-5 bg-black p-5 text-white">
-                <span className="text-[7px] uppercase tracking-[0.15em] text-gray-400">
-                  Market Insight
-                </span>
-                <p className="mt-2 font-serif text-[16px] leading-tight">
-                  Global healthcare AI market projected to reach $187B by 2030, growing at 37% CAGR.
-                </p>
-              </div>
+              ))}
+
             </div>
+
           </div>
+
         </section>
 
-        <section className="grid grid-cols-1 border-t-2 border-black lg:grid-cols-2">
-          <div className="py-6 lg:pr-6 lg:border-r lg:border-gray-300">
-            <SectionHeader title="Manufacturing & Industry 4.0" />
-            <div className="mb-4 overflow-hidden rounded-md">
-              <ImageWithFallback
-                src={sectionImages.manufacturing}
-                alt="Advanced manufacturing"
-                className="h-[190px] w-full object-cover transition-transform duration-500 hover:scale-[1.02] sm:h-[230px]"
-              />
-            </div>
-            <SmallStoryList stories={manufacturingStories} />
+        {/* =================================================
+            NEWSLETTER
+        ================================================= */}
+
+        <section className="bg-[#071A2D] rounded-lg px-5 sm:px-8 md:px-12 py-9 md:py-10 text-center mb-14">
+
+          <h2 className="font-serif text-[24px] md:text-[28px] font-bold text-white">
+            Stay Ahead with The Pride Times
+          </h2>
+
+          <p className="text-[11px] md:text-[12px] text-gray-300 mt-2">
+            Daily briefings on Technology, AI and Business delivered to your inbox.
+          </p>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-2 mt-5 max-w-[520px] mx-auto">
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="h-10 flex-1 rounded-md border border-white/10 bg-white/10 px-3 text-[11px] text-white placeholder:text-gray-400 outline-none focus:border-red-500"
+            />
+
+            <button className="h-10 px-5 rounded-md bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold transition-colors">
+              Subscribe Free
+            </button>
+
           </div>
 
-          <div className="py-6 lg:pl-6">
-            <SectionHeader title="Smart Cities" />
-            <div className="mb-4 overflow-hidden rounded-md">
-              <ImageWithFallback
-                src={sectionImages.smartCities}
-                alt="Smart city technology"
-                className="h-[190px] w-full object-cover transition-transform duration-500 hover:scale-[1.02] sm:h-[230px]"
-              />
-            </div>
-            <SmallStoryList stories={smartCityStories} />
-          </div>
         </section>
 
-        <section className="border-t-2 border-black py-7 pb-12" id="supply-chain">
-          <SectionHeader title="Supply Chain & Logistics" />
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.15fr_1fr]">
-            <div className="group overflow-hidden">
-              <ImageWithFallback
-                src={sectionImages.supplyChain}
-                alt="Supply chain and logistics"
-                className="h-[250px] w-full rounded-md object-cover transition-transform duration-700 group-hover:scale-[1.02] sm:h-[330px]"
-              />
-              <div className="border-x border-b border-gray-300 bg-white p-4">
-                <span className="text-[7px] font-bold uppercase tracking-[0.15em] text-red-700">
-                  Logistics & Trade
-                </span>
-                <h3 className="mt-1 font-serif text-[18px] font-bold leading-tight sm:text-[22px]">
-                  The global supply chain is being rebuilt around data, automation and artificial intelligence.
-                </h3>
-              </div>
-            </div>
-
-            <div>
-              <SmallStoryList stories={supplyChainStories} />
-            </div>
-          </div>
-        </section>
       </div>
     </main>
   );
