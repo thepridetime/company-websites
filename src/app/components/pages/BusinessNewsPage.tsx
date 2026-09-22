@@ -149,13 +149,13 @@ function MoreStories({
 ========================================================= */
 
 const hero = {
-  category: "CORPORATE STRATEGY",
+  category: "POLITICS & BUSINESS",
   title:
-    "The Great Corporate AI Arms Race: How Fortune 500 Companies Are Spending $2.3 Trillion to Win the Intelligence Economy",
+    "Marco Rubio Remakes Himself as Trump's Unapologetic Global Envoy",
   excerpt:
-    "Microsoft, Google, Amazon, Meta and Apple have collectively committed $2.3 trillion in AI investment through 2030. Every sector — from banking to retail, healthcare to manufacturing — is being redrawn. The companies that win this race will dominate the 21st century economy.",
-  author: "Sagar Kumar",
-  publishedAt: "2026-09-21T08:19:00Z",
+    "The secretary of state has embraced a more forceful role on the world stage as the Trump administration reshapes US foreign policy.",
+  author: "Bloomberg News",
+  publishedAt: "2026-09-22T10:00:00Z",
   image:
     "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
 };
@@ -163,100 +163,100 @@ const hero = {
 const maDeals = [
   {
     id: 1,
-    acquirer: "Amazon",
-    target: "NuScale Power",
-    value: "$12B",
-    sector: "Nuclear Energy",
-    status: "Announced",
+    acquirer: "Global Markets",
+    target: "The Best Music, TV, Books and Theater",
+    value: "—",
+    sector: "Culture",
+    status: "Featured",
   },
   {
     id: 2,
-    acquirer: "Microsoft",
-    target: "IonQ",
-    value: "$8.7B",
-    sector: "Quantum Computing",
-    status: "Pending",
+    acquirer: "Technology",
+    target: "The World's Most Reliable AI Detector",
+    value: "—",
+    sector: "AI",
+    status: "Featured",
   },
   {
     id: 3,
-    acquirer: "BlackRock",
-    target: "Global Infrastructure Partners",
-    value: "$12.5B",
-    sector: "Infrastructure",
-    status: "Closed",
+    acquirer: "Consumer",
+    target: "Fender and the Iconic Strat",
+    value: "—",
+    sector: "Music",
+    status: "Featured",
   },
   {
     id: 4,
-    acquirer: "JPMorgan",
-    target: "First Republic (Assets)",
-    value: "$10.6B",
-    sector: "Banking",
-    status: "Closed",
+    acquirer: "Work",
+    target: "America's Favorite Countertops",
+    value: "—",
+    sector: "Manufacturing",
+    status: "Featured",
   },
   {
     id: 5,
-    acquirer: "Reliance",
-    target: "Disney India",
-    value: "$8.5B",
-    sector: "Media / Streaming",
-    status: "Closed",
+    acquirer: "Global Business",
+    target: "The New Rules of Washington",
+    value: "—",
+    sector: "Business",
+    status: "Featured",
   },
 ];
 
 const earningsNews = [
   {
     id: 1,
-    company: "Apple",
-    ticker: "AAPL",
-    eps: "$2.45",
-    beat: "+12%",
-    revenue: "$98.3B",
+    company: "Bloomberg Businessweek",
+    ticker: "BW",
+    eps: "—",
+    beat: "FEATURE",
+    revenue: "—",
     status: "BEAT",
   },
   {
     id: 2,
-    company: "Microsoft",
-    ticker: "MSFT",
-    eps: "$3.12",
-    beat: "+8%",
-    revenue: "$71.2B",
+    company: "Global Markets",
+    ticker: "GLOB",
+    eps: "—",
+    beat: "FEATURE",
+    revenue: "—",
     status: "BEAT",
   },
   {
     id: 3,
-    company: "Alphabet",
-    ticker: "GOOGL",
-    eps: "$2.89",
-    beat: "+15%",
-    revenue: "$88.3B",
+    company: "Technology",
+    ticker: "TECH",
+    eps: "—",
+    beat: "FEATURE",
+    revenue: "—",
     status: "BEAT",
   },
   {
     id: 4,
-    company: "Meta",
-    ticker: "META",
-    eps: "$6.43",
-    beat: "+23%",
-    revenue: "$41.5B",
+    company: "Consumer",
+    ticker: "CONS",
+    eps: "—",
+    beat: "FEATURE",
+    revenue: "—",
     status: "BEAT",
   },
   {
     id: 5,
-    company: "Amazon",
-    ticker: "AMZN",
-    eps: "$1.91",
-    beat: "+5%",
-    revenue: "$187.8B",
+    company: "Work & Society",
+    ticker: "WORK",
+    eps: "—",
+    beat: "FEATURE",
+    revenue: "—",
     status: "BEAT",
   },
   {
     id: 6,
-    company: "Intel",
-    ticker: "INTC",
-    eps: "$0.18",
-    beat: "-8%",
-    revenue: "$12.4B",
-    status: "MISS",
+    company: "Culture",
+    ticker: "CULT",
+    eps: "—",
+    beat: "FEATURE",
+    revenue: "—",
+    status: "BEAT",
   },
 ];
 
@@ -264,44 +264,44 @@ const corporateNews = [
   {
     id: 1,
     title:
-      "LVMH Posts €21B Revenue — Luxury Demand Defies Global Economic Uncertainty",
-    publishedAt: "2026-09-21T09:19:00Z",
-    category: "LUXURY",
+      "Why Politicians From the Working Class Are Rare Around the World",
+    publishedAt: "2026-09-22T09:30:00Z",
+    category: "POLITICS",
   },
   {
     id: 2,
     title:
-      "Walmart Launches AI-Powered Supply Chain Platform — 50,000 Suppliers Enrolled",
-    publishedAt: "2026-09-21T08:19:00Z",
-    category: "RETAIL",
+      "Fender Makes Enemy With Its Melody Fight Over Its Iconic Strat",
+    publishedAt: "2026-09-22T08:45:00Z",
+    category: "CULTURE",
   },
   {
     id: 3,
     title:
-      "Saudi Aramco Overtakes Apple as World's Most Profitable Company in Q1 2026",
-    publishedAt: "2026-09-21T07:19:00Z",
-    category: "ENERGY",
+      "The World's Most Reliable AI Detector Has a Human Problem",
+    publishedAt: "2026-09-22T08:15:00Z",
+    category: "TECHNOLOGY",
   },
   {
     id: 4,
     title:
-      "Boeing's 737 MAX Returns to Full Delivery Schedule After 18-Month Production Fix",
-    publishedAt: "2026-09-21T06:19:00Z",
-    category: "AEROSPACE",
+      "TikTok 'Death Sentences': Crafting America's Favorite Countertops Is Killing Workers",
+    publishedAt: "2026-09-22T07:40:00Z",
+    category: "WORK",
   },
   {
     id: 5,
     title:
-      "Reliance Jio Surpasses 500 Million Subscribers — World's Largest Telecom by Users",
-    publishedAt: "2026-09-21T05:19:00Z",
-    category: "TELECOM",
+      "The Great Gulf Between the Rich and Everyone Else Is Getting Wider",
+    publishedAt: "2026-09-22T07:10:00Z",
+    category: "ECONOMY",
   },
   {
     id: 6,
     title:
-      "Goldman Sachs CEO David Solomon Takes Personal Pay Cut After Criticism of $30B Losses",
-    publishedAt: "2026-09-21T04:19:00Z",
-    category: "BANKING",
+      "The New Rules of Global Business Are Being Written in Washington",
+    publishedAt: "2026-09-22T06:40:00Z",
+    category: "GLOBAL BUSINESS",
   },
 ];
 
@@ -309,26 +309,26 @@ const startupNews = [
   {
     id: 1,
     title:
-      "Anthropic Raises $4B Series E at $40B Valuation — AI Safety Startup Now Among World's Most Valuable",
-    publishedAt: "2026-09-21T08:19:00Z",
+      "Chinese Brands Resort to Crude Insults to Hawk Legs and Charging Cables",
+    publishedAt: "2026-09-22T08:50:00Z",
   },
   {
     id: 2,
     title:
-      "Indian SaaS Startup Freshworks Acquires Two US Companies in $1.2B Deal",
-    publishedAt: "2026-09-21T06:19:00Z",
+      "The Ex-Bear Baron Turning Washington's Redline Into a $7.8 Billion Empire",
+    publishedAt: "2026-09-22T08:05:00Z",
   },
   {
     id: 3,
     title:
-      "Rapido Raises $250M as India's Bike-Taxi Market Explodes to 50M Monthly Rides",
-    publishedAt: "2026-09-21T04:19:00Z",
+      "Hating on Polyester Is Back in Fashion",
+    publishedAt: "2026-09-22T07:25:00Z",
   },
   {
     id: 4,
     title:
-      "SpaceX Valuation Hits $350B — Overtakes Boeing and Airbus Combined",
-    publishedAt: "2026-09-21T02:19:00Z",
+      "AI Is Changing the Business School Case Study",
+    publishedAt: "2026-09-22T06:55:00Z",
   },
 ];
 
@@ -404,15 +404,6 @@ export function BusinessNewsPage() {
 
 
         {/* =================================================
-            TOP ADVERTISEMENT
-        ================================================= */}
-
-        <div className="mb-7 md:mb-9">
-          <AdSpace />
-        </div>
-
-
-        {/* =================================================
             HERO + SIDEBAR
         ================================================= */}
 
@@ -472,8 +463,6 @@ export function BusinessNewsPage() {
           ================================================= */}
 
           <aside className="lg:pt-0">
-
-            <SponsoredAd />
 
             <MoreStories stories={corporateNews} />
 
@@ -787,68 +776,6 @@ export function BusinessNewsPage() {
               ))}
 
             </div>
-
-          </div>
-
-        </section>
-
-
-        {/* =================================================
-            SECOND ADVERTISEMENT
-        ================================================= */}
-
-        <div className="my-12 md:my-14">
-          <AdSpace label="Business Solutions | Powered by The Pride Times" />
-        </div>
-
-
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================= */}
-
-        <section className="rounded-md border border-gray-100 bg-gray-50 p-4 sm:p-5">
-
-          <div className="mb-4 flex items-center gap-2">
-
-            <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-              Sponsorship
-            </span>
-
-            <span className="text-[9px] text-gray-400">
-              Presented by our partners
-            </span>
-
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-
-            {[
-              "Global Finance Summit 2026",
-              "Tech Leaders Forum",
-              "Energy Transition Conference",
-              "AI & Business World",
-            ].map((item) => (
-
-              <div
-                key={item}
-                className="flex min-h-[90px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-4 text-center"
-              >
-
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
-                  <Briefcase size={13} />
-                </div>
-
-                <p className="mt-2 text-[10px] font-bold text-gray-900">
-                  {item}
-                </p>
-
-                <p className="mt-1 text-[8px] text-gray-400">
-                  Sponsored Event
-                </p>
-
-              </div>
-
-            ))}
 
           </div>
 
