@@ -1,4 +1,6 @@
-import { Clock, ChevronRight } from "lucide-react";
+
+import { TimeAgo } from "../../utils/timeAgo";
+import { Clock } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 /* =========================================================
@@ -10,7 +12,7 @@ type Story = {
   category: string;
   title: string;
   excerpt: string;
-  time: string;
+  publishedAt: string;
   image: string;
 };
 
@@ -25,7 +27,7 @@ const hero = {
     "The most comprehensive AI legislation in US history mandates transparency, safety audits, and liability frameworks for high-risk AI systems across 14 sectors.",
   author: "Sagar Kumar",
   date: "September 15, 2026",
-  time: "30 min ago",
+  publishedAt: "2026-09-21T09:49:00Z",
   image:
     "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1400&q=85",
 };
@@ -39,23 +41,25 @@ const moreStories = [
     id: 1,
     category: "WHITE HOUSE WATCH",
     title: "White House Announces $500B Infrastructure Investment in AI",
-    time: "2 hr ago",
+    publishedAt: "2026-09-21T08:19:00Z",
     image:
       "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 2,
     category: "WHITE HOUSE WATCH",
-    title: "Administration Begins New Round of Federal Technology Reviews",
-    time: "4 hr ago",
+    title:
+      "Administration Begins New Round of Federal Technology Reviews",
+    publishedAt: "2026-09-21T06:19:00Z",
     image:
       "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=400&q=80",
   },
   {
     id: 3,
     category: "WHITE HOUSE WATCH",
-    title: "Congress Debates New Framework for Artificial Intelligence",
-    time: "6 hr ago",
+    title:
+      "Congress Debates New Framework for Artificial Intelligence",
+    publishedAt: "2026-09-21T04:19:00Z",
     image:
       "https://images.unsplash.com/photo-1580130379624-3a069adbffc5?auto=format&fit=crop&w=400&q=80",
   },
@@ -69,74 +73,69 @@ const latestNews: Story[] = [
   {
     id: 1,
     category: "TECHNOLOGY",
-    title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    title:
+      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
     excerpt:
       "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South...",
-    time: "12 min ago",
+    publishedAt: "2026-09-21T10:07:00Z",
     image:
       "https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 2,
     category: "TECHNOLOGY",
-    title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    title:
+      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
     excerpt:
       "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
+    publishedAt: "2026-09-21T09:44:00Z",
     image:
       "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 3,
     category: "TECHNOLOGY",
-    title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    title:
+      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
     excerpt:
       "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing.",
-    time: "2 hr ago",
+    publishedAt: "2026-09-21T08:19:00Z",
     image:
       "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 4,
     category: "TECHNOLOGY",
-    title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
+    title:
+      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
     excerpt:
       "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative...",
-    time: "3 hr ago",
+    publishedAt: "2026-09-21T07:19:00Z",
     image:
       "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 5,
     category: "TECHNOLOGY",
-    title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    title:
+      "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
     excerpt:
       "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in multiple enterprise reasoning...",
-    time: "5 hr ago",
+    publishedAt: "2026-09-21T05:19:00Z",
     image:
       "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 6,
     category: "TECHNOLOGY",
-    title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    title:
+      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
     excerpt:
       "The latest satellite constellation expansion brings high-speed internet to remote regions across Africa, South Asia, and Latin...",
-    time: "6 hr ago",
+    publishedAt: "2026-09-21T04:19:00Z",
     image:
       "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=700&q=80",
   },
-];
-
-/* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-const sponsoredEvents = [
-  "Global Finance Summit 2026",
-  "Tech Leaders Forum",
-  "Energy Transition Conference",
-  "AI & Business World",
 ];
 
 /* =========================================================
@@ -154,103 +153,45 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 /* =========================================================
-   ADVERTISEMENT
+   MORE STORIES SIDEBAR
 ========================================================= */
 
-function Advertisement({
-  label = "Advertisement",
-}: {
-  label?: string;
-}) {
-  return (
-    <div className="relative w-full h-[90px] md:h-[94px] bg-[#102c35] overflow-hidden flex items-center justify-center">
-      <span className="absolute top-1 right-1 text-[7px] text-gray-300 bg-white/20 px-1">
-        {label}
-      </span>
-
-      <div className="text-center text-white">
-        <p className="text-[8px] md:text-[9px] font-bold tracking-[0.18em] text-cyan-300">
-          GOOGLE ADSENSE
-        </p>
-
-        <p className="text-[12px] md:text-[14px] font-semibold mt-1">
-          Advertisement Space
-        </p>
-
-        <p className="text-[8px] text-cyan-200 mt-1">
-          728 × 90 · Leaderboard
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   SPONSORED SIDEBAR
-========================================================= */
-
-function SponsoredSidebar() {
+function MoreStoriesSidebar() {
   return (
     <aside className="w-full">
-      <div className="border border-[#ece8dc] rounded-md overflow-hidden bg-[#fffdf6]">
-        <div className="flex items-center justify-between px-3 py-2">
-          <span className="text-[8px] uppercase tracking-[0.12em] text-gray-500 font-semibold">
-            Sponsored Content
-          </span>
-
-          <span className="text-[8px] text-gray-400">Ad</span>
-        </div>
-
-        <div className="mx-3 mb-3 h-[210px] bg-[#171b3b] flex items-center justify-center text-white text-center">
-          <div>
-            <p className="text-[8px] font-bold tracking-[0.14em] text-yellow-300">
-              FEATURED PARTNER
-            </p>
-
-            <p className="text-sm font-bold mt-3">Your Ad Here</p>
-
-            <p className="text-[9px] text-gray-300 mt-2">
-              Reach 2M+ business readers
-            </p>
-          </div>
-        </div>
+      <div className="border-b-2 border-black pb-2">
+        <h3 className="text-[13px] font-bold uppercase tracking-wide">
+          More Stories
+        </h3>
       </div>
 
-      <div className="mt-4">
-        <div className="border-b-2 border-black pb-2">
-          <h3 className="text-[13px] font-bold uppercase tracking-wide">
-            More Stories
-          </h3>
-        </div>
+      <div>
+        {moreStories.map((story) => (
+          <div
+            key={story.id}
+            className="flex gap-2.5 py-3 border-b border-gray-200 group cursor-pointer"
+          >
+            <ImageWithFallback
+              src={story.image}
+              alt={story.title}
+              className="w-[64px] h-[48px] object-cover rounded-[3px] shrink-0"
+            />
 
-        <div>
-          {moreStories.map((story) => (
-            <div
-              key={story.id}
-              className="flex gap-2.5 py-3 border-b border-gray-200 group cursor-pointer"
-            >
-              <ImageWithFallback
-                src={story.image}
-                alt={story.title}
-                className="w-[64px] h-[48px] object-cover rounded-[3px] shrink-0"
-              />
+            <div className="min-w-0">
+              <p className="text-[7px] text-red-600 font-bold uppercase tracking-wide">
+                {story.category}
+              </p>
 
-              <div className="min-w-0">
-                <p className="text-[7px] text-red-600 font-bold uppercase tracking-wide">
-                  {story.category}
-                </p>
+              <p className="text-[10px] font-bold leading-[1.25] text-gray-900 group-hover:text-red-600 transition-colors">
+                {story.title}
+              </p>
 
-                <p className="text-[10px] font-bold leading-[1.25] text-gray-900 group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </p>
-
-                <p className="text-[8px] text-gray-400 mt-1">
-                  {story.time}
-                </p>
-              </div>
+              <p className="text-[8px] text-gray-400 mt-1">
+                <TimeAgo iso={story.publishedAt} />
+              </p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </aside>
   );
@@ -299,7 +240,7 @@ function LatestNewsCard({ story }: { story: Story }) {
 
           <span className="flex items-center gap-1 text-[8px] text-gray-400">
             <Clock size={9} />
-            {story.time}
+            <TimeAgo iso={story.publishedAt} />
           </span>
         </div>
       </div>
@@ -362,14 +303,6 @@ export function WhiteHouseWatchPage() {
         </section>
 
         {/* =================================================
-            TOP AD
-        ================================================= */}
-
-        <div className="mb-6">
-          <Advertisement />
-        </div>
-
-        {/* =================================================
             HERO + SIDEBAR
         ================================================= */}
 
@@ -415,14 +348,17 @@ export function WhiteHouseWatchPage() {
 
                 <span>•</span>
 
-                <span>{hero.time}</span>
+                <span>
+                  <TimeAgo iso={hero.publishedAt} />
+                </span>
               </div>
             </div>
           </article>
 
-          {/* SPONSORED SIDEBAR */}
+          {/* MORE STORIES */}
 
-          <SponsoredSidebar />
+          <MoreStoriesSidebar />
+
         </section>
 
         {/* =================================================
@@ -434,54 +370,10 @@ export function WhiteHouseWatchPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {latestNews.map((story) => (
-              <LatestNewsCard key={story.id} story={story} />
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================
-            SECOND AD
-        ================================================= */}
-
-        <div className="mb-7">
-          <Advertisement label="Advertisement" />
-        </div>
-
-        {/* =================================================
-            SPONSORED CONTENT
-        ================================================= */}
-
-        <section className="bg-[#f7f7f7] rounded-md p-4 md:p-5 mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-[8px] border border-gray-300 rounded-sm px-2 py-1 uppercase tracking-wide text-gray-400 font-bold">
-              Sponsorship
-            </span>
-
-            <span className="text-[9px] text-gray-400">
-              Presented by our partners
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {sponsoredEvents.map((event) => (
-              <div
-                key={event}
-                className="bg-white border border-gray-200 rounded-md h-[92px] flex flex-col items-center justify-center text-center hover:shadow-sm transition-shadow"
-              >
-                <div className="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center mb-2">
-                  <span className="text-red-600 text-sm font-bold">
-                    ◆
-                  </span>
-                </div>
-
-                <p className="text-[10px] font-bold text-gray-800">
-                  {event}
-                </p>
-
-                <p className="text-[8px] text-gray-400 mt-1">
-                  Sponsored Event
-                </p>
-              </div>
+              <LatestNewsCard
+                key={story.id}
+                story={story}
+              />
             ))}
           </div>
         </section>
@@ -496,3 +388,4 @@ export function WhiteHouseWatchPage() {
     </main>
   );
 }
+
