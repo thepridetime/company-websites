@@ -422,24 +422,23 @@ function SecondaryArticle({
    PAGE
 ========================================================= */
 
-/*
- * IMPORTANT:
- * App.tsx imports:
- *
- * import { TechnologyPage } from "./components/pages/TechnologyPage";
- *
- * Therefore this component MUST be exported as TechnologyPage.
- */
-
 export function TechnologyPage() {
   return (
     <main className="w-full bg-white text-[#17140F] antialiased">
+
+      {/* =====================================================
+          MAIN FULL WIDTH CONTAINER
+      ===================================================== */}
+
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
 
-        {/* PAGE TITLE */}
+        {/* =================================================
+            PAGE TITLE
+        ================================================= */}
 
         <header className="pt-5 md:pt-7 pb-4">
           <div className="border-t-[3px] border-red-600 pt-4">
+
             <h1 className="font-serif text-[32px] sm:text-[36px] md:text-[40px] lg:text-[44px] xl:text-[48px] font-bold leading-none">
               Technology
             </h1>
@@ -448,13 +447,18 @@ export function TechnologyPage() {
               AI, technology companies, startups, data centers, markets and
               the future of business.
             </p>
+
           </div>
         </header>
 
-        {/* TOP ADVERTISEMENT */}
+        {/* =================================================
+            TOP ADVERTISEMENT
+        ================================================= */}
 
         <div className="w-full h-[70px] md:h-[78px] bg-[#17313A] flex items-center justify-center my-4 md:my-5 relative overflow-hidden">
+
           <div className="text-center text-white">
+
             <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.22em] text-cyan-300">
               GOOGLE ADSENSE
             </p>
@@ -466,29 +470,39 @@ export function TechnologyPage() {
             <p className="mt-0.5 text-[8px] text-cyan-200">
               728 × 90 • Leaderboard
             </p>
+
           </div>
 
           <span className="absolute top-1 right-1 text-[7px] bg-white/80 text-gray-500 px-1.5 py-0.5">
             Advertisement
           </span>
+
         </div>
 
-        {/* MAIN HERO + MORE STORIES */}
+        {/* =================================================
+            MAIN HERO + MORE STORIES
+        ================================================= */}
 
         <section className="grid grid-cols-1 xl:grid-cols-[minmax(0,3.25fr)_minmax(280px,1fr)] gap-5 lg:gap-7 mt-4 md:mt-6">
 
-          {/* MAIN HERO */}
+          {/* =================================================
+              MAIN HERO
+          ================================================= */}
 
           <article className="group cursor-pointer">
+
             <div className="overflow-hidden rounded-lg bg-gray-100">
+
               <ImageWithFallback
                 src={hero.image}
                 alt={hero.title}
                 className="w-full h-[260px] sm:h-[350px] md:h-[440px] lg:h-[500px] xl:h-[520px] object-cover transition-transform duration-700 group-hover:scale-[1.025]"
               />
+
             </div>
 
             <div className="pt-3">
+
               <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
                 {hero.category}
               </span>
@@ -502,8 +516,521 @@ export function TechnologyPage() {
               </p>
 
               <div className="flex flex-wrap items-center gap-3 mt-3 text-[10px] text-gray-400">
+
                 <span className="font-medium text-gray-500">
                   By {hero.author}
                 </span>
 
-                <span
+                <span className="h-3 w-px bg-gray-300" />
+
+                <span className="flex items-center gap-1.5">
+                  <Clock size={9} />
+                  <TimeAgo iso={hero.publishedAt} />
+                </span>
+
+              </div>
+
+            </div>
+
+          </article>
+
+          {/* =================================================
+              RIGHT SIDEBAR
+          ================================================= */}
+
+          <aside className="xl:border-l xl:border-gray-300 xl:pl-6">
+
+            {/* SPONSORED BOX */}
+
+            <div className="border border-gray-200 rounded-md overflow-hidden mb-5">
+
+              <div className="px-3 py-2 bg-[#F7F4EC]">
+
+                <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-gray-500">
+                  Sponsored Content
+                </span>
+
+              </div>
+
+              <div className="h-[150px] md:h-[170px] bg-[#101731] flex items-center justify-center text-center px-4">
+
+                <div>
+
+                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-yellow-400">
+                    Featured Partner
+                  </p>
+
+                  <p className="text-white text-[14px] font-semibold mt-2">
+                    Your Ad Here
+                  </p>
+
+                  <p className="text-gray-300 text-[9px] mt-1">
+                    Reach 2M+ business readers
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* MORE STORIES */}
+
+            <div className="border-b-2 border-[#17140F] pb-2 mb-1">
+
+              <h3 className="font-bold text-[14px] uppercase tracking-wide">
+                More Stories
+              </h3>
+
+            </div>
+
+            <div className="divide-y divide-gray-200">
+
+              {threatAlerts.slice(0, 4).map((story) => (
+
+                <article
+                  key={story.id}
+                  className="py-3 group cursor-pointer"
+                >
+
+                  <span
+                    className={`inline-block text-[7px] font-bold uppercase tracking-wider px-1.5 py-0.5 ${
+                      story.severity === "TECH"
+                        ? "bg-blue-600 text-white"
+                        : story.severity === "AI"
+                        ? "bg-purple-600 text-white"
+                        : story.severity === "BUSINESS"
+                        ? "bg-red-600 text-white"
+                        : "bg-amber-400 text-black"
+                    }`}
+                  >
+                    {story.severity}
+                  </span>
+
+                  <h4 className="mt-1.5 text-[11px] md:text-[12px] font-bold leading-[1.35] text-gray-900 group-hover:text-red-600 transition-colors">
+                    {story.title}
+                  </h4>
+
+                  <span className="flex items-center gap-1 mt-1 text-[8px] text-gray-400">
+                    <Clock size={8} />
+                    <TimeAgo iso={story.publishedAt} />
+                  </span>
+
+                </article>
+
+              ))}
+
+            </div>
+
+          </aside>
+
+        </section>
+
+        {/* =================================================
+            LATEST TECHNOLOGY NEWS
+        ================================================= */}
+
+        <section className="mt-12 md:mt-14">
+
+          <SectionHeader title="Latest Technology News" />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 lg:gap-x-7 gap-y-8">
+
+            {stories.map((story) => (
+
+              <article
+                key={story.id}
+                className="group cursor-pointer"
+              >
+
+                <div className="overflow-hidden rounded-md bg-gray-100">
+
+                  <ImageWithFallback
+                    src={story.image}
+                    alt={story.title}
+                    className="w-full h-[180px] sm:h-[190px] md:h-[205px] lg:h-[215px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+
+                </div>
+
+                <div className="pt-2.5">
+
+                  <span className="text-[8px] font-bold uppercase tracking-[0.13em] text-red-600">
+                    {story.category}
+                  </span>
+
+                  <h3 className="mt-1.5 font-serif text-[17px] md:text-[18px] font-bold leading-[1.18] text-[#17140F] group-hover:text-red-600 transition-colors">
+                    {story.title}
+                  </h3>
+
+                  <div className="flex items-center gap-1.5 mt-2 text-[9px] text-gray-400">
+
+                    <Clock size={8} />
+
+                    <TimeAgo iso={story.publishedAt} />
+
+                  </div>
+
+                </div>
+
+              </article>
+
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <div className="w-full h-[68px] md:h-[76px] bg-[#17313A] flex items-center justify-center my-10 md:my-12 relative">
+
+          <div className="text-center text-white">
+
+            <p className="text-[8px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+              GOOGLE ADSENSE
+            </p>
+
+            <p className="mt-1 text-[12px] md:text-[14px] font-semibold">
+              Business Solutions | Powered by The Pride Times
+            </p>
+
+            <p className="text-[8px] text-cyan-200 mt-0.5">
+              728 × 90 • Leaderboard
+            </p>
+
+          </div>
+
+          <span className="absolute top-1 right-1 text-[7px] bg-white/80 text-gray-500 px-1.5 py-0.5">
+            Advertisement
+          </span>
+
+        </div>
+
+        {/* =================================================
+            SPONSORSHIP
+        ================================================= */}
+
+        <section className="bg-[#F7F7F5] rounded-lg border border-gray-100 p-4 md:p-5 mb-10">
+
+          <div className="mb-4">
+
+            <span className="text-[8px] font-bold uppercase tracking-[0.15em] text-gray-500 border border-gray-200 bg-white px-2 py-1 rounded-sm">
+              Sponsorship
+            </span>
+
+            <span className="ml-2 text-[9px] text-gray-400">
+              Presented by our partners
+            </span>
+
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+            {sponsorships.map((item) => (
+
+              <div
+                key={item}
+                className="bg-white border border-gray-200 rounded-md min-h-[90px] flex flex-col items-center justify-center text-center px-3"
+              >
+
+                <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center mb-2">
+
+                  <span className="text-red-500 text-sm font-bold">
+                    ✦
+                  </span>
+
+                </div>
+
+                <p className="text-[10px] md:text-[11px] font-bold text-gray-900">
+                  {item}
+                </p>
+
+                <p className="text-[8px] text-gray-400 mt-1">
+                  Sponsored Event
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            TECHNOLOGY & AI
+        ================================================= */}
+
+        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] gap-8 md:gap-10 border-t-2 border-black pt-8 mb-12">
+
+          <div>
+
+            <SectionHeader title="Technology & AI" />
+
+            <div className="divide-y divide-gray-200">
+
+              {aiInfraStories.map((story) => (
+
+                <article
+                  key={story.id}
+                  className="py-4 first:pt-0 group cursor-pointer"
+                >
+
+                  <p className="text-[13px] md:text-[14px] font-semibold leading-[1.5] text-gray-900 group-hover:text-red-600 transition-colors">
+                    {story.title}
+                  </p>
+
+                  <span className="flex items-center gap-1.5 mt-1.5 text-[9px] text-gray-400">
+
+                    <Clock size={8} />
+
+                    <TimeAgo iso={story.publishedAt} />
+
+                  </span>
+
+                </article>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* TECHNOLOGY WATCH */}
+
+          <aside className="lg:border-l lg:border-gray-300 lg:pl-7">
+
+            <div className="border-b-2 border-black pb-2 mb-4">
+
+              <h3 className="font-bold text-[13px] uppercase tracking-wide">
+                Technology Watch
+              </h3>
+
+            </div>
+
+            <div className="bg-gray-50 border border-gray-100 rounded-md p-5">
+
+              <h4 className="font-bold text-[13px] leading-[1.35]">
+                {zeroTrustNote.title}
+              </h4>
+
+              <p className="text-[12px] leading-[1.65] text-gray-600 mt-3">
+                {zeroTrustNote.body}
+              </p>
+
+            </div>
+
+          </aside>
+
+        </section>
+
+        {/* =================================================
+            TECHNOLOGY MARKET WATCH
+        ================================================= */}
+
+        <section className="mb-12">
+
+          <SectionHeader title="Technology Market Watch" />
+
+          <div className="overflow-x-auto border border-gray-200 rounded-md">
+
+            <table className="w-full min-w-[720px] border-collapse">
+
+              <thead>
+
+                <tr className="border-b-2 border-black">
+
+                  <th className="text-left px-4 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Technology
+                  </th>
+
+                  <th className="text-left px-3 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Driver
+                  </th>
+
+                  <th className="text-left px-3 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Market Risk
+                  </th>
+
+                  <th className="text-right px-4 py-3 text-[9px] uppercase tracking-wider text-gray-400">
+                    Outlook
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody className="divide-y divide-gray-100">
+
+                {responseMatrix.map((item) => (
+
+                  <tr
+                    key={item.threat}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+
+                    <td className="px-4 py-3.5 text-[12px] font-semibold">
+                      {item.threat}
+                    </td>
+
+                    <td className="px-3 py-3.5 text-[12px] text-gray-600">
+                      {item.control}
+                    </td>
+
+                    <td className="px-3 py-3.5 text-[11px] text-gray-500">
+                      {item.risk}
+                    </td>
+
+                    <td className="px-4 py-3.5 text-right">
+
+                      <span className="inline-block bg-gray-100 rounded px-2 py-1 text-[9px] font-bold uppercase text-gray-500">
+                        {item.cadence}
+                      </span>
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            TECHNOLOGY BUSINESS + STOCKS
+        ================================================= */}
+
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 border-t-2 border-black pt-8 mb-12">
+
+          {/* TECHNOLOGY BUSINESS */}
+
+          <div>
+
+            <SectionHeader title="Technology Business" />
+
+            <div className="divide-y divide-gray-200">
+
+              {defenseNews.map((item) => (
+
+                <article
+                  key={item.id}
+                  className="py-4 first:pt-0 group cursor-pointer"
+                >
+
+                  <h3 className="text-[13px] md:text-[14px] font-semibold leading-[1.45] group-hover:text-red-600 transition-colors">
+                    {item.title}
+                  </h3>
+
+                  <span className="flex items-center gap-1.5 mt-1.5 text-[9px] text-gray-400">
+
+                    <Clock size={8} />
+
+                    <TimeAgo iso={item.publishedAt} />
+
+                  </span>
+
+                </article>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* TECHNOLOGY STOCKS */}
+
+          <div>
+
+            <SectionHeader title="Technology Stocks" />
+
+            <div className="divide-y divide-gray-200">
+
+              {marketData.map((stock) => (
+
+                <div
+                  key={stock.ticker}
+                  className="py-4 first:pt-0 flex items-center justify-between"
+                >
+
+                  <div>
+
+                    <p className="text-[13px] md:text-[14px] font-semibold">
+                      {stock.company}
+                    </p>
+
+                    <p className="text-[9px] text-gray-400 uppercase tracking-wider mt-0.5">
+                      {stock.ticker}
+                    </p>
+
+                  </div>
+
+                  <div className="text-right">
+
+                    <p className="text-[13px] font-semibold">
+                      {stock.price}
+                    </p>
+
+                    <p
+                      className={`text-[10px] font-bold mt-0.5 ${
+                        stock.up
+                          ? "text-green-700"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {stock.change}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            NEWSLETTER
+        ================================================= */}
+
+        <section className="bg-[#071A2D] rounded-lg px-5 sm:px-8 md:px-12 py-9 md:py-10 text-center mb-14">
+
+          <h2 className="font-serif text-[24px] md:text-[28px] font-bold text-white">
+            Stay Ahead with The Pride Times
+          </h2>
+
+          <p className="text-[11px] md:text-[12px] text-gray-300 mt-2">
+            Daily briefings on Technology, AI and Business delivered to your inbox.
+          </p>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-2 mt-5 max-w-[520px] mx-auto">
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="h-10 flex-1 rounded-md border border-white/10 bg-white/10 px-3 text-[11px] text-white placeholder:text-gray-400 outline-none focus:border-red-500"
+            />
+
+            <button className="h-10 px-5 rounded-md bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold transition-colors">
+              Subscribe Free
+            </button>
+
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+  );
+}
