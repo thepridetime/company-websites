@@ -1,3 +1,4 @@
+import { TimeAgo } from "../../utils/timeAgo";
 import {
   Clock,
   ChevronRight,
@@ -56,7 +57,7 @@ const heroStory = {
   excerpt:
     "Markets react sharply as investors digest fresh monetary policy signals, stronger corporate earnings and a rapidly changing global economic outlook.",
   author: "Sagar Kumar",
-  time: "1 hr ago",
+  publishedAt: "2026-09-21T09:19:00Z",
   image: images.hero,
   path: "/finance",
 };
@@ -67,7 +68,7 @@ const moreStories = [
     category: "FINANCE",
     title:
       "Federal Reserve Announces Surprise 50bps Rate Cut — Biggest in 4 Years",
-    time: "3 min ago",
+    publishedAt: "2026-09-21T10:16:00Z",
     image: images.fed,
     path: "/finance",
   },
@@ -76,7 +77,7 @@ const moreStories = [
     category: "TECHNOLOGY",
     title:
       "OpenAI Launches GPT-5 — Claims Surpasses PhD-Level Performance",
-    time: "12 min ago",
+    publishedAt: "2026-09-21T10:07:00Z",
     image: images.openai,
     path: "/technology",
   },
@@ -85,7 +86,7 @@ const moreStories = [
     category: "WORLD",
     title:
       "G20 Emergency Summit Called as Three Major Conflicts Converge",
-    time: "18 min ago",
+    publishedAt: "2026-09-21T10:01:00Z",
     image: images.world,
     path: "/world",
   },
@@ -99,7 +100,7 @@ const latestStories = [
       "Federal Reserve Announces Surprise 50bps Rate Cut — Biggest in 4 Years",
     excerpt:
       "Markets respond to the central bank's latest policy decision as investors reassess economic growth expectations.",
-    time: "3 min ago",
+    publishedAt: "2026-09-21T10:16:00Z",
     image: images.fed,
     path: "/finance",
     hot: true,
@@ -111,7 +112,7 @@ const latestStories = [
       "OpenAI Launches GPT-5 — Claims Surpasses PhD-Level Performance",
     excerpt:
       "The latest AI model arrives with major improvements across reasoning, coding and multimodal capabilities.",
-    time: "12 min ago",
+    publishedAt: "2026-09-21T10:07:00Z",
     image: images.openai,
     path: "/technology",
     hot: true,
@@ -123,7 +124,7 @@ const latestStories = [
       "G20 Emergency Summit Called as Three Major Conflicts Converge",
     excerpt:
       "World leaders prepare for emergency talks as geopolitical tensions increase across several regions.",
-    time: "18 min ago",
+    publishedAt: "2026-09-21T10:01:00Z",
     image: images.world,
     path: "/world",
     hot: true,
@@ -135,7 +136,7 @@ const latestStories = [
       "S&P 500 Surges 3.2% After Fed Cut — Biggest Single-Day Rally of 2026",
     excerpt:
       "Wall Street stocks jump sharply following fresh monetary policy guidance from the Federal Reserve.",
-    time: "24 min ago",
+    publishedAt: "2026-09-21T09:55:00Z",
     image: images.tech,
     path: "/markets",
     hot: false,
@@ -147,7 +148,7 @@ const latestStories = [
       "RBI Follows Fed with 25bps Cut — Sensex Up 1,400 Points",
     excerpt:
       "Indian equities climb as the Reserve Bank of India announces a fresh reduction in its policy rate.",
-    time: "31 min ago",
+    publishedAt: "2026-09-21T09:48:00Z",
     image: images.earth,
     path: "/finance",
     hot: false,
@@ -159,7 +160,7 @@ const latestStories = [
       "Apple Announces Reality Pro 2 AR Headset — Ships in 60 Days",
     excerpt:
       "Apple unveils its next-generation spatial computing hardware with significant upgrades.",
-    time: "45 min ago",
+    publishedAt: "2026-09-21T09:34:00Z",
     image: images.apple,
     path: "/technology",
     hot: false,
@@ -172,7 +173,7 @@ const breakingFeed = [
     category: "FINANCE",
     title:
       "Federal Reserve Announces Surprise 50bps Rate Cut — Biggest in 4 Years",
-    time: "3 min ago",
+    publishedAt: "2026-09-21T10:16:00Z",
     priority: "BREAKING",
     path: "/finance",
   },
@@ -181,7 +182,7 @@ const breakingFeed = [
     category: "TECHNOLOGY",
     title:
       "OpenAI Launches GPT-5 — Claims Surpasses PhD-Level Performance on All Academic Benchmarks",
-    time: "12 min ago",
+    publishedAt: "2026-09-21T10:07:00Z",
     priority: "BREAKING",
     path: "/technology",
   },
@@ -190,7 +191,7 @@ const breakingFeed = [
     category: "WORLD",
     title:
       "G20 Emergency Summit Called as Three Major Conflicts Converge",
-    time: "18 min ago",
+    publishedAt: "2026-09-21T10:01:00Z",
     priority: "URGENT",
     path: "/world",
   },
@@ -199,7 +200,7 @@ const breakingFeed = [
     category: "MARKETS",
     title:
       "S&P 500 Surges 3.2% After Fed Cut — Biggest Single-Day Rally of 2026",
-    time: "24 min ago",
+    publishedAt: "2026-09-21T09:55:00Z",
     priority: "BREAKING",
     path: "/markets",
   },
@@ -208,7 +209,7 @@ const breakingFeed = [
     category: "INDIA",
     title:
       "RBI Follows Fed with 25bps Cut — Sensex Up 1,400 Points",
-    time: "31 min ago",
+    publishedAt: "2026-09-21T09:48:00Z",
     priority: "URGENT",
     path: "/finance",
   },
@@ -217,7 +218,7 @@ const breakingFeed = [
     category: "TECHNOLOGY",
     title:
       "Apple Announces Reality Pro 2 AR Headset — Ships in 60 Days at $2,499",
-    time: "45 min ago",
+    publishedAt: "2026-09-21T09:34:00Z",
     priority: "URGENT",
     path: "/technology",
   },
@@ -226,7 +227,7 @@ const breakingFeed = [
     category: "ENERGY",
     title:
       "OPEC+ Emergency Meeting Called — Oil Falls 4% on Demand Fears",
-    time: "52 min ago",
+    publishedAt: "2026-09-21T09:27:00Z",
     priority: "URGENT",
     path: "/energy",
   },
@@ -235,7 +236,7 @@ const breakingFeed = [
     category: "CYBERSECURITY",
     title:
       "Critical Infrastructure Breach Hits US Power Grid — FBI, CISA Respond",
-    time: "1 hr ago",
+    publishedAt: "2026-09-21T09:19:00Z",
     priority: "BREAKING",
     path: "/cybersecurity",
   },
@@ -344,7 +345,7 @@ function HeroStory() {
 
           <span className="flex items-center gap-1">
             <Clock size={10} />
-            {heroStory.time}
+            <TimeAgo iso={heroStory.publishedAt} />
           </span>
         </div>
       </div>
@@ -421,7 +422,7 @@ function MoreStories() {
 
               <span className="mt-1 flex items-center gap-1 text-[8px] text-gray-400">
                 <Clock size={8} />
-                {story.time}
+                <TimeAgo iso={story.publishedAt} />
               </span>
             </div>
           </Link>
@@ -481,7 +482,7 @@ function LatestStoryCard({
 
           <span className="flex items-center gap-1 text-[9px] text-gray-400">
             <Clock size={8} />
-            {story.time}
+            <TimeAgo iso={story.publishedAt} />
           </span>
         </div>
       </div>
@@ -528,7 +529,7 @@ function BreakingFeed() {
 
                 <span className="flex items-center gap-1">
                   <Clock size={8} />
-                  {item.time}
+                  <TimeAgo iso={item.publishedAt} />
                 </span>
               </div>
             </div>
