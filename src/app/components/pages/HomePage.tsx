@@ -36,36 +36,6 @@ type MarketItem = {
   up: boolean;
 };
 
-function AdSpace({
-  title = "The Pride Times Premium",
-}: {
-  title?: string;
-}) {
-  return (
-    <div className="relative my-6 overflow-hidden border-y border-black/15 bg-[#eeeae2] px-5 py-5 sm:my-8">
-      <div className="absolute left-0 top-0 h-full w-1 bg-[#b3161b]" />
-      <span className="absolute right-3 top-2 text-[7px] font-semibold uppercase tracking-[0.18em] text-black/35">
-        Advertisement
-      </span>
-      <div className="mx-auto flex max-w-3xl items-center justify-center gap-5 text-center sm:gap-8">
-        <div className="hidden h-px w-16 bg-black/20 sm:block" />
-        <div>
-          <span className="block text-[8px] font-bold uppercase tracking-[0.28em] text-[#b3161b]">
-            The Pride Times
-          </span>
-          <h3 className="mt-1 font-serif text-sm font-bold tracking-tight text-black sm:text-base">
-            {title}
-          </h3>
-          <p className="mt-1 text-[8px] uppercase tracking-[0.18em] text-black/45">
-            Premium analysis • Global markets • Technology
-          </p>
-        </div>
-        <div className="hidden h-px w-16 bg-black/20 sm:block" />
-      </div>
-    </div>
-  );
-}
-
 const heroStory = {
   category: "TOP STORY",
   title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
@@ -272,13 +242,12 @@ export function HomePage() {
   const markets = (marketSnapshotData[activeMarketTab] || []).slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-[#f6f5f1] text-[#111] antialiased">
-      <div className="mx-auto w-full max-w-[1380px] px-3 sm:px-5 lg:px-8">
-        <main className="pb-16 pt-3 sm:pt-5">
-          <AdSpace title="The Pride Times Premium — Deep Analysis, Exclusive Access" />
+    <div className="editorial-page min-h-screen bg-[#f3f0e9] text-[#111] antialiased">
+      <div className="mx-auto w-full max-w-[1480px] px-3 sm:px-6 lg:px-10">
+        <main className="pb-20 pt-3 sm:pt-6">
 
           {/* Editorial identity strip */}
-          <div className="mb-5 border-y border-black bg-black px-3 py-2 text-white">
+          <div className="mb-6 border-y border-black bg-black px-4 py-2.5 text-white shadow-[0_8px_24px_rgba(0,0,0,0.08)] sm:px-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3 text-[8px] font-bold uppercase tracking-[0.2em]">
                 <span className="text-[#d71920]">Global Edition</span>
@@ -291,8 +260,8 @@ export function HomePage() {
           </div>
 
           {/* Hero editorial grid */}
-          <section className="grid grid-cols-1 gap-0 border-y-[3px] border-black bg-white lg:grid-cols-[1.28fr_0.82fr_0.58fr]">
-            <Link to={heroStory.link} className="group relative min-h-[440px] overflow-hidden border-b border-black lg:border-b-0 lg:border-r lg:min-h-[570px]">
+          <section className="magazine-hero grid grid-cols-1 gap-0 border-y-[3px] border-black bg-white shadow-[0_16px_40px_rgba(30,24,18,0.08)] lg:grid-cols-[1.34fr_0.82fr_0.58fr]">
+            <Link to={heroStory.link} className="group relative min-h-[470px] overflow-hidden border-b border-black lg:border-b-0 lg:border-r lg:min-h-[610px]">
               <ImageWithFallback src={heroStory.image} alt={heroStory.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.025]" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/5" />
               <div className="absolute left-5 top-5 border border-white/50 px-2 py-1 text-[8px] font-bold uppercase tracking-[0.2em] text-white">{heroStory.category}</div>
@@ -304,7 +273,7 @@ export function HomePage() {
               </div>
             </Link>
 
-            <div className="bg-white px-5 py-5 sm:px-6 sm:py-6">
+            <div className="bg-white px-5 py-6 sm:px-7 sm:py-7">
               <Link to={centerStories[0].link} className="group block">
                 <div className="relative overflow-hidden">
                   <ImageWithFallback src={centerStories[0].image} alt={centerStories[0].title} className="h-[235px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] sm:h-[275px] lg:h-[255px]" />
@@ -345,7 +314,7 @@ export function HomePage() {
               </div>
             </div>
 
-            <aside className="border-t border-black bg-[#f1f0eb] px-5 py-5 lg:border-l lg:border-t-0">
+            <aside className="border-t border-black bg-[#ebe7de] px-5 py-6 lg:border-l lg:border-t-0 sm:px-6">
               <div className="flex items-center justify-between border-b-2 border-black pb-2">
                 <h2 className="font-serif text-[17px] font-black">Global Briefing</h2>
                 <span className="text-[7px] font-bold uppercase tracking-[0.16em] text-[#b3161b]">Live desk</span>
@@ -381,18 +350,16 @@ export function HomePage() {
             </aside>
           </section>
 
-          <AdSpace title="Invest Smarter — The Pride Times Premium" />
-
           {/* Latest news / magazine rail */}
-          <section className="mb-10">
+          <section className="mb-12">
             <SectionHeading title="World News Desk" />
-            <div className="mb-5 flex gap-4 overflow-x-auto border-b border-black/15 pb-2 no-scrollbar">
+            <div className="mb-6 flex gap-5 overflow-x-auto border-b border-black/15 pb-2 no-scrollbar">
               {latestNewsTabs.map((tab) => (
                 <button key={tab} type="button" onClick={() => setActiveNewsTab(tab)} className={`whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.15em] ${activeNewsTab === tab ? "text-[#b3161b]" : "text-black/40 hover:text-black"}`}>{tab}</button>
               ))}
             </div>
 
-            <div className="grid grid-cols-1 gap-0 border-y border-black/20 bg-white sm:grid-cols-2 lg:grid-cols-5">
+            <div className="grid grid-cols-1 gap-0 border-y border-black/20 bg-white shadow-[0_10px_28px_rgba(30,24,18,0.05)] sm:grid-cols-2 lg:grid-cols-5">
               {latestStories.map((story, index) => (
                 <Link key={story.id} to={story.link} className={`group border-b border-black/15 p-4 sm:border-r lg:border-b-0 ${index === latestStories.length - 1 ? "lg:border-r-0" : ""}`}>
                   <div className="relative overflow-hidden">
@@ -407,7 +374,7 @@ export function HomePage() {
           </section>
 
           {/* Editor + magazine */}
-          <section className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-[1.7fr_0.8fr]">
+          <section className="mb-14 grid grid-cols-1 gap-10 lg:grid-cols-[1.7fr_0.8fr]">
             <div>
               <SectionHeading title="Editor's Picks" link="/leadership" />
               <div className="divide-y divide-black/15 bg-white px-4 sm:px-5">
@@ -443,7 +410,7 @@ export function HomePage() {
           </section>
 
           {/* Long-form leader index */}
-          <section className="mb-10">
+          <section className="mb-12">
             <SectionHeading title="Pride Times 30 — Leaders to Watch in 2026" link="/billionaires" linkText="Full list" />
             <div className="grid grid-cols-1 border-y border-black/20 bg-white sm:grid-cols-2 lg:grid-cols-5">
               {prideTimes30.map((leader) => (
@@ -460,16 +427,25 @@ export function HomePage() {
               ))}
             </div>
           </section>
-
-          <AdSpace title="The Pride Times Premium — Deep Analysis, Exclusive Access" />
         </main>
       </div>
 
       <style>{`
+        :root { color-scheme: light; }
+        html { scroll-behavior: smooth; background: #f3f0e9; }
+        body { margin: 0; background: #f3f0e9; }
+        .editorial-page { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+        .editorial-page h1, .editorial-page h2, .editorial-page h3, .editorial-page h4 { text-wrap: balance; }
+        .editorial-page a, .editorial-page button { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease; }
+        .editorial-page a:focus-visible, .editorial-page button:focus-visible { outline: 2px solid #b3161b; outline-offset: 3px; }
+        .editorial-page button:active { transform: scale(.97); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        html { scroll-behavior: smooth; }
         ::selection { background: rgba(211, 25, 32, .16); color: inherit; }
+        @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto; }
+          .editorial-page * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+        }
       `}</style>
     </div>
   );
