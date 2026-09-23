@@ -1,6 +1,59 @@
 import { TimeAgo } from "../../utils/timeAgo";
-import { Clock, Briefcase, ChevronRight } from "lucide-react";
+import { Clock, Briefcase, ChevronRight, Radio } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+
+/* =========================================================
+   MASTHEAD BAR
+========================================================= */
+
+function Masthead() {
+  return (
+    <div className="bg-black text-white">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-5">
+          <span className="font-serif text-lg font-bold tracking-tight sm:text-xl">
+            The Pride Times
+          </span>
+
+          <span className="hidden items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-red-500 sm:flex">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
+            Live
+          </span>
+
+          <nav className="hidden items-center gap-4 text-[11px] font-medium text-gray-300 md:flex">
+            <span className="cursor-pointer transition-colors hover:text-white">
+              Markets
+            </span>
+            <span className="cursor-pointer transition-colors hover:text-white">
+              Technology
+            </span>
+            <span className="cursor-pointer text-white">
+              Businessweek
+            </span>
+            <span className="cursor-pointer transition-colors hover:text-white">
+              Opinion
+            </span>
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="hidden text-[11px] font-semibold text-gray-300 transition-colors hover:text-white sm:block"
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            className="rounded-sm bg-red-600 px-3.5 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-red-700"
+          >
+            Subscribe
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* =========================================================
    SECTION HEADER
@@ -8,12 +61,14 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-5">
-      <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
+    <div className="mb-5 flex items-center justify-between border-b-2 border-black pb-2.5">
+      <div className="flex items-center gap-2.5">
+        <span className="h-3 w-1 shrink-0 bg-red-600" />
 
-      <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
-        {title}
-      </h2>
+        <h2 className="text-[13px] font-bold uppercase tracking-[0.16em] text-gray-900 md:text-sm">
+          {title}
+        </h2>
+      </div>
     </div>
   );
 }
@@ -28,9 +83,9 @@ function AdSpace({
   label?: string;
 }) {
   return (
-    <div className="relative w-full overflow-hidden rounded-sm border border-gray-200 bg-gradient-to-r from-[#102b33] via-[#193944] to-[#28596a]">
+    <div className="relative w-full overflow-hidden rounded-md border border-gray-200 bg-[#0d1117]">
       <div className="flex min-h-[90px] flex-col items-center justify-center px-4 py-5 text-center">
-        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-sky-300">
+        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-red-500">
           Google AdSense
         </span>
 
@@ -38,12 +93,12 @@ function AdSpace({
           {label}
         </span>
 
-        <span className="mt-1 text-[8px] sm:text-[9px] text-sky-300">
+        <span className="mt-1 text-[8px] sm:text-[9px] text-gray-400">
           728 × 90 • Leaderboard
         </span>
       </div>
 
-      <span className="absolute right-1.5 top-1 text-[7px] text-gray-300">
+      <span className="absolute right-1.5 top-1 text-[7px] text-gray-500">
         Advertisement
       </span>
     </div>
@@ -56,31 +111,31 @@ function AdSpace({
 
 function SponsoredAd() {
   return (
-    <div className="rounded-md border border-gray-200 bg-[#faf9f4] overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2">
+    <div className="overflow-hidden rounded-md border border-gray-200">
+      <div className="flex items-center justify-between bg-[#faf9f4] px-3 py-2">
         <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-          Sponsored Content
+          Businessweek Daily Newsletter
         </span>
 
-        <span className="text-[8px] text-gray-400">
-          Ad
-        </span>
+        <span className="text-[8px] text-gray-400">Ad</span>
       </div>
 
-      <div className="mx-3 mb-3 flex h-[145px] items-center justify-center bg-[#10162f] px-4 text-center">
-        <div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-400">
-            Featured Partner
-          </p>
+      <div className="flex flex-col items-start gap-1.5 bg-black px-4 py-5">
+        <span className="inline-flex items-center gap-1 rounded-sm bg-red-600 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
+          Free
+        </span>
 
-          <p className="mt-3 text-base font-semibold text-white">
-            Your Ad Here
-          </p>
+        <p className="text-[13px] leading-[1.4] text-white">
+          Fresh perspectives on business, economics, politics and tech —
+          straight from The Pride Times Businessweek desk.
+        </p>
 
-          <p className="mt-2 text-[9px] leading-4 text-gray-300">
-            Reach 2M+ business readers
-          </p>
-        </div>
+        <button
+          type="button"
+          className="mt-2 w-full rounded-sm bg-red-600 py-2 text-[10px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-red-700"
+        >
+          Sign Up Free
+        </button>
       </div>
     </div>
   );
@@ -114,8 +169,8 @@ function MoreStories({
             className="group cursor-pointer py-3"
           >
             <div className="flex gap-3">
-              <div className="flex h-[48px] w-[68px] shrink-0 items-center justify-center rounded-sm bg-gray-100">
-                <span className="text-[9px] font-bold uppercase text-gray-400">
+              <div className="flex h-[48px] w-[68px] shrink-0 items-center justify-center rounded-sm bg-gray-100 transition-colors group-hover:bg-red-50">
+                <span className="text-[9px] font-bold uppercase text-gray-400 group-hover:text-red-500">
                   News
                 </span>
               </div>
@@ -149,13 +204,12 @@ function MoreStories({
 ========================================================= */
 
 const hero = {
-  category: "POLITICS & BUSINESS",
-  title:
-    "Marco Rubio Remakes Himself as Trump's Unapologetic Global Envoy",
+  category: "BUSINESSWEEK",
+  title: "A $5,000 Bike Shows Why It's Hard to Build in America",
   excerpt:
-    "The secretary of state has embraced a more forceful role on the world stage as the Trump administration reshapes US foreign policy.",
-  author: "Bloomberg News",
-  publishedAt: "2026-09-22T10:00:00Z",
+    "A startup's attempt to build a bicycle almost entirely from US-made parts reveals just how much manufacturing capacity, skilled labor and supply chain depth the country has lost — and how expensive it is to rebuild.",
+  author: "Sagar Kumar",
+  publishedAt: "2026-09-23T08:19:00Z",
   image:
     "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
 };
@@ -163,100 +217,100 @@ const hero = {
 const maDeals = [
   {
     id: 1,
-    acquirer: "Global Markets",
-    target: "The Best Music, TV, Books and Theater",
-    value: "—",
-    sector: "Culture",
-    status: "Featured",
+    acquirer: "Amazon",
+    target: "NuScale Power",
+    value: "$12B",
+    sector: "Nuclear Energy",
+    status: "Announced",
   },
   {
     id: 2,
-    acquirer: "Technology",
-    target: "The World's Most Reliable AI Detector",
-    value: "—",
-    sector: "AI",
-    status: "Featured",
+    acquirer: "Microsoft",
+    target: "IonQ",
+    value: "$8.7B",
+    sector: "Quantum Computing",
+    status: "Pending",
   },
   {
     id: 3,
-    acquirer: "Consumer",
-    target: "Fender and the Iconic Strat",
-    value: "—",
-    sector: "Music",
-    status: "Featured",
+    acquirer: "BlackRock",
+    target: "Global Infrastructure Partners",
+    value: "$12.5B",
+    sector: "Infrastructure",
+    status: "Closed",
   },
   {
     id: 4,
-    acquirer: "Work",
-    target: "America's Favorite Countertops",
-    value: "—",
-    sector: "Manufacturing",
-    status: "Featured",
+    acquirer: "JPMorgan",
+    target: "First Republic (Assets)",
+    value: "$10.6B",
+    sector: "Banking",
+    status: "Closed",
   },
   {
     id: 5,
-    acquirer: "Global Business",
-    target: "The New Rules of Washington",
-    value: "—",
-    sector: "Business",
-    status: "Featured",
+    acquirer: "Reliance",
+    target: "Disney India",
+    value: "$8.5B",
+    sector: "Media / Streaming",
+    status: "Closed",
   },
 ];
 
 const earningsNews = [
   {
     id: 1,
-    company: "Bloomberg Businessweek",
-    ticker: "BW",
-    eps: "—",
-    beat: "FEATURE",
-    revenue: "—",
+    company: "Apple",
+    ticker: "AAPL",
+    eps: "$2.45",
+    beat: "+12%",
+    revenue: "$98.3B",
     status: "BEAT",
   },
   {
     id: 2,
-    company: "Global Markets",
-    ticker: "GLOB",
-    eps: "—",
-    beat: "FEATURE",
-    revenue: "—",
+    company: "Microsoft",
+    ticker: "MSFT",
+    eps: "$3.12",
+    beat: "+8%",
+    revenue: "$71.2B",
     status: "BEAT",
   },
   {
     id: 3,
-    company: "Technology",
-    ticker: "TECH",
-    eps: "—",
-    beat: "FEATURE",
-    revenue: "—",
+    company: "Alphabet",
+    ticker: "GOOGL",
+    eps: "$2.89",
+    beat: "+15%",
+    revenue: "$88.3B",
     status: "BEAT",
   },
   {
     id: 4,
-    company: "Consumer",
-    ticker: "CONS",
-    eps: "—",
-    beat: "FEATURE",
-    revenue: "—",
+    company: "Meta",
+    ticker: "META",
+    eps: "$6.43",
+    beat: "+23%",
+    revenue: "$41.5B",
     status: "BEAT",
   },
   {
     id: 5,
-    company: "Work & Society",
-    ticker: "WORK",
-    eps: "—",
-    beat: "FEATURE",
-    revenue: "—",
+    company: "Amazon",
+    ticker: "AMZN",
+    eps: "$1.91",
+    beat: "+5%",
+    revenue: "$187.8B",
     status: "BEAT",
   },
   {
     id: 6,
-    company: "Culture",
-    ticker: "CULT",
-    eps: "—",
-    beat: "FEATURE",
-    revenue: "—",
-    status: "BEAT",
+    company: "Intel",
+    ticker: "INTC",
+    eps: "$0.18",
+    beat: "-8%",
+    revenue: "$12.4B",
+    status: "MISS",
   },
 ];
 
@@ -264,71 +318,67 @@ const corporateNews = [
   {
     id: 1,
     title:
-      "Why Politicians From the Working Class Are Rare Around the World",
-    publishedAt: "2026-09-22T09:30:00Z",
-    category: "POLITICS",
+      "Fender Is Making Enemies With a Messy Fight Over Its Iconic Strat",
+    publishedAt: "2026-09-23T09:19:00Z",
+    category: "THE BIG TAKE",
   },
   {
     id: 2,
     title:
-      "Fender Makes Enemy With Its Melody Fight Over Its Iconic Strat",
-    publishedAt: "2026-09-22T08:45:00Z",
-    category: "CULTURE",
+      "Marco Rubio Remakes Himself as Trump's Unapologetic Global Envoy",
+    publishedAt: "2026-09-23T08:44:00Z",
+    category: "THE BIG TAKE",
   },
   {
     id: 3,
     title:
-      "The World's Most Reliable AI Detector Has a Human Problem",
-    publishedAt: "2026-09-22T08:15:00Z",
-    category: "TECHNOLOGY",
+      "Why Politicians From the Working Class Are Rare Around the World",
+    publishedAt: "2026-09-23T07:19:00Z",
+    category: "POLITICS",
   },
   {
     id: 4,
-    title:
-      "TikTok 'Death Sentences': Crafting America's Favorite Countertops Is Killing Workers",
-    publishedAt: "2026-09-22T07:40:00Z",
-    category: "WORK",
+    title: "These Are the Best Business Schools",
+    publishedAt: "2026-09-23T06:19:00Z",
+    category: "EDUCATION",
   },
   {
     id: 5,
     title:
-      "The Great Gulf Between the Rich and Everyone Else Is Getting Wider",
-    publishedAt: "2026-09-22T07:10:00Z",
-    category: "ECONOMY",
+      "Paramount Settles Lawsuits, Allowing for Warner Bros. Deal",
+    publishedAt: "2026-09-23T05:19:00Z",
+    category: "MEDIA",
   },
   {
     id: 6,
-    title:
-      "The New Rules of Global Business Are Being Written in Washington",
-    publishedAt: "2026-09-22T06:40:00Z",
-    category: "GLOBAL BUSINESS",
+    title: "The Great Stuff Transfer Has a $750 Billion Golden Lining",
+    publishedAt: "2026-09-23T04:19:00Z",
+    category: "WEALTH",
   },
 ];
 
 const startupNews = [
   {
     id: 1,
-    title:
-      "Chinese Brands Resort to Crude Insults to Hawk Legs and Charging Cables",
-    publishedAt: "2026-09-22T08:50:00Z",
+    title: "AI Is Changing the Business School Case Study",
+    publishedAt: "2026-09-23T08:19:00Z",
   },
   {
     id: 2,
-    title:
-      "The Ex-Bear Baron Turning Washington's Redline Into a $7.8 Billion Empire",
-    publishedAt: "2026-09-22T08:05:00Z",
+    title: "How a Gambling Addict Relapsed After He Discovered Kalshi",
+    publishedAt: "2026-09-23T06:19:00Z",
   },
   {
     id: 3,
     title:
-      "Hating on Polyester Is Back in Fashion",
-    publishedAt: "2026-09-22T07:25:00Z",
+      "Chinese Brands Resort to Crude Insults to Hawk LED Signs and Charging Cables",
+    publishedAt: "2026-09-23T04:19:00Z",
   },
   {
     id: 4,
     title:
-      "AI Is Changing the Business School Case Study",
-    publishedAt: "2026-09-22T06:55:00Z",
+      "The Ex-Beer Baron Turning Windshield Repair Into a $7.8 Billion-a-Year Empire",
+    publishedAt: "2026-09-23T02:19:00Z",
   },
 ];
 
@@ -376,31 +426,51 @@ const TH = ({
 export function BusinessNewsPage() {
   return (
     <div className="w-full bg-white text-gray-900 antialiased">
+
+      <Masthead />
+
       <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-9 lg:px-8">
 
         {/* =================================================
             PAGE HEADER
         ================================================= */}
 
-        <header className="border-b-4 border-black pb-5 mb-7 md:mb-8">
+        <header className="mb-7 border-t-[3px] border-red-600 pb-5 pt-5 md:mb-8">
           <div className="flex items-center gap-3.5">
 
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-white">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-600 text-white">
               <Briefcase size={19} strokeWidth={1.75} />
             </div>
 
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-600">
-                Corporate Intelligence
+                The Pride Times Businessweek
               </p>
 
               <h1 className="mt-1 font-serif text-3xl font-bold leading-tight tracking-tight md:text-[42px]">
-                Business News
+                Businessweek
               </h1>
             </div>
 
           </div>
+
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t border-gray-200 pt-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-gray-500">
+            <span className="cursor-pointer text-red-600">The Big Take</span>
+            <span className="cursor-pointer transition-colors hover:text-gray-900">Pursuits</span>
+            <span className="cursor-pointer transition-colors hover:text-gray-900">B-Schools</span>
+            <span className="cursor-pointer transition-colors hover:text-gray-900">Markets</span>
+            <span className="cursor-pointer transition-colors hover:text-gray-900">Politics</span>
+          </div>
         </header>
+
+
+        {/* =================================================
+            TOP ADVERTISEMENT
+        ================================================= */}
+
+        <div className="mb-7 md:mb-9">
+          <AdSpace />
+        </div>
 
 
         {/* =================================================
@@ -423,15 +493,15 @@ export function BusinessNewsPage() {
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-90" />
+
+              <span className="absolute left-4 top-4 rounded-sm bg-red-600 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white">
+                {hero.category}
+              </span>
             </div>
 
             <div className="mt-5">
 
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-                {hero.category}
-              </span>
-
-              <h2 className="mt-2 max-w-5xl font-serif text-2xl font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600 sm:text-3xl md:text-4xl lg:text-[40px]">
+              <h2 className="max-w-5xl font-serif text-2xl font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600 sm:text-3xl md:text-4xl lg:text-[40px]">
                 {hero.title}
               </h2>
 
@@ -464,6 +534,8 @@ export function BusinessNewsPage() {
 
           <aside className="lg:pt-0">
 
+            <SponsoredAd />
+
             <MoreStories stories={corporateNews} />
 
           </aside>
@@ -479,29 +551,31 @@ export function BusinessNewsPage() {
 
           <SectionHeader title="Earnings Season" />
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-md border border-gray-200">
 
             <table className="w-full min-w-[650px] border-collapse text-sm">
 
               <thead>
-                <tr className="border-b-2 border-gray-900">
-                  <TH>Company</TH>
+                <tr className="border-b-2 border-gray-900 bg-gray-50">
+                  <TH className="pl-4">Company</TH>
                   <TH align="right">EPS</TH>
                   <TH align="right">vs Est.</TH>
                   <TH align="right">Revenue</TH>
-                  <TH align="right">Result</TH>
+                  <TH align="right" className="pr-4">Result</TH>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-100">
 
-                {earningsNews.map((e) => (
+                {earningsNews.map((e, i) => (
                   <tr
                     key={e.ticker}
-                    className="transition-colors hover:bg-gray-50"
+                    className={`transition-colors hover:bg-red-50/40 ${
+                      i % 2 === 1 ? "bg-gray-50/50" : ""
+                    }`}
                   >
 
-                    <td className="py-3.5 pr-4">
+                    <td className="py-3.5 pl-4 pr-4">
                       <span className="font-semibold text-gray-900">
                         {e.company}
                       </span>
@@ -529,10 +603,10 @@ export function BusinessNewsPage() {
                       {e.revenue}
                     </td>
 
-                    <td className="py-3.5 pl-3 text-right">
+                    <td className="py-3.5 pl-3 pr-4 text-right">
 
                       <span
-                        className={`inline-flex rounded-[2px] px-2.5 py-1 text-[10px] font-bold tracking-wide ${earningsBadge[e.status]}`}
+                        className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${earningsBadge[e.status]}`}
                       >
                         {e.status}
                       </span>
@@ -559,14 +633,14 @@ export function BusinessNewsPage() {
 
           <SectionHeader title="M&A Tracker" />
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-md border border-gray-200">
 
             <table className="w-full min-w-[700px] border-collapse text-sm">
 
               <thead>
-                <tr className="border-b-2 border-gray-900">
+                <tr className="border-b-2 border-gray-900 bg-gray-50">
 
-                  <TH>Acquirer</TH>
+                  <TH className="pl-4">Acquirer</TH>
 
                   <TH>Target</TH>
 
@@ -578,7 +652,7 @@ export function BusinessNewsPage() {
                     Sector
                   </TH>
 
-                  <TH align="right">
+                  <TH align="right" className="pr-4">
                     Status
                   </TH>
 
@@ -587,13 +661,15 @@ export function BusinessNewsPage() {
 
               <tbody className="divide-y divide-gray-100">
 
-                {maDeals.map((d) => (
+                {maDeals.map((d, i) => (
                   <tr
                     key={d.id}
-                    className="transition-colors hover:bg-gray-50"
+                    className={`transition-colors hover:bg-red-50/40 ${
+                      i % 2 === 1 ? "bg-gray-50/50" : ""
+                    }`}
                   >
 
-                    <td className="py-3.5 pr-4 font-semibold text-gray-900">
+                    <td className="py-3.5 pl-4 pr-4 font-semibold text-gray-900">
                       {d.acquirer}
                     </td>
 
@@ -609,10 +685,10 @@ export function BusinessNewsPage() {
                       {d.sector}
                     </td>
 
-                    <td className="py-3.5 pl-3 text-right">
+                    <td className="py-3.5 pl-3 pr-4 text-right">
 
                       <span
-                        className={`inline-flex rounded-[2px] px-2.5 py-1 text-[10px] font-bold tracking-wide ${dealBadge[d.status]}`}
+                        className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${dealBadge[d.status]}`}
                       >
                         {d.status}
                       </span>
@@ -632,7 +708,7 @@ export function BusinessNewsPage() {
 
 
         {/* =================================================
-            CORPORATE + STARTUPS
+            CORPORATE + IDEAS
         ================================================= */}
 
         <section className="grid grid-cols-1 gap-10 border-t-2 border-black pt-10 md:grid-cols-2">
@@ -661,8 +737,9 @@ export function BusinessNewsPage() {
                     p-4
                     transition-all
                     duration-200
-                    hover:border-gray-300
-                    hover:bg-gray-50
+                    hover:-translate-y-0.5
+                    hover:border-red-200
+                    hover:shadow-sm
                   "
                 >
 
@@ -712,12 +789,12 @@ export function BusinessNewsPage() {
 
 
           {/* =================================================
-              STARTUPS & VENTURE
+              IDEAS & INSIGHT
           ================================================= */}
 
           <div>
 
-            <SectionHeader title="Startups & Venture" />
+            <SectionHeader title="Ideas & Insight" />
 
             <div className="space-y-3">
 
@@ -735,8 +812,9 @@ export function BusinessNewsPage() {
                     p-4
                     transition-all
                     duration-200
-                    hover:border-gray-300
-                    hover:bg-gray-50
+                    hover:-translate-y-0.5
+                    hover:border-red-200
+                    hover:shadow-sm
                   "
                 >
 
@@ -783,17 +861,83 @@ export function BusinessNewsPage() {
 
 
         {/* =================================================
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <div className="my-12 md:my-14">
+          <AdSpace label="Business Solutions | Powered by The Pride Times" />
+        </div>
+
+
+        {/* =================================================
+            SPONSORED EVENTS
+        ================================================= */}
+
+        <section className="rounded-md border border-gray-100 bg-gray-50 p-4 sm:p-5">
+
+          <div className="mb-4 flex items-center gap-2">
+
+            <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+              Sponsorship
+            </span>
+
+            <span className="text-[9px] text-gray-400">
+              Presented by our partners
+            </span>
+
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+            {[
+              "Global Finance Summit 2026",
+              "Tech Leaders Forum",
+              "Energy Transition Conference",
+              "AI & Business World",
+            ].map((item) => (
+
+              <div
+                key={item}
+                className="flex min-h-[90px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-4 text-center transition-all hover:-translate-y-0.5 hover:shadow-sm"
+              >
+
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+                  <Briefcase size={13} />
+                </div>
+
+                <p className="mt-2 text-[10px] font-bold text-gray-900">
+                  {item}
+                </p>
+
+                <p className="mt-1 text-[8px] text-gray-400">
+                  Sponsored Event
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
+
+        {/* =================================================
             NEWSLETTER
         ================================================= */}
 
-        <section className="mt-6 rounded-md bg-[#071a2d] px-5 py-8 text-center sm:px-8 md:py-10">
+        <section className="mt-6 rounded-md bg-black px-5 py-8 text-center sm:px-8 md:py-10">
+
+          <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-600">
+            <Radio size={17} className="text-white" strokeWidth={1.75} />
+          </div>
 
           <h2 className="font-serif text-xl font-bold text-white md:text-2xl">
             Stay Ahead with The Pride Times
           </h2>
 
           <p className="mt-2 text-xs text-gray-300 md:text-sm">
-            Daily briefings on Business News delivered to your inbox.
+            Daily briefings on Businessweek delivered to your inbox.
           </p>
 
           <div className="mx-auto mt-5 flex max-w-lg flex-col gap-2 sm:flex-row">
@@ -801,7 +945,7 @@ export function BusinessNewsPage() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="h-10 flex-1 rounded-sm border border-gray-500 bg-white/10 px-3 text-xs text-white outline-none placeholder:text-gray-400 focus:border-red-500"
+              className="h-10 flex-1 rounded-sm border border-gray-700 bg-white/5 px-3 text-xs text-white outline-none placeholder:text-gray-500 focus:border-red-500"
             />
 
             <button
