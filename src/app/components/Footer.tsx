@@ -4,6 +4,7 @@ import {
   Youtube,
   Linkedin,
 } from "lucide-react";
+import logo from "../assets/pride-times-logo.png"; // adjust path to wherever you save the logo
 
 /* =========================================================
    X ICON
@@ -120,19 +121,27 @@ export function Footer() {
             to="/"
             className="flex flex-col items-center md:items-start flex-shrink-0"
           >
-            {/* Main Logo Text */}
+            {/* Logo + Main Logo Text */}
 
-            <div
-              className="pt-logo leading-none whitespace-nowrap"
-              style={{
-                fontSize: "clamp(1.8rem, 2.6vw, 2.25rem)",
-              }}
-            >
-              THE{" "}
-              <span className="pt-logo-accent">
-                PRIDE
-              </span>{" "}
-              TIMES
+            <div className="flex items-center gap-3">
+              <img
+                src={logo}
+                alt="The Pride Times"
+                className="h-9 w-9 sm:h-11 sm:w-11 object-contain flex-shrink-0"
+              />
+
+              <div
+                className="pt-logo leading-none whitespace-nowrap"
+                style={{
+                  fontSize: "clamp(1.8rem, 2.6vw, 2.25rem)",
+                }}
+              >
+                THE{" "}
+                <span className="pt-logo-accent">
+                  PRIDE
+                </span>{" "}
+                TIMES
+              </div>
             </div>
 
             {/* Tagline */}
@@ -150,7 +159,7 @@ export function Footer() {
 
             {socialLinks.map(
               ({ icon, href, label }) => (
-                <a
+                
                   key={label}
                   href={href}
                   target="_blank"
