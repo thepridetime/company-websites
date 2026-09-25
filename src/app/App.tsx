@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { AuthProvider } from "./context/AuthContext";
 import { Header } from "./components/Header";
@@ -5,63 +6,84 @@ import { Footer } from "./components/Footer";
 import { MarketsTicker } from "./components/MarketsTicker";
 import { PageLayout } from "./components/PageLayout";
 
-// Pages
+// ============================================================
+// MAIN PAGES
+// ============================================================
+
 import { HomePage } from "./components/pages/HomePage";
 import { TechnologyPage } from "./components/pages/TechnologyPage";
 import { FinancePage } from "./components/pages/FinancePage";
 import { BillionairesPage } from "./components/pages/BillionairesPage";
 import { WorldPage } from "./components/pages/WorldPage";
+import { InternationalNewsPage } from "./components/pages/InternationalNewsPage";
+import { StartupSuccessPage } from "./components/pages/Startupsuccesspage";
+
 import { CybersecurityPage } from "./components/pages/CybersecurityPage";
 import { EnergyPage } from "./components/pages/EnergyPage";
 import { HealthcarePage } from "./components/pages/HealthcarePage";
 import { ManufacturingPage } from "./components/pages/ManufacturingPage";
 import { SmartCitiesPage } from "./components/pages/SmartCitiesPage";
 import { SupplyChainPage } from "./components/pages/SupplyChainPage";
+
 import { FeaturedPage } from "./components/pages/FeaturedPage";
 import { BreakingNewsPage } from "./components/pages/BreakingNewsPage";
 import { MarketsPage } from "./components/pages/MarketsPage";
 import { CoverStoriesPage } from "./components/pages/CoverStoriesPage";
 import { WhiteHouseWatchPage } from "./components/pages/WhiteHouseWatchPage";
 import { BusinessNewsPage } from "./components/pages/BusinessNewsPage";
+import { ArticleDetailPage } from "./components/pages/ArticleDetailPage";
 import { LeadershipPage } from "./components/pages/LeadershipPage";
 import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
-import { InternationalNewsPage } from "./components/pages/InternationalNewsPage";
-import { StartupSuccessPage } from "./components/pages/Startupsuccesspage";
+import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
+import { AboutUsPage } from "./components/pages/AboutUsPage";
+
+// ============================================================
+// LEGAL / SYSTEM PAGES
+// ============================================================
+
 import { Privacy } from "./components/pages/Privacy";
 import { Terms } from "./components/pages/Terms";
 import { CookiePolicy } from "./components/pages/CookiePolicy";
 import { Accessibility } from "./components/pages/Accessibility";
 import { ResetPasswordPage } from "./components/pages/ResetPasswordPage";
-import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
-import { AboutUsPage } from "./components/pages/AboutUsPage";
-import { AdvertisePage } from "./components/pages/AdvertisePage";
-import { CareersPage } from "./components/pages/CareersPage";
-import { ContactPage } from "./components/pages/ContactPage";
-import { PressRoomPage } from "./components/pages/PressRoomPage";
 
-// Auth
+// ============================================================
+// AUTH PAGES
+// ============================================================
+
 import { LoginPage } from "./components/auth/LoginPage";
 import { SignUpPage } from "./components/auth/SignUpPage";
 import { DashboardPage } from "./components/auth/DashboardPage";
 
-function MagazineLayout({
-  children,
-  showLeftSidebar = true,
-  showRightSidebar = true,
-  topBanner = true,
-}: {
+// ============================================================
+// MAGAZINE LAYOUT
+// Ads are disabled throughout the website.
+// ============================================================
+
+interface MagazineLayoutProps {
   children: React.ReactNode;
   showLeftSidebar?: boolean;
   showRightSidebar?: boolean;
   topBanner?: boolean;
-}) {
+}
+
+function MagazineLayout({
+  children,
+  showLeftSidebar = false,
+  showRightSidebar = false,
+  topBanner = false,
+}: MagazineLayoutProps) {
   return (
     <div className="min-h-screen bg-white flex flex-col">
+
+      {/* Website Header */}
       <Header />
 
+      {/* Market ticker */}
       <MarketsTicker />
 
+      {/* Main page content */}
       <PageLayout
         showLeftSidebar={showLeftSidebar}
         showRightSidebar={showRightSidebar}
@@ -70,28 +92,74 @@ function MagazineLayout({
         {children}
       </PageLayout>
 
+      {/* Website Footer */}
       <Footer />
+
     </div>
   );
 }
+
+// ============================================================
+// APPLICATION
+// ============================================================
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Standalone pages (no mag layout) */}
 
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/cookiepolicy" element={<CookiePolicy />} />
-          <Route path="/accessibility" element={<Accessibility />} />
+          {/* ==================================================
+              AUTH / STANDALONE PAGES
+              ================================================== */}
 
-          {/* Main magazine routes */}
+          <Route
+            path="/login"
+            element={<LoginPage />}
+          />
+
+          <Route
+            path="/signup"
+            element={<SignUpPage />}
+          />
+
+          <Route
+            path="/dashboard"
+            element={<DashboardPage />}
+          />
+
+          <Route
+            path="/reset-password"
+            element={<ResetPasswordPage />}
+          />
+
+          {/* ==================================================
+              LEGAL PAGES
+              ================================================== */}
+
+          <Route
+            path="/privacy"
+            element={<Privacy />}
+          />
+
+          <Route
+            path="/terms"
+            element={<Terms />}
+          />
+
+          <Route
+            path="/cookiepolicy"
+            element={<CookiePolicy />}
+          />
+
+          <Route
+            path="/accessibility"
+            element={<Accessibility />}
+          />
+
+          {/* ==================================================
+              HOME
+              ================================================== */}
 
           <Route
             path="/"
@@ -106,10 +174,18 @@ export default function App() {
             }
           />
 
+          {/* ==================================================
+              MAIN CATEGORY PAGES
+              ================================================== */}
+
           <Route
             path="/technology"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <TechnologyPage />
               </MagazineLayout>
             }
@@ -118,7 +194,11 @@ export default function App() {
           <Route
             path="/finance"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <FinancePage />
               </MagazineLayout>
             }
@@ -127,7 +207,11 @@ export default function App() {
           <Route
             path="/billionaires"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <BillionairesPage />
               </MagazineLayout>
             }
@@ -136,102 +220,12 @@ export default function App() {
           <Route
             path="/world"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <WorldPage />
-              </MagazineLayout>
-            }
-          />
-
-          {/* Header category pages */}
-
-          <Route
-            path="/cybersecurity"
-            element={
-              <MagazineLayout>
-                <CybersecurityPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/energy"
-            element={
-              <MagazineLayout>
-                <EnergyPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/healthcare"
-            element={
-              <MagazineLayout>
-                <HealthcarePage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/manufacturing"
-            element={
-              <MagazineLayout>
-                <ManufacturingPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/smart-cities"
-            element={
-              <MagazineLayout>
-                <SmartCitiesPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/supply-chain"
-            element={
-              <MagazineLayout>
-                <SupplyChainPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/magazine"
-            element={
-              <MagazineLayout>
-                <MagazinePage />
-              </MagazineLayout>
-            }
-          />
-
-          {/* Subheader / More pages */}
-
-          <Route
-            path="/featured"
-            element={
-              <MagazineLayout>
-                <FeaturedPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/breaking-news"
-            element={
-              <MagazineLayout>
-                <BreakingNewsPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/markets"
-            element={
-              <MagazineLayout>
-                <MarketsPage />
               </MagazineLayout>
             }
           />
@@ -239,13 +233,15 @@ export default function App() {
           <Route
             path="/international-news"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <InternationalNewsPage />
               </MagazineLayout>
             }
           />
-
-          {/* Startup Success - Ads Disabled */}
 
           <Route
             path="/startup-success"
@@ -260,10 +256,152 @@ export default function App() {
             }
           />
 
+          {/* ==================================================
+              HEADER CATEGORY PAGES
+              ================================================== */}
+
+          <Route
+            path="/cybersecurity"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <CybersecurityPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/energy"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <EnergyPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/healthcare"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <HealthcarePage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/manufacturing"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <ManufacturingPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/smart-cities"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <SmartCitiesPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/supply-chain"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <SupplyChainPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/magazine"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <MagazinePage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* ==================================================
+              ADDITIONAL NEWS PAGES
+              ================================================== */}
+
+          <Route
+            path="/featured"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <FeaturedPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/breaking-news"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <BreakingNewsPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/markets"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <MarketsPage />
+              </MagazineLayout>
+            }
+          />
+
           <Route
             path="/cover-stories"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <CoverStoriesPage />
               </MagazineLayout>
             }
@@ -272,7 +410,11 @@ export default function App() {
           <Route
             path="/white-house-watch"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <WhiteHouseWatchPage />
               </MagazineLayout>
             }
@@ -281,8 +423,36 @@ export default function App() {
           <Route
             path="/business-news"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <BusinessNewsPage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* ==================================================
+              ARTICLE DETAIL PAGES
+
+              Homepage article cards should navigate to:
+              /article/<article-slug>
+
+              ArticleDetailPage checks homepageArticleData first,
+              then falls back to the existing business articles.
+              This route is intentionally separate from /markets.
+              ================================================== */}
+
+          <Route
+            path="/article/:id"
+            element={
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
+                <ArticleDetailPage />
               </MagazineLayout>
             }
           />
@@ -290,7 +460,11 @@ export default function App() {
           <Route
             path="/leadership"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <LeadershipPage />
               </MagazineLayout>
             }
@@ -299,7 +473,11 @@ export default function App() {
           <Route
             path="/innovation"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <InnovationPage />
               </MagazineLayout>
             }
@@ -308,67 +486,58 @@ export default function App() {
           <Route
             path="/ceospotlight"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <CeoSpotlightPage />
               </MagazineLayout>
             }
           />
 
+          {/* ==================================================
+              ABOUT US
+              Standalone site-shell route.
+              Does NOT use PageLayout.
+              ================================================== */}
+
           <Route
             path="/about-us"
             element={
-              <MagazineLayout>
-                <AboutUsPage />
-              </MagazineLayout>
+              <div className="min-h-screen bg-white flex flex-col">
+
+                <Header />
+
+                <MarketsTicker />
+
+                <main className="flex-1">
+                  <AboutUsPage />
+                </main>
+
+                <Footer />
+
+              </div>
             }
           />
 
-          <Route
-            path="/advertise"
-            element={
-              <MagazineLayout>
-                <AdvertisePage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/careers"
-            element={
-              <MagazineLayout>
-                <CareersPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/contact"
-            element={
-              <MagazineLayout>
-                <ContactPage />
-              </MagazineLayout>
-            }
-          />
-
-          <Route
-            path="/press-room"
-            element={
-              <MagazineLayout>
-                <PressRoomPage />
-              </MagazineLayout>
-            }
-          />
-
-          {/* "More" catch-all → redirect to featured */}
+          {/* ==================================================
+              MORE
+              ================================================== */}
 
           <Route
             path="/more"
             element={
-              <MagazineLayout>
+              <MagazineLayout
+                showLeftSidebar={false}
+                showRightSidebar={false}
+                topBanner={false}
+              >
                 <FeaturedPage />
               </MagazineLayout>
             }
           />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
