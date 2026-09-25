@@ -1,4 +1,6 @@
 import { Clock, ArrowRight } from "lucide-react";
+import { Link } from "react-router";
+import { specialArticlePath } from "../../data/specialArticleData";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 import HC1Img from "../../../imports/HC1.png";
@@ -7,10 +9,25 @@ import HC3Img from "../../../imports/HC3.png";
 import HC4Img from "../../../imports/HC4.png";
 
 /* =========================================================
-   DATA
+   TYPES
 ========================================================= */
 
-const hero = {
+type Story = {
+  id?: number;
+  category: string;
+  badge?: string;
+  title: string;
+  excerpt?: string;
+  author?: string;
+  time: string;
+  image: string;
+};
+
+/* =========================================================
+   HERO DATA
+========================================================= */
+
+const hero: Story = {
   category: "HEALTHCARE",
   title: "How Biotech Innovations Are Extending & Improving Lives",
   excerpt:
@@ -20,7 +37,71 @@ const hero = {
   image: HC1Img,
 };
 
-const latestNews = [
+/* =========================================================
+   MAJOR STORIES
+========================================================= */
+
+const majorStories: Story[] = [
+  {
+    id: 1,
+    category: "GENE THERAPY",
+    badge: "HOT",
+    title:
+      "CRISPR 3.0 Corrects Hearing Loss Mutation in 92% of Clinical Trial Patients",
+    excerpt:
+      "New gene-editing approaches are opening the door to targeted treatments for previously difficult-to-treat genetic conditions.",
+    author: "Sagar Kumar",
+    time: "2 hrs ago",
+    image: HC2Img,
+  },
+  {
+    id: 2,
+    category: "AI DIAGNOSTICS",
+    badge: "HOT",
+    title:
+      "AI System Detects Alzheimer's Disease Years Before Symptoms Appear",
+    excerpt:
+      "Artificial intelligence is increasingly being used to identify subtle clinical patterns and improve early diagnosis.",
+    author: "Sagar Kumar",
+    time: "4 hrs ago",
+    image: HC3Img,
+  },
+];
+
+/* =========================================================
+   SUPPORTING STORIES
+========================================================= */
+
+const supportingStories: Story[] = [
+  {
+    id: 3,
+    category: "ORGAN BIOENGINEERING",
+    title:
+      "Lab-Grown Kidney Research Moves Closer to Routine Human Transplants",
+    excerpt:
+      "Researchers are advancing tissue engineering and regenerative medicine as alternatives to conventional organ donation.",
+    author: "Sagar Kumar",
+    time: "7 hrs ago",
+    image: HC4Img,
+  },
+  {
+    id: 4,
+    category: "PHARMACEUTICALS",
+    title:
+      "Novo Nordisk Expands Next-Generation Obesity Drug Development",
+    excerpt:
+      "Pharmaceutical companies continue investing in therapies designed to improve treatment outcomes and patient access.",
+    author: "Sagar Kumar",
+    time: "9 hrs ago",
+    image: HC1Img,
+  },
+];
+
+/* =========================================================
+   LATEST NEWS
+========================================================= */
+
+const latestNews: Story[] = [
   {
     id: 1,
     category: "GENE THERAPY",
@@ -48,7 +129,6 @@ const latestNews = [
   {
     id: 3,
     category: "ORGAN BIOENGINEERING",
-    badge: "",
     title:
       "Lab-Grown Kidney Research Moves Closer to Routine Human Transplants",
     excerpt:
@@ -60,7 +140,6 @@ const latestNews = [
   {
     id: 4,
     category: "PHARMACEUTICALS",
-    badge: "",
     title:
       "Novo Nordisk Expands Next-Generation Obesity Drug Development",
     excerpt:
@@ -72,7 +151,6 @@ const latestNews = [
   {
     id: 5,
     category: "HEALTHTECH",
-    badge: "",
     title:
       "Digital Health Platforms Accelerate the Shift Toward Preventive Care",
     excerpt:
@@ -84,7 +162,6 @@ const latestNews = [
   {
     id: 6,
     category: "MEDICAL TECHNOLOGY",
-    badge: "",
     title:
       "Surgical Robotics Enters a New Phase of Clinical Innovation",
     excerpt:
@@ -95,7 +172,11 @@ const latestNews = [
   },
 ];
 
-const moreStories = [
+/* =========================================================
+   MORE STORIES
+========================================================= */
+
+const moreStories: Story[] = [
   {
     id: 1,
     category: "HEALTHCARE",
@@ -121,6 +202,10 @@ const moreStories = [
     image: HC4Img,
   },
 ];
+
+/* =========================================================
+   SPONSORED EVENTS
+========================================================= */
 
 const sponsoredEvents = [
   {
@@ -151,23 +236,23 @@ function AdBanner({
   secondary?: boolean;
 }) {
   return (
-    <div className="relative w-full h-[74px] md:h-[88px] bg-[#102d35] overflow-hidden flex flex-col items-center justify-center text-center">
+    <div className="relative w-full h-[58px] md:h-[72px] bg-[#102d35] overflow-hidden flex flex-col items-center justify-center text-center">
+      <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
+        Advertisement
+      </span>
+
       <span className="text-[7px] md:text-[8px] font-bold tracking-[0.2em] text-cyan-400 uppercase">
         GOOGLE ADSENSE
       </span>
 
-      <strong className="mt-1 text-[12px] md:text-sm font-semibold text-white">
+      <strong className="mt-0.5 text-[10px] md:text-[12px] font-semibold text-white">
         {secondary
           ? "Business Solutions | Powered by The Pride Times"
           : "Advertisement Space"}
       </strong>
 
-      <span className="mt-0.5 text-[8px] md:text-[9px] text-cyan-300">
+      <span className="text-[7px] md:text-[8px] text-cyan-300">
         728 × 90 • Leaderboard
-      </span>
-
-      <span className="absolute top-0 right-0 bg-white/80 px-1.5 py-0.5 text-[6px] text-gray-500">
-        Advertisement
       </span>
     </div>
   );
@@ -179,18 +264,31 @@ function AdBanner({
 
 function SectionHeader({
   title,
-  marginBottom = "mb-5",
+  subtitle,
 }: {
   title: string;
-  marginBottom?: string;
+  subtitle?: string;
 }) {
   return (
-    <div
-      className={`flex items-center border-t-2 border-black pt-3 ${marginBottom}`}
-    >
-      <h2 className="font-sans text-sm md:text-base font-bold text-gray-900">
-        {title}
-      </h2>
+    <div className="border-t-2 border-black pt-3 mb-4">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <h2 className="font-serif text-[17px] md:text-[20px] font-bold text-gray-950">
+            {title}
+          </h2>
+
+          {subtitle && (
+            <p className="mt-0.5 text-[8px] md:text-[9px] text-gray-500">
+              {subtitle}
+            </p>
+          )}
+        </div>
+
+        <ArrowRight
+          size={14}
+          className="shrink-0 text-gray-400"
+        />
+      </div>
     </div>
   );
 }
@@ -203,15 +301,17 @@ function StoryMeta({
   author,
   time,
 }: {
-  author: string;
+  author?: string;
   time: string;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 text-[9px] md:text-[10px] text-gray-400">
-      <span>By {author}</span>
+    <div className="flex flex-wrap items-center gap-2.5 text-[8px] md:text-[9px] text-gray-400">
+      {author && <span>By {author}</span>}
+
+      {author && <span>·</span>}
 
       <span className="flex items-center gap-1">
-        <Clock size={10} strokeWidth={2} />
+        <Clock size={9} strokeWidth={2} />
         {time}
       </span>
     </div>
@@ -219,48 +319,128 @@ function StoryMeta({
 }
 
 /* =========================================================
-   LATEST STORY CARD
+   HERO STORY
 ========================================================= */
 
-function LatestStoryCard({
-  story,
-}: {
-  story: (typeof latestNews)[number];
-}) {
+function HeroStory() {
   return (
-    <article className="group overflow-hidden rounded-md border border-gray-200 bg-white hover:shadow-md transition-shadow duration-300">
-      <div className="relative overflow-hidden">
+    <Link to={specialArticlePath("healthcare-biotech-lives")} className="block">
+    <article className="group min-w-0">
+      <div className="relative overflow-hidden rounded-md h-[250px] sm:h-[330px] md:h-[390px] lg:h-[400px]">
+        <ImageWithFallback
+          src={hero.image}
+          alt={hero.title}
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+        />
+
+        <div className="absolute left-3 bottom-3 bg-black/75 px-2 py-1">
+          <span className="text-[7px] md:text-[8px] font-bold tracking-[0.14em] uppercase text-white">
+            Lead Story
+          </span>
+        </div>
+      </div>
+
+      <div className="pt-2.5 md:pt-3">
+        <p className="text-[8px] md:text-[9px] font-bold tracking-[0.14em] uppercase text-[#e31b23]">
+          {hero.category}
+        </p>
+
+        <h2 className="mt-1 font-serif text-[23px] sm:text-[27px] md:text-[31px] lg:text-[34px] font-bold leading-[1.08] text-gray-950 group-hover:text-[#e31b23] transition-colors">
+          {hero.title}
+        </h2>
+
+        <p className="mt-2 text-[10px] md:text-[12px] lg:text-[13px] leading-[1.55] text-gray-500 max-w-5xl">
+          {hero.excerpt}
+        </p>
+
+        <div className="mt-2.5 pt-2 border-t border-gray-200">
+          <StoryMeta
+            author={hero.author}
+            time={hero.time}
+          />
+        </div>
+      </div>
+    </article>
+    </Link>
+  );
+}
+
+/* =========================================================
+   MAJOR STORY
+========================================================= */
+
+function MajorStory({ story }: { story: Story }) {
+  return (
+    <article className="group border-b border-gray-200 pb-3">
+      <div className="relative h-[125px] sm:h-[145px] md:h-[150px] overflow-hidden rounded-sm">
         <ImageWithFallback
           src={story.image}
           alt={story.title}
-          className="w-full h-[165px] sm:h-[185px] md:h-[175px] lg:h-[185px] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {story.badge && (
+          <span className="absolute top-2 left-2 bg-[#e31b23] text-white text-[6px] font-bold px-1.5 py-1 uppercase">
+            {story.badge}
+          </span>
+        )}
       </div>
 
-      <div className="p-3 md:p-4">
-        <div className="flex items-center gap-2">
-          <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-[0.08em] text-red-600">
-            {story.category}
-          </span>
+      <div className="pt-2">
+        <p className="text-[7px] md:text-[8px] font-bold tracking-[0.1em] uppercase text-[#e31b23]">
+          {story.category}
+        </p>
 
-          {story.badge && (
-            <span className="rounded-sm bg-red-600 px-1.5 py-0.5 text-[6px] font-bold text-white">
-              {story.badge}
-            </span>
-          )}
-        </div>
-
-        <h3 className="mt-1.5 font-serif text-[15px] md:text-[16px] lg:text-[17px] font-bold leading-[1.18] text-gray-900 group-hover:text-red-600 transition-colors duration-200">
+        <h3 className="mt-1 font-serif text-[14px] md:text-[16px] font-bold leading-[1.18] text-gray-900 group-hover:text-[#e31b23] transition-colors">
           {story.title}
         </h3>
 
-        <p className="mt-2 text-[10px] md:text-[11px] leading-[1.5] text-gray-500 line-clamp-3">
+        {story.excerpt && (
+          <p className="mt-1.5 text-[8px] md:text-[9px] leading-[1.45] text-gray-500 line-clamp-3">
+            {story.excerpt}
+          </p>
+        )}
+
+        <div className="mt-2">
+          <StoryMeta
+            author={story.author}
+            time={story.time}
+          />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
+   SUPPORTING STORY
+========================================================= */
+
+function SupportingStory({ story }: { story: Story }) {
+  return (
+    <article className="group flex gap-3 py-3 border-b border-gray-200 last:border-b-0">
+      <div className="w-[95px] h-[68px] md:w-[115px] md:h-[78px] shrink-0 overflow-hidden rounded-sm">
+        <ImageWithFallback
+          src={story.image}
+          alt={story.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+
+      <div className="min-w-0">
+        <p className="text-[7px] md:text-[8px] font-bold tracking-[0.08em] uppercase text-[#e31b23]">
+          {story.category}
+        </p>
+
+        <h3 className="mt-0.5 font-serif text-[12px] md:text-[14px] font-bold leading-[1.2] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+          {story.title}
+        </h3>
+
+        <p className="mt-1 text-[8px] md:text-[9px] leading-[1.4] text-gray-500 line-clamp-2">
           {story.excerpt}
         </p>
 
-        <div className="mt-3 pt-2.5 border-t border-gray-100">
+        <div className="mt-1.5">
           <StoryMeta
             author={story.author}
             time={story.time}
@@ -277,25 +457,27 @@ function LatestStoryCard({
 
 function SponsoredContent() {
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[8px] font-bold tracking-[0.14em] text-gray-400 uppercase">
+    <div className="border border-gray-200 rounded-md overflow-hidden">
+      <div className="px-2.5 py-1.5 flex items-center justify-between bg-[#faf9f4]">
+        <span className="text-[7px] font-bold tracking-[0.14em] text-gray-400 uppercase">
           Sponsored Content
         </span>
 
-        <span className="text-[7px] text-gray-400">Ad</span>
+        <span className="text-[7px] text-gray-400">
+          Ad
+        </span>
       </div>
 
-      <div className="h-[150px] md:h-[168px] bg-[#171c3a] flex flex-col items-center justify-center text-center px-4">
+      <div className="h-[145px] md:h-[160px] bg-[#171c3a] flex flex-col items-center justify-center text-center px-4">
         <span className="text-[8px] font-bold tracking-[0.16em] text-yellow-400 uppercase">
           Featured Partner
         </span>
 
-        <strong className="mt-3 font-serif text-lg text-white">
+        <strong className="mt-2.5 font-serif text-[15px] text-white">
           Your Ad Here
         </strong>
 
-        <span className="mt-2 text-[9px] text-gray-300">
+        <span className="mt-1.5 text-[8px] text-gray-300">
           Reach 2M+ business readers
         </span>
       </div>
@@ -310,8 +492,8 @@ function SponsoredContent() {
 function MoreStories() {
   return (
     <div className="mt-5">
-      <div className="border-b-2 border-black pb-2 mb-2">
-        <h3 className="text-[11px] md:text-xs font-bold uppercase tracking-wide text-gray-900">
+      <div className="border-b-2 border-black pb-2 mb-1">
+        <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.08em] text-gray-900">
           More Stories
         </h3>
       </div>
@@ -320,9 +502,9 @@ function MoreStories() {
         {moreStories.map((story) => (
           <article
             key={story.id}
-            className="group flex gap-3 py-2.5 border-b border-gray-200 last:border-b-0"
+            className="group flex gap-2.5 py-2.5 border-b border-gray-200 last:border-b-0"
           >
-            <div className="w-[70px] h-[52px] md:w-[74px] md:h-[56px] rounded-sm overflow-hidden shrink-0">
+            <div className="w-[58px] h-[45px] md:w-[65px] md:h-[50px] shrink-0 overflow-hidden rounded-sm">
               <ImageWithFallback
                 src={story.image}
                 alt={story.title}
@@ -331,11 +513,11 @@ function MoreStories() {
             </div>
 
             <div className="min-w-0">
-              <span className="text-[7px] font-bold text-red-600 uppercase">
+              <p className="text-[7px] font-bold text-[#e31b23] uppercase">
                 {story.category}
-              </span>
+              </p>
 
-              <h4 className="mt-0.5 text-[9px] md:text-[10px] font-semibold leading-[1.25] text-gray-800 group-hover:text-red-600 transition-colors">
+              <h4 className="mt-0.5 font-serif text-[9px] md:text-[10px] font-bold leading-[1.25] text-gray-800 group-hover:text-[#e31b23] transition-colors">
                 {story.title}
               </h4>
 
@@ -351,14 +533,150 @@ function MoreStories() {
 }
 
 /* =========================================================
-   SPONSORSHIP SECTION
+   NEWSROOM STREAM
+========================================================= */
+
+function NewsroomStream() {
+  return (
+    <aside className="lg:border-l lg:border-gray-200 lg:pl-4">
+      <div className="border-t-2 border-black pt-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-serif text-[16px] md:text-[18px] font-bold text-gray-950">
+            Newsroom
+          </h3>
+
+          <span className="text-[7px] font-bold uppercase tracking-[0.1em] text-gray-400">
+            Latest
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-2">
+        {latestNews.map((story) => (
+          <article
+            key={`stream-${story.id}`}
+            className="group py-2.5 border-b border-gray-200"
+          >
+            <div className="flex items-start gap-2">
+              <div className="shrink-0 pt-0.5">
+                <Clock size={9} className="text-[#e31b23]" />
+              </div>
+
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[6px] font-bold uppercase tracking-[0.08em] text-[#e31b23]">
+                    {story.category}
+                  </span>
+
+                  {story.badge && (
+                    <span className="bg-[#e31b23] text-white text-[5px] font-bold px-1 py-0.5 rounded-sm">
+                      {story.badge}
+                    </span>
+                  )}
+                </div>
+
+                <h4 className="mt-1 font-serif text-[10px] md:text-[11px] font-bold leading-[1.25] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+                  {story.title}
+                </h4>
+
+                <p className="mt-1 text-[7px] text-gray-400">
+                  {story.time}
+                </p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
+/* =========================================================
+   COVERAGE CARD
+========================================================= */
+
+function CoverageCard({ story }: { story: Story }) {
+  return (
+    <article className="group grid grid-cols-[100px_minmax(0,1fr)] md:grid-cols-[145px_minmax(0,1fr)] gap-3 border-b border-gray-200 pb-3">
+      <div className="h-[72px] md:h-[92px] overflow-hidden rounded-sm">
+        <ImageWithFallback
+          src={story.image}
+          alt={story.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+
+      <div>
+        <p className="text-[7px] md:text-[8px] font-bold tracking-[0.08em] uppercase text-[#e31b23]">
+          {story.category}
+        </p>
+
+        <h3 className="mt-0.5 font-serif text-[12px] md:text-[14px] font-bold leading-[1.2] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+          {story.title}
+        </h3>
+
+        <p className="mt-1 text-[8px] md:text-[9px] leading-[1.4] text-gray-500 line-clamp-2">
+          {story.excerpt}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
+   NEWS CARD
+========================================================= */
+
+function NewsCard({ story }: { story: Story }) {
+  return (
+    <article className="group border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow-md transition-shadow duration-300">
+      <div className="relative h-[140px] sm:h-[150px] md:h-[155px] overflow-hidden bg-gray-100">
+        <ImageWithFallback
+          src={story.image}
+          alt={story.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+        />
+
+        {story.badge && (
+          <span className="absolute top-2 left-2 bg-[#e31b23] text-white text-[6px] font-bold px-1.5 py-1 uppercase">
+            {story.badge}
+          </span>
+        )}
+      </div>
+
+      <div className="p-2.5 md:p-3">
+        <p className="text-[7px] md:text-[8px] font-bold uppercase tracking-[0.08em] text-[#e31b23]">
+          {story.category}
+        </p>
+
+        <h3 className="mt-1 font-serif text-[13px] md:text-[14px] font-bold leading-[1.22] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+          {story.title}
+        </h3>
+
+        <p className="mt-1.5 text-[8px] md:text-[9px] leading-[1.45] text-gray-500 line-clamp-3">
+          {story.excerpt}
+        </p>
+
+        <div className="mt-2 pt-2 border-t border-gray-100">
+          <StoryMeta
+            author={story.author}
+            time={story.time}
+          />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
+   SPONSORSHIP
 ========================================================= */
 
 function SponsorshipSection() {
   return (
-    <section className="mt-8 md:mt-10 rounded-md bg-[#f7f7f7] border border-gray-100 p-4 md:p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="rounded-sm border border-gray-300 px-2 py-1 text-[7px] font-bold tracking-[0.1em] text-gray-400 uppercase">
+    <section className="mt-6 md:mt-8 rounded-md bg-[#f7f7f7] border border-gray-100 p-3 md:p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="rounded-sm border border-gray-300 px-1.5 py-1 text-[7px] font-bold tracking-[0.1em] text-gray-400 uppercase">
           Sponsorship
         </span>
 
@@ -367,14 +685,16 @@ function SponsorshipSection() {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {sponsoredEvents.map((event) => (
           <div
             key={event.title}
-            className="flex min-h-[74px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 text-center"
+            className="flex min-h-[74px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-2 text-center"
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-red-50">
-              <span className="text-[10px] text-red-500">✦</span>
+              <span className="text-[10px] text-[#e31b23]">
+                ✦
+              </span>
             </div>
 
             <h4 className="mt-2 text-[9px] font-bold text-gray-800">
@@ -397,28 +717,31 @@ function SponsorshipSection() {
 
 function Newsletter() {
   return (
-    <section className="mt-8 md:mt-10 rounded-md bg-[#071a2d] px-5 py-8 md:py-10 text-center">
-      <h2 className="font-serif text-xl md:text-2xl font-bold text-white">
-        Stay Ahead with The Pride Times
-      </h2>
+    <section className="mt-6 md:mt-8 mb-10">
+      <div className="rounded-md bg-[#071a2d] px-5 py-7 md:py-8 text-center">
+        <h2 className="font-serif text-[18px] md:text-[20px] font-bold text-white">
+          Stay Ahead with The Pride Times
+        </h2>
 
-      <p className="mt-1.5 text-[10px] md:text-xs text-gray-300">
-        Daily briefings on Healthcare delivered to your inbox.
-      </p>
+        <p className="mt-1 text-[9px] md:text-[10px] text-gray-300">
+          Daily briefings on Healthcare delivered to your inbox.
+        </p>
 
-      <div className="mx-auto mt-5 flex w-full max-w-[440px] flex-col sm:flex-row gap-2">
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="h-9 flex-1 rounded-sm border border-white/10 bg-white/10 px-3 text-[10px] text-white placeholder:text-gray-400 outline-none focus:border-red-500"
-        />
+        <div className="mt-4 flex flex-col sm:flex-row justify-center gap-2 mx-auto max-w-[420px]">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            aria-label="Email address"
+            className="h-8 flex-1 rounded border border-[#42566b] bg-[#1c344b] px-3 text-[9px] text-white placeholder:text-[#8796a6] outline-none focus:border-[#e31b23]"
+          />
 
-        <button
-          type="button"
-          className="h-9 rounded-sm bg-red-600 px-5 text-[10px] font-bold text-white transition-colors hover:bg-red-700"
-        >
-          Subscribe Free
-        </button>
+          <button
+            type="button"
+            className="h-8 px-4 rounded bg-[#e31b23] text-white text-[9px] font-bold hover:bg-[#c9151c] transition-colors"
+          >
+            Subscribe Free
+          </button>
+        </div>
       </div>
     </section>
   );
@@ -430,103 +753,163 @@ function Newsletter() {
 
 export function HealthcarePage() {
   return (
-    <main className="w-full bg-white text-gray-900 antialiased">
-      {/* FULL WIDTH PAGE CONTENT */}
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-5 md:py-6">
+    <main className="w-full bg-white text-[#17140F] antialiased">
+      <div className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* =================================================
-            TOP RED RULE + PAGE TITLE
+            PAGE HEADER
         ================================================= */}
 
-        <header className="border-t-[3px] border-red-600 pt-4 md:pt-5 mb-5 md:mb-6">
-          <h1 className="font-serif text-[27px] sm:text-[31px] md:text-[36px] font-bold leading-none text-gray-950">
-            Healthcare
-          </h1>
+        <section className="pt-5 md:pt-7">
+          <div className="border-t-[3px] border-[#e31b23] pt-4 md:pt-5">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-1">
+              <div>
+                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-gray-950">
+                  Healthcare
+                </h1>
 
-          <p className="mt-2 text-[10px] md:text-[11px] text-gray-500">
-            Medicine, biotechnology, pharmaceuticals, and the future of
-            healthcare.
-          </p>
-        </header>
-
-        {/* =================================================
-            TOP AD
-        ================================================= */}
-
-        <AdBanner />
-
-        {/* =================================================
-            HERO + SIDEBAR
-        ================================================= */}
-
-        <section className="mt-4 md:mt-5 grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6">
-
-          {/* MAIN HERO */}
-          <article className="lg:col-span-9 group">
-            <div className="overflow-hidden rounded-md">
-              <ImageWithFallback
-                src={hero.image}
-                alt={hero.title}
-                className="w-full h-[250px] sm:h-[330px] md:h-[390px] lg:h-[405px] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-              />
-            </div>
-
-            <div className="mt-3">
-              <span className="text-[8px] md:text-[9px] font-bold text-red-600 uppercase tracking-[0.12em]">
-                {hero.category}
-              </span>
-
-              <h2 className="mt-1.5 font-serif text-[24px] sm:text-[28px] md:text-[32px] lg:text-[34px] font-bold leading-[1.08] text-gray-950 group-hover:text-red-600 transition-colors">
-                {hero.title}
-              </h2>
-
-              <p className="mt-2 text-[11px] md:text-[12px] lg:text-[13px] leading-[1.6] text-gray-500 max-w-5xl">
-                {hero.excerpt}
-              </p>
-
-              <div className="mt-3 pt-2.5 border-t border-gray-200">
-                <StoryMeta
-                  author={hero.author}
-                  time={hero.time}
-                />
+                <p className="mt-1 text-[10px] md:text-[12px] text-gray-500">
+                  Medicine, biotechnology, pharmaceuticals, and the future of healthcare.
+                </p>
               </div>
-            </div>
-          </article>
 
-          {/* RIGHT SIDEBAR */}
-          <aside className="lg:col-span-3">
-            <SponsoredContent />
-            <MoreStories />
+              <span className="text-[7px] md:text-[8px] uppercase tracking-[0.14em] font-bold text-gray-400">
+                Healthcare & Life Sciences
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================
+            TOP ADVERTISEMENT
+        ================================================= */}
+
+        <section className="mt-4 md:mt-5">
+          <AdBanner />
+        </section>
+
+        {/* =================================================
+            LEAD STORY + MAJOR STORIES + SPONSOR
+        ================================================= */}
+
+        <section className="mt-4 md:mt-5 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_235px] gap-5 md:gap-6">
+
+          {/* LEAD */}
+          <div className="min-w-0">
+            <HeroStory />
+          </div>
+
+          {/* EDITORIAL RAIL */}
+          <aside className="lg:border-l lg:border-gray-200 lg:pl-4">
+            <div className="border-t-2 border-black pt-3">
+              <h2 className="font-serif text-[16px] md:text-[18px] font-bold text-gray-950">
+                Major Healthcare Stories
+              </h2>
+            </div>
+
+            <div className="mt-3 space-y-4">
+              {majorStories.map((story) => (
+                <Link key={story.id} to={specialArticlePath(`healthcare-major-${story.id}`)} className="block"><MajorStory story={story} /></Link>
+              ))}
+            </div>
+
+            <div className="mt-4">
+              <SponsoredContent />
+            </div>
           </aside>
         </section>
 
         {/* =================================================
-            LATEST HEALTHCARE NEWS
+            HEALTHCARE COVERAGE
         ================================================= */}
 
-        <section className="mt-8 md:mt-10">
-          <SectionHeader title="Latest Healthcare News" />
+        <section className="mt-7 md:mt-9">
+          <SectionHeader
+            title="Healthcare Coverage"
+            subtitle="Research, medicine, technology and pharmaceutical developments"
+          />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {latestNews.map((story) => (
-              <LatestStoryCard
-                key={story.id}
-                story={story}
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6">
+            {supportingStories.map((story) => (
+              <Link key={story.id} to={specialArticlePath(`healthcare-coverage-${story.id}`)} className="block"><CoverageCard story={story} /></Link>
             ))}
           </div>
         </section>
 
         {/* =================================================
-            SECOND AD
+            LATEST NEWS + NEWSROOM
         ================================================= */}
 
-        <div className="mt-6 md:mt-8">
-          <AdBanner secondary />
-        </div>
+        <section className="mt-7 md:mt-9">
+          <SectionHeader
+            title="Latest Healthcare News"
+            subtitle="A rolling view of the latest healthcare developments"
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_225px] gap-5 md:gap-6">
+
+            {/* NEWS GRID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+              {latestNews.map((story) => (
+                <Link key={story.id} to={specialArticlePath(`healthcare-latest-${story.id}`)} className="block"><NewsCard story={story} /></Link>
+              ))}
+            </div>
+
+            {/* NEWSROOM */}
+            <NewsroomStream />
+          </div>
+        </section>
 
         {/* =================================================
-            SPONSORSHIP
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <section className="mt-6 md:mt-7">
+          <AdBanner secondary />
+        </section>
+
+        {/* =================================================
+            MORE FROM HEALTHCARE
+        ================================================= */}
+
+        <section className="mt-6 md:mt-8">
+          <SectionHeader title="More From Healthcare" />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+            {moreStories.map((story) => (
+              <Link
+                key={`more-${story.id}`}
+                to={specialArticlePath(`healthcare-more-${story.id}`)}
+                className="group flex gap-3 border-b border-gray-200 pb-3 md:border md:rounded-md md:p-2.5"
+              >
+                <div className="w-[80px] h-[58px] md:w-[90px] md:h-[64px] shrink-0 overflow-hidden rounded-sm">
+                  <ImageWithFallback
+                    src={story.image}
+                    alt={story.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-[7px] font-bold uppercase text-[#e31b23]">
+                    {story.category}
+                  </p>
+
+                  <h3 className="mt-0.5 font-serif text-[10px] md:text-[11px] font-bold leading-[1.25] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+                    {story.title}
+                  </h3>
+
+                  <p className="mt-1 text-[7px] text-gray-400">
+                    {story.time}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* =================================================
+            SPONSORED EVENTS
         ================================================= */}
 
         <SponsorshipSection />
@@ -537,12 +920,9 @@ export function HealthcarePage() {
 
         <Newsletter />
 
-        {/* =================================================
-            BOTTOM SPACE
-        ================================================= */}
-
-        <div className="h-8 md:h-12" />
       </div>
     </main>
   );
 }
+
+export default HealthcarePage;
