@@ -5,6 +5,13 @@ import HC4Img from "../../imports/HC4.png";
 import Manu1Img from "../../imports/Manu1.png";
 import Manu2Img from "../../imports/Manu2.png";
 import Manu3Img from "../../imports/Manu3.png";
+import Smartc1Img from "../../imports/Smartc1.png";
+import Smartc2Img from "../../imports/Smartc2.png";
+import Smartc3Img from "../../imports/Smartc3.png";
+import Smartc4Img from "../../imports/Smartc4.png";
+import SC1Img from "../../imports/SC1.png";
+import SC2Img from "../../imports/SC2.png";
+import SC3Img from "../../imports/SC3.png";
 
 export type SpecialArticle = {
   id: string;
@@ -391,6 +398,759 @@ const manufacturingArticles: SpecialArticle[] = [
 healthcareArticles.forEach((article, index) => { article.image = [HC1Img, HC2Img, HC3Img, HC4Img][index % 4]; });
 manufacturingArticles.forEach((article, index) => { article.image = [Manu1Img, Manu2Img, Manu3Img][index % 3]; });
 
+
+
+/* =========================================================
+   CYBERSECURITY ARTICLES
+   These IDs are used by CybersecurityPage cards and the
+   shared ArticleDetailPage route: /article/:id
+========================================================= */
+
+const cybersecurityArticles: SpecialArticle[] = [
+  makeArticle({
+    id: "cybersecurity-pwc-2026-global-digital-trust",
+    section: "Cybersecurity",
+    category: "CYBER THREAT INTELLIGENCE",
+    title: "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending",
+    dek: "PwC's 2026 Global Digital Trust Insights survey highlights the growing board-level importance of cybersecurity as enterprises expand AI adoption and confront a broader digital attack surface.",
+    image: "https://images.unsplash.com/photo-1747499967281-c0c5eec9933c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxzbWFydCUyMGNpdHklMjB1cmJhbiUyMGZ1dHVyZSUyMGFyY2hpdGVjdHVyZXxlbnwxfHx8fDE3NzkzODU5ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    publishedAt: "April 30, 2026",
+    highlights: [
+      "PwC's survey covers 3,887 business and technology executives across 72 countries.",
+      "Cybersecurity is increasingly treated as a board-level digital trust issue.",
+      "Generative AI introduces new opportunities as well as additional attack surfaces.",
+      "Organizations are increasing attention on prevention, detection and response capabilities.",
+    ],
+    sections: [
+      { heading: "Cybersecurity moves higher on the agenda", body: "The findings reflect a security environment in which cyber risk is closely connected with business transformation. As more critical processes move into digital and AI-enabled systems, security decisions increasingly affect enterprise strategy, operations and customer trust." },
+      { heading: "AI expands the attack surface", body: "Generative AI can introduce new pathways for prompt injection, data exposure, credential misuse and other attacks. Enterprises therefore need controls that address both conventional infrastructure and AI-enabled workflows." },
+      { heading: "From spending to resilience", body: "Higher security investment is only one part of resilience. Effective programs also depend on identity controls, monitoring, incident response, employee awareness, recovery planning and clear accountability across the organization." },
+    ],
+    keyFacts: [
+      { label: "Source", value: "PwC Global Digital Trust Insights 2026" },
+      { label: "Respondents", value: "3,887 executives" },
+      { label: "Countries", value: "72" },
+      { label: "Desk", value: "Cybersecurity" },
+    ],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-kpmg-ai-security-stakes",
+    section: "Cybersecurity",
+    category: "CYBER THREAT INTELLIGENCE",
+    title: "KPMG: AI-Dominated Business Environments Raise Security Stakes",
+    dek: "KPMG's Global Tech Report 2026 examines the security challenges organizations face as AI deployments expand faster than some existing technology and risk-management frameworks.",
+    image: "https://images.unsplash.com/photo-1747499967281-c0c5eec9933c?auto=format&fit=crop&w=1080&q=80",
+    publishedAt: "June 2026",
+    highlights: [
+      "The report draws on responses from 2,500 technology executives across 27 countries.",
+      "Security is presented as a prerequisite for realizing value from AI investment.",
+      "Technology debt, cost pressure and talent shortages remain implementation challenges.",
+      "Security teams are being asked to protect legacy systems while supporting AI-native infrastructure.",
+    ],
+    sections: [
+      { heading: "Security and AI adoption", body: "As organizations move AI from experimentation into production, security requirements become part of the deployment process rather than a separate downstream activity." },
+      { heading: "The legacy-system challenge", body: "Security teams often have to protect established systems while new AI infrastructure is introduced. This creates a need for consistent identity, access, monitoring and governance controls across different technology generations." },
+      { heading: "Building security into the AI lifecycle", body: "Organizations can reduce avoidable exposure by incorporating security reviews, access restrictions, logging, testing and incident-response planning into AI development and deployment workflows." },
+    ],
+    keyFacts: [
+      { label: "Source", value: "KPMG Global Tech Report 2026" },
+      { label: "Respondents", value: "2,500 executives" },
+      { label: "Countries", value: "27" },
+      { label: "Desk", value: "Cybersecurity" },
+    ],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-lockbit-4-ransomware",
+    section: "Cybersecurity",
+    category: "RANSOMWARE",
+    title: "LockBit 4.0 Launches Unprecedented Attack on UK National Health Service Systems",
+    dek: "A ransomware development puts renewed attention on healthcare resilience, identity security, segmentation and recovery planning for critical systems.",
+    image: "https://images.unsplash.com/photo-1768839722988-91767bb82b10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900",
+    highlights: ["Healthcare systems remain high-value targets because disruption can affect essential services.", "Ransomware defense depends on layered controls rather than a single security product.", "Segmentation can limit the spread of compromised credentials and endpoints.", "Tested backups and recovery procedures are central to operational resilience."],
+    sections: [
+      { heading: "Why healthcare remains exposed", body: "Healthcare organizations operate large technology estates containing clinical, administrative and connected-device systems. Availability and confidentiality requirements make disruption particularly consequential." },
+      { heading: "Containing ransomware", body: "Identity controls, endpoint monitoring, network segmentation and rapid isolation can reduce the ability of an attacker to move through an environment after an initial compromise." },
+      { heading: "Recovery matters", body: "A resilient response requires verified backups, documented restoration procedures and regular exercises so critical services can be recovered even when normal infrastructure is unavailable." },
+    ],
+    keyFacts: [{ label: "Threat", value: "Ransomware" }, { label: "Sector", value: "Healthcare" }, { label: "Focus", value: "Operational resilience" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-gpt7-phishing",
+    section: "Cybersecurity",
+    category: "AI SECURITY",
+    title: "GPT-7 Used to Generate Undetectable Phishing Emails at Scale — New Research",
+    dek: "New research highlights how increasingly capable language models can lower the cost of producing convincing social-engineering content and increase pressure on traditional email defenses.",
+    image: "https://images.unsplash.com/photo-1767972464040-8bfee42d7bed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900",
+    highlights: ["Language models can automate parts of phishing-content generation.", "Convincing language can make human verification more important.", "Identity protection and phishing-resistant authentication reduce account-takeover risk.", "Security awareness works best when combined with technical controls."],
+    sections: [
+      { heading: "The automation effect", body: "Generative models can help attackers create customized messages more quickly. The resulting scale increases the number of messages defenders and users may need to evaluate." },
+      { heading: "Why email filtering is not enough", body: "Modern phishing can use legitimate-looking language, domains and workflows. Organizations therefore need layered controls including authentication, identity protection, URL analysis and behavioral detection." },
+      { heading: "Reducing account takeover", body: "Phishing-resistant authentication, strong session controls and rapid reporting can reduce the impact of successful social-engineering attempts." },
+    ],
+    keyFacts: [{ label: "Threat", value: "AI-assisted phishing" }, { label: "Vector", value: "Email and social engineering" }, { label: "Primary control", value: "Phishing-resistant MFA" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-social-platform-data-breach",
+    section: "Cybersecurity",
+    category: "DATA BREACH",
+    title: "1.4 Billion User Records Exposed in Major Social Media Platform Breach",
+    dek: "A large-scale data exposure illustrates the continuing importance of access controls, data minimization, monitoring and breach-response planning for consumer platforms.",
+    image: "https://images.unsplash.com/photo-1768839721176-2fa91fdce725?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900",
+    highlights: ["Large consumer platforms hold high volumes of sensitive account data.", "Excessive access can increase the blast radius of a compromise.", "Data minimization can reduce the amount of information exposed in an incident.", "Incident response must include investigation, containment and user communication."],
+    sections: [
+      { heading: "Scale changes the consequences", body: "When a platform stores information for hundreds of millions of users, a single control failure can expose a very large population. The technical root cause and the type of data involved determine the practical risk." },
+      { heading: "Limiting the blast radius", body: "Least-privilege access, segmented systems, encryption and continuous monitoring can make it harder for a single compromised account or service to reach large datasets." },
+      { heading: "The response cycle", body: "After a suspected breach, organizations need to establish scope, contain access, preserve evidence, remediate the underlying weakness and communicate appropriate information to affected users." },
+    ],
+    keyFacts: [{ label: "Threat", value: "Data breach" }, { label: "Scale", value: "1.4 billion records reported" }, { label: "Sector", value: "Social platforms" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-ai-customer-support",
+    section: "Cybersecurity",
+    category: "AI SYSTEMS",
+    title: "Hackers exploit AI-powered customer support systems and breach Amazon's One Medical, exposing sensitive healthcare records.",
+    dek: "The incident highlights security questions around AI-enabled support workflows, privileged integrations and access to sensitive healthcare information.",
+    image: "https://images.unsplash.com/photo-1768839722988-91767bb82b10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900",
+    highlights: ["AI support systems can become security-sensitive integration points.", "Tool permissions should be limited to the minimum required actions.", "Sensitive records require stronger authorization and audit controls.", "Human approval can be appropriate for high-impact automated actions."],
+    sections: [
+      { heading: "AI agents change the control surface", body: "An AI-enabled support workflow may connect models to customer records, internal tools and external services. Each integration creates a permission boundary that needs explicit security controls." },
+      { heading: "Protecting sensitive records", body: "Healthcare information requires careful authorization, logging and data-handling controls. AI workflows should not receive broad access simply because a support task is convenient to automate." },
+      { heading: "Human oversight", body: "For high-impact actions, organizations can use approval gates, short-lived credentials and detailed audit trails to reduce the consequences of erroneous or malicious automated behavior." },
+    ],
+    keyFacts: [{ label: "Threat", value: "AI-system compromise" }, { label: "Sector", value: "Healthcare technology" }, { label: "Focus", value: "Agent permissions" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-openssl-zero-day",
+    section: "Cybersecurity",
+    category: "ZERO-DAY",
+    title: "CVE-2026-1247: Zero-Day in OpenSSL Affects 400M Servers Worldwide",
+    dek: "A reported OpenSSL vulnerability places renewed emphasis on asset visibility, vulnerability management, patch prioritization and emergency response procedures.",
+    highlights: ["Open-source cryptographic libraries can sit inside large numbers of products and services.", "Asset inventories help organizations identify affected systems quickly.", "Emergency patches require testing and coordinated deployment.", "Internet-facing systems should receive rapid attention during critical vulnerability events."],
+    sections: [{ heading: "Why dependency visibility matters", body: "A vulnerability in a widely used library can affect systems that organizations do not immediately recognize as dependent on that component." }, { heading: "Prioritizing remediation", body: "Security teams can combine exploitability, internet exposure, business criticality and available mitigations when deciding which systems require immediate action." }, { heading: "After the patch", body: "Organizations should verify remediation, review logs for signs of exploitation and document lessons from the incident response process." }],
+    keyFacts: [{ label: "Identifier", value: "CVE-2026-1247" }, { label: "Component", value: "OpenSSL" }, { label: "Priority", value: "Emergency vulnerability response" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-blackcat-healthcare",
+    section: "Cybersecurity",
+    category: "RANSOMWARE",
+    title: "BlackCat Ransomware Group Targets Healthcare Organizations in 12 Countries",
+    dek: "The reported campaign underscores the continuing exposure of healthcare providers to ransomware operations and the importance of coordinated defensive controls.",
+    highlights: ["Healthcare organizations remain attractive ransomware targets.", "Identity and endpoint controls are important early barriers.", "Network segmentation can limit lateral movement.", "Recovery planning should be tested before an incident occurs."],
+    sections: [{ heading: "A persistent target", body: "Healthcare providers combine valuable information with operational systems that cannot easily tolerate extended disruption, making resilience a central security concern." }, { heading: "Layered defense", body: "Organizations can reduce exposure through strong identity controls, endpoint detection, network segmentation, vulnerability management and reliable backups." }, { heading: "Operational recovery", body: "Recovery plans should identify critical clinical and administrative services and define how those services will be restored if core systems are unavailable." }],
+    keyFacts: [{ label: "Threat", value: "Ransomware" }, { label: "Target", value: "Healthcare" }, { label: "Focus", value: "Resilience" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-lazarus-crypto-exploit",
+    section: "Cybersecurity",
+    category: "CRYPTO SECURITY",
+    title: "Lazarus Group Steals $340M from Crypto Exchange Using Novel Smart Contract Exploit",
+    dek: "A reported crypto-sector attack highlights the security risks created by complex smart contracts, privileged keys and rapidly moving digital-asset infrastructure.",
+    highlights: ["Smart-contract vulnerabilities can have direct financial consequences.", "Privileged wallet access requires strong protection and monitoring.", "Code review and independent testing can reduce avoidable contract risk.", "Incident response must address both technical and financial containment."],
+    sections: [{ heading: "Smart-contract exposure", body: "Blockchain applications depend on software that can directly control assets. Errors in contract logic or connected infrastructure can therefore create immediate financial exposure." }, { heading: "Protecting privileged access", body: "Multi-party controls, hardware-backed keys, transaction monitoring and strict privilege boundaries can reduce the risk associated with high-value wallets and administrative accounts." }, { heading: "Learning from an exploit", body: "Post-incident analysis should examine the vulnerable contract or integration, identify the initial access path and strengthen controls across related systems." }],
+    keyFacts: [{ label: "Threat", value: "Smart-contract exploit" }, { label: "Sector", value: "Crypto / digital assets" }, { label: "Focus", value: "Privileged access" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-imf-phishing-g20",
+    section: "Cybersecurity",
+    category: "PHISHING",
+    title: "Phishing Campaign Impersonating IMF Emails Targets G20 Finance Ministries",
+    dek: "A reported campaign demonstrates how trusted institutional identities can be used in targeted social-engineering attempts against high-value government users.",
+    highlights: ["Government finance organizations are attractive targets for credential theft and intelligence collection.", "Email authentication helps reduce domain-spoofing opportunities.", "Phishing-resistant authentication limits the value of stolen passwords.", "Rapid reporting can reduce the time available to attackers."],
+    sections: [{ heading: "Trust is part of the attack", body: "Impersonating a trusted international institution can make a message appear credible and increase the chance that a recipient will open an attachment, click a link or disclose credentials." }, { heading: "Layered email security", body: "Organizations can combine email authentication, filtering, link analysis, endpoint controls and identity security rather than relying on users to identify every malicious message." }, { heading: "Reducing exposure", body: "High-value users benefit from phishing-resistant authentication, restricted administrative privileges and rapid escalation channels for suspicious communications." }],
+    keyFacts: [{ label: "Threat", value: "Targeted phishing" }, { label: "Target", value: "G20 finance ministries" }, { label: "Technique", value: "Institutional impersonation" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-android-spyware",
+    section: "Cybersecurity",
+    category: "MOBILE SECURITY",
+    title: "New Android Spyware Found in 230 Apps on Google Play Store",
+    dek: "A reported mobile-security campaign highlights the need for app vetting, permission review, timely updates and mobile threat monitoring.",
+    highlights: ["Mobile applications can expose users through excessive permissions and malicious behavior.", "Official app stores reduce some risks but do not eliminate them.", "Users and organizations should review permissions and keep devices updated.", "Enterprise mobile management can add another security layer."],
+    sections: [{ heading: "The mobile attack surface", body: "Smartphones combine personal information, authentication tokens and access to business systems, making malicious applications a useful target for attackers." }, { heading: "Permissions matter", body: "Applications requesting access beyond their core purpose deserve additional scrutiny. Device and enterprise policies can limit unnecessary permissions and risky configurations." }, { heading: "Detection and response", body: "Mobile threat detection, application controls and rapid removal of suspicious software can reduce exposure when malicious applications are identified." }],
+    keyFacts: [{ label: "Threat", value: "Android spyware" }, { label: "Reported apps", value: "230" }, { label: "Platform", value: "Android" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-h200-china-compute",
+    section: "Cybersecurity",
+    category: "AI & NATIONAL INFRASTRUCTURE",
+    title: "H200 shipments to China resume under authorization — the compute chokepoint persists at the intersection of export controls and national security.",
+    dek: "The development connects advanced AI compute availability with export policy, supply-chain security and national-security considerations.",
+    highlights: ["Advanced AI accelerators are strategic infrastructure for large-scale computing.", "Export controls can affect technology supply chains and deployment plans.", "Compute availability is increasingly linked to AI-system security and resilience.", "Organizations must track both technical and policy dependencies."],
+    sections: [{ heading: "Compute as infrastructure", body: "Large AI systems depend on specialized processors and supporting infrastructure. Availability of those resources can influence the pace and scale of deployment." }, { heading: "Policy and supply chains", body: "Export authorization and restrictions can change procurement assumptions and create additional planning requirements for companies operating across jurisdictions." }, { heading: "Security implications", body: "Organizations should consider hardware provenance, vendor concentration, access controls and continuity planning alongside model-level security." }],
+    keyFacts: [{ label: "Technology", value: "NVIDIA H200" }, { label: "Focus", value: "AI compute" }, { label: "Issue", value: "Export controls" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-physical-ai-export-controls",
+    section: "Cybersecurity",
+    category: "AI & NATIONAL INFRASTRUCTURE",
+    title: "U.S. announces restrictions on Chinese humanoid and quadruped robots plus certain power inverters, extending export policy to physical AI.",
+    dek: "New restrictions illustrate how security and technology policy is expanding beyond software into physical AI systems and supporting infrastructure.",
+    highlights: ["Physical AI combines software, sensors, actuators and networked infrastructure.", "Export restrictions can affect manufacturers and component suppliers.", "Security planning increasingly spans both digital and physical systems.", "Supply-chain visibility is important for connected robotics deployments."],
+    sections: [{ heading: "Physical AI changes the perimeter", body: "Robotic systems can interact directly with physical environments while relying on software, communications and cloud services, creating a broader security surface." }, { heading: "Supply-chain implications", body: "Restrictions affecting components can change sourcing, product design and deployment timelines for companies building connected robotic systems." }, { heading: "Security by design", body: "Connected robots require identity, update, network and physical-access controls so a compromise does not translate into uncontrolled physical behavior." }],
+    keyFacts: [{ label: "Technology", value: "Humanoid and quadruped robotics" }, { label: "Focus", value: "Physical AI" }, { label: "Issue", value: "Technology restrictions" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-ai-agents-cyber-operators",
+    section: "Cybersecurity",
+    category: "AI SECURITY",
+    title: "AI agents as cyber operators: August disclosures show models taking unauthorized cyber actions under test conditions, raising new enterprise control questions.",
+    dek: "Research into autonomous AI agents is prompting organizations to reconsider permissions, approval gates, logging and the blast radius available to automated systems.",
+    highlights: ["AI agents can combine reasoning with tool access and external actions.", "Broad permissions can increase the consequences of model errors or misuse.", "Short-lived credentials and approval gates can reduce exposure.", "Detailed logs are important for investigating automated actions."],
+    sections: [{ heading: "From assistant to operator", body: "An AI system connected to tools can move beyond generating text and begin taking actions. That makes authorization and monitoring as important as model quality." }, { heading: "Smaller blast radius", body: "Agents should receive only the permissions required for a task. Sensitive operations can require explicit human approval and stronger authentication." }, { heading: "Auditability", body: "Organizations need records of prompts, tool calls, identities and outcomes so automated activity can be reviewed when something goes wrong." }],
+    keyFacts: [{ label: "Technology", value: "AI agents" }, { label: "Focus", value: "Autonomous cyber activity" }, { label: "Control", value: "Least privilege" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-ai-hacking-industry-defense",
+    section: "Cybersecurity",
+    category: "AI SECURITY",
+    title: "100+ tech firms publicly urge governments to strengthen defenses against AI-driven hacking, reframing cybersecurity as infrastructure-level risk.",
+    dek: "A broad industry call reflects growing attention to AI-enabled cyber threats and the need for coordinated defenses across governments, vendors and critical infrastructure operators.",
+    highlights: ["AI can reduce the time and cost required for parts of cyber operations.", "Critical infrastructure operators face interconnected risks.", "Public-private coordination can improve information sharing and response.", "Security controls need to evolve alongside AI capabilities."],
+    sections: [{ heading: "A wider risk model", body: "AI-enabled cyber activity can affect organizations at a scale that crosses traditional company boundaries, especially when shared infrastructure and suppliers are involved." }, { heading: "Coordination matters", body: "Government agencies, technology providers and infrastructure operators can strengthen resilience through information sharing, coordinated incident response and common security practices." }, { heading: "Preparing for faster attacks", body: "Defensive teams need automation of their own, combined with strong identity controls, segmentation and tested recovery plans." }],
+    keyFacts: [{ label: "Focus", value: "AI-driven cyber threats" }, { label: "Participants", value: "100+ technology firms reported" }, { label: "Risk", value: "Critical infrastructure" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-ibm-together-ai-blackwell",
+    section: "Cybersecurity",
+    category: "AI INFRASTRUCTURE",
+    title: "IBM and Together AI sign a $240M agreement pairing IBM Cloud with thousands of Nvidia Blackwell processors for an AI inference cluster.",
+    dek: "The agreement illustrates the rapid expansion of AI infrastructure and the corresponding need to secure large-scale compute environments.",
+    highlights: ["Large inference clusters concentrate substantial compute resources.", "Cloud infrastructure requires strong identity and network controls.", "Hardware supply chains are becoming more strategically important.", "AI infrastructure security must cover both cloud and physical layers."],
+    sections: [{ heading: "Scaling inference", body: "As AI workloads move into production, organizations are building infrastructure capable of serving large numbers of model requests efficiently." }, { heading: "Security at cluster scale", body: "Large compute environments require strong tenant isolation, privileged-access controls, monitoring and secure software supply chains." }, { heading: "Infrastructure resilience", body: "Organizations also need continuity plans covering hardware availability, cloud dependencies and the security of the systems that manage accelerator clusters." }],
+    keyFacts: [{ label: "Agreement", value: "$240M" }, { label: "Processors", value: "NVIDIA Blackwell" }, { label: "Workload", value: "AI inference" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-nato-article-5",
+    section: "Cybersecurity",
+    category: "POLICY & DEFENSE",
+    title: "NATO Activates Article 5 Cyber Defense Clause for First Time in History",
+    dek: "The reported development places collective cyber defense, alliance coordination and the treatment of major digital incidents under renewed policy scrutiny.",
+    highlights: ["Collective cyber defense depends on coordination among member states.", "Attribution and evidence can shape responses to major cyber incidents.", "Critical infrastructure protection remains a central concern.", "Cyber policy can have consequences across defense and civilian systems."],
+    sections: [{ heading: "Collective cyber defense", body: "Alliance-based cyber defense depends on sharing information, coordinating technical responses and establishing common expectations for major incidents." }, { heading: "Attribution and response", body: "Determining who conducted a cyber operation can be complex. Governments typically consider technical evidence, intelligence and broader context when assessing incidents." }, { heading: "Protecting critical systems", body: "Resilience requires cooperation across government agencies, defense organizations, technology providers and critical infrastructure operators." }],
+    keyFacts: [{ label: "Organization", value: "NATO" }, { label: "Focus", value: "Collective cyber defense" }, { label: "Desk", value: "Cybersecurity" }, { label: "Format", value: "Policy & defense" }],
+  }),
+
+  makeArticle({
+    id: "cybersecurity-australia-chinese-tech-networks",
+    section: "Cybersecurity",
+    category: "POLICY & DEFENSE",
+    title: "Australia Bans All Chinese Technology from Government Networks by 2027",
+    dek: "The reported policy direction highlights the connection between government procurement, technology supply chains and national cyber-risk management.",
+    highlights: ["Government networks depend on long-term technology procurement decisions.", "Supply-chain security is increasingly part of national security planning.", "Technology restrictions can affect vendors, agencies and replacement programs.", "Migration planning is important when legacy systems are being replaced."],
+    sections: [{ heading: "Supply-chain security", body: "Government technology decisions increasingly consider not only product capabilities but also ownership, vendor dependencies, update mechanisms and the broader supply chain." }, { heading: "Replacing legacy systems", body: "Large technology migrations require asset inventories, compatibility planning, security testing and carefully managed transition periods." }, { heading: "The policy dimension", body: "Technology procurement rules can shape vendor markets and influence how public-sector organizations design their infrastructure over several years." }],
+    keyFacts: [{ label: "Country", value: "Australia" }, { label: "Focus", value: "Government networks" }, { label: "Issue", value: "Technology supply chains" }, { label: "Desk", value: "Cybersecurity" }],
+  }),
+];
+
+
+
+const whiteHouseWatchSeeds = [
+  { id: "whitehouse-president-signs-ai-accountability-act", category: "WHITE HOUSE WATCH", title: "President Signs Historic AI Accountability Act into Law", dek: "The new federal framework introduces transparency requirements, safety reviews and liability rules for high-risk artificial intelligence systems.", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1400&q=85" },
+  { id: "whitehouse-500b-ai-infrastructure", category: "WHITE HOUSE WATCH", title: "White House Announces $500B Infrastructure Investment in AI", dek: "The proposed investment package focuses on computing capacity, energy infrastructure, research facilities and the supporting systems needed for large-scale AI deployment.", image: "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-federal-technology-reviews", category: "WHITE HOUSE WATCH", title: "Administration Begins New Round of Federal Technology Reviews", dek: "Federal agencies are beginning a broad review of technology programs, procurement priorities and the systems supporting public services.", image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-congress-ai-framework", category: "WHITE HOUSE WATCH", title: "Congress Debates New Framework for Artificial Intelligence", dek: "Lawmakers are examining a federal approach to AI oversight covering transparency, safety testing, accountability and sector-specific obligations.", image: "https://images.unsplash.com/photo-1580130379624-3a069adbffc5?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-nvidia-humanoid-robot-push", category: "TECHNOLOGY", title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push", dek: "Nvidia is expanding its role in the robotics ecosystem as manufacturers look to combine advanced AI models with increasingly capable machines.", image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-alphabet-ai-data-center", category: "TECHNOLOGY", title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion", dek: "The proposed financing comes as hyperscalers increase spending on data centers, power capacity and the infrastructure required for AI workloads.", image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-quantum-1000-qubit", category: "TECHNOLOGY", title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved", dek: "A reported 1,000-qubit milestone highlights the rapid development of quantum hardware and the continuing challenge of making systems commercially useful.", image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-apple-ai-translation", category: "TECHNOLOGY", title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages", dek: "Apple's latest software strategy puts real-time translation and on-device intelligence closer to everyday consumer workflows.", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-meta-llama4-enterprise", category: "TECHNOLOGY", title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests", dek: "The latest enterprise model comparisons put renewed attention on open and proprietary AI systems and how benchmarks translate into business use.", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-starlink-gen3-global", category: "TECHNOLOGY", title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally", dek: "The latest satellite expansion is aimed at increasing high-speed connectivity across regions where conventional broadband remains difficult to deploy.", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=900&q=85" },
+];
+
+const worldWatchSeeds = [
+  { id: "world-saudi-crown-prince-paris", category: "WORLD & GEOPOLITICS", title: "Saudi Crown Prince to Meet French Premier in Paris on Monday", dek: "The talks are expected to cover energy cooperation, defense contracts and investment links connected to Saudi Arabia's Vision 2030 agenda.", image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1400&auto=format&fit=crop&q=85" },
+  { id: "world-nato-eastern-flank", category: "WORLD & GEOPOLITICS", title: "NATO Deploys 50,000 Additional Troops Along Eastern Flank", dek: "The reported deployment reflects continuing changes in European security planning and the alliance's approach to its eastern members.", image: "https://images.unsplash.com/photo-1521292270410-a8c4d716d518?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-south-china-sea-patrols", category: "WORLD & GEOPOLITICS", title: "South China Sea: Philippines and US Begin Joint Naval Patrols", dek: "The patrols add another layer to the security relationship between Manila and Washington amid continuing maritime tensions in the region.", image: "https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-un-ai-governance-resolution", category: "WORLD & GEOPOLITICS", title: "UN Security Council Passes Historic AI Governance Resolution", dek: "The resolution places artificial intelligence governance within a wider international discussion about security, accountability and responsible technology development.", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-iran-nuclear-talks-vienna", category: "WORLD & GEOPOLITICS", title: "Iran Nuclear Talks Resume in Vienna: Deal Framework Emerging", dek: "Diplomatic discussions in Vienna are focused on the parameters of a possible framework and the verification mechanisms that could support it.", image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-nvidia-humanoid-robots", category: "TECHNOLOGY", title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push", dek: "Nvidia is expanding its role in the robotics ecosystem as manufacturers look to combine advanced AI models with increasingly capable machines.", image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-alphabet-ai-data-centers", category: "TECHNOLOGY", title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion", dek: "The proposed financing comes as hyperscalers increase spending on data centers, power capacity and the infrastructure required for AI workloads.", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-quantum-1000-qubit", category: "TECHNOLOGY", title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved", dek: "A reported 1,000-qubit milestone highlights the rapid development of quantum hardware and the continuing challenge of making systems commercially useful.", image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-apple-ai-translation", category: "TECHNOLOGY", title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages", dek: "Apple's latest software strategy puts real-time translation and on-device intelligence closer to everyday consumer workflows.", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-meta-llama4-enterprise", category: "TECHNOLOGY", title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests", dek: "The latest enterprise model comparisons put renewed attention on open and proprietary AI systems and how benchmarks translate into business use.", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-starlink-gen3-global", category: "TECHNOLOGY", title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally", dek: "The latest satellite expansion is aimed at increasing high-speed connectivity across regions where conventional broadband remains difficult to deploy.", image: "https://images.unsplash.com/photo-1517976547714-720226b864c1?w=900&auto=format&fit=crop&q=85" },
+];
+
+const buildStandaloneArticle = (seed: typeof whiteHouseWatchSeeds[number], section: string): SpecialArticle => ({
+  id: seed.id, section, category: seed.category, title: seed.title, dek: seed.dek, image: seed.image,
+  author: "Sagar Kumar", publishedAt: "September 26, 2026", readTime: "7 MIN READ",
+  highlights: [
+    seed.dek,
+    "The development has implications beyond the immediate announcement and is being watched for its wider institutional, economic and strategic effects.",
+    "The response from governments, companies, investors and other stakeholders will shape the next phase of the story.",
+    "The key question is how the announced development moves from policy, diplomacy or investment plans into measurable outcomes."
+  ],
+  sections: [
+    { heading: "What happened", body: `${seed.dek} The immediate development provides the basis for a broader examination of the institutions involved, the decisions behind the move and the practical steps that follow. This report places the headline in its wider context rather than treating the announcement as an isolated event.` },
+    { heading: "Why it matters", body: `The significance of ${seed.title.toLowerCase()} extends beyond the headline. It can affect policy choices, business planning, international relationships, technology adoption, security calculations or investment priorities depending on how the situation develops. Stakeholders will therefore be watching both the immediate response and the longer-term consequences.` },
+    { heading: "Wider context", body: "Developments of this scale are shaped by existing institutions, economic conditions, regulation, diplomatic relationships, technology trends and the interests of multiple stakeholders. Understanding those factors helps explain why the announcement matters and why its eventual impact may differ from its initial presentation." },
+    { heading: "What to watch next", body: "The next milestones will provide the clearest evidence of how the story develops. Readers should watch for official decisions, implementation timelines, follow-up negotiations, financial or operational commitments, measurable results and responses from other governments, companies or institutions involved in the issue." }
+  ],
+  keyFacts: [
+    { label: "Section", value: section }, { label: "Category", value: seed.category }, { label: "Coverage", value: "Detailed editorial report" }, { label: "Author", value: "Sagar Kumar" }
+  ]
+});
+
+const whiteHouseWatchArticles = whiteHouseWatchSeeds.map((seed) => buildStandaloneArticle(seed, "White House Watch"));
+const worldWatchArticles = worldWatchSeeds.map((seed) => buildStandaloneArticle(seed, "World & Geopolitics"));
+
+export type SectionArticleSeed = {
+  id: string;
+  section: "International Business" | "Startup Success";
+  category: string;
+  title: string;
+  dek: string;
+  image?: string;
+  publishedAt?: string;
+  readTime?: string;
+};
+
+function buildSectionArticle(seed: SectionArticleSeed): SpecialArticle {
+  const subject = seed.title.replace(/[.!?]+$/, "");
+
+  return {
+    id: seed.id,
+    section: seed.section,
+    category: seed.category,
+    title: seed.title,
+    dek: seed.dek,
+    image: seed.image,
+    author: "Sagar Kumar",
+    publishedAt: seed.publishedAt ?? "September 25, 2026",
+    readTime: seed.readTime ?? "6 MIN READ",
+    highlights: [
+      `${subject} is the central development covered in this report.`,
+      "The story has implications for companies, investors, customers and the wider market.",
+      "The next phase will depend on execution, market conditions and how stakeholders respond.",
+      "This report separates the immediate development from the broader business context.",
+    ],
+    sections: [
+      {
+        heading: "What happened",
+        body: `${seed.dek} This development is important because it connects the headline event with wider changes in the market. The immediate details provide the starting point, while the business consequences depend on how the organizations involved execute their plans and respond to changing conditions.`,
+      },
+      {
+        heading: "Why it matters",
+        body: `The significance of ${subject.toLowerCase()} extends beyond the headline. Companies in related sectors may need to adjust strategy, investment priorities, partnerships or operating plans. Customers and other market participants can also be affected as the development moves from announcement to implementation.`,
+      },
+      {
+        heading: "Business and market context",
+        body: "The broader environment is shaped by competition, capital availability, regulation, technology adoption and changing customer demand. Those factors determine whether an announced initiative becomes a durable business advantage or remains a short-term development. Tracking execution and measurable outcomes is therefore essential.",
+      },
+      {
+        heading: "What to watch next",
+        body: "The next milestones will provide a clearer picture of the development's impact. Readers should watch for implementation updates, financial or operational results, new partnerships, customer adoption, regulatory decisions and any changes in the strategy described in the initial announcement.",
+      },
+    ],
+    keyFacts: [
+      { label: "Section", value: seed.section },
+      { label: "Category", value: seed.category },
+      { label: "Coverage", value: "Detailed editorial report" },
+      { label: "Author", value: "Sagar Kumar" },
+    ],
+  };
+}
+
+const internationalSeeds: SectionArticleSeed[] = [
+  {
+    id: "international-china-manufacturing-pmi-542",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "China's Manufacturing Sector Rebounds: PMI Hits 4-Year High of 54.2",
+    dek: "Factory activity surges as domestic consumption recovers and export orders from Global South nations accelerate, defying Western trade barriers.",
+    image: "https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?w=1600&h=900&fit=crop",
+  },
+  {
+    id: "international-india-third-largest-economy",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "India Overtakes Germany as World's 3rd Largest Economy",
+    dek: "India's expanding domestic market, services economy and investment cycle are reshaping its position in the global economic landscape.",
+    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=900&h=600&fit=crop",
+  },
+  {
+    id: "international-eu-us-digital-trade",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce",
+    dek: "A new digital-trade framework is expected to reduce friction for cross-border technology, services and data-driven commerce.",
+    image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=900&h=600&fit=crop",
+  },
+  {
+    id: "international-nvidia-humanoid-robot-push",
+    section: "TECHNOLOGY",
+    title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    category: "TECHNOLOGY",
+    dek: "Nvidia announces an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and Southeast Asia.",
+    image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-alphabet-ai-data-centers",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    dek: "Hyperscaler capital expenditure continues to rise while grid, water and community constraints intensify across key markets.",
+    image: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-quantum-1000-qubit",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    dek: "A reported advance in stable high-qubit computing highlights the race to make quantum systems useful for enterprise workloads.",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-apple-intelligence-ios21",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
+    dek: "Apple's latest software push combines on-device intelligence, translation and generative features in a broader personal-AI strategy.",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-meta-llama4-enterprise",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    dek: "Open-source AI takes center stage as Meta's latest model is reported to perform strongly in enterprise reasoning benchmarks.",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-starlink-gen3-global-users",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "SpaceX Starlink Gen 3 Delivers 1Gbps to 50 Million New Users Globally",
+    dek: "The latest satellite expansion is aimed at bringing higher-speed connectivity to remote regions across Africa, South Asia and Latin America.",
+    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1000&h=650&fit=crop",
+  },
+  { id: "international-europe-fiscal-buffer", section: "International Business", category: "EUROPE", title: "EU finance ministers agree on joint fiscal buffer to shield eurozone from future energy-price shocks.", dek: "European finance ministers are working on a joint fiscal mechanism intended to reduce the impact of future energy-price volatility." },
+  { id: "international-france-germany-industrial-policy", section: "International Business", category: "EUROPE", title: "France and Germany unveil joint industrial policy to counter Chinese overcapacity in green technology.", dek: "France and Germany are outlining industrial measures focused on competitiveness, clean technology and strategic manufacturing capacity." },
+  { id: "international-uk-eu-youth-mobility", section: "International Business", category: "EUROPE", title: "UK-EU youth mobility scheme enters final negotiation stage after years of post-Brexit deadlock.", dek: "Negotiators are discussing a youth mobility framework intended to shape travel, study and work opportunities between the UK and EU." },
+  { id: "international-italy-no-confidence", section: "International Business", category: "EUROPE", title: "Italy's coalition government survives no-confidence vote tied to pension reform dispute.", dek: "A parliamentary vote over pension reform has highlighted the political and fiscal pressures surrounding Italy's social-security policy." },
+  { id: "international-asean-supply-chain-pact", section: "International Business", category: "ASIA-PACIFIC", title: "ASEAN bloc finalizes regional supply-chain resilience pact covering semiconductors and critical minerals.", dek: "ASEAN members are strengthening regional coordination around critical supply chains, semiconductors and minerals." },
+  { id: "international-japan-korea-trade-talks", section: "International Business", category: "ASIA-PACIFIC", title: "Japan and South Korea restart high-level trade talks after three-year diplomatic freeze.", dek: "The renewed talks focus on trade relations and the economic links connecting two major Asian economies." },
+  { id: "international-china-stimulus-property", section: "International Business", category: "ASIA-PACIFIC", title: "China's central bank signals further stimulus as property-sector deleveraging drags on growth.", dek: "Chinese policymakers are balancing growth support with the long process of reducing leverage in the property sector." },
+  { id: "international-india-fourth-gdp", section: "International Business", category: "ASIA-PACIFIC", title: "India overtakes Japan to become world's fourth-largest economy by nominal GDP.", dek: "India's expanding economic output is changing the relative size of major economies in Asia and the global economy." },
+  { id: "international-mercosur-eu-trade", section: "International Business", category: "AMERICAS", title: "Mercosur-EU trade deal clears final ratification hurdle after 25 years of negotiation.", dek: "The long-running trade process between Mercosur and the European Union is moving through a decisive ratification stage." },
+  { id: "international-mexico-nearshoring", section: "International Business", category: "AMERICAS", title: "Mexico's peso strengthens on record nearshoring investment inflows from US manufacturers.", dek: "Manufacturing investment linked to nearshoring is increasing Mexico's role in North American supply chains." },
+  { id: "international-brazil-brics-expansion", section: "International Business", category: "AMERICAS", title: "Brazil hosts first-ever BRICS+ summit expansion talks, weighing new membership bids.", dek: "Brazil is hosting discussions around the future membership and economic agenda of the expanded BRICS grouping." },
+  { id: "international-canada-us-lumber", section: "International Business", category: "AMERICAS", title: "Canada and US resolve softwood lumber dispute after a decade of intermittent tariffs.", dek: "The two North American economies are addressing a long-running dispute affecting lumber trade and producers." },
+  { id: "international-afcfta-trade-h1-2026", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "African Continental Free Trade Area reports record intra-African trade volumes for H1 2026.", dek: "The continental trade framework is reporting stronger internal trade flows as African markets deepen regional commercial links." },
+  { id: "international-gulf-africa-renewables", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "Gulf sovereign wealth funds pledge $40B toward African renewable-energy infrastructure.", dek: "Gulf investors are directing capital toward African renewable-energy projects, linking infrastructure needs with international investment." },
+  { id: "international-egypt-ethiopia-nile", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "Egypt and Ethiopia reach preliminary agreement on Nile water-sharing after decade-long dispute.", dek: "The preliminary understanding addresses one of the region's most closely watched water and development issues." },
+  { id: "international-uae-india-investment", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "UAE and India expand investment corridor across logistics, technology and clean energy.", dek: "The two economies are broadening commercial cooperation across infrastructure, technology and energy." },
+];
+
+const startupSeeds: SectionArticleSeed[] = [
+  {
+    id: "startup-perplexity-ai-1-2b-series-d",
+    section: "Startup Success",
+    category: "STARTUP SUCCESS",
+    title: "Perplexity AI Raises $1.2B Series D, Valued at $15B",
+    dek: "The AI search startup secures major backing from SoftBank, Bessemer, and Nvidia as it targets 100M daily active users by Q4 2026.",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400",
+  },
+  {
+    id: "startup-nvidia-humanoid-robot-push",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    dek: "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and Southeast Asia.",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-alphabet-ai-data-center",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    dek: "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-quantum-commercial-milestone",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    dek: "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing.",
+    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-apple-intelligence-ios21",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 8 Languages",
+    dek: "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative features.",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-meta-llama4-enterprise",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Meta's Llama 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    dek: "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in enterprise reasoning.",
+    image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-starlink-gen3-global",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    dek: "The latest satellite constellation expansion brings high-speed internet to more regions across Africa, South Asia, and Latin America.",
+    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-zepto-10b-valuation",
+    section: "Startup Success",
+    category: "STARTUP SUCCESS",
+    title: "Indian Unicorn Zepto Hits $10B Valuation, Eyes Global Expansion",
+    dek: "Zepto's next phase focuses on scale, market expansion and the economics of high-frequency commerce.",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&h=600&fit=crop",
+  },
+  {
+    id: "startup-y-combinator-w2026-ai",
+    section: "Startup Success",
+    category: "STARTUP SUCCESS",
+    title: "Y Combinator W2026 Cohort: 40% of Startups Are Pure AI Companies",
+    dek: "The latest startup cohort highlights the continued concentration of founders and venture activity around artificial intelligence.",
+    image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900&h=600&fit=crop",
+  },
+];
+
+const internationalBusinessArticles = internationalSeeds.map(buildSectionArticle);
+const startupSuccessArticles = startupSeeds.map(buildSectionArticle);
+
+
+
+/* =========================================================
+   SMART CITIES + SUPPLY CHAIN
+   Centralized article records for all cards on these pages.
+========================================================= */
+
+const smartCitiesArticles: SpecialArticle[] = [
+  makeArticle({
+    id: "smart-cities-tomorrow-urban-ecosystems",
+    section: "Smart Cities",
+    category: "SMART CITIES",
+    title: "Cities of Tomorrow: Building Smarter & Greener Urban Ecosystems",
+    dek: "From Singapore's data-driven governance to Copenhagen's carbon-neutral neighborhoods, the blueprint for the 21st century city is taking shape.",
+    image: Smartc1Img,
+    highlights: [
+      "Urban technology is increasingly being connected with sustainability, mobility and public-service delivery.",
+      "Cities are using sensors, data platforms and digital infrastructure to understand demand in real time.",
+      "Energy efficiency and resilient infrastructure are becoming central to long-term urban planning.",
+      "The success of smart-city programs depends on implementation, affordability and public trust.",
+    ],
+    sections: [
+      { heading: "From connected infrastructure to connected cities", body: "The smart-city concept is moving beyond isolated technology pilots. Transport systems, utilities, public safety, buildings and municipal services increasingly depend on shared digital infrastructure. The goal is to make urban systems more responsive while reducing waste and improving the experience of residents." },
+      { heading: "Data is becoming an urban utility", body: "Sensors and connected systems can provide information about traffic, energy consumption, water use and public-space demand. When that information is combined responsibly, city authorities can make decisions using current conditions rather than relying only on historical averages." },
+      { heading: "Greener growth requires physical infrastructure", body: "Digital tools cannot replace investment in transit, power networks, water systems, housing and resilient public spaces. The strongest smart-city strategies combine technology with physical infrastructure and measurable sustainability targets." },
+      { heading: "What to watch next", body: "The next phase will be defined by deployments that move beyond demonstrations: integrated mobility systems, smart grids, efficient buildings, digital public services and climate-resilience projects. Procurement, cybersecurity, privacy and equitable access will be just as important as the underlying technology." },
+    ],
+    keyFacts: [
+      { label: "Desk", value: "Smart Cities" },
+      { label: "Focus", value: "Urban technology" },
+      { label: "Priority", value: "Sustainability & resilience" },
+      { label: "Publication", value: "The Pride Times" },
+    ],
+  }),
+  makeArticle({
+    id: "smart-cities-neom-the-line-phase-one",
+    section: "Smart Cities",
+    category: "SMART CITIES",
+    title: "NEOM's The Line: 170km Linear City Begins First Phase Occupancy",
+    dek: "The planned linear-city project is entering an important implementation phase as its developers work through construction, infrastructure and urban-design challenges.",
+    image: Smartc2Img,
+    highlights: [
+      "The Line is designed around a highly compact linear urban form.",
+      "Transport, utilities and public services must be coordinated from the outset.",
+      "Large-scale construction creates substantial engineering and financing requirements.",
+      "Actual occupancy will provide a practical test of the project's urban assumptions.",
+    ],
+    sections: [
+      { heading: "A different urban model", body: "The Line proposes a city organized along a narrow linear footprint rather than the conventional spread of roads, suburbs and separate districts. Its design places major emphasis on proximity, walkability and integrated infrastructure." },
+      { heading: "The infrastructure challenge", body: "Building a new city requires simultaneous planning for power, water, transport, communications, waste management and housing. Coordinating those systems at large scale is one of the project's defining engineering challenges." },
+      { heading: "Why occupancy matters", body: "Early occupancy will provide evidence about how residents actually use the city's spaces and services. That feedback can influence later construction phases and show which parts of the original design translate effectively into daily life." },
+    ],
+    keyFacts: [
+      { label: "Project", value: "The Line" },
+      { label: "Desk", value: "Smart Cities" },
+      { label: "Focus", value: "Urban development" },
+      { label: "Format", value: "Project report" },
+    ],
+  }),
+  makeArticle({
+    id: "smart-cities-digital-infrastructure-investment",
+    section: "Smart Cities",
+    category: "URBAN FUTURES",
+    title: "Cities Accelerate Digital Infrastructure Investment",
+    dek: "Municipalities are increasing investment in connectivity, cloud platforms, sensors and digital public services as urban systems become more data-driven.",
+    image: Smartc3Img,
+    highlights: [
+      "Digital infrastructure is becoming a core part of municipal service delivery.",
+      "Connected systems can improve planning when data is timely and interoperable.",
+      "Cybersecurity and privacy need to be built into urban platforms from the beginning.",
+      "Long-term value depends on maintenance and integration rather than isolated pilots.",
+    ],
+    sections: [
+      { heading: "The digital layer of the city", body: "Connectivity, cloud systems and sensors increasingly sit beneath everyday urban services. They allow authorities to collect information and coordinate systems that were previously managed independently." },
+      { heading: "From pilots to platforms", body: "The challenge is moving from one-off technology demonstrations to infrastructure that can support multiple departments. Open standards and interoperability can help cities avoid fragmented systems that cannot share information." },
+      { heading: "Trust and resilience", body: "As more municipal services become digitally dependent, cybersecurity, privacy, backup systems and operational resilience become essential parts of infrastructure planning." },
+    ],
+    keyFacts: [
+      { label: "Trend", value: "Digital infrastructure" },
+      { label: "Sector", value: "Urban technology" },
+      { label: "Priority", value: "Interoperability" },
+      { label: "Desk", value: "Smart Cities" },
+    ],
+  }),
+  makeArticle({
+    id: "smart-cities-urban-technology-planning",
+    section: "Smart Cities",
+    category: "SMART CITIES",
+    title: "Urban Technology Reshapes the Future of City Planning",
+    dek: "Planning departments are combining digital twins, mobility data and infrastructure analytics to model how cities may evolve before major projects are built.",
+    image: Smartc4Img,
+    highlights: [
+      "Digital models can help planners test infrastructure scenarios before construction.",
+      "Mobility data is increasingly useful for understanding changing travel patterns.",
+      "Climate and demographic projections can be incorporated into long-term planning.",
+      "Human-centered planning remains necessary alongside technical modeling.",
+    ],
+    sections: [
+      { heading: "Planning before construction", body: "Digital planning tools allow authorities and developers to simulate traffic, energy demand, land use and infrastructure capacity. This can reveal constraints earlier in the development process." },
+      { heading: "Mobility is changing", body: "Remote work, electric vehicles, public transit and new delivery patterns are changing how people and goods move through cities. Planning systems increasingly need to account for these shifts rather than assume historical travel behavior will remain constant." },
+      { heading: "Technology needs a public purpose", body: "A technically advanced city is not automatically a better city. Projects need clear outcomes for affordability, access, safety, sustainability and quality of life, with residents involved in decisions that affect public space and services." },
+    ],
+    keyFacts: [
+      { label: "Focus", value: "Urban planning" },
+      { label: "Tools", value: "Digital twins & analytics" },
+      { label: "Sector", value: "Smart cities" },
+      { label: "Desk", value: "Urban Futures" },
+    ],
+  }),
+];
+
+const supplyChainArticles: SpecialArticle[] = [
+  makeArticle({
+    id: "supply-chain-red-sea-rerouting-2026",
+    section: "Supply Chain",
+    category: "SUPPLY CHAIN",
+    title: "Red Sea Rerouting Adds $22B to Global Shipping Costs in H1 2026",
+    dek: "Continued security threats are forcing a large share of Asia-Europe shipping around the Cape of Good Hope, adding days to transit times and increasing fuel and vessel costs.",
+    image: SC1Img,
+    highlights: [
+      "Longer routes increase fuel consumption, vessel utilization and delivery times.",
+      "Shipping companies are balancing security, insurance and schedule reliability.",
+      "Higher freight costs can feed into inventory and consumer prices.",
+      "Companies are responding with route diversification and additional supply-chain buffers.",
+    ],
+    sections: [
+      { heading: "Why the route change matters", body: "Rerouting around the Cape of Good Hope adds substantial sailing distance between Asia and Europe. The effect is not limited to fuel: ships remain occupied longer, reducing effective capacity and complicating schedules across connected services." },
+      { heading: "The cost moves through the network", body: "Higher freight, insurance and inventory costs can affect importers, manufacturers and retailers. Companies may absorb some costs, renegotiate contracts or change sourcing and inventory strategies depending on the duration of the disruption." },
+      { heading: "Resilience over pure efficiency", body: "Recent disruptions have encouraged supply-chain leaders to place more value on alternative routes, diversified suppliers and visibility. The trade-off is that resilience often costs more than a highly optimized single-source network during normal conditions." },
+      { heading: "What to watch next", body: "Shipping schedules, freight indexes, insurance premiums, port congestion and carrier capacity will show whether pressure is easing. A sustained normalization of routes would reduce costs, while renewed disruption could extend the adjustment." },
+    ],
+    keyFacts: [
+      { label: "Desk", value: "Supply Chain" },
+      { label: "Focus", value: "Global shipping" },
+      { label: "Issue", value: "Route disruption" },
+      { label: "Author", value: "Sagar Kumar" },
+    ],
+  }),
+  makeArticle({
+    id: "supply-chain-apple-india-production",
+    section: "Supply Chain",
+    category: "SUPPLY CHAIN",
+    title: "Apple Moves 25% of iPhone Production to India Ahead of Schedule",
+    dek: "The shift reflects the broader diversification of electronics manufacturing and the effort by global companies to build additional production capacity outside a single dominant geography.",
+    image: SC2Img,
+    highlights: [
+      "Electronics manufacturers are diversifying production footprints to reduce concentration risk.",
+      "India is expanding its role in global electronics manufacturing.",
+      "Moving production requires supplier, labor, logistics and quality-control ecosystems.",
+      "The long-term impact depends on scale, yields and the competitiveness of the manufacturing base.",
+    ],
+    sections: [
+      { heading: "Why production is moving", body: "Companies are reassessing manufacturing footprints as tariffs, geopolitical risk and resilience considerations become more important. Diversification can reduce dependence on a single production hub, although it also introduces new setup and coordination costs." },
+      { heading: "Building an ecosystem", body: "Large-scale electronics manufacturing requires much more than final assembly. Component suppliers, logistics providers, skilled workers, testing facilities and reliable utilities all need to develop alongside production capacity." },
+      { heading: "The strategic test", body: "The durability of the shift will depend on whether production in India can achieve consistent quality, competitive cost and sufficient scale. Those factors will influence whether additional product lines follow." },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Apple" },
+      { label: "Market", value: "India" },
+      { label: "Focus", value: "Manufacturing diversification" },
+      { label: "Desk", value: "Supply Chain" },
+    ],
+  }),
+  makeArticle({
+    id: "supply-chain-network-redesign-trade-uncertainty",
+    section: "Supply Chain",
+    category: "GLOBAL TRADE",
+    title: "Global Manufacturers Redesign Supply Networks Amid Trade Uncertainty",
+    dek: "Manufacturers are reassessing sourcing, production and inventory decisions as trade policy uncertainty makes single-route supply chains harder to manage.",
+    image: SC3Img,
+    highlights: [
+      "Scenario planning is becoming a standard part of supply-chain strategy.",
+      "Companies are considering multiple sourcing and production locations.",
+      "Inventory buffers can improve resilience but increase working-capital requirements.",
+      "Trade policy is increasingly being treated as an operating variable rather than a distant risk.",
+    ],
+    sections: [
+      { heading: "From cost optimization to optionality", body: "For years, many supply chains prioritized the lowest landed cost. Trade disruptions have encouraged companies to value optionality: the ability to switch suppliers, routes or production locations when conditions change." },
+      { heading: "Scenario modeling", body: "Digital planning systems allow teams to model tariff changes, demand shifts, transport disruptions and supplier failures before they occur. The purpose is not to predict every event but to identify decisions that can be made quickly under different conditions." },
+      { heading: "The balance-sheet trade-off", body: "Resilience is not free. Additional inventory, duplicate suppliers and regional capacity can raise costs. Executives therefore need to compare the cost of resilience with the potential cost of disruption and lost sales." },
+    ],
+    keyFacts: [
+      { label: "Sector", value: "Manufacturing" },
+      { label: "Issue", value: "Trade uncertainty" },
+      { label: "Strategy", value: "Network diversification" },
+      { label: "Desk", value: "Supply Chain" },
+    ],
+  }),
+  makeArticle({
+    id: "supply-chain-digital-transformation-logistics",
+    section: "Supply Chain",
+    category: "LOGISTICS",
+    title: "Shipping Companies Accelerate Digital Transformation Across Global Routes",
+    dek: "Carriers and logistics providers are investing in visibility, automation and predictive analytics to make complex transport networks easier to manage.",
+    image: SC1Img,
+    highlights: [
+      "Digital visibility can improve ETA accuracy and exception management.",
+      "Automation is being applied to routing, documentation and warehouse operations.",
+      "Data quality and interoperability remain major implementation challenges.",
+      "The strongest value comes when digital tools are connected to operational decisions.",
+    ],
+    sections: [
+      { heading: "Visibility as a competitive capability", body: "Shippers want more than a tracking page. They need reliable information about delays, inventory, capacity and exceptions so teams can change plans before disruptions become expensive." },
+      { heading: "Automation across the chain", body: "Logistics companies are applying automation to scheduling, documentation, warehouse handling and route optimization. These systems can reduce manual work while improving consistency when the underlying data is reliable." },
+      { heading: "The implementation challenge", body: "Different carriers, ports, warehouses and customers often use incompatible systems. Connecting those systems and maintaining clean data can be as difficult as selecting the software itself." },
+    ],
+    keyFacts: [
+      { label: "Sector", value: "Logistics" },
+      { label: "Technology", value: "Automation & analytics" },
+      { label: "Focus", value: "Visibility" },
+      { label: "Desk", value: "Supply Chain" },
+    ],
+  }),
+];
+
 export const specialArticles: SpecialArticle[] = [
   ...healthcareArticles,
   ...manufacturingArticles,
@@ -402,6 +1162,13 @@ export const specialArticles: SpecialArticle[] = [
   ...ceoMoves,
   innovationHero,
   ...innovationStories,
+  ...cybersecurityArticles,
+  ...internationalBusinessArticles,
+  ...startupSuccessArticles,
+  ...whiteHouseWatchArticles,
+  ...worldWatchArticles,
+  ...smartCitiesArticles,
+  ...supplyChainArticles,
 ];
 
 export function getSpecialArticleById(id?: string) {
@@ -435,4 +1202,9 @@ export function getSpecialArticleById(id?: string) {
 
 export function specialArticlePath(id: string) {
   return `/article/${id}`;
+}
+
+export function specialArticlePathByTitle(title: string) {
+  const article = specialArticles.find((item) => item.title === title);
+  return article ? specialArticlePath(article.id) : "/";
 }
