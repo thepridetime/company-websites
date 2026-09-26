@@ -1,4 +1,6 @@
 import { Clock, Globe, Landmark, Plane, Users } from "lucide-react";
+import { Link } from "react-router";
+import { specialArticlePathByTitle } from "../../data/specialArticleData";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 /* =========================================================
@@ -345,9 +347,10 @@ function SponsoredContent() {
 
         <div>
           {moreStories.map((story) => (
-            <article
+            <Link
               key={story.id}
-              className="flex gap-3 py-3 border-b border-gray-200 group cursor-pointer"
+              to={specialArticlePathByTitle(story.title)}
+              className="flex gap-3 py-3 border-b border-gray-200 group"
             >
               <div className="w-[72px] h-[48px] shrink-0 overflow-hidden rounded-sm bg-gray-100">
                 <ImageWithFallback
@@ -370,7 +373,7 @@ function SponsoredContent() {
                   {story.time}
                 </span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
@@ -385,15 +388,16 @@ function SponsoredContent() {
 function HeroStoryCard({ story }: { story: HeroStory }) {
   return (
     <article className="group">
-      <div className="overflow-hidden rounded-[6px] bg-gray-100">
+      <Link to={specialArticlePathByTitle(story.title)} className="block">
+        <div className="overflow-hidden rounded-[6px] bg-gray-100">
         <ImageWithFallback
           src={story.image}
           alt={story.title}
           className="w-full h-[300px] sm:h-[370px] md:h-[440px] lg:h-[455px] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
         />
-      </div>
+        </div>
 
-      <div className="pt-3 md:pt-4">
+        <div className="pt-3 md:pt-4">
         <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.12em] text-red-600">
           {story.category}
         </span>
@@ -414,7 +418,8 @@ function HeroStoryCard({ story }: { story: HeroStory }) {
             {story.time}
           </span>
         </div>
-      </div>
+        </div>
+      </Link>
     </article>
   );
 }
@@ -425,7 +430,7 @@ function HeroStoryCard({ story }: { story: HeroStory }) {
 
 function LatestNewsCard({ story }: { story: Story }) {
   return (
-    <article className="group overflow-hidden border border-gray-200 rounded-[5px] bg-white hover:shadow-sm transition-shadow">
+    <Link to={specialArticlePathByTitle(story.title)} className="group block overflow-hidden border border-gray-200 rounded-[5px] bg-white hover:shadow-sm transition-shadow">
       <div className="h-[155px] sm:h-[175px] md:h-[185px] overflow-hidden bg-gray-100">
         <ImageWithFallback
           src={story.image || ""}
@@ -466,7 +471,7 @@ function LatestNewsCard({ story }: { story: Story }) {
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -489,9 +494,10 @@ function RegionalStories({
 
       <div>
         {stories.map((story) => (
-          <article
+          <Link
             key={story.id}
-            className="group py-3 border-b border-gray-200 last:border-b-0 cursor-pointer"
+            to={specialArticlePathByTitle(story.title)}
+            className="group block py-3 border-b border-gray-200 last:border-b-0"
           >
             <h3 className="text-[12px] md:text-[13px] font-medium leading-[1.45] text-gray-900 group-hover:text-red-600 transition-colors">
               {story.title}
@@ -501,7 +507,7 @@ function RegionalStories({
               <Clock size={9} />
               <span>{story.time}</span>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </section>
