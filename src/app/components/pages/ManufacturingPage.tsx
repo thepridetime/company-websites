@@ -1,4 +1,6 @@
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { Link } from "react-router";
+import { specialArticlePath } from "../../data/specialArticleData";
 import {
   Clock,
   Factory,
@@ -37,7 +39,7 @@ interface HeroStory {
 }
 
 /* =========================================================
-   DATA
+   HERO DATA
 ========================================================= */
 
 const hero: HeroStory = {
@@ -51,11 +53,90 @@ const hero: HeroStory = {
   image: Manu1Img,
 };
 
+/* =========================================================
+   MAJOR MANUFACTURING STORIES
+========================================================= */
+
+const majorStories: Story[] = [
+  {
+    id: 1,
+    category: "TECHNOLOGY",
+    title:
+      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    excerpt:
+      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Asia.",
+    time: "12 min ago",
+    image: Manu2Img,
+  },
+  {
+    id: 2,
+    category: "TECHNOLOGY",
+    title:
+      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    excerpt:
+      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
+    time: "35 min ago",
+    image: Manu3Img,
+  },
+];
+
+/* =========================================================
+   MANUFACTURING COVERAGE
+========================================================= */
+
+const manufacturingCoverage: Story[] = [
+  {
+    id: 1,
+    category: "QUANTUM COMPUTING",
+    title:
+      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    excerpt:
+      "IBM and Google announce new advances as enterprise quantum computing moves toward commercial deployment.",
+    time: "2 hr ago",
+    image: Manu1Img,
+  },
+  {
+    id: 2,
+    category: "CONSUMER TECHNOLOGY",
+    title:
+      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
+    excerpt:
+      "Apple's latest software update expands on-device translation and generative AI capabilities.",
+    time: "3 hr ago",
+    image: Manu2Img,
+  },
+  {
+    id: 3,
+    category: "ARTIFICIAL INTELLIGENCE",
+    title:
+      "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    excerpt:
+      "Open-source AI takes center stage as Meta's latest model competes across enterprise reasoning benchmarks.",
+    time: "5 hr ago",
+    image: Manu3Img,
+  },
+  {
+    id: 4,
+    category: "SPACE TECHNOLOGY",
+    title:
+      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    excerpt:
+      "The latest satellite constellation expansion brings high-speed internet to remote regions worldwide.",
+    time: "6 hr ago",
+    image: Manu1Img,
+  },
+];
+
+/* =========================================================
+   LATEST MANUFACTURING NEWS
+========================================================= */
+
 const latestStories: Story[] = [
   {
     id: 1,
     category: "TECHNOLOGY",
-    title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    title:
+      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
     excerpt:
       "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Asia.",
     time: "12 min ago",
@@ -113,6 +194,10 @@ const latestStories: Story[] = [
   },
 ];
 
+/* =========================================================
+   AUTOMOTIVE
+========================================================= */
+
 const autoStories: Story[] = [
   {
     id: 1,
@@ -145,6 +230,10 @@ const autoStories: Story[] = [
     time: "6 hrs ago",
   },
 ];
+
+/* =========================================================
+   ROBOTICS
+========================================================= */
 
 const roboticsStories: Story[] = [
   {
@@ -179,6 +268,10 @@ const roboticsStories: Story[] = [
   },
 ];
 
+/* =========================================================
+   SEMICONDUCTORS
+========================================================= */
+
 const semiconductors: Story[] = [
   {
     id: 1,
@@ -212,6 +305,10 @@ const semiconductors: Story[] = [
   },
 ];
 
+/* =========================================================
+   AEROSPACE & DEFENSE
+========================================================= */
+
 const aeroDefense: Story[] = [
   {
     id: 1,
@@ -238,6 +335,10 @@ const aeroDefense: Story[] = [
     time: "8 hrs ago",
   },
 ];
+
+/* =========================================================
+   MANUFACTURING PMI
+========================================================= */
 
 const mfgIndex = [
   {
@@ -285,23 +386,40 @@ const mfgIndex = [
 function SectionHeader({
   title,
   icon,
+  subtitle,
 }: {
   title: string;
   icon?: React.ReactNode;
+  subtitle?: string;
 }) {
   return (
-    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
-      <div className="flex items-center gap-2">
-        {icon && <span className="text-red-600">{icon}</span>}
+    <div className="border-t-2 border-black pt-3 mb-4">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2">
+            {icon && (
+              <span className="text-[#e31b23]">
+                {icon}
+              </span>
+            )}
 
-        <h2 className="text-sm md:text-base font-bold uppercase tracking-[0.08em] text-gray-900">
-          {title}
-        </h2>
+            <h2 className="font-serif text-[17px] md:text-[20px] font-bold text-gray-950">
+              {title}
+            </h2>
+          </div>
+
+          {subtitle && (
+            <p className="mt-1 text-[8px] md:text-[9px] text-gray-500">
+              {subtitle}
+            </p>
+          )}
+        </div>
+
+        <ArrowRight
+          size={14}
+          className="shrink-0 text-gray-400"
+        />
       </div>
-
-      <span className="hidden sm:block text-[9px] uppercase tracking-widest text-gray-400">
-        The Pride Times
-      </span>
     </div>
   );
 }
@@ -310,25 +428,54 @@ function SectionHeader({
    ADVERTISEMENT BAR
 ========================================================= */
 
-function AdvertisementBar({ bottom = false }: { bottom?: boolean }) {
+function AdvertisementBar({
+  bottom = false,
+}: {
+  bottom?: boolean;
+}) {
   return (
-    <div className="w-full h-[78px] md:h-[90px] bg-[#12313b] flex flex-col items-center justify-center text-white my-5 relative overflow-hidden">
-      <span className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-[#64c7e6] font-bold">
+    <div className="relative w-full h-[58px] md:h-[72px] bg-[#102d35] overflow-hidden flex flex-col items-center justify-center text-center">
+      <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
+        Advertisement
+      </span>
+
+      <span className="text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-[#64c7e6] font-bold">
         Google Adsense
       </span>
 
-      <span className="text-sm md:text-base font-semibold mt-1">
+      <span className="text-[10px] md:text-[12px] font-semibold mt-0.5 text-white">
         {bottom
           ? "Business Solutions | Powered by The Pride Times"
           : "Advertisement Space"}
       </span>
 
-      <span className="text-[8px] md:text-[9px] text-[#83b8c8] mt-1">
+      <span className="text-[7px] md:text-[8px] text-[#83b8c8]">
         728 × 90 · Leaderboard
       </span>
+    </div>
+  );
+}
 
-      <span className="absolute right-1 top-1 text-[7px] text-gray-300">
-        Advertisement
+/* =========================================================
+   STORY META
+========================================================= */
+
+function StoryMeta({
+  author,
+  time,
+}: {
+  author?: string;
+  time: string;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2.5 text-[8px] md:text-[9px] text-gray-400">
+      {author && <span>By {author}</span>}
+
+      {author && <span>·</span>}
+
+      <span className="flex items-center gap-1">
+        <Clock size={9} />
+        {time}
       </span>
     </div>
   );
@@ -340,22 +487,22 @@ function AdvertisementBar({ bottom = false }: { bottom?: boolean }) {
 
 function SponsoredContent() {
   return (
-    <aside className="border border-gray-200 bg-[#faf9f4] h-fit">
-      <div className="px-3 py-2 flex justify-between items-center text-[8px] uppercase tracking-wider text-gray-400">
+    <aside className="border border-gray-200 bg-[#faf9f4] rounded-md overflow-hidden">
+      <div className="px-2.5 py-1.5 flex justify-between items-center text-[7px] uppercase tracking-[0.12em] text-gray-400">
         <span>Sponsored Content</span>
         <span>Ad</span>
       </div>
 
-      <div className="mx-3 mb-3 h-[190px] md:h-[210px] bg-[#151b3a] flex flex-col items-center justify-center text-center px-4">
-        <span className="text-[9px] font-bold tracking-[0.15em] text-yellow-400">
+      <div className="h-[150px] md:h-[165px] bg-[#151b3a] flex flex-col items-center justify-center text-center px-4">
+        <span className="text-[8px] font-bold tracking-[0.15em] text-yellow-400">
           FEATURED PARTNER
         </span>
 
-        <h3 className="text-white font-semibold mt-2 text-base">
+        <h3 className="text-white font-semibold mt-2 text-[13px]">
           Your Ad Here
         </h3>
 
-        <p className="text-gray-300 text-[9px] mt-2">
+        <p className="text-gray-300 text-[8px] mt-1.5">
           Reach 2M+ business readers
         </p>
       </div>
@@ -384,9 +531,9 @@ function MoreStories() {
   ];
 
   return (
-    <div className="mt-4">
-      <div className="border-b-2 border-black pb-2 mb-2">
-        <h3 className="text-xs font-bold uppercase tracking-wide">
+    <div className="mt-5">
+      <div className="border-b-2 border-black pb-2 mb-1">
+        <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.08em]">
           More Stories
         </h3>
       </div>
@@ -394,24 +541,28 @@ function MoreStories() {
       {stories.map((story) => (
         <article
           key={story.title}
-          className="flex gap-3 py-3 border-b border-gray-200"
+          className="group flex gap-2.5 py-2.5 border-b border-gray-200 last:border-b-0"
         >
-          <ImageWithFallback
-            src={story.image}
-            alt={story.title}
-            className="w-16 h-12 object-cover rounded-sm shrink-0"
-          />
+          <div className="w-[60px] h-[46px] shrink-0 overflow-hidden rounded-sm">
+            <ImageWithFallback
+              src={story.image}
+              alt={story.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
 
-          <div>
-            <span className="text-[7px] uppercase font-bold text-red-600">
+          <div className="min-w-0">
+            <span className="text-[7px] uppercase font-bold text-[#e31b23]">
               Manufacturing
             </span>
 
-            <h4 className="text-[10px] leading-snug font-bold text-gray-900 mt-0.5">
+            <h4 className="font-serif text-[9px] md:text-[10px] leading-[1.25] font-bold text-gray-900 mt-0.5 group-hover:text-[#e31b23] transition-colors">
               {story.title}
             </h4>
 
-            <p className="text-[8px] text-gray-400 mt-1">{story.time}</p>
+            <p className="text-[7px] text-gray-400 mt-1">
+              {story.time}
+            </p>
           </div>
         </article>
       ))}
@@ -425,53 +576,123 @@ function MoreStories() {
 
 function HeroStoryCard({
   story,
-  large = false,
 }: {
   story: HeroStory;
-  large?: boolean;
 }) {
   return (
-    <article className="group cursor-pointer">
-      <div
-        className={`relative overflow-hidden bg-gray-100 rounded-md ${
-          large ? "h-[270px] sm:h-[360px] lg:h-[390px]" : "h-[250px]"
-        }`}
-      >
+    <article className="group">
+      <div className="relative overflow-hidden rounded-md h-[250px] sm:h-[330px] md:h-[390px] lg:h-[400px]">
         <ImageWithFallback
           src={story.image}
           alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.025]"
         />
+
+        <span className="absolute left-3 bottom-3 bg-black/75 px-2 py-1 text-[7px] font-bold tracking-[0.12em] uppercase text-white">
+          Lead Story
+        </span>
       </div>
 
-      <div className="pt-3">
-        <p className="text-[8px] md:text-[9px] uppercase tracking-wider font-bold text-red-600">
+      <div className="pt-2.5 md:pt-3">
+        <p className="text-[8px] md:text-[9px] uppercase tracking-[0.14em] font-bold text-[#e31b23]">
           {story.category}
         </p>
 
-        <h2
-          className={`font-serif font-bold leading-tight text-gray-950 mt-1 group-hover:text-red-600 transition-colors ${
-            large
-              ? "text-2xl md:text-3xl lg:text-[30px]"
-              : "text-xl md:text-2xl"
-          }`}
-        >
+        <h2 className="font-serif font-bold leading-[1.08] text-gray-950 mt-1 text-[23px] sm:text-[27px] md:text-[31px] lg:text-[34px] group-hover:text-[#e31b23] transition-colors">
           {story.title}
         </h2>
 
-        <p className="mt-2 text-xs md:text-sm leading-6 text-gray-600">
+        <p className="mt-2 text-[10px] md:text-[12px] leading-[1.55] text-gray-500 max-w-5xl">
           {story.excerpt}
         </p>
 
-        <div className="flex flex-wrap items-center gap-3 mt-3 text-[9px] text-gray-400">
-          <span>By {story.author}</span>
+        <div className="mt-2.5 pt-2 border-t border-gray-200">
+          <StoryMeta
+            author={story.author}
+            time={story.time}
+          />
+        </div>
+      </div>
+    </article>
+  );
+}
 
-          <span className="flex items-center gap-1">
-            <Clock size={10} />
-            {story.time}
-          </span>
+/* =========================================================
+   MAJOR STORY
+========================================================= */
 
-          <span>4 hr ago</span>
+function MajorStory({
+  story,
+}: {
+  story: Story;
+}) {
+  return (
+    <article className="group border-b border-gray-200 pb-3">
+      <div className="relative h-[125px] md:h-[145px] overflow-hidden rounded-sm">
+        <ImageWithFallback
+          src={story.image || Manu1Img}
+          alt={story.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+        />
+      </div>
+
+      <div className="pt-2">
+        <p className="text-[7px] md:text-[8px] uppercase tracking-[0.1em] font-bold text-[#e31b23]">
+          {story.category || "MANUFACTURING"}
+        </p>
+
+        <h3 className="mt-1 font-serif text-[13px] md:text-[15px] font-bold leading-[1.2] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+          {story.title}
+        </h3>
+
+        {story.excerpt && (
+          <p className="mt-1.5 text-[8px] md:text-[9px] leading-[1.45] text-gray-500 line-clamp-3">
+            {story.excerpt}
+          </p>
+        )}
+
+        <div className="mt-1.5">
+          <StoryMeta time={story.time} />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
+   COVERAGE STORY
+========================================================= */
+
+function CoverageStory({
+  story,
+}: {
+  story: Story;
+}) {
+  return (
+    <article className="group flex gap-3 py-3 border-b border-gray-200 last:border-b-0">
+      <div className="w-[95px] h-[68px] md:w-[125px] md:h-[82px] shrink-0 overflow-hidden rounded-sm">
+        <ImageWithFallback
+          src={story.image || Manu1Img}
+          alt={story.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+
+      <div className="min-w-0">
+        <p className="text-[7px] md:text-[8px] uppercase tracking-[0.08em] font-bold text-[#e31b23]">
+          {story.category}
+        </p>
+
+        <h3 className="mt-0.5 font-serif text-[12px] md:text-[14px] font-bold leading-[1.2] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+          {story.title}
+        </h3>
+
+        <p className="mt-1 text-[8px] md:text-[9px] leading-[1.4] text-gray-500 line-clamp-2">
+          {story.excerpt}
+        </p>
+
+        <div className="mt-1.5">
+          <StoryMeta time={story.time} />
         </div>
       </div>
     </article>
@@ -482,45 +703,45 @@ function HeroStoryCard({
    LATEST NEWS CARD
 ========================================================= */
 
-function LatestNewsCard({ story }: { story: Story }) {
+function LatestNewsCard({
+  story,
+}: {
+  story: Story;
+}) {
   return (
-    <article className="group border border-gray-200 rounded-md overflow-hidden bg-white cursor-pointer hover:shadow-md transition-shadow duration-200">
-      <div className="h-[145px] md:h-[160px] overflow-hidden bg-gray-100">
+    <article className="group border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow-md transition-shadow duration-300">
+      <div className="relative h-[140px] sm:h-[150px] md:h-[155px] overflow-hidden bg-gray-100">
         <ImageWithFallback
           src={story.image || Manu1Img}
           alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
+
+        <span className="absolute top-2 left-2 bg-[#e31b23] text-white text-[6px] font-bold px-1.5 py-1 rounded-sm">
+          HOT
+        </span>
       </div>
 
-      <div className="p-3">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-[7px] uppercase tracking-wider font-bold text-red-600">
-            {story.category || "MANUFACTURING"}
-          </span>
+      <div className="p-2.5 md:p-3">
+        <p className="text-[7px] md:text-[8px] uppercase tracking-[0.08em] font-bold text-[#e31b23]">
+          {story.category || "MANUFACTURING"}
+        </p>
 
-          <span className="bg-red-600 text-white text-[6px] font-bold px-1.5 py-0.5 rounded-sm">
-            HOT
-          </span>
-        </div>
-
-        <h3 className="font-serif font-bold text-[13px] md:text-[14px] leading-snug text-gray-900 group-hover:text-red-600 transition-colors">
+        <h3 className="font-serif font-bold text-[13px] md:text-[14px] leading-[1.22] text-gray-900 mt-1 group-hover:text-[#e31b23] transition-colors">
           {story.title}
         </h3>
 
         {story.excerpt && (
-          <p className="text-[10px] leading-4 text-gray-500 mt-2 line-clamp-2">
+          <p className="text-[8px] md:text-[9px] leading-[1.45] text-gray-500 mt-1.5 line-clamp-3">
             {story.excerpt}
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100">
-          <span className="text-[8px] text-gray-400">By Sagar Kumar</span>
-
-          <span className="flex items-center gap-1 text-[8px] text-gray-400">
-            <Clock size={9} />
-            {story.time}
-          </span>
+        <div className="mt-2 pt-2 border-t border-gray-100">
+          <StoryMeta
+            author="Sagar Kumar"
+            time={story.time}
+          />
         </div>
       </div>
     </article>
@@ -528,16 +749,71 @@ function LatestNewsCard({ story }: { story: Story }) {
 }
 
 /* =========================================================
-   PMI PANEL
+   NEWSROOM STREAM
+========================================================= */
+
+function NewsroomStream() {
+  return (
+    <aside className="lg:border-l lg:border-gray-200 lg:pl-4">
+      <div className="border-t-2 border-black pt-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-serif text-[16px] md:text-[18px] font-bold text-gray-950">
+            Newsroom
+          </h3>
+
+          <span className="text-[7px] uppercase tracking-[0.1em] font-bold text-gray-400">
+            Latest
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-1">
+        {latestStories.map((story) => (
+          <article
+            key={`newsroom-${story.id}`}
+            className="group py-2.5 border-b border-gray-200"
+          >
+            <div className="flex items-start gap-2">
+              <Clock
+                size={9}
+                className="mt-1 shrink-0 text-[#e31b23]"
+              />
+
+              <div className="min-w-0">
+                <p className="text-[6px] uppercase tracking-[0.08em] font-bold text-[#e31b23]">
+                  {story.category}
+                </p>
+
+                <h4 className="mt-0.5 font-serif text-[10px] md:text-[11px] font-bold leading-[1.25] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+                  {story.title}
+                </h4>
+
+                <p className="mt-1 text-[7px] text-gray-400">
+                  {story.time}
+                </p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
+/* =========================================================
+   MANUFACTURING PMI
 ========================================================= */
 
 function ManufacturingPMI() {
   return (
-    <aside className="border border-gray-200 bg-[#fafafa] p-4 md:p-5 h-fit">
-      <div className="flex items-center gap-2 border-b border-gray-300 pb-3 mb-1">
-        <TrendingUp size={15} className="text-red-600" />
+    <aside className="border border-gray-200 bg-[#fafafa] p-3 md:p-4 rounded-md">
+      <div className="flex items-center gap-2 border-b border-gray-300 pb-3">
+        <TrendingUp
+          size={15}
+          className="text-[#e31b23]"
+        />
 
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em]">
+        <h2 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.12em]">
           Manufacturing PMI
         </h2>
       </div>
@@ -548,24 +824,28 @@ function ManufacturingPMI() {
         return (
           <div
             key={`${item.country}-${item.value}`}
-            className="flex items-center justify-between py-3 border-b border-gray-200 last:border-0"
+            className="flex items-center justify-between py-2.5 border-b border-gray-200 last:border-0"
           >
             <div className="pr-2">
-              <p className="text-xs font-semibold text-gray-900">
+              <p className="text-[11px] font-semibold text-gray-900">
                 {item.country}
               </p>
 
-              <p className="text-[8px] text-gray-500 uppercase tracking-wide mt-0.5">
+              <p className="text-[7px] text-gray-500 uppercase tracking-wide mt-0.5">
                 {item.label}
               </p>
             </div>
 
             <div className="text-right shrink-0">
-              <p className="font-mono text-xs font-bold">{item.value}</p>
+              <p className="font-mono text-[11px] font-bold">
+                {item.value}
+              </p>
 
               <p
-                className={`text-[8px] font-semibold uppercase ${
-                  positive ? "text-green-600" : "text-red-600"
+                className={`text-[7px] font-semibold uppercase ${
+                  positive
+                    ? "text-green-600"
+                    : "text-red-600"
                 }`}
               >
                 {item.status}
@@ -575,7 +855,7 @@ function ManufacturingPMI() {
         );
       })}
 
-      <p className="text-[8px] leading-4 text-gray-400 mt-3">
+      <p className="text-[7px] leading-4 text-gray-400 mt-3">
         PMI above 50 indicates expansion. Data referenced: May 2026.
       </p>
     </aside>
@@ -589,52 +869,55 @@ function ManufacturingPMI() {
 function IndustryStatistics() {
   return (
     <section>
-      <SectionHeader title="Industry Statistics" icon={<Factory size={15} />} />
+      <SectionHeader
+        title="Industry Statistics"
+        icon={<Factory size={15} />}
+      />
 
       <div className="overflow-x-auto border border-gray-300">
-        <table className="w-full border-collapse text-xs">
+        <table className="w-full border-collapse text-[10px] md:text-xs">
           <tbody>
             <tr>
-              <td className="w-1/3 bg-gray-100 border-b border-r border-gray-300 p-3 font-bold">
+              <td className="w-1/3 bg-gray-100 border-b border-r border-gray-300 p-2.5 md:p-3 font-bold">
                 ISM Manufacturing Index
               </td>
-              <td className="border-b border-gray-300 p-3">
+              <td className="border-b border-gray-300 p-2.5 md:p-3">
                 54.0 — above consensus of 53.2
               </td>
             </tr>
 
             <tr>
-              <td className="bg-gray-100 border-b border-r border-gray-300 p-3 font-bold">
+              <td className="bg-gray-100 border-b border-r border-gray-300 p-2.5 md:p-3 font-bold">
                 New Orders Sub-Index
               </td>
-              <td className="border-b border-gray-300 p-3">
+              <td className="border-b border-gray-300 p-2.5 md:p-3">
                 56.8 — up 2.7 points from April
               </td>
             </tr>
 
             <tr>
-              <td className="bg-gray-100 border-b border-r border-gray-300 p-3 font-bold">
+              <td className="bg-gray-100 border-b border-r border-gray-300 p-2.5 md:p-3 font-bold">
                 Manufacturing M&A
               </td>
-              <td className="border-b border-gray-300 p-3">
+              <td className="border-b border-gray-300 p-2.5 md:p-3">
                 11 megadeals in 2025 — ranked 3rd globally
               </td>
             </tr>
 
             <tr>
-              <td className="bg-gray-100 border-b border-r border-gray-300 p-3 font-bold">
+              <td className="bg-gray-100 border-b border-r border-gray-300 p-2.5 md:p-3 font-bold">
                 AI in Manufacturing Deals
               </td>
-              <td className="border-b border-gray-300 p-3">
+              <td className="border-b border-gray-300 p-2.5 md:p-3">
                 Among the most frequently cited technologies
               </td>
             </tr>
 
             <tr>
-              <td className="bg-gray-100 border-r border-gray-300 p-3 font-bold">
+              <td className="bg-gray-100 border-r border-gray-300 p-2.5 md:p-3 font-bold">
                 Cobot ROI Threshold
               </td>
-              <td className="p-3">
+              <td className="p-2.5 md:p-3">
                 Reduced from roughly 4 years in 2020 to about 18 months in
                 2026
               </td>
@@ -647,7 +930,49 @@ function IndustryStatistics() {
 }
 
 /* =========================================================
-   SPONSORSHIP SECTION
+   INDUSTRY STREAM
+========================================================= */
+
+function IndustryStream({
+  title,
+  icon,
+  stories,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  stories: Story[];
+}) {
+  return (
+    <section>
+      <SectionHeader
+        title={title}
+        icon={icon}
+      />
+
+      <div>
+        {stories.map((story, index) => (
+          <Link
+            key={story.id}
+            to={specialArticlePath(`manufacturing-industry-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index + 1}`)}
+            className="group block py-2.5 border-b border-gray-200 last:border-0"
+          >
+            <h3 className="text-[11px] md:text-[12px] leading-[1.4] font-medium text-gray-900 group-hover:text-[#e31b23] transition-colors">
+              {story.title}
+            </h3>
+
+            <div className="flex items-center gap-1.5 mt-1.5 text-[7px] md:text-[8px] text-gray-400">
+              <Clock size={9} />
+              {story.time}
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   SPONSORSHIP
 ========================================================= */
 
 function SponsorshipSection() {
@@ -659,30 +984,36 @@ function SponsorshipSection() {
   ];
 
   return (
-    <section className="bg-[#f8f8f8] border border-gray-100 rounded-md p-4 md:p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="border border-gray-300 rounded px-2 py-1 text-[7px] uppercase tracking-widest text-gray-400">
+    <section className="bg-[#f8f8f8] border border-gray-100 rounded-md p-3 md:p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="border border-gray-300 rounded px-1.5 py-1 text-[7px] uppercase tracking-widest text-gray-400">
           Sponsorship
         </span>
 
-        <span className="text-[9px] text-gray-400">
+        <span className="text-[8px] text-gray-400">
           Presented by our partners
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {events.map((event) => (
           <div
             key={event}
-            className="bg-white border border-gray-200 rounded-md min-h-[85px] flex flex-col items-center justify-center text-center px-3"
+            className="bg-white border border-gray-200 rounded-md min-h-[74px] flex flex-col items-center justify-center text-center px-2"
           >
-            <div className="w-7 h-7 rounded-full bg-red-50 text-red-600 flex items-center justify-center mb-2">
-              <span className="text-sm">✦</span>
+            <div className="w-7 h-7 rounded-full bg-red-50 text-[#e31b23] flex items-center justify-center mb-2">
+              <span className="text-[10px]">
+                ✦
+              </span>
             </div>
 
-            <h3 className="text-[9px] font-bold text-gray-800">{event}</h3>
+            <h3 className="text-[9px] font-bold text-gray-800">
+              {event}
+            </h3>
 
-            <p className="text-[7px] text-gray-400 mt-1">Sponsored Event</p>
+            <p className="text-[7px] text-gray-400 mt-0.5">
+              Sponsored Event
+            </p>
           </div>
         ))}
       </div>
@@ -696,23 +1027,27 @@ function SponsorshipSection() {
 
 function Newsletter() {
   return (
-    <section className="bg-[#071a2d] rounded-md px-5 py-8 md:py-10 text-center text-white">
-      <h2 className="font-serif font-bold text-xl md:text-2xl">
+    <section className="bg-[#071a2d] rounded-md px-5 py-7 md:py-8 text-center text-white">
+      <h2 className="font-serif font-bold text-[18px] md:text-[20px]">
         Stay Ahead with The Pride Times
       </h2>
 
-      <p className="text-[10px] md:text-xs text-gray-400 mt-2">
+      <p className="text-[9px] md:text-[10px] text-gray-400 mt-1">
         Daily briefings on Manufacturing delivered to your inbox.
       </p>
 
-      <div className="flex flex-col sm:flex-row justify-center gap-2 mt-5 max-w-md mx-auto">
+      <div className="flex flex-col sm:flex-row justify-center gap-2 mt-4 max-w-md mx-auto">
         <input
           type="email"
           placeholder="Enter your email"
-          className="h-10 flex-1 rounded-sm border border-gray-600 bg-[#162c40] px-3 text-xs text-white outline-none placeholder:text-gray-500"
+          aria-label="Email address"
+          className="h-8 flex-1 rounded-sm border border-gray-600 bg-[#162c40] px-3 text-[9px] text-white outline-none placeholder:text-gray-500 focus:border-[#e31b23]"
         />
 
-        <button className="h-10 px-5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-sm transition-colors">
+        <button
+          type="button"
+          className="h-8 px-5 bg-[#e31b23] hover:bg-[#c9151c] text-white text-[9px] font-bold rounded-sm transition-colors"
+        >
           Subscribe Free
         </button>
       </div>
@@ -727,130 +1062,263 @@ function Newsletter() {
 export function ManufacturingPage() {
   return (
     <main className="w-full min-h-screen bg-white text-gray-900 antialiased">
-      {/* FULL WIDTH CONTENT CONTAINER
-          No max-w-7xl restriction.
-          Uses almost the complete browser width.
-      */}
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-11 xl:px-14 py-5 md:py-7">
+      <div className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* =================================================
             PAGE HEADER
         ================================================= */}
 
-        <header className="border-t-[3px] border-red-600 pt-4 mb-5">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h1 className="font-serif text-3xl md:text-4xl lg:text-[38px] font-bold leading-none">
-                Manufacturing
-              </h1>
+        <section className="pt-5 md:pt-7">
+          <div className="border-t-[3px] border-[#e31b23] pt-4 md:pt-5">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-1">
+              <div>
+                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-gray-950">
+                  Manufacturing
+                </h1>
 
-              <p className="text-xs md:text-sm text-gray-500 mt-2">
-                Industrial automation, reshoring, supply chain evolution, and
-                factory innovation.
-              </p>
+                <p className="mt-1 text-[10px] md:text-[12px] text-gray-500">
+                  Industrial automation, reshoring, supply chain evolution,
+                  and factory innovation.
+                </p>
+              </div>
+
+              <div className="hidden md:flex items-center gap-2 text-gray-400">
+                <Factory size={17} />
+
+                <span className="text-[7px] uppercase tracking-[0.14em]">
+                  Industry & Production
+                </span>
+              </div>
             </div>
-
-            <div className="hidden md:flex items-center gap-2 text-gray-400">
-              <Factory size={19} />
-              <span className="text-[9px] uppercase tracking-widest">
-                Industry & Production
-              </span>
-            </div>
-          </div>
-        </header>
-
-        {/* =================================================
-            TOP AD
-        ================================================= */}
-
-        <AdvertisementBar />
-
-        {/* =================================================
-            HERO + SPONSORED SIDEBAR
-        ================================================= */}
-
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_280px] xl:grid-cols-[minmax(0,3.2fr)_300px] gap-5 lg:gap-6 mb-8">
-          <HeroStoryCard story={hero} large />
-
-          <div>
-            <SponsoredContent />
-            <MoreStories />
           </div>
         </section>
 
         {/* =================================================
-            LATEST MANUFACTURING NEWS
+            TOP ADVERTISEMENT
         ================================================= */}
 
-        <section className="mb-8">
+        <section className="mt-4 md:mt-5">
+          <AdvertisementBar />
+        </section>
+
+        {/* =================================================
+            LEAD STORY + MAJOR STORIES
+        ================================================= */}
+
+        <section className="mt-4 md:mt-5 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_255px] gap-5 md:gap-6">
+
+          {/* LEAD STORY */}
+          <div className="min-w-0">
+            <Link to={specialArticlePath("manufacturing-reshoring") } className="block"><HeroStoryCard story={hero} /></Link>
+          </div>
+
+          {/* MAJOR STORIES RAIL */}
+          <aside className="lg:border-l lg:border-gray-200 lg:pl-4">
+            <div className="border-t-2 border-black pt-3">
+              <h2 className="font-serif text-[16px] md:text-[18px] font-bold text-gray-950">
+                Major Manufacturing Stories
+              </h2>
+            </div>
+
+            <div className="mt-3 space-y-4">
+              {majorStories.map((story) => (
+                <Link key={story.id} to={specialArticlePath(`manufacturing-major-${story.id}`)} className="block"><MajorStory story={story} /></Link>
+              ))}
+            </div>
+
+            <div className="mt-4">
+              <SponsoredContent />
+            </div>
+          </aside>
+        </section>
+
+        {/* =================================================
+            MANUFACTURING COVERAGE
+        ================================================= */}
+
+        <section className="mt-7 md:mt-9">
           <SectionHeader
-            title="Latest Manufacturing News"
+            title="Manufacturing Coverage"
             icon={<Factory size={15} />}
+            subtitle="Technology, automation and industrial production"
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {latestStories.map((story) => (
-              <LatestNewsCard
-                key={story.id}
-                story={story}
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6">
+            {manufacturingCoverage.map((story) => (
+              <Link key={story.id} to={specialArticlePath(`manufacturing-coverage-${story.id}`)} className="block"><CoverageStory story={story} /></Link>
             ))}
           </div>
         </section>
 
         {/* =================================================
-            SECOND AD
+            LATEST NEWS + NEWSROOM
         ================================================= */}
 
-        <AdvertisementBar bottom />
+        <section className="mt-7 md:mt-9">
+          <SectionHeader
+            title="Latest Manufacturing News"
+            icon={<TrendingUp size={15} />}
+            subtitle="The latest developments across global manufacturing"
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_235px] gap-5 md:gap-6">
+
+            {/* NEWS GRID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+              {latestStories.map((story) => (
+                <Link key={story.id} to={specialArticlePath(`manufacturing-latest-${story.id}`)} className="block"><LatestNewsCard story={story} /></Link>
+              ))}
+            </div>
+
+            {/* NEWSROOM */}
+            <NewsroomStream />
+          </div>
+        </section>
 
         {/* =================================================
-            SPONSORSHIP
+            SECOND ADVERTISEMENT
         ================================================= */}
 
-        <div className="mt-5">
-          <SponsorshipSection />
-        </div>
+        <section className="mt-6 md:mt-7">
+          <AdvertisementBar bottom />
+        </section>
 
         {/* =================================================
-            NEWSLETTER
+            MORE FROM MANUFACTURING
         ================================================= */}
 
-        <div className="mt-6 mb-10">
-          <Newsletter />
-        </div>
+        <section className="mt-6 md:mt-8">
+          <SectionHeader
+            title="More From Manufacturing"
+            icon={<Globe2 size={15} />}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+            {[
+              {
+                title:
+                  "Foxconn's AI-Driven Factories Reduce Human Labor by 70% in Two Years",
+                time: "6 hr ago",
+                image: Manu2Img,
+              },
+              {
+                title:
+                  "Industrial Automation Investment Reaches New Record as AI Adoption Accelerates",
+                time: "8 hr ago",
+                image: Manu3Img,
+              },
+            ].map((story, index) => (
+              <Link
+                key={story.title}
+                to={specialArticlePath(`manufacturing-more-${index + 1}`)}
+                className="group flex gap-3 py-3 border-b border-gray-200"
+              >
+                <div className="w-[85px] h-[60px] shrink-0 overflow-hidden rounded-sm">
+                  <ImageWithFallback
+                    src={story.image}
+                    alt={story.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-[7px] uppercase font-bold text-[#e31b23]">
+                    Manufacturing
+                  </p>
+
+                  <h3 className="mt-0.5 font-serif text-[11px] md:text-[12px] font-bold leading-[1.25] text-gray-900 group-hover:text-[#e31b23] transition-colors">
+                    {story.title}
+                  </h3>
+
+                  <p className="mt-1 text-[7px] text-gray-400">
+                    {story.time}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* =================================================
             MANUFACTURING DATA
         ================================================= */}
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-7 border-t-2 border-black pt-7 mb-10">
-          <div className="lg:col-span-2">
-            <SectionHeader
-              title="Manufacturing Outlook"
-              icon={<TrendingUp size={15} />}
-            />
+        <section className="mt-7 md:mt-9">
+          <SectionHeader
+            title="Manufacturing Outlook"
+            icon={<TrendingUp size={15} />}
+            subtitle="Selected manufacturing indicators and industry context"
+          />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <ManufacturingPMI />
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-6">
 
-              <IndustryStatistics />
-            </div>
+            <IndustryStatistics />
+
+            <ManufacturingPMI />
+
           </div>
+        </section>
 
-          <div>
+        {/* =================================================
+            INDUSTRY FOCUS
+        ================================================= */}
+
+        <section className="mt-7 md:mt-9 grid grid-cols-1 lg:grid-cols-3 gap-6 border-t-2 border-black pt-6">
+
+          <div className="lg:col-span-2">
             <SectionHeader
               title="Industry Focus"
               icon={<Globe2 size={15} />}
             />
 
-            <p className="text-sm leading-7 text-gray-600">
-              Manufacturers are increasing investment in automation,
-              semiconductors, electric vehicles, robotics, and domestic
-              production capacity as global supply chains continue to evolve.
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border border-gray-200 p-4 rounded-md">
+                <div className="flex items-center gap-2 mb-2">
+                  <Factory
+                    size={14}
+                    className="text-[#e31b23]"
+                  />
 
-            <div className="mt-5 border-l-4 border-red-600 pl-4">
-              <p className="font-serif italic text-base leading-6 text-gray-800">
+                  <h3 className="font-serif text-[14px] font-bold">
+                    Intelligent Factories
+                  </h3>
+                </div>
+
+                <p className="text-[9px] md:text-[10px] leading-[1.6] text-gray-500">
+                  Manufacturers are increasing investment in automation,
+                  robotics and intelligent production systems.
+                </p>
+              </div>
+
+              <div className="border border-gray-200 p-4 rounded-md">
+                <div className="flex items-center gap-2 mb-2">
+                  <Cpu
+                    size={14}
+                    className="text-[#e31b23]"
+                  />
+
+                  <h3 className="font-serif text-[14px] font-bold">
+                    Industrial AI
+                  </h3>
+                </div>
+
+                <p className="text-[9px] md:text-[10px] leading-[1.6] text-gray-500">
+                  AI adoption is increasingly connected with factory
+                  automation, electronics production and industrial
+                  decision-making.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <SectionHeader
+              title="At a Glance"
+              icon={<TrendingUp size={15} />}
+            />
+
+            <div className="border-l-4 border-[#e31b23] pl-4">
+              <p className="font-serif italic text-[14px] md:text-[15px] leading-6 text-gray-800">
                 "The next manufacturing cycle will be defined by automation,
                 resilient supply chains and intelligent factories."
               </p>
@@ -862,111 +1330,61 @@ export function ManufacturingPage() {
             AUTOMOTIVE + ROBOTICS
         ================================================= */}
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t-2 border-black pt-7 mb-10">
-          <div>
-            <SectionHeader
-              title="Automotive & EV"
-              icon={<Car size={15} />}
-            />
+        <section className="mt-7 md:mt-9 grid grid-cols-1 lg:grid-cols-2 gap-7 border-t-2 border-black pt-6">
 
-            {autoStories.map((story) => (
-              <article
-                key={story.id}
-                className="group py-3 border-b border-gray-200 last:border-0 cursor-pointer"
-              >
-                <h3 className="text-sm leading-snug font-medium group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </h3>
+          <IndustryStream
+            title="Automotive & EV"
+            icon={<Car size={15} />}
+            stories={autoStories}
+          />
 
-                <div className="flex items-center gap-1.5 mt-2 text-[9px] text-gray-400">
-                  <Clock size={10} />
-                  {story.time}
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div>
-            <SectionHeader
-              title="Robotics & Automation"
-              icon={<Cpu size={15} />}
-            />
-
-            {roboticsStories.map((story) => (
-              <article
-                key={story.id}
-                className="group py-3 border-b border-gray-200 last:border-0 cursor-pointer"
-              >
-                <h3 className="text-sm leading-snug font-medium group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </h3>
-
-                <div className="flex items-center gap-1.5 mt-2 text-[9px] text-gray-400">
-                  <Clock size={10} />
-                  {story.time}
-                </div>
-              </article>
-            ))}
-          </div>
+          <IndustryStream
+            title="Robotics & Automation"
+            icon={<Cpu size={15} />}
+            stories={roboticsStories}
+          />
         </section>
 
         {/* =================================================
             SEMICONDUCTORS + AEROSPACE
         ================================================= */}
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t-2 border-black pt-7">
-          <div>
-            <SectionHeader
-              title="Semiconductors & Electronics"
-              icon={<Cpu size={15} />}
-            />
+        <section className="mt-7 md:mt-9 grid grid-cols-1 lg:grid-cols-2 gap-7 border-t-2 border-black pt-6">
 
-            {semiconductors.map((story) => (
-              <article
-                key={story.id}
-                className="group py-3 border-b border-gray-200 last:border-0 cursor-pointer"
-              >
-                <h3 className="text-sm leading-snug font-medium group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </h3>
+          <IndustryStream
+            title="Semiconductors & Electronics"
+            icon={<Cpu size={15} />}
+            stories={semiconductors}
+          />
 
-                <div className="flex items-center gap-1.5 mt-2 text-[9px] text-gray-400">
-                  <Clock size={10} />
-                  {story.time}
-                </div>
-              </article>
-            ))}
-          </div>
+          <IndustryStream
+            title="Aerospace & Defense"
+            icon={<Plane size={15} />}
+            stories={aeroDefense}
+          />
+        </section>
 
-          <div>
-            <SectionHeader
-              title="Aerospace & Defense"
-              icon={<Plane size={15} />}
-            />
+        {/* =================================================
+            SPONSORED EVENTS
+        ================================================= */}
 
-            {aeroDefense.map((story) => (
-              <article
-                key={story.id}
-                className="group py-3 border-b border-gray-200 last:border-0 cursor-pointer"
-              >
-                <h3 className="text-sm leading-snug font-medium group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </h3>
+        <section className="mt-7 md:mt-9">
+          <SponsorshipSection />
+        </section>
 
-                <div className="flex items-center gap-1.5 mt-2 text-[9px] text-gray-400">
-                  <Clock size={10} />
-                  {story.time}
-                </div>
-              </article>
-            ))}
-          </div>
+        {/* =================================================
+            NEWSLETTER
+        ================================================= */}
+
+        <section className="mt-6 md:mt-8 mb-10">
+          <Newsletter />
         </section>
 
         {/* =================================================
             BOTTOM EDITORIAL BAR
         ================================================= */}
 
-        <div className="mt-10 pt-4 border-t border-gray-300 flex flex-col sm:flex-row justify-between gap-2 text-[9px] uppercase tracking-widest text-gray-400">
+        <div className="pb-6 pt-4 border-t border-gray-300 flex flex-col sm:flex-row justify-between gap-2 text-[8px] uppercase tracking-widest text-gray-400">
           <span>Manufacturing</span>
 
           <span>
@@ -977,3 +1395,5 @@ export function ManufacturingPage() {
     </main>
   );
 }
+
+export default ManufacturingPage;
