@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import {
@@ -20,20 +19,26 @@ function parseChange(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-/* Bloomberg-style mega-menu columns for "Top Securities".
-   All paths point at routes that already exist in App.tsx. */
+/* =========================================================
+   MEGA MENU COLUMNS
+========================================================= */
+
 const megaMenuColumns = [
   {
     title: "Markets",
     links: [
-      { label: "Stocks", path: "/markets?tab=Stocks" },
-      { label: "Commodities", path: "/markets?tab=Commodities" },
-      { label: "Forex", path: "/markets?tab=Forex" },
-      { label: "ETFs", path: "/markets?tab=ETFs" },
-      { label: "Government Bonds", path: "/markets?tab=Government Bonds" },
-      { label: "Global Markets", path: "/markets?tab=Global Markets" },
+      { label: "Stocks", path: "/markets" },
+      { label: "Indices", path: "/markets" },
+      { label: "Commodities", path: "/markets" },
+      { label: "Forex", path: "/markets" },
+      { label: "Crypto", path: "/markets" },
+      { label: "Mutual Funds", path: "/markets" },
+      { label: "ETFs", path: "/markets" },
+      { label: "Government Bonds", path: "/markets" },
+      { label: "Global Markets", path: "/markets" },
     ],
   },
+
   {
     title: "Industries",
     links: [
@@ -46,46 +51,61 @@ const megaMenuColumns = [
       { label: "Supply Chain", path: "/supply-chain" },
     ],
   },
+
   {
     title: "More",
     links: [
+      { label: "Featured", path: "/featured" },
+      { label: "Breaking News", path: "/breaking-news" },
       { label: "Business News", path: "/business-news" },
-      { label: "International Business", path: "/international-news" },
-      { label: "Startup Success", path: "/startup-success" },
       { label: "CEO Spotlight", path: "/ceospotlight" },
-      { label: "Magazines", path: "/magazine" },
       { label: "Innovation", path: "/innovation" },
+      { label: "Cover Stories", path: "/cover-stories" },
       { label: "White House Watch", path: "/white-house-watch" },
       { label: "World & Geopolitics", path: "/world" },
     ],
   },
+
+  /* =======================================================
+     COMPANY
+     
+     Removed:
+     - Advertise
+     - Careers
+     - Press Room
+  ======================================================= */
+
   {
     title: "Company",
     links: [
       { label: "About Us", path: "/about-us" },
-      { label: "Advertise", path: "/advertise" },
-      { label: "Careers", path: "/careers" },
-      { label: "Contact Us", path: "/contact" },
-      { label: "Press Room", path: "/press-room" },
+      { label: "Contact Us", path: "/contact-us" },
     ],
   },
 ];
 
+/* =========================================================
+   MARKETS TICKER
+========================================================= */
+
 export function MarketsTicker() {
   const [cards, setCards] = useState<TickerCard[]>([]);
   const [showSecurities, setShowSecurities] = useState(false);
+
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const isPausedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
+
+  /* =======================================================
+     LOAD MARKET DATA
+  ======================================================= */
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const data = await getQuotes();
 
-        // Map real API data into Bloomberg-style cards.
-        // No hardcoded values — everything comes from tickerData.
         const tickerData: (TickerCard | null)[] = [
           ...data.usIndices.map((item: any) => ({
             symbol: item.name,
@@ -134,17 +154,23 @@ export function MarketsTicker() {
     return () => clearInterval(interval);
   }, []);
 
-  // Close the mega-menu after a longer pause than the simple nav dropdowns.
+  /* =======================================================
+     AUTO-CLOSE MEGA MENU
+  ======================================================= */
+
   useEffect(() => {
     if (!showSecurities) return;
 
-    const timer = setTimeout(
-      () => setShowSecurities(false),
-      9000
-    );
+    const timer = setTimeout(() => {
+      setShowSecurities(false);
+    }, 9000);
 
     return () => clearTimeout(timer);
   }, [showSecurities]);
+
+  /* =======================================================
+     MANUAL TICKER SCROLL
+  ======================================================= */
 
   const scrollByAmount = (direction: "left" | "right") => {
     const el = trackRef.current;
@@ -175,7 +201,10 @@ export function MarketsTicker() {
     }, 400);
   };
 
-  // ── Continuous auto-scroll (Bloomberg-style moving ticker) ──
+  /* =======================================================
+     CONTINUOUS AUTO-SCROLL
+  ======================================================= */
+
   useEffect(() => {
     if (cards.length === 0) return;
 
@@ -208,6 +237,10 @@ export function MarketsTicker() {
     };
   }, [cards]);
 
+  /* =======================================================
+     PAUSE / RESUME
+  ======================================================= */
+
   const pauseAutoScroll = () => {
     isPausedRef.current = true;
   };
@@ -216,11 +249,17 @@ export function MarketsTicker() {
     isPausedRef.current = false;
   };
 
+  /* =======================================================
+     RENDER
+  ======================================================= */
+
   return (
     <div className="pt-securities-bar w-full relative">
       <div className="pt-container flex items-stretch">
 
-        {/* Top Securities — Bloomberg-style mega-menu trigger */}
+        {/* =================================================
+            MENU BUTTON
+        ================================================= */}
 
         <div className="relative flex-shrink-0 flex items-center">
           <button
@@ -270,13 +309,17 @@ export function MarketsTicker() {
           </button>
         </div>
 
-        {/* Continuously auto-scrolling market cards */}
+        {/* =================================================
+            MARKET TICKER
+        ================================================= */}
 
         <div
           className="relative flex items-center flex-1 min-w-0 pl-3 gap-2"
           onMouseEnter={pauseAutoScroll}
           onMouseLeave={resumeAutoScroll}
         >
+          {/* LEFT ARROW */}
+
           <button
             className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
             onClick={() => {
@@ -287,6 +330,8 @@ export function MarketsTicker() {
           >
             <ChevronLeft size={16} />
           </button>
+
+          {/* TICKER TRACK */}
 
           <div
             className="overflow-hidden py-2 flex-1"
@@ -331,6 +376,8 @@ export function MarketsTicker() {
             </div>
           </div>
 
+          {/* RIGHT ARROW */}
+
           <button
             className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
             onClick={() => {
@@ -344,17 +391,23 @@ export function MarketsTicker() {
         </div>
       </div>
 
+      {/* =====================================================
+          MEGA MENU
+      ===================================================== */}
+
       {showSecurities && (
         <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
           <div className="pt-container">
+
             <div className="pt-mega-menu-inner">
+
               {megaMenuColumns.map((column) => (
                 <div key={column.title}>
                   <h4 className="pt-mega-menu-heading">
                     {column.title}
                   </h4>
 
-                  <ul className="flex flex-col gap-2">
+                  <ul className="flex flex-col gap-3">
                     {column.links.map((link) => (
                       <li key={link.label}>
                         <Link
@@ -370,7 +423,12 @@ export function MarketsTicker() {
                   </ul>
                 </div>
               ))}
+
             </div>
+
+            {/* =================================================
+                MEGA MENU UTILITY LINKS
+            ================================================= */}
 
             <div className="pt-mega-menu-utility">
               <Link
@@ -401,10 +459,10 @@ export function MarketsTicker() {
                 Terms of Use
               </Link>
             </div>
+
           </div>
         </div>
       )}
     </div>
   );
 }
-
