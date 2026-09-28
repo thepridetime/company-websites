@@ -1,4 +1,4 @@
-import { Clock, Briefcase, ChevronRight } from "lucide-react";
+import { Clock, Briefcase } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -27,57 +27,99 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 /* =========================================================
-   AD SPACE
+   GOOGLE ADSENSE DISPLAY / IN-ARTICLE AD
 ========================================================= */
 
-function AdSpace({ label = "Advertisement" }: { label?: string }) {
+function AdSpace({
+  label = "Advertisement",
+}: {
+  label?: string;
+}) {
   useEffect(() => {
     try {
-      const w = window as Window & { adsbygoogle?: unknown[] };
+      const w = window as Window & {
+        adsbygoogle?: unknown[];
+      };
+
       w.adsbygoogle = w.adsbygoogle || [];
       w.adsbygoogle.push({});
-    } catch {}
+    } catch {
+      // Prevent AdSense errors from breaking the page
+    }
   }, []);
-  const inArticle = label.includes("in-article");
+
+  const inArticle = label === "in-article";
+
   return (
     <div className="relative w-full overflow-hidden border-y border-gray-200 bg-white py-4">
-      <p className="mb-2 text-center text-[8px] font-bold uppercase tracking-[0.2em] text-gray-400">Advertisement</p>
-      <ins className="adsbygoogle" style={{ display: "block", minHeight: "90px" }} data-ad-client="ca-pub-2331501617441941" data-ad-slot={inArticle ? "8042854193" : "5373718974"} {...(inArticle ? {"data-ad-layout":"in-article","data-ad-format":"fluid"} : {"data-ad-format":"auto","data-full-width-responsive":"true"})} />
+      <p className="mb-2 text-center text-[8px] font-bold uppercase tracking-[0.2em] text-gray-400">
+        Advertisement
+      </p>
+
+      <ins
+        className="adsbygoogle"
+        style={{
+          display: "block",
+          minHeight: "90px",
+          width: "100%",
+        }}
+        data-ad-client="ca-pub-2331501617441941"
+        data-ad-slot={
+          inArticle
+            ? "8042854193"
+            : "5373718974"
+        }
+        {...(inArticle
+          ? {
+              "data-ad-layout": "in-article",
+              "data-ad-format": "fluid",
+            }
+          : {
+              "data-ad-format": "auto",
+              "data-full-width-responsive": "true",
+            })}
+      />
     </div>
   );
 }
 
 /* =========================================================
-   SIDEBAR SPONSORED AD
+   SIDEBAR GOOGLE ADSENSE AD
 ========================================================= */
 
-function SponsoredAd() {
+function SidebarAd() {
+  useEffect(() => {
+    try {
+      const w = window as Window & {
+        adsbygoogle?: unknown[];
+      };
+
+      w.adsbygoogle = w.adsbygoogle || [];
+      w.adsbygoogle.push({});
+    } catch {
+      // Prevent AdSense errors from breaking the page
+    }
+  }, []);
+
   return (
-    <div className="rounded-md border border-gray-200 bg-[#faf9f4] overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-          Sponsored Content
-        </span>
+    <div className="mb-6 overflow-hidden rounded-md border border-gray-200 bg-white p-2">
+      <p className="mb-2 text-center text-[8px] font-bold uppercase tracking-[0.2em] text-gray-400">
+        Advertisement
+      </p>
 
-        <span className="text-[8px] text-gray-400">
-          Ad
-        </span>
-      </div>
-
-      <div className="mx-3 mb-3 flex h-[145px] items-center justify-center bg-[#10162f] px-4 text-center">
-        <div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-400">
-            Featured Partner
-          </p>
-
-          <p className="mt-3 text-base font-semibold text-white">
-            Your Ad Here
-          </p>
-
-          <p className="mt-2 text-[9px] leading-4 text-gray-300">
-            Reach 2M+ business readers
-          </p>
-        </div>
+      <div className="w-full overflow-hidden">
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: "block",
+            minHeight: "250px",
+            width: "100%",
+          }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot="5373718974"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
       </div>
     </div>
   );
@@ -213,7 +255,6 @@ export function BusinessNewsPage() {
           </div>
         </header>
 
-
         {/* =================================================
             TOP ADVERTISEMENT
         ================================================= */}
@@ -221,7 +262,6 @@ export function BusinessNewsPage() {
         <div className="mb-7 md:mb-9">
           <AdSpace />
         </div>
-
 
         {/* =================================================
             HERO + SIDEBAR
@@ -233,8 +273,10 @@ export function BusinessNewsPage() {
               HERO STORY
           ================================================= */}
 
-          <Link to={`/article/${hero.id}`} className="group block">
-
+          <Link
+            to={`/article/${hero.id}`}
+            className="group block"
+          >
             <div className="relative overflow-hidden rounded-md">
               <ImageWithFallback
                 src={hero.image}
@@ -277,21 +319,22 @@ export function BusinessNewsPage() {
             </div>
           </Link>
 
-
           {/* =================================================
               RIGHT SIDEBAR
           ================================================= */}
 
           <aside className="lg:pt-0">
 
-            <SponsoredAd />
+            {/* REAL GOOGLE ADSENSE SIDEBAR AD */}
+            <SidebarAd />
 
-            <MoreStories stories={corporateNews.slice(3, 6)} />
+            <MoreStories
+              stories={corporateNews.slice(3, 6)}
+            />
 
           </aside>
 
         </section>
-
 
         {/* =================================================
             EARNINGS
@@ -372,7 +415,6 @@ export function BusinessNewsPage() {
 
         </section>
 
-
         {/* =================================================
             M&A TRACKER
         ================================================= */}
@@ -451,7 +493,6 @@ export function BusinessNewsPage() {
           </div>
 
         </section>
-
 
         {/* =================================================
             CORPORATE + STARTUPS
@@ -533,7 +574,6 @@ export function BusinessNewsPage() {
 
           </div>
 
-
           {/* =================================================
               STARTUPS & VENTURE
           ================================================= */}
@@ -605,15 +645,13 @@ export function BusinessNewsPage() {
 
         </section>
 
-
         {/* =================================================
-            SECOND ADVERTISEMENT
+            SECOND ADVERTISEMENT — IN ARTICLE
         ================================================= */}
 
         <div className="my-12 md:my-14">
           <AdSpace label="in-article" />
         </div>
-
 
         {/* =================================================
             SPONSORED EVENTS
@@ -666,7 +704,6 @@ export function BusinessNewsPage() {
           </div>
 
         </section>
-
 
         {/* =================================================
             NEWSLETTER
