@@ -1,4 +1,5 @@
 import { Clock, Briefcase, ChevronRight } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import {
@@ -29,30 +30,19 @@ function SectionHeader({ title }: { title: string }) {
    AD SPACE
 ========================================================= */
 
-function AdSpace({
-  label = "Advertisement Space",
-}: {
-  label?: string;
-}) {
+function AdSpace({ label = "Advertisement" }: { label?: string }) {
+  useEffect(() => {
+    try {
+      const w = window as Window & { adsbygoogle?: unknown[] };
+      w.adsbygoogle = w.adsbygoogle || [];
+      w.adsbygoogle.push({});
+    } catch {}
+  }, []);
+  const inArticle = label.includes("in-article");
   return (
-    <div className="relative w-full overflow-hidden rounded-sm border border-gray-200 bg-gradient-to-r from-[#102b33] via-[#193944] to-[#28596a]">
-      <div className="flex min-h-[90px] flex-col items-center justify-center px-4 py-5 text-center">
-        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-sky-300">
-          Google AdSense
-        </span>
-
-        <span className="mt-1 text-sm sm:text-base font-semibold text-white">
-          {label}
-        </span>
-
-        <span className="mt-1 text-[8px] sm:text-[9px] text-sky-300">
-          728 × 90 • Leaderboard
-        </span>
-      </div>
-
-      <span className="absolute right-1.5 top-1 text-[7px] text-gray-300">
-        Advertisement
-      </span>
+    <div className="relative w-full overflow-hidden border-y border-gray-200 bg-white py-4">
+      <p className="mb-2 text-center text-[8px] font-bold uppercase tracking-[0.2em] text-gray-400">Advertisement</p>
+      <ins className="adsbygoogle" style={{ display: "block", minHeight: "90px" }} data-ad-client="ca-pub-2331501617441941" data-ad-slot={inArticle ? "8042854193" : "5373718974"} {...(inArticle ? {"data-ad-layout":"in-article","data-ad-format":"fluid"} : {"data-ad-format":"auto","data-full-width-responsive":"true"})} />
     </div>
   );
 }
@@ -621,7 +611,7 @@ export function BusinessNewsPage() {
         ================================================= */}
 
         <div className="my-12 md:my-14">
-          <AdSpace label="Business Solutions | Powered by The Pride Times" />
+          <AdSpace label="in-article" />
         </div>
 
 
