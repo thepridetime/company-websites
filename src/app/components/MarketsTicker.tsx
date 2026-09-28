@@ -20,6 +20,13 @@ function parseChange(value: unknown): number | null {
 }
 
 /* =========================================================
+   MARKETS TAB LINK HELPER
+   Builds /markets?tab=<Tab> so MarketsPage opens the right tab
+========================================================= */
+
+const marketTab = (tab: string) => `/markets?tab=${encodeURIComponent(tab)}`;
+
+/* =========================================================
    MEGA MENU COLUMNS
 ========================================================= */
 
@@ -27,15 +34,15 @@ const megaMenuColumns = [
   {
     title: "Markets",
     links: [
-      { label: "Stocks", path: "/markets" },
-      { label: "Indices", path: "/markets" },
-      { label: "Commodities", path: "/markets" },
-      { label: "Forex", path: "/markets" },
-      { label: "Crypto", path: "/markets" },
-      { label: "Mutual Funds", path: "/markets" },
-      { label: "ETFs", path: "/markets" },
-      { label: "Government Bonds", path: "/markets" },
-      { label: "Global Markets", path: "/markets" },
+      { label: "Stocks", path: marketTab("Stocks") },
+      { label: "Indices", path: marketTab("Indices") },
+      { label: "Commodities", path: marketTab("Commodities") },
+      { label: "Forex", path: marketTab("Forex") },
+      { label: "Crypto", path: marketTab("Crypto") },
+      { label: "Mutual Funds", path: marketTab("Mutual Funds") },
+      { label: "ETFs", path: marketTab("ETFs") },
+      { label: "Government Bonds", path: marketTab("Government Bonds") },
+      { label: "Global Markets", path: marketTab("Global Markets") },
     ],
   },
 
@@ -52,11 +59,10 @@ const megaMenuColumns = [
     ],
   },
 
+  /* Removed from "More": Featured, Breaking News */
   {
     title: "More",
     links: [
-      { label: "Featured", path: "/featured" },
-      { label: "Breaking News", path: "/breaking-news" },
       { label: "Business News", path: "/business-news" },
       { label: "CEO Spotlight", path: "/ceospotlight" },
       { label: "Innovation", path: "/innovation" },
@@ -68,7 +74,7 @@ const megaMenuColumns = [
 
   /* =======================================================
      COMPANY
-     
+
      Removed:
      - Advertise
      - Careers
