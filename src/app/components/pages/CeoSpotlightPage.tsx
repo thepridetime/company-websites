@@ -12,35 +12,14 @@ import {
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Link } from "react-router";
 import CeospotImg from "../../../imports/Ceospot.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* ============================================================
    AD SLOT
    Existing advertising presentation retained
 ============================================================ */
 
-function AdSlot({
-  label = "728 × 90 · Leaderboard",
-  title = "Advertisement Space",
-}: {
-  label?: string;
-  title?: string;
-}) {
-  return (
-    <div className="relative mb-10 rounded-[2px] bg-gradient-to-br from-slate-800 to-teal-900 px-4 py-8 text-center text-white">
-      <span className="absolute right-3 top-2 text-[10px] uppercase tracking-wide text-gray-400">
-        Advertisement
-      </span>
 
-      <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-sky-400">
-        Google AdSense
-      </p>
-
-      <p className="font-semibold">{title}</p>
-
-      <p className="mt-1 text-xs text-sky-300/80">{label}</p>
-    </div>
-  );
-}
 
 /* ============================================================
    SPONSORED BANNER
@@ -514,7 +493,7 @@ export function CeoSpotlightPage() {
             ADVERTISEMENT
         ==================================================== */}
 
-        <AdSlot />
+        <PrideTimesAd variant="fifth" />
 
         {/* ====================================================
             TOP STORIES / LEAD PROFILE
