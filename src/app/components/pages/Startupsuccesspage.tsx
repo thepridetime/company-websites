@@ -2,6 +2,7 @@ import { Clock, Rocket } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Link } from "react-router";
 import { specialArticlePathByTitle } from "../../data/specialArticleData";
+import { useEffect } from "react";
 
 /* =========================================================
    TYPES
@@ -154,40 +155,134 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 /* =========================================================
-   AD BANNER
+   REAL GOOGLE ADSENSE
 ========================================================= */
 
-function AdBanner({ secondary = false }: { secondary?: boolean }) {
+type AdSlotProps = {
+  slot: string;
+  format?: "auto" | "fluid";
+  layout?: string;
+  layoutKey?: string;
+  className?: string;
+  minHeight?: number;
+};
+
+function AdSlot({
+  slot,
+  format = "auto",
+  layout,
+  layoutKey,
+  className = "",
+  minHeight = 90,
+}: AdSlotProps) {
+  useEffect(() => {
+    try {
+      const w = window as Window & {
+        adsbygoogle?: unknown[];
+      };
+
+      w.adsbygoogle = w.adsbygoogle || [];
+      w.adsbygoogle.push({});
+    } catch {
+      // AdSense may be unavailable because of an ad blocker,
+      // development environment, consent settings, or no inventory.
+    }
+  }, []);
+
   return (
-    <div
-      className={`relative w-full overflow-hidden ${
-        secondary
-          ? "bg-[#12313b] h-[95px] md:h-[105px]"
-          : "bg-[#102d35] h-[88px] md:h-[96px]"
-      }`}
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0d252c] via-[#173b45] to-[#285968]" />
-
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
-        <p className="text-[8px] md:text-[9px] font-bold tracking-[0.2em] text-cyan-300 uppercase">
-          Google Adsense
-        </p>
-
-        <p className="mt-1 text-white text-sm md:text-base font-semibold">
-          {secondary
-            ? "Business Solutions | Powered by The Pride Times"
-            : "Advertisement Space"}
-        </p>
-
-        <p className="text-[8px] md:text-[9px] text-cyan-200 mt-0.5">
-          728 × 90 • Leaderboard
-        </p>
+    <div className={`w-full overflow-hidden ${className}`}>
+      <div className="mb-1 text-center text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+        Advertisement
       </div>
 
-      <span className="absolute top-1 right-1 text-[6px] bg-white/80 px-1 py-0.5 text-gray-500">
-        Advertisement
-      </span>
+      <div
+        className="w-full overflow-hidden"
+        style={{ minHeight }}
+      >
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: "block",
+            width: "100%",
+            minHeight,
+          }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive={
+            format === "auto" ? "true" : undefined
+          }
+          data-ad-layout={layout}
+          data-ad-layout-key={layoutKey}
+        />
+      </div>
     </div>
+  );
+}
+
+/* =========================================================
+   TOP / MOVABLE AD
+   SLOT: 5373718974
+========================================================= */
+
+function TopAd() {
+  return (
+    <AdSlot
+      slot="5373718974"
+      format="auto"
+      minHeight={90}
+      className="mb-7"
+    />
+  );
+}
+
+/* =========================================================
+   SIDEBAR / MOVABLE AD
+   SLOT: 5373718974
+========================================================= */
+
+function SidebarAd() {
+  return (
+    <AdSlot
+      slot="5373718974"
+      format="auto"
+      minHeight={250}
+      className="mt-6"
+    />
+  );
+}
+
+/* =========================================================
+   IN-ARTICLE / MOVABLE AD
+   SLOT: 8042854193
+========================================================= */
+
+function InArticleAd() {
+  return (
+    <AdSlot
+      slot="8042854193"
+      format="fluid"
+      layout="in-article"
+      minHeight={120}
+      className="my-8"
+    />
+  );
+}
+
+/* =========================================================
+   SECONDARY MOVABLE AD
+   SLOT: 5608262547
+========================================================= */
+
+function SecondaryAd() {
+  return (
+    <AdSlot
+      slot="5608262547"
+      format="fluid"
+      layoutKey="-ef+6k-30-ac+ty"
+      minHeight={120}
+      className="my-8"
+    />
   );
 }
 
@@ -198,30 +293,10 @@ function AdBanner({ secondary = false }: { secondary?: boolean }) {
 function SponsoredContent() {
   return (
     <aside className="w-full">
-      <div className="border border-gray-200 bg-white overflow-hidden">
-        <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100">
-          <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-            Sponsored Content
-          </span>
+      {/* REAL ADSENSE SIDEBAR AD */}
+      <SidebarAd />
 
-          <span className="text-[8px] text-gray-400">Ad</span>
-        </div>
-
-        <div className="mx-3 my-3 h-[145px] md:h-[160px] bg-[#11172f] flex flex-col items-center justify-center text-center">
-          <p className="text-[9px] font-bold tracking-[0.16em] text-yellow-400">
-            FEATURED PARTNER
-          </p>
-
-          <p className="text-white text-sm font-semibold mt-2">
-            Your Ad Here
-          </p>
-
-          <p className="text-[9px] text-gray-300 mt-1">
-            Reach 2M+ business readers
-          </p>
-        </div>
-      </div>
-
+      {/* RELATED COVERAGE */}
       <div className="mt-6">
         <div className="border-t-2 border-black pt-3 mb-2">
           <h3 className="text-[12px] font-bold uppercase tracking-tight text-gray-900">
@@ -272,7 +347,10 @@ function SponsoredContent() {
 function HeroStory() {
   return (
     <article className="group">
-      <Link to={specialArticlePathByTitle(hero.title)} className="block">
+      <Link
+        to={specialArticlePathByTitle(hero.title)}
+        className="block"
+      >
         <div className="w-full overflow-hidden">
           <ImageWithFallback
             src={hero.image}
@@ -547,6 +625,7 @@ export function StartupSuccessPage() {
   return (
     <div className="w-full min-h-screen bg-white text-gray-900 antialiased">
       <main className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 py-6 md:py-8">
+
         {/* ===================================================
             PAGE TITLE
         =================================================== */}
@@ -571,18 +650,18 @@ export function StartupSuccessPage() {
         </header>
 
         {/* ===================================================
-            TOP AD
+            TOP REAL ADSENSE AD
+            SLOT 5373718974
         =================================================== */}
 
-        <div className="mb-7">
-          <AdBanner />
-        </div>
+        <TopAd />
 
         {/* ===================================================
             LEAD EDITORIAL AREA
         =================================================== */}
 
         <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,2.45fr)_minmax(280px,1fr)] gap-6 lg:gap-7 mb-9">
+
           {/* Lead Story */}
 
           <HeroStory />
@@ -597,9 +676,13 @@ export function StartupSuccessPage() {
             </div>
 
             {majorStories.map((story) => (
-              <MajorStory key={`major-${story.id}`} story={story} />
+              <MajorStory
+                key={`major-${story.id}`}
+                story={story}
+              />
             ))}
 
+            {/* MOVABLE REAL ADSENSE SIDEBAR */}
             <SponsoredContent />
           </aside>
         </section>
@@ -627,6 +710,7 @@ export function StartupSuccessPage() {
 
         <section className="mb-9">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)] gap-7">
+
             {/* News Cards */}
 
             <div>
@@ -634,9 +718,15 @@ export function StartupSuccessPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-7">
                 {latestNews.slice(0, 4).map((story) => (
-                  <NewsCard key={`latest-${story.id}`} story={story} />
+                  <NewsCard
+                    key={`latest-${story.id}`}
+                    story={story}
+                  />
                 ))}
               </div>
+
+              {/* IN-ARTICLE REAL ADSENSE */}
+              <InArticleAd />
             </div>
 
             {/* Chronological Stream */}
@@ -648,12 +738,11 @@ export function StartupSuccessPage() {
         </section>
 
         {/* ===================================================
-            SECOND AD
+            SECOND REAL ADSENSE AD
+            SLOT 5608262547
         =================================================== */}
 
-        <div className="mb-7">
-          <AdBanner secondary />
-        </div>
+        <SecondaryAd />
 
         {/* ===================================================
             MORE STARTUP COVERAGE
