@@ -2,6 +2,7 @@ import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import { specialArticlePath } from "../../data/specialArticleData";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 import HC1Img from "../../../imports/HC1.png";
 import HC2Img from "../../../imports/HC2.png";
@@ -24,236 +25,60 @@ type Story = {
 };
 
 /* =========================================================
-   HERO DATA
+   HEALTHCARE 2026 DATA
 ========================================================= */
 
 const hero: Story = {
-  category: "HEALTHCARE",
-  title: "How Biotech Innovations Are Extending & Improving Lives",
+  category: "HEALTHCARE OUTLOOK",
+  title: "Healthcare Resilience Meets an AI-Led Transformation of Diagnostics, Supply Chains and Patient Management",
   excerpt:
-    "Gene-editing therapies, AI-driven drug discovery, and personalized medicine are converging to tackle diseases that were once considered untreatable.",
-  author: "Sagar Kumar",
-  time: "8 hr ago",
+    "Healthcare continues to show resilience as AI expands across diagnostics, real-time inventory visibility, demand forecasting, supplier-risk management and patient operations.",
+  author: "The Pride Times Editorial Desk",
+  time: "September 29, 2026",
   image: HC1Img,
 };
 
-/* =========================================================
-   MAJOR STORIES
-========================================================= */
-
 const majorStories: Story[] = [
-  {
-    id: 1,
-    category: "GENE THERAPY",
-    badge: "HOT",
-    title:
-      "CRISPR 3.0 Corrects Hearing Loss Mutation in 92% of Clinical Trial Patients",
-    excerpt:
-      "New gene-editing approaches are opening the door to targeted treatments for previously difficult-to-treat genetic conditions.",
-    author: "Sagar Kumar",
-    time: "2 hrs ago",
-    image: HC2Img,
-  },
-  {
-    id: 2,
-    category: "AI DIAGNOSTICS",
-    badge: "HOT",
-    title:
-      "AI System Detects Alzheimer's Disease Years Before Symptoms Appear",
-    excerpt:
-      "Artificial intelligence is increasingly being used to identify subtle clinical patterns and improve early diagnosis.",
-    author: "Sagar Kumar",
-    time: "4 hrs ago",
-    image: HC3Img,
-  },
+  { id: 1, category: "HEALTHCARE SUPPLY CHAIN", badge: "MARKET", title: "Healthcare Supply Chain Market Forecast to Reach $8.60 Billion by 2034", excerpt: "The supplied outlook puts the market at $3.20 billion in 2025, with software-led solutions at 58% share and cloud delivery at 56%.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC2Img },
+  { id: 2, category: "AI IN HEALTHCARE", badge: "AI", title: "AI Moves From Clinical Experiment to Everyday Healthcare Operations", excerpt: "Real-time inventory visibility, demand forecasting and supplier-risk management are emerging alongside AI-enabled diagnostics and patient management.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC3Img },
 ];
-
-/* =========================================================
-   SUPPORTING STORIES
-========================================================= */
 
 const supportingStories: Story[] = [
-  {
-    id: 3,
-    category: "ORGAN BIOENGINEERING",
-    title:
-      "Lab-Grown Kidney Research Moves Closer to Routine Human Transplants",
-    excerpt:
-      "Researchers are advancing tissue engineering and regenerative medicine as alternatives to conventional organ donation.",
-    author: "Sagar Kumar",
-    time: "7 hrs ago",
-    image: HC4Img,
-  },
-  {
-    id: 4,
-    category: "PHARMACEUTICALS",
-    title:
-      "Novo Nordisk Expands Next-Generation Obesity Drug Development",
-    excerpt:
-      "Pharmaceutical companies continue investing in therapies designed to improve treatment outcomes and patient access.",
-    author: "Sagar Kumar",
-    time: "9 hrs ago",
-    image: HC1Img,
-  },
+  { id: 3, category: "HEALTHCARE INFLATION", title: "Healthcare Supply-Chain Inflation Projected at 2.78% Through June 2027", excerpt: "The supplied Vizient figure adds a defined cost-planning horizon to the sector's broader digital transformation.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC4Img },
+  { id: 4, category: "VENDOR WATCH", title: "Black Book Research 2026 Vendor Watch List Highlights Ten Companies for Hospitals and Health Systems", excerpt: "The supplied briefing points to vendor selection as an increasingly important part of healthcare technology strategy.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC1Img },
 ];
-
-/* =========================================================
-   LATEST NEWS
-========================================================= */
 
 const latestNews: Story[] = [
-  {
-    id: 1,
-    category: "GENE THERAPY",
-    badge: "HOT",
-    title:
-      "CRISPR 3.0 Corrects Hearing Loss Mutation in 92% of Clinical Trial Patients",
-    excerpt:
-      "New gene-editing approaches are opening the door to targeted treatments for previously difficult-to-treat genetic conditions.",
-    author: "Sagar Kumar",
-    time: "2 hrs ago",
-    image: HC2Img,
-  },
-  {
-    id: 2,
-    category: "AI DIAGNOSTICS",
-    badge: "HOT",
-    title:
-      "AI System Detects Alzheimer's Disease Years Before Symptoms Appear",
-    excerpt:
-      "Artificial intelligence is increasingly being used to identify subtle clinical patterns and improve early diagnosis.",
-    author: "Sagar Kumar",
-    time: "4 hrs ago",
-    image: HC3Img,
-  },
-  {
-    id: 3,
-    category: "ORGAN BIOENGINEERING",
-    title:
-      "Lab-Grown Kidney Research Moves Closer to Routine Human Transplants",
-    excerpt:
-      "Researchers are advancing tissue engineering and regenerative medicine as alternatives to conventional organ donation.",
-    author: "Sagar Kumar",
-    time: "7 hrs ago",
-    image: HC4Img,
-  },
-  {
-    id: 4,
-    category: "PHARMACEUTICALS",
-    title:
-      "Novo Nordisk Expands Next-Generation Obesity Drug Development",
-    excerpt:
-      "Pharmaceutical companies continue investing in therapies designed to improve treatment outcomes and patient access.",
-    author: "Sagar Kumar",
-    time: "9 hrs ago",
-    image: HC1Img,
-  },
-  {
-    id: 5,
-    category: "HEALTHTECH",
-    title:
-      "Digital Health Platforms Accelerate the Shift Toward Preventive Care",
-    excerpt:
-      "Connected devices and digital health platforms are becoming an increasingly important part of preventative healthcare.",
-    author: "Sagar Kumar",
-    time: "10 hrs ago",
-    image: HC2Img,
-  },
-  {
-    id: 6,
-    category: "MEDICAL TECHNOLOGY",
-    title:
-      "Surgical Robotics Enters a New Phase of Clinical Innovation",
-    excerpt:
-      "Hospitals and medical-device companies are exploring new robotic systems designed to improve surgical precision.",
-    author: "Sagar Kumar",
-    time: "12 hrs ago",
-    image: HC3Img,
-  },
+  { id: 1, category: "MEDTECH", title: "Medtronic to Acquire CathWorks for Up to $585 Million to Expand Interventional Cardiology Portfolio", excerpt: "The supplied healthcare briefing cites the transaction as a portfolio-expansion move in interventional cardiology.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC2Img },
+  { id: 2, category: "AI SUPPLY CHAIN", title: "Real-Time Inventory Visibility Becomes a Core AI Healthcare Use Case", excerpt: "AI is increasingly being applied to inventory visibility, connecting stock information with demand and supplier data.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC3Img },
+  { id: 3, category: "DEMAND FORECASTING", title: "Healthcare Demand Forecasting Moves Into the Center of Supply-Chain Planning", excerpt: "Forecasting can connect anticipated requirements with procurement, inventory and supplier planning.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC4Img },
+  { id: 4, category: "TRACEABILITY", title: "Regulatory Traceability Requirements Accelerate Digital Healthcare Adoption", excerpt: "Digital traceability is becoming a driver for modernization across healthcare supply-chain workflows.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC1Img },
+  { id: 5, category: "MEDTECH & SUSTAINABILITY", title: "Healthcare Partnerships Connect Medtech, Digital Operations and Sustainability", excerpt: "The supplied update highlights collaborations across pharma, medtech and sustainability, including Schneider Electric and EcoVadis.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC2Img },
+  { id: 6, category: "EMPLOYMENT & HEALTHCARE", title: "Healthcare Employment Growth Reinforces the Sector's Economic Resilience", excerpt: "The supplied Deloitte Insights briefing says healthcare and private education added more than 1 million jobs from January 2025 through August 2026.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC3Img },
 ];
-
-/* =========================================================
-   MORE STORIES
-========================================================= */
 
 const moreStories: Story[] = [
-  {
-    id: 1,
-    category: "HEALTHCARE",
-    title:
-      "WHO Declares End to COVID-XE Variant Concern; Surveillance Continues",
-    time: "3 hr ago",
-    image: HC2Img,
-  },
-  {
-    id: 2,
-    category: "HEALTHCARE",
-    title:
-      "CRISPR Therapy Cures Sickle Cell Disease in Early Clinical Results",
-    time: "5 hr ago",
-    image: HC3Img,
-  },
-  {
-    id: 3,
-    category: "HEALTHCARE",
-    title:
-      "Global Healthcare Systems Increase Investment in AI Diagnostics",
-    time: "7 hr ago",
-    image: HC4Img,
-  },
+  { id: 1, category: "HEALTHCARE SCM", title: "Software-Led Healthcare Supply Chains Gain Strategic Importance", time: "September 29, 2026", image: HC2Img },
+  { id: 2, category: "HOSPITAL TECHNOLOGY", title: "Hospitals Reassess Technology Vendors as Digital Healthcare Scales", time: "September 29, 2026", image: HC3Img },
+  { id: 3, category: "HEALTHCARE AI", title: "The Next Healthcare AI Wave Is Operational, Connected and Traceable", time: "September 29, 2026", image: HC4Img },
 ];
-
-/* =========================================================
-   SPONSORED EVENTS
-========================================================= */
 
 const sponsoredEvents = [
-  {
-    title: "Global Health Summit 2026",
-    subtitle: "Sponsored Event",
-  },
-  {
-    title: "Tech Leaders Forum",
-    subtitle: "Sponsored Event",
-  },
-  {
-    title: "Healthcare Innovation Conference",
-    subtitle: "Sponsored Event",
-  },
-  {
-    title: "AI & Healthcare World",
-    subtitle: "Sponsored Event",
-  },
+  { title: "Healthcare Supply Chain Briefing", subtitle: "Pride Times Editorial" },
+  { title: "AI in Healthcare Report", subtitle: "Pride Times Editorial" },
+  { title: "Medtech & Life Sciences", subtitle: "Pride Times Editorial" },
+  { title: "Healthcare Technology Forum", subtitle: "Pride Times Editorial" },
 ];
 
 /* =========================================================
-   AD BANNER
+   REAL GOOGLE ADSENSE
 ========================================================= */
 
-function AdBanner({
-  secondary = false,
-}: {
-  secondary?: boolean;
-}) {
+function AdBanner({ secondary = false }: { secondary?: boolean }) {
   return (
-    <div className="relative w-full h-[58px] md:h-[72px] bg-[#102d35] overflow-hidden flex flex-col items-center justify-center text-center">
-      <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
-        Advertisement
-      </span>
-
-      <span className="text-[7px] md:text-[8px] font-bold tracking-[0.2em] text-cyan-400 uppercase">
-        GOOGLE ADSENSE
-      </span>
-
-      <strong className="mt-0.5 text-[10px] md:text-[12px] font-semibold text-white">
-        {secondary
-          ? "Business Solutions | Powered by The Pride Times"
-          : "Advertisement Space"}
-      </strong>
-
-      <span className="text-[7px] md:text-[8px] text-cyan-300">
-        728 × 90 • Leaderboard
-      </span>
+    <div className="w-full overflow-hidden">
+      <div className="mb-1 text-right text-[7px] uppercase tracking-[0.14em] text-gray-400">Advertisement</div>
+      <PrideTimesAd variant={secondary ? "second" : "first"} />
     </div>
   );
 }
@@ -324,7 +149,7 @@ function StoryMeta({
 
 function HeroStory() {
   return (
-    <Link to={specialArticlePath("healthcare-biotech-lives")} className="block">
+    <Link to={specialArticlePath("healthcare-ai-resilient-sector")} className="block">
     <article className="group min-w-0">
       <div className="relative overflow-hidden rounded-md h-[250px] sm:h-[330px] md:h-[390px] lg:h-[400px]">
         <ImageWithFallback
@@ -457,29 +282,13 @@ function SupportingStory({ story }: { story: Story }) {
 
 function SponsoredContent() {
   return (
-    <div className="border border-gray-200 rounded-md overflow-hidden">
+    <div className="border border-gray-200 rounded-md overflow-hidden bg-white">
       <div className="px-2.5 py-1.5 flex items-center justify-between bg-[#faf9f4]">
-        <span className="text-[7px] font-bold tracking-[0.14em] text-gray-400 uppercase">
-          Sponsored Content
-        </span>
-
-        <span className="text-[7px] text-gray-400">
-          Ad
-        </span>
+        <span className="text-[7px] font-bold tracking-[0.14em] text-gray-400 uppercase">Advertisement</span>
+        <span className="text-[7px] text-gray-400">Google AdSense</span>
       </div>
-
-      <div className="h-[145px] md:h-[160px] bg-[#171c3a] flex flex-col items-center justify-center text-center px-4">
-        <span className="text-[8px] font-bold tracking-[0.16em] text-yellow-400 uppercase">
-          Featured Partner
-        </span>
-
-        <strong className="mt-2.5 font-serif text-[15px] text-white">
-          Your Ad Here
-        </strong>
-
-        <span className="mt-1.5 text-[8px] text-gray-300">
-          Reach 2M+ business readers
-        </span>
+      <div className="p-2.5">
+        <PrideTimesAd variant="third" />
       </div>
     </div>
   );
