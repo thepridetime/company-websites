@@ -8,7 +8,8 @@ import {
   earningsNews,
   corporateNews,
   startupNews,
-} from "../../data/businessNewsData";
+} from "../../data/businessNewsData";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    SECTION HEADER
@@ -739,6 +740,7 @@ export function BusinessNewsPage() {
         </section>
 
       </div>
+      <PrideTimesAd variant="first" />
     </div>
   );
 }

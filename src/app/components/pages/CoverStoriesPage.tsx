@@ -7,7 +7,8 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Link } from "react-router";
-import CVImg from "../../../imports/Coverstory.png";
+import CVImg from "../../../imports/Coverstory.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    TYPES
@@ -158,33 +159,7 @@ const sponsoredEvents = [
    AD COMPONENT
 ========================================================= */
 
-function LeaderboardAd({
-  label = "Advertisement Space",
-}: {
-  label?: string;
-}) {
-  return (
-    <div className="relative w-full h-[90px] md:h-[96px] bg-[#102b33] overflow-hidden">
-      <span className="absolute top-1.5 right-1.5 bg-white/80 text-[7px] text-gray-500 px-1.5 py-0.5">
-        Advertisement
-      </span>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-[8px] md:text-[9px] font-bold tracking-[0.2em] text-cyan-400 uppercase">
-          Google AdSense
-        </span>
-
-        <span className="mt-1 text-sm md:text-base font-semibold text-white">
-          {label}
-        </span>
-
-        <span className="mt-1 text-[8px] md:text-[9px] text-cyan-300">
-          728 × 90 • Leaderboard
-        </span>
-      </div>
-    </div>
-  );
-}
 
 /* =========================================================
    SPONSORED CONTENT
@@ -320,7 +295,7 @@ export function CoverStoriesPage() {
         ================================================= */}
 
         <section className="mt-5 md:mt-6">
-          <LeaderboardAd label="Advertisement Space" />
+          <PrideTimesAd variant="first" />
         </section>
 
         {/* =================================================
@@ -435,7 +410,7 @@ export function CoverStoriesPage() {
         ================================================= */}
 
         <section className="mt-7 md:mt-9">
-          <LeaderboardAd label="Business Solutions | Powered by The Pride Times" />
+          <PrideTimesAd variant="second" />
         </section>
 
         {/* =================================================
@@ -515,7 +490,8 @@ export function CoverStoriesPage() {
             </form>
           </div>
         </section>
-      </main>
+        
+    </main>
     </div>
   );
 }

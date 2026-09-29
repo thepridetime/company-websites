@@ -1,34 +1,13 @@
 import { Clock } from "lucide-react";
 import { Link } from "react-router";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    ADVERTISEMENT SLOT
 ========================================================= */
 
-function AdSlot({
-  label = "728 × 90 · Leaderboard",
-  title = "Advertisement Space",
-}: {
-  label?: string;
-  title?: string;
-}) {
-  return (
-    <div className="relative bg-gradient-to-br from-slate-800 to-teal-900 text-white text-center py-8 px-4 mb-8 rounded-[2px] overflow-hidden">
-      <span className="absolute top-2 right-3 text-[10px] text-gray-400 uppercase tracking-wide">
-        Advertisement
-      </span>
 
-      <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-sky-400 mb-1">
-        Google AdSense
-      </p>
-
-      <p className="font-semibold text-sm md:text-base">{title}</p>
-
-      <p className="text-xs text-sky-300/80 mt-1">{label}</p>
-    </div>
-  );
-}
 
 /* =========================================================
    DATA
@@ -199,7 +178,7 @@ export function InnovationPage() {
             TOP ADVERTISEMENT
         ================================================== */}
 
-        <AdSlot />
+        <PrideTimesAd variant="first" />
 
         {/* =================================================
             HERO + MORE STORIES
@@ -378,10 +357,7 @@ export function InnovationPage() {
             SECOND ADVERTISEMENT
         ================================================== */}
 
-        <AdSlot
-          title="Business Solutions | Powered by The Pride Times"
-          label="728 × 90 · Leaderboard"
-        />
+        <PrideTimesAd variant="second" />
 
         {/* =================================================
             SPONSORED EVENTS
@@ -453,6 +429,7 @@ export function InnovationPage() {
           </form>
         </section>
       </div>
+      
     </div>
   );
 }

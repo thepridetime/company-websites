@@ -8,7 +8,8 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Link } from "react-router";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    IMAGE DATA
@@ -801,7 +802,8 @@ export function BreakingNewsPage() {
         ================================================= */}
 
         <Newsletter />
-      </main>
+        <PrideTimesAd variant="first" />
+    </main>
     </div>
   );
 }

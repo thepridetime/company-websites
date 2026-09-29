@@ -1,6 +1,7 @@
 import { TimeAgo } from "../../utils/timeAgo";
 import { Clock, Globe } from "lucide-react";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    WORLD & GEOPOLITICS PAGE
@@ -160,33 +161,7 @@ const sponsoredEvents = [
    ADVERTISEMENT
 ========================================================= */
 
-function Advertisement({
-  label = "Advertisement Space",
-}: {
-  label?: string;
-}) {
-  return (
-    <div className="relative w-full h-[90px] md:h-[90px] bg-gradient-to-r from-[#0c252d] via-[#173943] to-[#28596a] overflow-hidden">
-      <span className="absolute top-1 right-1 text-[6px] md:text-[7px] bg-white/80 text-gray-500 px-1.5 py-0.5">
-        Advertisement
-      </span>
 
-      <div className="h-full flex flex-col items-center justify-center text-center">
-        <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] text-[#52a8cf]">
-          GOOGLE ADSENSE
-        </span>
-
-        <span className="mt-1 text-[13px] md:text-sm font-semibold text-white">
-          {label}
-        </span>
-
-        <span className="mt-1 text-[8px] md:text-[9px] text-[#8ebdce]">
-          728 × 90 · Leaderboard
-        </span>
-      </div>
-    </div>
-  );
-}
 
 /* =========================================================
    SECTION HEADER
@@ -445,7 +420,7 @@ export function WorldPage() {
         ================================================= */}
 
         <div className="mb-5 md:mb-6">
-          <Advertisement />
+          <PrideTimesAd variant="first" />
         </div>
 
         {/* =================================================
@@ -529,7 +504,7 @@ export function WorldPage() {
         ================================================= */}
 
         <div className="mb-5 md:mb-6">
-          <Advertisement label="Business Solutions | Powered by The Pride Times" />
+          <PrideTimesAd variant="second" />
         </div>
 
         {/* =================================================
@@ -548,6 +523,7 @@ export function WorldPage() {
           <Newsletter />
         </div>
       </div>
+      
     </main>
   );
 }

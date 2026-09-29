@@ -15,7 +15,8 @@ import {
 
 import HeroImg from "../../../imports/heroimage.png";
 import Hero1Img from "../../../imports/Techheroimage.png";
-import Hero2Img from "../../../imports/hero1image.png";
+import Hero2Img from "../../../imports/hero1image.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    SECTION HEADER
@@ -963,6 +964,7 @@ export function InternationalNewsPage() {
           onClose={() => setSelectedArticle(null)}
         />
       )}
+      <PrideTimesAd variant="first" />
     </main>
   );
 }

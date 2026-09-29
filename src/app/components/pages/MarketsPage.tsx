@@ -6,7 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { getQuotes } from "../../../services/marketApi";
+import { getQuotes } from "../../../services/marketApi";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 interface TickerCard {
   symbol: string;
@@ -815,6 +816,7 @@ export function MarketsPage() {
           )}
         </div>
       </div>
+      <PrideTimesAd variant="first" />
     </main>
   );
 }

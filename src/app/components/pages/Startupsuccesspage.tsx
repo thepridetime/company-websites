@@ -2,7 +2,8 @@ import { Clock, Rocket } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Link } from "react-router";
 import { specialArticlePathByTitle } from "../../data/specialArticleData";
-import { useEffect } from "react";
+import { useEffect } from "react";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    TYPES
@@ -795,7 +796,8 @@ export function StartupSuccessPage() {
         =================================================== */}
 
         <Newsletter />
-      </main>
+        <PrideTimesAd variant="first" />
+    </main>
     </div>
   );
 }

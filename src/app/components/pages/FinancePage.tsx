@@ -6,7 +6,8 @@ import InsImg from "../../../imports/Insightimage.png";
 import LN4Img from "../../../imports/LN4image.png";
 import FIN3Img from "../../../imports/FIN3.png";
 import FIN4Img from "../../../imports/FIN4.png";
-import FIN5Img from "../../../imports/FIN5.png";
+import FIN5Img from "../../../imports/FIN5.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    MARKET DATA
@@ -1502,6 +1503,7 @@ export function FinancePage() {
         }
 
       `}</style>
+      <PrideTimesAd variant="first" />
     </main>
   );
 }

@@ -6,7 +6,8 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 import Smartc1Img from "../../../imports/Smartc1.png";
 import Smartc2Img from "../../../imports/Smartc2.png";
 import Smartc3Img from "../../../imports/Smartc3.png";
-import Smartc4Img from "../../../imports/Smartc4.png";
+import Smartc4Img from "../../../imports/Smartc4.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    TYPES
@@ -46,31 +47,7 @@ function SectionHeader({ title }: { title: string }) {
    ADVERTISEMENT BANNER
 ========================================================= */
 
-function AdBanner({ bottom = false }: { bottom?: boolean }) {
-  return (
-    <section className={bottom ? "mt-6 md:mt-7" : "mt-4 md:mt-5"}>
-      <div className="relative h-[58px] md:h-[72px] overflow-hidden bg-[#102c35] flex flex-col items-center justify-center text-center px-4">
-        <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
-          Advertisement
-        </span>
 
-        <p className="text-[7px] md:text-[8px] tracking-[0.18em] uppercase text-[#65b9d5] font-bold">
-          GOOGLE ADSENSE
-        </p>
-
-        <p className="mt-0.5 text-[10px] md:text-[12px] text-white font-semibold">
-          {bottom
-            ? "Business Solutions | Powered by The Pride Times"
-            : "Advertisement Space"}
-        </p>
-
-        <p className="text-[7px] md:text-[8px] text-[#73a9b8]">
-          728 × 90 • Leaderboard
-        </p>
-      </div>
-    </section>
-  );
-}
 
 /* =========================================================
    HERO DATA
@@ -481,7 +458,7 @@ export function SmartCitiesPage() {
             TOP ADVERTISEMENT
         ================================================= */}
 
-        <AdBanner />
+        <PrideTimesAd variant="first" />
 
         {/* =================================================
             HERO + SIDEBAR
@@ -521,7 +498,7 @@ export function SmartCitiesPage() {
             SECOND ADVERTISEMENT
         ================================================= */}
 
-        <AdBanner bottom />
+        <PrideTimesAd variant="second" />
 
         {/* =================================================
             SPONSORED EVENTS
@@ -534,7 +511,8 @@ export function SmartCitiesPage() {
         ================================================= */}
 
         <Newsletter />
-      </main>
+        
+    </main>
     </div>
   );
 }

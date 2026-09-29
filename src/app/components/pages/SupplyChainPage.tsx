@@ -5,7 +5,8 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 import SC1Img from "../../../imports/SC1.png";
 import SC2Img from "../../../imports/SC2.png";
-import SC3Img from "../../../imports/SC3.png";
+import SC3Img from "../../../imports/SC3.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    TYPES
@@ -162,41 +163,7 @@ const latestNews: Story[] = [
    ADVERTISEMENT
 ========================================================= */
 
-function AdBanner({
-  secondary = false,
-}: {
-  secondary?: boolean;
-}) {
-  return (
-    <section className="relative w-full overflow-hidden bg-[#102c35]">
-      <div
-        className={`flex flex-col items-center justify-center text-center ${
-          secondary
-            ? "h-[64px] md:h-[74px]"
-            : "h-[58px] md:h-[72px]"
-        }`}
-      >
-        <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
-          Advertisement
-        </span>
 
-        <p className="text-[7px] md:text-[8px] tracking-[0.18em] uppercase text-[#65b9d5] font-bold">
-          GOOGLE ADSENSE
-        </p>
-
-        <p className="mt-0.5 text-[10px] md:text-[12px] text-white font-semibold">
-          {secondary
-            ? "Business Solutions | Powered by The Pride Times"
-            : "Advertisement Space"}
-        </p>
-
-        <p className="text-[7px] md:text-[8px] text-[#73a9b8]">
-          728 × 90 • Leaderboard
-        </p>
-      </div>
-    </section>
-  );
-}
 
 /* =========================================================
    SPONSORED CONTENT
@@ -560,7 +527,7 @@ export function SupplyChainPage() {
         ================================================= */}
 
         <section className="mt-4 md:mt-5">
-          <AdBanner />
+          <PrideTimesAd variant="first" />
         </section>
 
         {/* =================================================
@@ -650,7 +617,7 @@ export function SupplyChainPage() {
         ================================================= */}
 
         <section className="mt-7 md:mt-8">
-          <AdBanner secondary />
+          <PrideTimesAd variant="second" />
         </section>
 
         {/* =================================================
@@ -682,7 +649,8 @@ export function SupplyChainPage() {
 
         <Newsletter />
 
-      </main>
+        
+    </main>
     </div>
   );
 }

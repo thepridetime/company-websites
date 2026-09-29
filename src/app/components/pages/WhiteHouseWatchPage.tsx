@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { Clock, ChevronRight } from "lucide-react";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 const articleIds: Record<string, string> = {
   "President Signs Historic AI Accountability Act into Law": "whitehouse-president-signs-ai-accountability-act",
@@ -205,33 +206,7 @@ function SectionHeader({
    ADVERTISEMENT
 ========================================================= */
 
-function Advertisement({
-  label = "Advertisement",
-}: {
-  label?: string;
-}) {
-  return (
-    <div className="relative w-full h-[90px] md:h-[94px] bg-[#102c35] overflow-hidden flex items-center justify-center my-5">
-      <span className="absolute top-1 right-1 text-[7px] text-gray-300 bg-white/20 px-1">
-        {label}
-      </span>
 
-      <div className="text-center text-white">
-        <p className="text-[8px] md:text-[9px] font-bold tracking-[0.18em] text-cyan-300">
-          GOOGLE ADSENSE
-        </p>
-
-        <p className="text-[12px] md:text-[14px] font-semibold mt-1">
-          Advertisement Space
-        </p>
-
-        <p className="text-[8px] text-cyan-200 mt-1">
-          728 × 90 · Leaderboard
-        </p>
-      </div>
-    </div>
-  );
-}
 
 /* =========================================================
    STORY META
@@ -681,7 +656,7 @@ export function WhiteHouseWatchPage() {
             TOP AD
         ================================================= */}
 
-        <Advertisement />
+        <PrideTimesAd variant="first" />
 
         {/* =================================================
             LEAD EDITORIAL PACKAGE
@@ -786,7 +761,7 @@ export function WhiteHouseWatchPage() {
             SECOND AD
         ================================================= */}
 
-        <Advertisement />
+        <PrideTimesAd variant="second" />
 
         {/* =================================================
             SPONSORED EVENTS
@@ -872,6 +847,7 @@ export function WhiteHouseWatchPage() {
           </span>
         </footer>
       </div>
+      
     </main>
   );
 }

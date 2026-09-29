@@ -2,7 +2,8 @@ import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Clock, ChevronRight } from "lucide-react";
 import CS2Img from "../../../imports/CS2.png";
-import CS3Img from "../../../imports/CS3.png";
+import CS3Img from "../../../imports/CS3.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    ARTICLE ROUTING
@@ -392,29 +393,7 @@ export function CybersecurityPage() {
             TOP ADVERTISEMENT
         ================================================= */}
 
-        <div className="w-full h-[68px] md:h-[76px] bg-[#17313A] flex items-center justify-center my-5 md:my-7 relative">
-
-          <div className="text-center text-white">
-
-            <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.22em] text-cyan-300">
-              GOOGLE ADSENSE
-            </p>
-
-            <p className="mt-1 text-[13px] md:text-[15px] font-semibold">
-              Advertisement Space
-            </p>
-
-            <p className="mt-0.5 text-[8px] text-cyan-200">
-              728 × 90 • Leaderboard
-            </p>
-
-          </div>
-
-          <span className="absolute top-1 right-1 text-[7px] bg-white/80 text-gray-500 px-1.5 py-0.5">
-            Advertisement
-          </span>
-
-        </div>
+        <PrideTimesAd variant="first" />
 
         {/* =================================================
             MAIN HERO + MORE STORIES
@@ -625,29 +604,7 @@ export function CybersecurityPage() {
             SECOND ADVERTISEMENT
         ================================================= */}
 
-        <div className="w-full h-[68px] md:h-[76px] bg-[#17313A] flex items-center justify-center my-10 md:my-12 relative">
-
-          <div className="text-center text-white">
-
-            <p className="text-[8px] font-bold uppercase tracking-[0.22em] text-cyan-300">
-              GOOGLE ADSENSE
-            </p>
-
-            <p className="mt-1 text-[12px] md:text-[14px] font-semibold">
-              Business Solutions | Powered by The Pride Times
-            </p>
-
-            <p className="text-[8px] text-cyan-200 mt-0.5">
-              728 × 90 • Leaderboard
-            </p>
-
-          </div>
-
-          <span className="absolute top-1 right-1 text-[7px] bg-white/80 text-gray-500 px-1.5 py-0.5">
-            Advertisement
-          </span>
-
-        </div>
+        <PrideTimesAd variant="second" />
 
         {/* =================================================
             SPONSORSHIP
@@ -968,6 +925,7 @@ export function CybersecurityPage() {
 
       </div>
 
+      
     </main>
   );
 }
