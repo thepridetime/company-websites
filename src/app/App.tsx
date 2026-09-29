@@ -37,7 +37,7 @@ import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
 import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
 import { AboutUsPage } from "./components/pages/AboutUsPage";
-import AdSlot from "./components/AdSlot";
+//import AdSlot from "./components/AdSlot";
 
 // ============================================================
 // LEGAL / SYSTEM PAGES
@@ -99,6 +99,7 @@ interface MagazineLayoutProps {
     //</div>
   //);
 //}
+
 function MagazineLayout({
   children,
   showLeftSidebar = false,
@@ -110,8 +111,6 @@ function MagazineLayout({
       <Header />
       <MarketsTicker />
 
-      <AdSlot type="top" />
-
       <PageLayout
         showLeftSidebar={showLeftSidebar}
         showRightSidebar={showRightSidebar}
@@ -119,8 +118,6 @@ function MagazineLayout({
       >
         {children}
       </PageLayout>
-
-      <AdSlot type="bottom" />
 
       <Footer />
     </div>
