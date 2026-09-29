@@ -2,12 +2,12 @@ import { Clock } from "lucide-react";
 import { Link } from "react-router";
 import { specialArticlePathByTitle } from "../../data/specialArticleData";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 import Smartc1Img from "../../../imports/Smartc1.png";
 import Smartc2Img from "../../../imports/Smartc2.png";
 import Smartc3Img from "../../../imports/Smartc3.png";
-import Smartc4Img from "../../../imports/Smartc4.png";
-import { PrideTimesAd } from "../AdSenseSlots";
+import Smartc4Img from "../../../imports/Smartc4.png";
 
 /* =========================================================
    TYPES
@@ -47,7 +47,13 @@ function SectionHeader({ title }: { title: string }) {
    ADVERTISEMENT BANNER
 ========================================================= */
 
-
+function AdBanner({ bottom = false }: { bottom?: boolean }) {
+  return (
+    <section className={bottom ? "mt-6 md:mt-7" : "mt-4 md:mt-5"}>
+      <PrideTimesAd variant={bottom ? "second" : "first"} />
+    </section>
+  );
+}
 
 /* =========================================================
    HERO DATA
@@ -55,11 +61,11 @@ function SectionHeader({ title }: { title: string }) {
 
 const hero = {
   category: "SMART CITIES",
-  title: "Cities of Tomorrow: Building Smarter & Greener Urban Ecosystems",
+  title: "AI Platforms Expand Into Smart-City Functions From Retail to Public Safety",
   excerpt:
-    "From Singapore's data-driven governance to Copenhagen's carbon-neutral neighborhoods, the blueprint for the 21st century city is taking shape.",
-  author: "Sagar Kumar",
-  time: "September 15, 2026",
+    "Smart-city development is accelerating as AI, IoT, grid modernization, autonomous mobility and connected logistics converge around the needs of modern urban infrastructure.",
+  author: "The Pride Times Editorial Desk",
+  time: "September 29, 2026",
   image: Smartc1Img,
 };
 
@@ -69,21 +75,21 @@ const hero = {
 
 const moreStories: Story[] = [
   {
-    category: "SMART CITIES",
-    title: "NEOM's The Line: 170km Linear City Begins First Phase Occupancy",
-    time: "5 hr ago",
+    category: "AI & URBAN INTELLIGENCE",
+    title: "AI Platforms Expand Into Smart-City Functions From Retail to Public Safety",
+    time: "Today",
     image: Smartc2Img,
   },
   {
-    category: "URBAN FUTURES",
-    title: "Cities Accelerate Digital Infrastructure Investment",
-    time: "7 hr ago",
+    category: "ENERGY & INFRASTRUCTURE",
+    title: "Grid Modernization Becomes Critical as EVs, Data Centers and Clean Energy Expand",
+    time: "Today",
     image: Smartc3Img,
   },
   {
-    category: "SMART CITIES",
-    title: "Urban Technology Reshapes the Future of City Planning",
-    time: "9 hr ago",
+    category: "URBAN MOBILITY",
+    title: "Robotaxis and Delivery Drones Reshape Urban Mobility and Logistics Planning",
+    time: "Today",
     image: Smartc4Img,
   },
 ];
@@ -94,64 +100,68 @@ const moreStories: Story[] = [
 
 const latestNews: LatestStory[] = [
   {
-    category: "TECHNOLOGY",
+    category: "AI & URBAN INTELLIGENCE",
     badge: "HOT",
-    title:
-      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-    excerpt:
-      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South...",
-    time: "12 min ago",
+    title: "AI Platforms Expand Into Smart-City Functions From Retail to Public Safety",
+    excerpt: "Camera-agnostic AI and connected data platforms are expanding into retail analytics, healthcare monitoring, public safety and wider urban operations.",
+    time: "Today",
     image: Smartc2Img,
   },
   {
-    category: "TECHNOLOGY",
+    category: "ENERGY & INFRASTRUCTURE",
     badge: "HOT",
-    title:
-      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
-    excerpt:
-      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
+    title: "Grid Modernization Becomes Critical as EVs, Data Centers and Clean Energy Expand",
+    excerpt: "Urban power networks are under growing pressure to support EV charging, data centers and increasingly variable clean-energy generation.",
+    time: "Today",
     image: Smartc3Img,
   },
   {
-    category: "TECHNOLOGY",
+    category: "URBAN MOBILITY",
     badge: "",
-    title:
-      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
-    excerpt:
-      "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing...",
-    time: "2 hr ago",
+    title: "Robotaxis and Delivery Drones Reshape Urban Mobility and Logistics Planning",
+    excerpt: "Autonomous transport is changing how cities plan roads, curb space, delivery networks and the movement of people and goods.",
+    time: "Today",
     image: Smartc4Img,
   },
   {
-    category: "TECHNOLOGY",
+    category: "LOGISTICS & CONNECTIVITY",
     badge: "",
-    title:
-      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
-    excerpt:
-      "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative...",
-    time: "3 hr ago",
+    title: "DP World Expands Southeast Asia Logistics Network With New Cross-Border Storage Capacity",
+    excerpt: "New logistics capacity near Singapore highlights the growing connection between smart-city infrastructure, regional trade and cross-border supply chains.",
+    time: "Today",
     image: Smartc1Img,
   },
   {
-    category: "TECHNOLOGY",
+    category: "MARITIME LOGISTICS",
     badge: "",
-    title:
-      "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
-    excerpt:
-      "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in 14 of 18 enterprise reasoning...",
-    time: "5 hr ago",
+    title: "Jones Act Waiver Changes the Operating Picture for U.S. Coastal Shipping",
+    excerpt: "A temporary waiver framework is affecting certain coastal cargo movements, adding a policy dimension to logistics and infrastructure planning.",
+    time: "Today",
     image: Smartc2Img,
   },
   {
-    category: "TECHNOLOGY",
+    category: "ENERGY MANAGEMENT",
     badge: "",
-    title:
-      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
-    excerpt:
-      "The latest satellite constellation expansion brings high-speed internet to remote regions across Africa, South Asia, and Latin...",
-    time: "6 hr ago",
+    title: "AI and IoT Turn Energy Management Into a Real-Time Urban Operating System",
+    excerpt: "Connected sensors and AI-driven analytics are helping operators monitor demand, detect inefficiencies and coordinate energy use.",
+    time: "Today",
     image: Smartc3Img,
+  },
+  {
+    category: "PUBLIC SAFETY",
+    badge: "",
+    title: "Camera-Agnostic AI Broadens the Role of Urban Video Infrastructure",
+    excerpt: "AI analytics are being designed to work across diverse camera environments and support wider urban operations beyond conventional security.",
+    time: "Today",
+    image: Smartc4Img,
+  },
+  {
+    category: "URBAN INFRASTRUCTURE",
+    badge: "",
+    title: "Smart-City Investment Shifts Toward Integrated Urban Infrastructure",
+    excerpt: "The next phase connects energy, mobility, logistics, public services and digital infrastructure instead of treating them as isolated projects.",
+    time: "Today",
+    image: Smartc1Img,
   },
 ];
 
@@ -162,33 +172,7 @@ const latestNews: LatestStory[] = [
 function SponsoredContent() {
   return (
     <aside className="w-full">
-      <div className="border border-[#eee] rounded-md overflow-hidden bg-white">
-        <div className="px-2 py-1.5 flex items-center justify-between bg-[#faf9f4]">
-          <span className="text-[7px] font-bold tracking-[0.12em] uppercase text-[#999]">
-            Sponsored Content
-          </span>
-
-          <span className="text-[7px] text-[#aaa]">
-            Ad
-          </span>
-        </div>
-
-        <div className="h-[150px] md:h-[160px] bg-[#171d3b] flex flex-col items-center justify-center text-center px-3">
-          <p className="text-[8px] font-bold tracking-[0.12em] text-[#e7c829] uppercase">
-            Featured Partner
-          </p>
-
-          <p className="mt-2 text-[12px] font-semibold text-white">
-            Your Ad Here
-          </p>
-
-          <p className="mt-1 text-[8px] text-gray-300">
-            Reach 2M+ business readers
-          </p>
-        </div>
-      </div>
-
-      {/* MORE STORIES */}
+      <PrideTimesAd variant="third" />
 
       <div className="mt-5">
         <SectionHeader title="More Stories" />
@@ -226,6 +210,19 @@ function SponsoredContent() {
         </div>
       </div>
     </aside>
+  );
+}
+
+/* =========================================================
+   ADSENSE
+========================================================= */
+
+function SectionAds() {
+  return (
+    <div className="mt-5 md:mt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-5 items-start">
+      <PrideTimesAd variant="fifth" />
+      <PrideTimesAd variant="fourth" />
+    </div>
   );
 }
 
@@ -318,7 +315,7 @@ function LatestNewsCard({ news }: { news: LatestStory }) {
 
         <div className="mt-2 flex items-center justify-between gap-2 text-[7px] text-[#aaa]">
           <span className="truncate">
-            By Sagar Kumar
+            By The Pride Times Editorial Desk
           </span>
 
           <span className="flex items-center gap-1 whitespace-nowrap">
@@ -442,8 +439,7 @@ export function SmartCitiesPage() {
                 </h1>
 
                 <p className="mt-1 text-[12px] md:text-[13px] text-[#777]">
-                  Urban technology, sustainable infrastructure, and future city
-                  design.
+                  AI, IoT, urban infrastructure, mobility, energy and the future of connected cities.
                 </p>
               </div>
 
@@ -458,7 +454,7 @@ export function SmartCitiesPage() {
             TOP ADVERTISEMENT
         ================================================= */}
 
-        <PrideTimesAd variant="first" />
+        <AdBanner />
 
         {/* =================================================
             HERO + SIDEBAR
@@ -498,11 +494,13 @@ export function SmartCitiesPage() {
             SECOND ADVERTISEMENT
         ================================================= */}
 
-        <PrideTimesAd variant="second" />
+        <AdBanner bottom />
 
         {/* =================================================
             SPONSORED EVENTS
         ================================================= */}
+
+        <SectionAds />
 
         <SponsorshipSection />
 
@@ -511,8 +509,9 @@ export function SmartCitiesPage() {
         ================================================= */}
 
         <Newsletter />
-        
-    </main>
+      </main>
     </div>
   );
 }
+
+export default SmartCitiesPage;
