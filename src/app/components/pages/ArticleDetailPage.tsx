@@ -71,6 +71,18 @@ function getSectionPath(section: string) {
     case "Technology":
       return "/technology";
 
+    case "Smart Cities":
+      return "/smart-cities";
+
+    case "Supply Chain":
+      return "/supply-chain";
+
+    case "White House Watch":
+      return "/white-house-watch";
+
+    case "World & Geopolitics":
+      return "/world";
+
     default:
       return "/ceospotlight";
   }
@@ -105,6 +117,18 @@ function getSectionName(section: string) {
 
     case "Technology":
       return "Technology";
+
+    case "Smart Cities":
+      return "Smart Cities";
+
+    case "Supply Chain":
+      return "Supply Chain";
+
+    case "White House Watch":
+      return "White House Watch";
+
+    case "World & Geopolitics":
+      return "World & Geopolitics";
 
     default:
       return "CEO Spotlight";
@@ -142,7 +166,19 @@ function SpecialArticleEditorial({
 
   const sectionPath = getSectionPath(article.section);
   const sectionName = getSectionName(article.section);
-  const showSectionAds = ["Innovation", "CEO Spotlight", "Healthcare", "White House Watch", "World & Geopolitics"].includes(article.section);
+  const showSectionAds = [
+    "Innovation",
+    "CEO Spotlight",
+    "Technology",
+    "Cybersecurity",
+    "Healthcare",
+    "Manufacturing",
+    "Smart Cities",
+    "Supply Chain",
+    "Energy",
+    "White House Watch",
+    "World & Geopolitics",
+  ].includes(article.section);
 
   return (
     <article className="bg-[#f8f7f3] text-[#171717]">
@@ -601,7 +637,7 @@ function SpecialArticleEditorial({
                     </p>
 
                     <p className="mt-1 text-sm">
-                      Sagar Kumar
+                      The Pride Times Editorial Desk
                     </p>
                   </div>
 
@@ -1019,7 +1055,7 @@ function HomepageArticle({
                     <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
                       Editor
                     </p>
-                    <p className="mt-1 text-sm">Sagar Kumar</p>
+                    <p className="mt-1 text-sm">The Pride Times Editorial Desk</p>
                   </div>
 
                   <div>
@@ -1360,7 +1396,7 @@ function MagazineEditorial({
                     <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
                       Editor
                     </p>
-                    <p className="mt-1 text-sm">Sagar Kumar</p>
+                    <p className="mt-1 text-sm">The Pride Times Editorial Desk</p>
                   </div>
 
                   <div>
