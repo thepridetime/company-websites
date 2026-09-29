@@ -1,9 +1,9 @@
-import { PrideTimesAd } from "../AdSenseSlots";
 import { TimeAgo } from "../../utils/timeAgo";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Clock, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 import { technologyArticlePath } from "../../data/technologyNewsData";
+import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
    SECTION HEADER
@@ -34,344 +34,316 @@ function SectionHeader({
 }
 
 /* =========================================================
-   TECHNOLOGY HERO DATA
+   UPDATED TECHNOLOGY INTELLIGENCE — 2026
+   THE PRIDE TIMES
 ========================================================= */
 
 const hero = {
-  category: "TECHNOLOGY",
-  title: "Pagaya Closes $460 Million Revolving Personal Loan Facility",
+  category: "TECHNOLOGY • AI",
+  title:
+    "Artificial Intelligence Becomes the Defining Theme of the Global Technology Landscape",
   excerpt:
-    "Pagaya has closed a $460 million revolving personal loan facility, highlighting continued activity in technology-driven financial services and alternative lending markets.",
-  author: "Sagar Kumar",
-  publishedAt: "2026-09-22T10:00:00Z",
+    "AI is moving from assistive software into autonomous decision-making systems across healthcare, logistics, finance and defense. The shift is changing enterprise workflows, infrastructure requirements and the regulatory questions surrounding advanced technology.",
+  author: "The Pride Times Editorial Desk",
+  publishedAt: "2026-09-29T09:00:00Z",
   image:
-    "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=80",
+    "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1400&q=80",
 };
 
 const hero1 = {
-  category: "AI",
-  title: "AI Startup Heidi Doubles Valuation to $900 Million in New Round",
+  category: "AI INFRASTRUCTURE",
+  title:
+    "Agentic AI Moves Into Enterprise Workflows as Companies Automate Decisions",
   excerpt:
-    "AI startup Heidi has raised new funding that doubles its valuation to $900 million, highlighting continued investor interest in artificial intelligence startups.",
-  author: "Sagar Kumar",
-  publishedAt: "2026-09-22T09:30:00Z",
+    "Agentic AI systems are moving beyond simple assistance toward multi-step planning, execution and decision-making, including embedded procurement and workflow tools.",
+  author: "The Pride Times Editorial Desk",
+  publishedAt: "2026-09-29T08:30:00Z",
   image:
-    "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1000&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80",
 };
 
 const hero2 = {
-  category: "AI",
-  title: "Anthropic CEO Dario Amodei to Brief UN Security Council on AI",
+  category: "AI POWER DEMAND",
+  title:
+    "AI Data Centers Push Power Security to the Center of Technology Strategy",
   excerpt:
-    "Anthropic CEO Dario Amodei is set to brief the United Nations Security Council on artificial intelligence as governments continue examining the opportunities and risks surrounding advanced AI systems.",
-  author: "Sagar Kumar",
-  publishedAt: "2026-09-22T08:30:00Z",
+    "AI infrastructure is creating a new technology constraint: access to secure electricity. IEA projections put global data-center electricity demand on a trajectory toward almost 1,000 TWh by 2030.",
+  author: "The Pride Times Editorial Desk",
+  publishedAt: "2026-09-29T08:00:00Z",
   image:
-    "https://images.unsplash.com/photo-1633412802994-5c058f151b66?auto=format&fit=crop&w=1000&q=80",
+    "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1000&q=80",
 };
-
-/* =========================================================
-   TECHNOLOGY MORE STORIES
-========================================================= */
 
 const threatAlerts = [
   {
     id: 1,
-    severity: "TECH",
+    severity: "AI",
     title:
-      "Data Center Firm Acceleration, Becker Seek $720 Million in IPO",
-    publishedAt: "2026-09-22T08:19:00Z",
+      "Agentic AI and Embedded Procurement Tools Enter Enterprise Workflows",
+    publishedAt: "2026-09-29T08:19:00Z",
   },
   {
     id: 2,
-    severity: "BUSINESS",
+    severity: "POWER",
     title:
-      "DoorDash to Pay $132 Million to NYC, Workers Over Missing Wages",
-    publishedAt: "2026-09-22T07:19:00Z",
+      "Secure Power Access Emerges as a Critical Constraint for AI Infrastructure",
+    publishedAt: "2026-09-29T07:45:00Z",
   },
   {
     id: 3,
-    severity: "TECH",
+    severity: "INFRA",
     title:
-      "Peloton Debuts Three New Treadmills, Including $2,195 Foldable Model",
-    publishedAt: "2026-09-22T06:19:00Z",
+      "Global Data-Center Electricity Demand Tracks Toward Almost 1,000 TWh by 2030",
+    publishedAt: "2026-09-29T07:15:00Z",
   },
   {
     id: 4,
-    severity: "MARKETS",
+    severity: "GLOBAL",
     title:
-      "SoftBank Draws Over $20 Billion of Early Interest in Junk Bond",
-    publishedAt: "2026-09-22T05:19:00Z",
+      "U.S.-China AI Competition Intensifies Across Model Capability and Deployment",
+    publishedAt: "2026-09-29T06:45:00Z",
   },
   {
     id: 5,
-    severity: "AI",
+    severity: "ENTERPRISE",
     title:
-      "AI Cloud Startup Verda Raises $189 Million in Funding Round",
-    publishedAt: "2026-09-22T04:19:00Z",
+      "EY Expands NVIDIA-Powered Enterprise AI Capabilities With LangChain Validation",
+    publishedAt: "2026-09-29T06:15:00Z",
   },
 ];
-
-/* =========================================================
-   LATEST TECHNOLOGY NEWS
-========================================================= */
 
 const stories = [
   {
     id: 1,
-    category: "TECHNOLOGY",
+    category: "ARTIFICIAL INTELLIGENCE",
     title:
-      "Pagaya Closes $460 Million Revolving Personal Loan Facility",
-    publishedAt: "2026-09-22T10:00:00Z",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80",
-  },
-  {
-    id: 2,
-    category: "AI",
-    title:
-      "AI Startup Heidi Doubles Valuation to $900 Million in New Round",
-    publishedAt: "2026-09-22T09:30:00Z",
+      "Artificial Intelligence Becomes the Defining Theme of the Global Technology Landscape",
+    publishedAt: "2026-09-29T09:00:00Z",
     image:
       "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=700&q=80",
   },
   {
-    id: 3,
-    category: "AI",
+    id: 2,
+    category: "AI AGENTS",
     title:
-      "Anthropic CEO Dario Amodei to Brief UN Security Council on AI",
-    publishedAt: "2026-09-22T08:30:00Z",
+      "Agentic AI Moves Into Enterprise Workflows and Procurement",
+    publishedAt: "2026-09-29T08:30:00Z",
     image:
-      "https://images.unsplash.com/photo-1633412802994-5c058f151b66?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=700&q=80",
   },
   {
-    id: 4,
-    category: "DATA CENTERS",
+    id: 3,
+    category: "AI INFRASTRUCTURE",
     title:
-      "Data Center Firm Acceleration, Becker Seek $720 Million in IPO",
-    publishedAt: "2026-09-22T08:00:00Z",
+      "Data-Center Electricity Demand Could Approach 1,000 TWh by 2030",
+    publishedAt: "2026-09-29T08:00:00Z",
     image:
       "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=700&q=80",
   },
   {
-    id: 5,
-    category: "BUSINESS",
+    id: 4,
+    category: "ENERGY & AI",
     title:
-      "DoorDash to Pay $132 Million to NYC, Workers Over Missing Wages",
-    publishedAt: "2026-09-22T07:19:00Z",
+      "Secure Power Access Becomes a Strategic Requirement for AI Infrastructure",
+    publishedAt: "2026-09-29T07:30:00Z",
     image:
-      "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    id: 5,
+    category: "ENTERPRISE AI",
+    title:
+      "EY Expands NVIDIA-Powered Enterprise AI Capabilities With LangChain Validation",
+    publishedAt: "2026-09-29T07:00:00Z",
+    image:
+      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 6,
-    category: "TECHNOLOGY",
+    category: "GLOBAL AI RACE",
     title:
-      "Peloton Debuts Three New Treadmills, Including $2,195 Foldable Model",
-    publishedAt: "2026-09-22T06:19:00Z",
+      "U.S.-China AI Competition Intensifies Around Capability and Deployment",
+    publishedAt: "2026-09-29T06:30:00Z",
     image:
-      "https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 7,
-    category: "MARKETS",
+    category: "REGULATION",
     title:
-      "SoftBank Draws Over $20 Billion of Early Interest in Junk Bond",
-    publishedAt: "2026-09-22T05:19:00Z",
+      "AI Adoption Moves From Assistive to Autonomous, Increasing Regulatory Pressure",
+    publishedAt: "2026-09-29T06:00:00Z",
     image:
-      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=700&q=80",
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 8,
-    category: "TECHNOLOGY",
+    category: "ECONOMY",
     title:
-      "Chinese App Founder Sells $110 Million in Shares to Pay Taxman",
-    publishedAt: "2026-09-22T04:30:00Z",
+      "Broader AI Adoption Becomes a Potential Upside Risk to the Global Growth Outlook",
+    publishedAt: "2026-09-29T05:30:00Z",
     image:
       "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=700&q=80",
   },
   {
     id: 9,
-    category: "AI",
+    category: "ENTERPRISE TECHNOLOGY",
     title:
-      "AI Cloud Startup Verda Raises $189 Million in Funding Round",
-    publishedAt: "2026-09-22T04:00:00Z",
+      "Technology Leaders Rework Infrastructure Plans Around Compute, Power and Autonomy",
+    publishedAt: "2026-09-29T05:00:00Z",
     image:
       "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=80",
   },
 ];
 
-/* =========================================================
-   TECHNOLOGY & AI
-========================================================= */
-
 const aiInfraStories = [
   {
     id: 1,
     title:
-      "Chinese App Founder Sells $110 Million in Shares to Pay Taxman",
-    publishedAt: "2026-09-22T05:00:00Z",
+      "Agentic AI is entering enterprise workflows as companies move from assistance toward autonomous execution.",
+    publishedAt: "2026-09-29T08:30:00Z",
   },
   {
     id: 2,
     title:
-      "AI Cloud Startup Verda Raises $189 Million in Funding Round",
-    publishedAt: "2026-09-22T04:00:00Z",
+      "Embedded AI procurement tools are beginning to connect software intelligence with purchasing workflows.",
+    publishedAt: "2026-09-29T08:15:00Z",
   },
   {
     id: 3,
     title:
-      "Trump's Nvidia Deal Turns Armenia Into Surprising AI Hotspot",
-    publishedAt: "2026-09-22T03:00:00Z",
+      "Data-center electricity demand is projected to approach 1,000 TWh by 2030, increasing pressure on power systems.",
+    publishedAt: "2026-09-29T08:00:00Z",
   },
   {
     id: 4,
     title:
-      "SoftBank Draws Over $20 Billion of Early Interest in Junk Bond",
-    publishedAt: "2026-09-22T02:00:00Z",
+      "Secure power access is becoming a critical AI infrastructure requirement, with power availability increasingly competing with construction readiness.",
+    publishedAt: "2026-09-29T07:45:00Z",
   },
   {
     id: 5,
     title:
-      "Peloton Debuts Three New Treadmills, Including $2,195 Foldable Model",
-    publishedAt: "2026-09-22T01:00:00Z",
+      "AI adoption is shifting from assistive tools toward autonomous systems, raising new questions for governance and regulation.",
+    publishedAt: "2026-09-29T07:30:00Z",
   },
 ];
 
-/* =========================================================
-   TECHNOLOGY WATCH
-========================================================= */
-
 const zeroTrustNote = {
-  title: "Technology Watch: The AI Infrastructure Race",
+  title: "Technology Watch: The AI Autonomy and Infrastructure Race",
   body:
-    "The expansion of artificial intelligence is increasing demand for computing infrastructure, data centers and specialized hardware. Technology companies are balancing rapid AI investment with financing requirements, regulatory scrutiny and the growing cost of operating advanced systems.",
+    "Artificial intelligence is no longer only a software-product story. The next phase combines autonomous decision-making, enterprise workflow integration, model capability, specialized compute and dependable electricity. Companies now have to evaluate AI deployment alongside infrastructure availability, regulatory requirements and operating costs.",
 };
-
-/* =========================================================
-   TECHNOLOGY MARKET MATRIX
-========================================================= */
 
 const responseMatrix = [
   {
-    threat: "AI Infrastructure",
-    control: "Compute Capacity",
-    risk: "Capital Intensity",
-    cadence: "Expanding",
+    threat: "Agentic AI",
+    control: "Autonomous Workflows",
+    risk: "Governance + Reliability",
+    cadence: "Accelerating",
   },
   {
-    threat: "AI Startups",
-    control: "Venture Funding",
-    risk: "Valuation Pressure",
-    cadence: "Ongoing",
+    threat: "AI Procurement",
+    control: "Embedded Enterprise Tools",
+    risk: "Decision Oversight",
+    cadence: "Emerging",
   },
   {
     threat: "Data Centers",
-    control: "Power + Capacity",
-    risk: "Infrastructure Costs",
+    control: "Compute + Power",
+    risk: "Electricity Availability",
     cadence: "High Priority",
   },
   {
-    threat: "Cloud Computing",
-    control: "Enterprise Demand",
-    risk: "Margin Pressure",
-    cadence: "Quarterly",
+    threat: "AI Models",
+    control: "Capability + Deployment",
+    risk: "Geopolitical Competition",
+    cadence: "Intensifying",
   },
   {
-    threat: "Consumer Technology",
-    control: "Product Innovation",
-    risk: "Demand Shifts",
-    cadence: "Emerging",
+    threat: "AI Regulation",
+    control: "Autonomous Adoption",
+    risk: "Compliance Complexity",
+    cadence: "Expanding",
   },
 ];
-
-/* =========================================================
-   TECHNOLOGY BUSINESS NEWS
-========================================================= */
 
 const defenseNews = [
   {
     id: 1,
     title:
-      "Pagaya Closes $460 Million Revolving Personal Loan Facility",
-    publishedAt: "2026-09-22T10:00:00Z",
+      "AI Moves From Assistive Tools Toward Autonomous Decision-Making Systems",
+    publishedAt: "2026-09-29T09:00:00Z",
   },
   {
     id: 2,
     title:
-      "AI Startup Heidi Doubles Valuation to $900 Million in New Round",
-    publishedAt: "2026-09-22T09:30:00Z",
+      "Agentic AI and Embedded Procurement Tools Enter Enterprise Workflows",
+    publishedAt: "2026-09-29T08:30:00Z",
   },
   {
     id: 3,
     title:
-      "Anthropic CEO Dario Amodei to Brief UN Security Council on AI",
-    publishedAt: "2026-09-22T08:30:00Z",
+      "Data-Center Electricity Demand Tracks Toward Almost 1,000 TWh by 2030",
+    publishedAt: "2026-09-29T08:00:00Z",
   },
   {
     id: 4,
     title:
-      "Data Center Firm Acceleration, Becker Seek $720 Million in IPO",
-    publishedAt: "2026-09-22T08:00:00Z",
+      "Secure Power Access Becomes Critical to the Next AI Infrastructure Buildout",
+    publishedAt: "2026-09-29T07:30:00Z",
   },
   {
     id: 5,
     title:
-      "Trump's Nvidia Deal Turns Armenia Into Surprising AI Hotspot",
-    publishedAt: "2026-09-22T03:00:00Z",
+      "EY Expands NVIDIA-Powered Enterprise AI Capabilities With LangChain Validation",
+    publishedAt: "2026-09-29T07:00:00Z",
   },
 ];
-
-/* =========================================================
-   TECHNOLOGY STOCKS
-========================================================= */
 
 const marketData = [
   {
-    company: "Nvidia",
-    ticker: "NVDA",
-    price: "$184.30",
-    change: "+2.4%",
+    company: "NVIDIA",
+    ticker: "AI INFRA",
+    price: "AI compute",
+    change: "Core enabler",
     up: true,
   },
   {
-    company: "Microsoft",
-    ticker: "MSFT",
-    price: "$511.20",
-    change: "+1.7%",
+    company: "Data Centers",
+    ticker: "INFRA",
+    price: "≈1,000 TWh",
+    change: "2030 demand path",
     up: true,
   },
   {
-    company: "Apple",
-    ticker: "AAPL",
-    price: "$245.80",
-    change: "+0.9%",
+    company: "Enterprise AI",
+    ticker: "AGENTS",
+    price: "Autonomous",
+    change: "Adoption shift",
     up: true,
   },
   {
-    company: "Amazon",
-    ticker: "AMZN",
-    price: "$231.40",
-    change: "-0.4%",
-    up: false,
+    company: "Power Systems",
+    ticker: "ENERGY",
+    price: "Strategic",
+    change: "Access constraint",
+    up: true,
   },
   {
-    company: "Meta Platforms",
-    ticker: "META",
-    price: "$774.60",
-    change: "+1.3%",
+    company: "Global AI",
+    ticker: "MACRO",
+    price: "3.1%",
+    change: "IMF 2026 growth",
     up: true,
   },
 ];
 
-/* =========================================================
-   SPONSORSHIP CARDS
-========================================================= */
-
 const sponsorships = [
-  "Global Finance Summit 2026",
-  "Tech Leaders Forum",
-  "Energy Transition Conference",
   "AI & Business World",
+  "Global Technology Forum",
+  "Future Infrastructure Summit",
+  "Enterprise AI Leadership Forum",
 ];
 
 /* =========================================================
@@ -383,7 +355,8 @@ function SecondaryArticle({
 }: {
   data: typeof hero1;
 }) {
-  const articleId = data.title === hero1.title ? "tech-heidi" : "tech-anthropic";
+  const articleId =
+    data.title === hero1.title ? "tech-heidi" : "tech-anthropic";
 
   return (
     <Link to={technologyArticlePath(articleId)} className="group block">
@@ -449,8 +422,8 @@ export function TechnologyPage() {
             </h1>
 
             <p className="mt-2 text-[12px] md:text-[13px] text-[#77736D]">
-              AI, technology companies, startups, data centers, markets and
-              the future of business.
+              AI, autonomous systems, enterprise technology, data centers,
+              power demand and the global AI race.
             </p>
 
           </div>
@@ -460,7 +433,9 @@ export function TechnologyPage() {
             TOP ADVERTISEMENT
         ================================================= */}
 
-        <PrideTimesAd variant="first" className="my-4 md:my-5" />
+        <div className="my-4 md:my-5">
+          <PrideTimesAd variant="first" />
+        </div>
 
         {/* =================================================
             MAIN HERO + MORE STORIES
@@ -472,7 +447,10 @@ export function TechnologyPage() {
               MAIN HERO
           ================================================= */}
 
-          <Link to={technologyArticlePath("tech-pagaya")} className="group block">
+          <Link
+            to={technologyArticlePath("tech-pagaya")}
+            className="group block"
+          >
 
             <div className="overflow-hidden rounded-lg bg-gray-100">
 
@@ -523,38 +501,10 @@ export function TechnologyPage() {
 
           <aside className="xl:border-l xl:border-gray-300 xl:pl-6">
 
-            {/* SPONSORED BOX */}
+            {/* REAL ADSENSE */}
 
-            <div className="border border-gray-200 rounded-md overflow-hidden mb-5">
-
-              <div className="px-3 py-2 bg-[#F7F4EC]">
-
-                <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-gray-500">
-                  Sponsored Content
-                </span>
-
-              </div>
-
-              <div className="h-[150px] md:h-[170px] bg-[#101731] flex items-center justify-center text-center px-4">
-
-                <div>
-
-                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-yellow-400">
-                    Featured Partner
-                  </p>
-
-                  <p className="text-white text-[14px] font-semibold mt-2">
-                    Your Ad Here
-                  </p>
-
-                  <p className="text-gray-300 text-[9px] mt-1">
-                    Reach 2M+ business readers
-                  </p>
-
-                </div>
-
-              </div>
-
+            <div className="mb-5">
+              <PrideTimesAd variant="second" />
             </div>
 
             {/* MORE STORIES */}
@@ -573,7 +523,14 @@ export function TechnologyPage() {
 
                 <Link
                   key={story.id}
-                  to={technologyArticlePath(["tech-datacenter","tech-doordash","tech-peloton","tech-softbank"][story.id - 1] || "tech-pagaya")}
+                  to={technologyArticlePath(
+                    [
+                      "tech-heidi",
+                      "tech-datacenter",
+                      "tech-anthropic",
+                      "tech-peloton",
+                    ][story.id - 1] || "tech-pagaya"
+                  )}
                   className="block py-3 group"
                 >
 
@@ -624,7 +581,19 @@ export function TechnologyPage() {
 
               <Link
                 key={story.id}
-                to={technologyArticlePath(["tech-pagaya","tech-heidi","tech-anthropic","tech-datacenter","tech-doordash","tech-peloton","tech-softbank","tech-founder","tech-verda"][story.id - 1] || "tech-pagaya")}
+                to={technologyArticlePath(
+                  [
+                    "tech-pagaya",
+                    "tech-heidi",
+                    "tech-anthropic",
+                    "tech-datacenter",
+                    "tech-doordash",
+                    "tech-peloton",
+                    "tech-softbank",
+                    "tech-founder",
+                    "tech-verda",
+                  ][story.id - 1] || "tech-pagaya"
+                )}
                 className="group block"
               >
 
@@ -670,7 +639,9 @@ export function TechnologyPage() {
             SECOND ADVERTISEMENT
         ================================================= */}
 
-        <PrideTimesAd variant="second" className="my-4 md:my-5" />
+        <div className="my-10 md:my-12">
+          <PrideTimesAd variant="fifth" />
+        </div>
 
         {/* =================================================
             SPONSORSHIP
@@ -739,7 +710,15 @@ export function TechnologyPage() {
 
                 <Link
                   key={story.id}
-                  to={technologyArticlePath(["tech-founder","tech-verda","tech-anthropic","tech-softbank","tech-peloton"][story.id - 1] || "tech-pagaya")}
+                  to={technologyArticlePath(
+                    [
+                      "tech-heidi",
+                      "tech-anthropic",
+                      "tech-datacenter",
+                      "tech-peloton",
+                      "tech-softbank",
+                    ][story.id - 1] || "tech-pagaya"
+                  )}
                   className="block py-4 first:pt-0 group"
                 >
 
@@ -886,13 +865,15 @@ export function TechnologyPage() {
 
                 <Link
                   key={item.id}
-                  to={technologyArticlePath([
-                    "tech-pagaya",
-                    "tech-heidi",
-                    "tech-anthropic",
-                    "tech-datacenter",
-                    "tech-anthropic",
-                  ][item.id - 1] || "tech-pagaya")}
+                  to={technologyArticlePath(
+                    [
+                      "tech-pagaya",
+                      "tech-heidi",
+                      "tech-anthropic",
+                      "tech-datacenter",
+                      "tech-doordash",
+                    ][item.id - 1] || "tech-pagaya"
+                  )}
                   className="block py-4 first:pt-0 group"
                 >
 
@@ -982,7 +963,7 @@ export function TechnologyPage() {
           </h2>
 
           <p className="text-[11px] md:text-[12px] text-gray-300 mt-2">
-            Daily briefings on Technology, AI and Business delivered to your inbox.
+            Daily briefings on AI, technology infrastructure and the global digital economy delivered to your inbox.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-2 mt-5 max-w-[520px] mx-auto">
@@ -1005,3 +986,5 @@ export function TechnologyPage() {
     </main>
   );
 }
+
+export default TechnologyPage;
