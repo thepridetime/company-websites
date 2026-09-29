@@ -1002,9 +1002,6 @@ cybersecurityArticles.forEach((article) => {
   article.author = "The Pride Times Editorial Desk";
 });
 
-const internationalBusinessArticles = internationalSeeds.map(buildSectionArticle);
-const startupSuccessArticles = startupSeeds.map(buildSectionArticle);
-
 
 
 /* =========================================================
