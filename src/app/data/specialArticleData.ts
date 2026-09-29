@@ -1,3 +1,8 @@
+declare module "*.png" {
+  const value: string;
+  export default value;
+}
+
 import HC1Img from "../../imports/HC1.png";
 import HC2Img from "../../imports/HC2.png";
 import HC3Img from "../../imports/HC3.png";
@@ -12,6 +17,23 @@ import Smartc4Img from "../../imports/Smartc4.png";
 import SC1Img from "../../imports/SC1.png";
 import SC2Img from "../../imports/SC2.png";
 import SC3Img from "../../imports/SC3.png";
+
+export const specialArticleImages = {
+  hc1: HC1Img,
+  hc2: HC2Img,
+  hc3: HC3Img,
+  hc4: HC4Img,
+  manu1: Manu1Img,
+  manu2: Manu2Img,
+  manu3: Manu3Img,
+  smartc1: Smartc1Img,
+  smartc2: Smartc2Img,
+  smartc3: Smartc3Img,
+  smartc4: Smartc4Img,
+  sc1: SC1Img,
+  sc2: SC2Img,
+  sc3: SC3Img,
+};
 
 export type SpecialArticle = {
   id: string;
@@ -131,13 +153,13 @@ const ceoInterviews = [
   image: image as string,
   readTime: id === 1 ? "35 MIN READ" : id === 2 ? "28 MIN READ" : "42 MIN READ",
   highlights: [
-    `The conversation focuses on ${topic.toLowerCase()} and how leadership decisions translate into execution.`,
+    `The conversation focuses on ${String(topic).toLowerCase()} and how leadership decisions translate into execution.`,
     "Technology, people and organizational culture increasingly influence one another.",
     "Long-term strategy depends on turning broad ambitions into measurable operating priorities.",
     "The interview also highlights the trade-offs leaders face when markets and technology move quickly.",
   ],
   sections: [
-    { heading: "The central leadership question", body: `In this ${topic.toLowerCase()} discussion, the emphasis is on how executives turn a major strategic idea into a repeatable operating model. The challenge is not simply identifying a trend, but deciding where the organization should invest and how quickly.` },
+    { heading: "The central leadership question", body: `In this ${String(topic).toLowerCase()} discussion, the emphasis is on how executives turn a major strategic idea into a repeatable operating model. The challenge is not simply identifying a trend, but deciding where the organization should invest and how quickly.` },
     { heading: "From vision to execution", body: "Successful transformation requires alignment across product teams, finance, operations and customer-facing groups. Clear priorities help organizations avoid spreading resources across too many initiatives while still leaving room for experimentation." },
     { heading: "What comes next", body: "The next phase will be measured through adoption, productivity, customer response and the durability of the underlying business model. Those signals matter because they show whether a leadership thesis is becoming an operating reality." },
   ],
@@ -1008,7 +1030,18 @@ cybersecurityArticles.forEach((article) => {
    SMART CITIES + SUPPLY CHAIN
    Centralized article records for all cards on these pages.
 ========================================================= */
+type SectionArticleSeed = Pick<
+  SpecialArticle,
+  "id" | "section" | "category" | "title" | "dek"
+> &
+  Partial<
+    Pick<
+      SpecialArticle,
+      "image" | "highlights" | "sections" | "keyFacts" | "publishedAt" | "readTime"
+    >
+  >;
 
+<<<<<<< HEAD
 export type SectionArticleSeed = {
   id: string;
   section: "International Business" | "Startup Success";
@@ -1024,12 +1057,17 @@ function buildSectionArticle(seed: SectionArticleSeed): SpecialArticle {
   const subject = seed.title.replace(/[.!?]+$/, "");
 
   return {
+=======
+function buildSectionArticle(seed: SectionArticleSeed): SpecialArticle {
+  return makeArticle({
+>>>>>>> 4df3c45 (Fix missing buildSectionArticle helper and undefined article arrays)
     id: seed.id,
     section: seed.section,
     category: seed.category,
     title: seed.title,
     dek: seed.dek,
     image: seed.image,
+<<<<<<< HEAD
     author: "The Pride Times Editorial Desk",
     publishedAt: seed.publishedAt ?? "September 29, 2026",
     readTime: seed.readTime ?? "6 MIN READ",
@@ -1066,6 +1104,33 @@ function buildSectionArticle(seed: SectionArticleSeed): SpecialArticle {
   };
 }
 
+=======
+    publishedAt: seed.publishedAt,
+    readTime: seed.readTime,
+    highlights: seed.highlights ?? [
+      seed.dek,
+      "Executives and analysts are tracking how this development affects markets, supply chains and long-term strategy.",
+      "Follow-up data releases and official statements will show how durable the shift is.",
+    ],
+    sections: seed.sections ?? [
+      { heading: "What happened", body: seed.dek },
+      {
+        heading: "Why it matters",
+        body: "Developments like this shape investment decisions, competitive positioning and policy priorities across the sector. Business leaders are weighing the near-term signals against longer-term structural trends.",
+      },
+      {
+        heading: "What to watch next",
+        body: "Upcoming data releases, official announcements and market reaction over the coming weeks will indicate how lasting the change is.",
+      },
+    ],
+    keyFacts: seed.keyFacts ?? [
+      { label: "Section", value: seed.section },
+      { label: "Category", value: seed.category },
+      { label: "Desk", value: "Executive Intelligence" },
+    ],
+  });
+}
+>>>>>>> 4df3c45 (Fix missing buildSectionArticle helper and undefined article arrays)
 const internationalSeeds: SectionArticleSeed[] = [
   {
     id: "international-china-manufacturing-pmi-542",
@@ -1662,7 +1727,8 @@ const energyArticles: SpecialArticle[] = [
   },
 ];
 
-
+const whiteHouseWatchArticles: SpecialArticle[] = [];
+const worldWatchArticles: SpecialArticle[] = [];
 export const specialArticles: SpecialArticle[] = [
   ...healthcareArticles,
   ...manufacturingArticles,
