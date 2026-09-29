@@ -366,86 +366,431 @@ healthcareArticles.forEach((article) => {
 });
 
 const manufacturingArticles: SpecialArticle[] = [
-  makeArticle({id:"manufacturing-reshoring",section:"Manufacturing",category:"MANUFACTURING",title:"Reshoring Accelerates: US Manufacturing Output Hits 40-Year High",dek:"Semiconductor and EV battery factories are reshaping domestic industrial investment while companies rethink supply-chain resilience.",image:undefined,highlights:["New semiconductor capacity is reshaping industrial investment.","EV battery plants are creating new manufacturing clusters.","Reshoring decisions involve cost, resilience and access to skilled labor.","Automation is increasingly central to the economics of new factories."],sections:[{heading:"Why factories are moving closer to demand",body:"Manufacturers are reassessing supply chains after years of disruption. Proximity to customers, incentives, logistics and geopolitical considerations can all influence where new capacity is built."},{heading:"Semiconductors and batteries lead investment",body:"Strategic technologies such as chips and batteries are attracting large-scale factory investment because they sit at the center of electronics, vehicles and energy systems."},{heading:"Automation changes the factory equation",body:"Modern plants can use robotics, machine vision and software to raise throughput while reducing dependence on repetitive manual work. The result is a different mix of capital, skills and operating costs."},{heading:"The supply-chain test",body:"The long-term effect will depend on whether new facilities can achieve competitive costs, reliable output and stable access to components and talent."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Focus",value:"Reshoring"},{label:"Industries",value:"Semiconductors & EV batteries"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-major-1",section:"Manufacturing",category:'TECHNOLOGY',title:'Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push',dek:'Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Asia.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-major-2",section:"Manufacturing",category:'TECHNOLOGY',title:'Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion',dek:'Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-coverage-1",section:"Manufacturing",category:'QUANTUM COMPUTING',title:'Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved',dek:'IBM and Google announce new advances as enterprise quantum computing moves toward commercial deployment.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'QUANTUM COMPUTING'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-coverage-2",section:"Manufacturing",category:'CONSUMER TECHNOLOGY',title:'Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages',dek:"Apple's latest software update expands on-device translation and generative AI capabilities.",highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'CONSUMER TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-coverage-3",section:"Manufacturing",category:'ARTIFICIAL INTELLIGENCE',title:"Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",dek:"Open-source AI takes center stage as Meta's latest model competes across enterprise reasoning benchmarks.",highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'ARTIFICIAL INTELLIGENCE'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-coverage-4",section:"Manufacturing",category:'SPACE TECHNOLOGY',title:'SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally',dek:'The latest satellite constellation expansion brings high-speed internet to remote regions worldwide.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'SPACE TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-latest-1",section:"Manufacturing",category:'TECHNOLOGY',title:'Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push',dek:'Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Asia.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-latest-2",section:"Manufacturing",category:'TECHNOLOGY',title:'Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion',dek:'Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-latest-3",section:"Manufacturing",category:'TECHNOLOGY',title:'Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved',dek:'IBM and Google announce new advances as enterprise quantum computing moves toward commercial deployment.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-latest-4",section:"Manufacturing",category:'TECHNOLOGY',title:'Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages',dek:"Apple's latest software update expands on-device translation and generative AI capabilities.",highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-latest-5",section:"Manufacturing",category:'TECHNOLOGY',title:"Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",dek:"Open-source AI takes center stage as Meta's latest model competes across enterprise reasoning benchmarks.",highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-latest-6",section:"Manufacturing",category:'TECHNOLOGY',title:'SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally',dek:'The latest satellite constellation expansion brings high-speed internet to remote regions worldwide.',highlights:["Industrial investment is changing the structure of modern production.","Automation and digital systems are becoming central to factory operations.","Supply-chain resilience remains an important strategic consideration.","The next phase will be measured by output, adoption and operating results."],sections:[{heading:"What is changing",body:"Manufacturers are adapting to a more technology-intensive operating environment. New investment decisions increasingly combine production capacity, software, automation and supply-chain strategy."},{heading:"Why it matters",body:"The development can affect costs, productivity, workforce requirements and the location of industrial capacity. The impact varies by industry and by the maturity of the technology involved."},{heading:"What to watch next",body:"Readers can follow factory announcements, investment commitments, production milestones, customer adoption and company guidance to understand how the story develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Category",value:'TECHNOLOGY'},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-more-1",section:"Manufacturing",category:"MANUFACTURING",title:"Foxconn's AI-Driven Factories Reduce Human Labor by 70% in Two Years",dek:"Factories are increasing investment in automation, robotics and AI as manufacturers seek greater throughput, consistency and resilience.",highlights:["AI is becoming part of production planning and factory control.","Automation changes the mix of skills required on the factory floor.","Capital spending decisions depend on measurable productivity gains.","Implementation quality can be as important as the technology itself."],sections:[{heading:"The factory automation shift",body:"Manufacturers are combining robotics, machine vision, predictive maintenance and AI software to redesign production processes. The goal is often a more consistent and data-driven factory rather than simple labor replacement."},{heading:"Workforce implications",body:"Automation can reduce repetitive tasks while increasing demand for technicians, engineers and operators who can work with connected systems. Workforce transitions therefore become part of the investment decision."},{heading:"The next performance signals",body:"Production output, downtime, quality rates, energy use and return on investment will provide clearer evidence of whether new automation programs are delivering the expected results."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Focus",value:"Industrial automation"},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-more-2",section:"Manufacturing",category:"MANUFACTURING",title:'Industrial Automation Investment Reaches New Record as AI Adoption Accelerates',dek:"Factories are increasing investment in automation, robotics and AI as manufacturers seek greater throughput, consistency and resilience.",highlights:["AI is becoming part of production planning and factory control.","Automation changes the mix of skills required on the factory floor.","Capital spending decisions depend on measurable productivity gains.","Implementation quality can be as important as the technology itself."],sections:[{heading:"The factory automation shift",body:"Manufacturers are combining robotics, machine vision, predictive maintenance and AI software to redesign production processes. The goal is often a more consistent and data-driven factory rather than simple labor replacement."},{heading:"Workforce implications",body:"Automation can reduce repetitive tasks while increasing demand for technicians, engineers and operators who can work with connected systems. Workforce transitions therefore become part of the investment decision."},{heading:"The next performance signals",body:"Production output, downtime, quality rates, energy use and return on investment will provide clearer evidence of whether new automation programs are delivering the expected results."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Focus",value:"Industrial automation"},{label:"Format",value:"Industry report"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-autoStories-1",section:"Manufacturing",category:"AUTOMOTIVE & EV",title:'Manufacturing executives say Middle East tensions are inflating supply-chain costs across transportation-equipment networks.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-autoStories-2",section:"Manufacturing",category:"AUTOMOTIVE & EV",title:'Major automotive suppliers announce new labor agreements as manufacturers expand North American production.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-autoStories-3",section:"Manufacturing",category:"AUTOMOTIVE & EV",title:'Toyota expands next-generation EV battery production as global demand for electric vehicles rises.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-autoStories-4",section:"Manufacturing",category:"AUTOMOTIVE & EV",title:"Volkswagen's Wolfsburg plant becomes one of Europe's largest low-carbon automotive facilities.",dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-autoStories-5",section:"Manufacturing",category:"AUTOMOTIVE & EV",title:'Tesla expands manufacturing capacity as next-generation vehicle platform enters production.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-roboticsStories-1",section:"Manufacturing",category:"ROBOTICS & AUTOMATION",title:'Neura raises capital to scale humanoid and industrial robot manufacturing infrastructure.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-roboticsStories-2",section:"Manufacturing",category:"ROBOTICS & AUTOMATION",title:'Boston Dynamics humanoid robots begin pilot assembly operations at a major automotive facility.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-roboticsStories-3",section:"Manufacturing",category:"ROBOTICS & AUTOMATION",title:'Foxconn expands deployment of AI-guided robotic arms across high-volume electronics production.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-roboticsStories-4",section:"Manufacturing",category:"ROBOTICS & AUTOMATION",title:"ABB's new collaborative robot receives safety certification for human-facing assembly lines.",dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-roboticsStories-5",section:"Manufacturing",category:"ROBOTICS & AUTOMATION",title:"Amazon's manufacturing robotics division expands industrial automation research.",dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-semiconductors-1",section:"Manufacturing",category:"SEMICONDUCTORS & ELECTRONICS",title:'US manufacturing commitments continue to rise as AI infrastructure investment accelerates.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-semiconductors-2",section:"Manufacturing",category:"SEMICONDUCTORS & ELECTRONICS",title:'CHIPS Act awards support additional semiconductor manufacturing expansion across the United States.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-semiconductors-3",section:"Manufacturing",category:"SEMICONDUCTORS & ELECTRONICS",title:'TSMC expands advanced chip manufacturing capacity as demand for AI processors grows.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-semiconductors-4",section:"Manufacturing",category:"SEMICONDUCTORS & ELECTRONICS",title:'Samsung announces additional investment in next-generation memory manufacturing.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-semiconductors-5",section:"Manufacturing",category:"SEMICONDUCTORS & ELECTRONICS",title:"Intel's foundry business expands domestic semiconductor production partnerships.",dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-aeroDefense-1",section:"Manufacturing",category:"AEROSPACE & DEFENSE",title:'Airbus backlog reaches new milestone as production ramp-up puts pressure on suppliers.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-aeroDefense-2",section:"Manufacturing",category:"AEROSPACE & DEFENSE",title:'Space manufacturing facilities accelerate production of next-generation launch systems.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-aeroDefense-3",section:"Manufacturing",category:"AEROSPACE & DEFENSE",title:"India's aerospace manufacturing ecosystem expands as domestic production programs grow.",dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
-  makeArticle({id:"manufacturing-industry-aeroDefense-4",section:"Manufacturing",category:"AEROSPACE & DEFENSE",title:'Defense manufacturers increase capacity to strengthen regional supply-chain resilience.',dek:"The development reflects the continuing transformation of industrial technology, production systems and global supply chains.",highlights:["Industrial technology is becoming more connected and automated.","Companies are balancing investment with operating efficiency.","Supply-chain and workforce considerations remain important.","Future results will depend on deployment and measurable performance."],sections:[{heading:"The development",body:"Industrial companies are adopting new technologies and operating models as they respond to changing demand, costs and supply-chain requirements."},{heading:"The operating impact",body:"The effect can appear in productivity, quality, maintenance, logistics and workforce requirements. Results vary depending on implementation and the specific industry."},{heading:"What comes next",body:"Announcements about production, investment, partnerships and customer adoption will provide the clearest signals of how the technology develops."}],keyFacts:[{label:"Desk",value:"Manufacturing"},{label:"Format",value:"Industry report"},{label:"Sector",value:"Industrial technology"},{label:"Publication",value:"The Pride Times"}]}),
-
+  makeArticle({
+    id: "manufacturing-reshoring-2026",
+    section: "Manufacturing",
+    category: "MANUFACTURING",
+    title: "Global Manufacturing Enters a New Cycle as Tariffs, Labor Shortages and Energy Costs Reshape Investment",
+    dek: "Manufacturers are navigating tariff uncertainty, workforce constraints, energy costs and fragmented supply chains while AI and robotics accelerate a new investment cycle highlighted at IMTS 2026.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-demand-output-prices",
+    section: "Manufacturing",
+    category: "MACROECONOMICS",
+    title: "Manufactured-Goods Demand Remains Resilient for Now but Rising Output Prices Create Risk",
+    dek: "Demand for manufactured goods is described as resilient for now, while higher output prices remain a vulnerability for producers and downstream customers.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-hyundai-80-percent-us-suppliers",
+    section: "Manufacturing",
+    category: "AUTOMOTIVE",
+    title: "Hyundai Plans to Source 80% of Vehicle Parts From U.S. Suppliers by 2030",
+    dek: "Hyundai’s sourcing target illustrates how automakers are increasing domestic supplier participation as manufacturing networks respond to tariff uncertainty and resilience requirements.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-mind-robotics-500m",
+    section: "Manufacturing",
+    category: "ROBOTICS",
+    title: "Mind Robotics Raises $500M Series A to Address Western Manufacturing Labor Shortages",
+    dek: "The Rivian spin-off is using large-scale venture funding to develop robotics for manufacturers facing persistent labor shortages across Western markets.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-uber-rivian-50000-robotaxis",
+    section: "Manufacturing",
+    category: "AUTONOMOUS MOBILITY",
+    title: "Uber and Rivian Target 50,000 Autonomous Robotaxis by 2031 With More Than $1B of Planned Uber Investment",
+    dek: "The partnership connects autonomous vehicle manufacturing, fleet deployment and the capital requirements of scaling a large robotaxi network.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-dhl-10-warehousing-sites",
+    section: "Manufacturing",
+    category: "LOGISTICS",
+    title: "DHL Announces 10 Warehousing Sites to Support Data-Center Manufacturing Capacity",
+    dek: "The logistics expansion highlights the physical supply chain required to move equipment and components as data-center manufacturing capacity grows.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-advanced-chip-fault-tracing",
+    section: "Manufacturing",
+    category: "SEMICONDUCTORS",
+    title: "Advanced Chip Makers Push Fault Tracing Earlier as Complex Packaging Raises Defect Risk",
+    dek: "Increasing semiconductor packaging complexity is making earlier fault tracing, process monitoring and quality control more important to manufacturing yield.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-ai-robotics-digital-twins",
+    section: "Manufacturing",
+    category: "SMART MANUFACTURING",
+    title: "AI, Robotics and Digital Twins Transform Factory Operations",
+    dek: "Smart manufacturing combines artificial intelligence, robotics and digital-twin technology to improve production planning, maintenance, quality control and factory simulation.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-imts-2026-ai-robotics",
+    section: "Manufacturing",
+    category: "IMTS 2026",
+    title: "IMTS 2026 Highlights the Acceleration of AI, Robotics and Domestic Manufacturing Investment",
+    dek: "The IMTS 2026 discussion around the American manufacturing revolution places intelligent automation, robotics and domestic supply-chain partnerships at the center of industrial investment.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-domestic-supply-chain-partnerships",
+    section: "Manufacturing",
+    category: "SUPPLY CHAIN",
+    title: "Domestic Supply-Chain Partnerships Become a Larger Part of Manufacturing Strategy",
+    dek: "Companies are strengthening regional supplier relationships as fragmented global networks, tariff uncertainty and resilience requirements influence sourcing decisions.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-supply-chain-fragmentation",
+    section: "Manufacturing",
+    category: "GLOBAL MANUFACTURING",
+    title: "Supply-Chain Fragmentation Forces Manufacturers to Reconsider Production Networks",
+    dek: "Manufacturers are balancing global sourcing efficiencies against the operational cost of more regionalized and diversified production networks.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-energy-costs",
+    section: "Manufacturing",
+    category: "ENERGY & INDUSTRY",
+    title: "Energy Costs Become a Larger Variable in Factory Investment Decisions",
+    dek: "Energy-intensive manufacturers are increasingly considering power availability and cost alongside labor, logistics and market access when evaluating production locations.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-southeast-asia-ai-cybersecurity",
+    section: "Manufacturing",
+    category: "SOUTHEAST ASIA",
+    title: "Thailand and Southeast Asian Manufacturers Balance AI Investment With Cybersecurity Risk",
+    dek: "Manufacturers across Thailand and Southeast Asia are evaluating AI and automation while also weighing cybersecurity exposure and sustainability goals.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-ai-hardware-production",
+    section: "Manufacturing",
+    category: "AI HARDWARE",
+    title: "AI Hardware Demand Raises the Importance of Advanced Manufacturing Quality Control",
+    dek: "The expansion of AI hardware production increases pressure on manufacturers to improve process visibility, defect detection and yield management.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
+  makeArticle({
+    id: "manufacturing-smart-factory-strategy",
+    section: "Manufacturing",
+    category: "INDUSTRY 4.0",
+    title: "The Smart Factory Strategy Moves From Automation Toward Connected Decision-Making",
+    dek: "Modern smart factories increasingly connect machines, production data, digital twins and AI systems so operational decisions can be made with greater visibility.",
+    image: undefined,
+    publishedAt: "September 29, 2026",
+    readTime: "8 MIN READ",
+    highlights: [
+      "Manufacturing investment is being shaped by changing costs, trade conditions and supply-chain requirements.",
+      "AI, robotics and digital twins are becoming more important to industrial operations.",
+      "Workforce availability remains a major driver of automation decisions.",
+      "Companies are balancing resilience with cost, productivity and implementation risk."
+    ],
+    sections: [
+      { heading: "What is changing", body: "The manufacturing environment is being reshaped by tariff uncertainty, labor shortages, energy costs and fragmented supply chains. Companies are reassessing production footprints and supplier relationships while investing in technologies that can improve capacity and visibility." },
+      { heading: "Why the development matters", body: "The shift affects factory economics, sourcing decisions, workforce requirements and the timing of capital investment. The impact will differ by industry, geography and the maturity of the technology being deployed." },
+      { heading: "The role of AI and robotics", body: "Artificial intelligence, industrial robotics and digital twins can support planning, quality control, predictive maintenance and production optimization. Their value depends on reliable data, integration with existing systems and measurable operating results." },
+      { heading: "What to watch next", body: "The clearest signals will come from announced factory investments, supplier commitments, production milestones, robotics deployments, logistics capacity and evidence that new manufacturing systems improve productivity or resilience." }
+    ],
+    keyFacts: [
+      { label: "Section", value: "Manufacturing" },
+      { label: "Coverage", value: "Industrial intelligence" },
+      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Publication", value: "The Pride Times" }
+    ]
+  }),
 ];
 
-healthcareArticles.forEach((article, index) => { article.image = [HC1Img, HC2Img, HC3Img, HC4Img][index % 4]; });
-manufacturingArticles.forEach((article, index) => { article.image = [Manu1Img, Manu2Img, Manu3Img][index % 3]; });
-
-
-
-/* =========================================================
-   CYBERSECURITY ARTICLES
-   These IDs are used by CybersecurityPage cards and the
-   shared ArticleDetailPage route: /article/:id
-========================================================= */
+manufacturingArticles.forEach((article) => {
+  article.author = "The Pride Times Editorial Desk";
+});
 
 const cybersecurityArticles: SpecialArticle[] = [
   makeArticle({
@@ -667,6 +1012,182 @@ const startupSuccessArticles = startupSeeds.map(buildSectionArticle);
    Centralized article records for all cards on these pages.
 ========================================================= */
 
+const internationalSeeds: SectionArticleSeed[] = [
+  {
+    id: "international-china-manufacturing-pmi-542",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "China's Manufacturing Sector Rebounds: PMI Hits 4-Year High of 54.2",
+    dek: "Factory activity surges as domestic consumption recovers and export orders from Global South nations accelerate, defying Western trade barriers.",
+    image: "https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?w=1600&h=900&fit=crop",
+  },
+  {
+    id: "international-india-third-largest-economy",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "India Overtakes Germany as World's 3rd Largest Economy",
+    dek: "India's expanding domestic market, services economy and investment cycle are reshaping its position in the global economic landscape.",
+    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=900&h=600&fit=crop",
+  },
+  {
+    id: "international-eu-us-digital-trade",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce",
+    dek: "A new digital-trade framework is expected to reduce friction for cross-border technology, services and data-driven commerce.",
+    image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=900&h=600&fit=crop",
+  },
+  {
+    id: "international-nvidia-humanoid-robot-push",
+    section: "TECHNOLOGY",
+    title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    category: "TECHNOLOGY",
+    dek: "Nvidia announces an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and Southeast Asia.",
+    image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-alphabet-ai-data-centers",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    dek: "Hyperscaler capital expenditure continues to rise while grid, water and community constraints intensify across key markets.",
+    image: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-quantum-1000-qubit",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    dek: "A reported advance in stable high-qubit computing highlights the race to make quantum systems useful for enterprise workloads.",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-apple-intelligence-ios21",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
+    dek: "Apple's latest software push combines on-device intelligence, translation and generative features in a broader personal-AI strategy.",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-meta-llama4-enterprise",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    dek: "Open-source AI takes center stage as Meta's latest model is reported to perform strongly in enterprise reasoning benchmarks.",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1000&h=650&fit=crop",
+  },
+  {
+    id: "international-starlink-gen3-global-users",
+    section: "International Business",
+    category: "TECHNOLOGY",
+    title: "SpaceX Starlink Gen 3 Delivers 1Gbps to 50 Million New Users Globally",
+    dek: "The latest satellite expansion is aimed at bringing higher-speed connectivity to remote regions across Africa, South Asia and Latin America.",
+    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1000&h=650&fit=crop",
+  },
+  { id: "international-europe-fiscal-buffer", section: "International Business", category: "EUROPE", title: "EU finance ministers agree on joint fiscal buffer to shield eurozone from future energy-price shocks.", dek: "European finance ministers are working on a joint fiscal mechanism intended to reduce the impact of future energy-price volatility." },
+  { id: "international-france-germany-industrial-policy", section: "International Business", category: "EUROPE", title: "France and Germany unveil joint industrial policy to counter Chinese overcapacity in green technology.", dek: "France and Germany are outlining industrial measures focused on competitiveness, clean technology and strategic manufacturing capacity." },
+  { id: "international-uk-eu-youth-mobility", section: "International Business", category: "EUROPE", title: "UK-EU youth mobility scheme enters final negotiation stage after years of post-Brexit deadlock.", dek: "Negotiators are discussing a youth mobility framework intended to shape travel, study and work opportunities between the UK and EU." },
+  { id: "international-italy-no-confidence", section: "International Business", category: "EUROPE", title: "Italy's coalition government survives no-confidence vote tied to pension reform dispute.", dek: "A parliamentary vote over pension reform has highlighted the political and fiscal pressures surrounding Italy's social-security policy." },
+  { id: "international-asean-supply-chain-pact", section: "International Business", category: "ASIA-PACIFIC", title: "ASEAN bloc finalizes regional supply-chain resilience pact covering semiconductors and critical minerals.", dek: "ASEAN members are strengthening regional coordination around critical supply chains, semiconductors and minerals." },
+  { id: "international-japan-korea-trade-talks", section: "International Business", category: "ASIA-PACIFIC", title: "Japan and South Korea restart high-level trade talks after three-year diplomatic freeze.", dek: "The renewed talks focus on trade relations and the economic links connecting two major Asian economies." },
+  { id: "international-china-stimulus-property", section: "International Business", category: "ASIA-PACIFIC", title: "China's central bank signals further stimulus as property-sector deleveraging drags on growth.", dek: "Chinese policymakers are balancing growth support with the long process of reducing leverage in the property sector." },
+  { id: "international-india-fourth-gdp", section: "International Business", category: "ASIA-PACIFIC", title: "India overtakes Japan to become world's fourth-largest economy by nominal GDP.", dek: "India's expanding economic output is changing the relative size of major economies in Asia and the global economy." },
+  { id: "international-mercosur-eu-trade", section: "International Business", category: "AMERICAS", title: "Mercosur-EU trade deal clears final ratification hurdle after 25 years of negotiation.", dek: "The long-running trade process between Mercosur and the European Union is moving through a decisive ratification stage." },
+  { id: "international-mexico-nearshoring", section: "International Business", category: "AMERICAS", title: "Mexico's peso strengthens on record nearshoring investment inflows from US manufacturers.", dek: "Manufacturing investment linked to nearshoring is increasing Mexico's role in North American supply chains." },
+  { id: "international-brazil-brics-expansion", section: "International Business", category: "AMERICAS", title: "Brazil hosts first-ever BRICS+ summit expansion talks, weighing new membership bids.", dek: "Brazil is hosting discussions around the future membership and economic agenda of the expanded BRICS grouping." },
+  { id: "international-canada-us-lumber", section: "International Business", category: "AMERICAS", title: "Canada and US resolve softwood lumber dispute after a decade of intermittent tariffs.", dek: "The two North American economies are addressing a long-running dispute affecting lumber trade and producers." },
+  { id: "international-afcfta-trade-h1-2026", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "African Continental Free Trade Area reports record intra-African trade volumes for H1 2026.", dek: "The continental trade framework is reporting stronger internal trade flows as African markets deepen regional commercial links." },
+  { id: "international-gulf-africa-renewables", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "Gulf sovereign wealth funds pledge $40B toward African renewable-energy infrastructure.", dek: "Gulf investors are directing capital toward African renewable-energy projects, linking infrastructure needs with international investment." },
+  { id: "international-egypt-ethiopia-nile", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "Egypt and Ethiopia reach preliminary agreement on Nile water-sharing after decade-long dispute.", dek: "The preliminary understanding addresses one of the region's most closely watched water and development issues." },
+  { id: "international-uae-india-investment", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "UAE and India expand investment corridor across logistics, technology and clean energy.", dek: "The two economies are broadening commercial cooperation across infrastructure, technology and energy." },
+];
+
+const startupSeeds: SectionArticleSeed[] = [
+  {
+    id: "startup-perplexity-ai-1-2b-series-d",
+    section: "Startup Success",
+    category: "STARTUP SUCCESS",
+    title: "Perplexity AI Raises $1.2B Series D, Valued at $15B",
+    dek: "The AI search startup secures major backing from SoftBank, Bessemer, and Nvidia as it targets 100M daily active users by Q4 2026.",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400",
+  },
+  {
+    id: "startup-nvidia-humanoid-robot-push",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    dek: "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and Southeast Asia.",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-alphabet-ai-data-center",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    dek: "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-quantum-commercial-milestone",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    dek: "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing.",
+    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-apple-intelligence-ios21",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 8 Languages",
+    dek: "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative features.",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-meta-llama4-enterprise",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "Meta's Llama 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    dek: "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in enterprise reasoning.",
+    image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-starlink-gen3-global",
+    section: "Startup Success",
+    category: "TECHNOLOGY",
+    title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    dek: "The latest satellite constellation expansion brings high-speed internet to more regions across Africa, South Asia, and Latin America.",
+    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&h=520&fit=crop",
+  },
+  {
+    id: "startup-zepto-10b-valuation",
+    section: "Startup Success",
+    category: "STARTUP SUCCESS",
+    title: "Indian Unicorn Zepto Hits $10B Valuation, Eyes Global Expansion",
+    dek: "Zepto's next phase focuses on scale, market expansion and the economics of high-frequency commerce.",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&h=600&fit=crop",
+  },
+  {
+    id: "startup-y-combinator-w2026-ai",
+    section: "Startup Success",
+    category: "STARTUP SUCCESS",
+    title: "Y Combinator W2026 Cohort: 40% of Startups Are Pure AI Companies",
+    dek: "The latest startup cohort highlights the continued concentration of founders and venture activity around artificial intelligence.",
+    image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900&h=600&fit=crop",
+  },
+];
+
+const internationalBusinessArticles = internationalSeeds.map(buildSectionArticle);
+const startupSuccessArticles = startupSeeds.map(buildSectionArticle);
+
+
+
+/* =========================================================
+   SMART CITIES + SUPPLY CHAIN
+   Centralized article records for all cards on these pages.
+========================================================= */
+
 const smartCitiesArticles: SpecialArticle[] = [
   makeArticle({
     id: "smart-cities-tomorrow-urban-ecosystems",
@@ -874,7 +1395,6 @@ const supplyChainArticles: SpecialArticle[] = [
     ],
   }),
 ];
-
 
 const energyArticles: SpecialArticle[] = [
   {
@@ -1088,6 +1608,7 @@ const energyArticles: SpecialArticle[] = [
   },
 ];
 
+
 export const specialArticles: SpecialArticle[] = [
   ...healthcareArticles,
   ...manufacturingArticles,
@@ -1100,13 +1621,13 @@ export const specialArticles: SpecialArticle[] = [
   innovationHero,
   ...innovationStories,
   ...cybersecurityArticles,
-  ...energyArticles,
   ...internationalBusinessArticles,
   ...startupSuccessArticles,
   ...whiteHouseWatchArticles,
   ...worldWatchArticles,
   ...smartCitiesArticles,
   ...supplyChainArticles,
+  ...energyArticles,
 ];
 
 export function getSpecialArticleById(id?: string) {
