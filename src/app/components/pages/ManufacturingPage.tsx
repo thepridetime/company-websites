@@ -1,6 +1,7 @@
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Link } from "react-router";
 import { specialArticlePath } from "../../data/specialArticleData";
+import { PrideTimesAd } from "../AdSenseSlots";
 import {
   Clock,
   Factory,
@@ -27,6 +28,7 @@ interface Story {
   category?: string;
   excerpt?: string;
   image?: string;
+  slug?: string;
 }
 
 interface HeroStory {
@@ -45,338 +47,276 @@ interface HeroStory {
 const hero: HeroStory = {
   category: "MANUFACTURING",
   title:
-    "Reshoring Accelerates: US Manufacturing Output Hits 40-Year High",
+    "Global Manufacturing Faces Tariffs, Labor Shortages, Energy Costs and Supply-Chain Fragmentation",
   excerpt:
-    "Semiconductor and EV battery factories drive the strongest domestic manufacturing renaissance since the post-war industrial boom.",
-  author: "Sagar Kumar",
-  time: "September 15, 2026",
+    "Manufacturing demand remains resilient for now, but tariff uncertainty, labor shortages and energy costs are reshaping investment. At IMTS 2026, AI, robotics and domestic supply-chain partnerships emerged as central themes of the next industrial cycle.",
+  author: "The Pride Times Editorial Desk",
+  time: "September 29, 2026",
   image: Manu1Img,
 };
-
-/* =========================================================
-   MAJOR MANUFACTURING STORIES
-========================================================= */
 
 const majorStories: Story[] = [
   {
     id: 1,
-    category: "TECHNOLOGY",
-    title:
-      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    category: "AUTOMOTIVE SUPPLY CHAIN",
+    title: "Hyundai Plans to Source 80% of Vehicle Parts From U.S. Suppliers by 2030",
     excerpt:
-      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Asia.",
-    time: "12 min ago",
+      "Hyundai's localization target illustrates how automakers are reassessing supplier networks as tariff uncertainty and supply-chain resilience become larger manufacturing considerations.",
+    time: "1 hr ago",
     image: Manu2Img,
+    slug: "manufacturing-hyundai-80-percent-us-suppliers",
   },
   {
     id: 2,
-    category: "TECHNOLOGY",
-    title:
-      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    category: "INDUSTRIAL ROBOTICS",
+    title: "Mind Robotics Raises $500M Series A as Western Manufacturers Address Labor Shortages",
     excerpt:
-      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
+      "The Rivian spin-off is part of a broader industrial push toward robotics as manufacturers seek ways to increase capacity while managing persistent workforce constraints.",
+    time: "2 hrs ago",
     image: Manu3Img,
+    slug: "manufacturing-mind-robotics-500m",
   },
 ];
-
-/* =========================================================
-   MANUFACTURING COVERAGE
-========================================================= */
 
 const manufacturingCoverage: Story[] = [
   {
     id: 1,
-    category: "QUANTUM COMPUTING",
-    title:
-      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    category: "AUTONOMOUS MOBILITY",
+    title: "Uber and Rivian Target 50,000 Autonomous Robotaxis by 2031",
     excerpt:
-      "IBM and Google announce new advances as enterprise quantum computing moves toward commercial deployment.",
-    time: "2 hr ago",
+      "The partnership combines autonomous-vehicle manufacturing ambitions with Uber's planned investment of more than $1 billion in the program.",
+    time: "3 hrs ago",
     image: Manu1Img,
+    slug: "manufacturing-uber-rivian-50000-robotaxis",
   },
   {
     id: 2,
-    category: "CONSUMER TECHNOLOGY",
-    title:
-      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
+    category: "DATA CENTER MANUFACTURING",
+    title: "DHL Announces 10 Warehousing Sites to Support Data-Center Manufacturing Capacity",
     excerpt:
-      "Apple's latest software update expands on-device translation and generative AI capabilities.",
-    time: "3 hr ago",
+      "New logistics capacity reflects the growing physical supply chain behind data centers, advanced computing equipment and AI infrastructure.",
+    time: "4 hrs ago",
     image: Manu2Img,
+    slug: "manufacturing-dhl-10-warehousing-sites",
   },
   {
     id: 3,
-    category: "ARTIFICIAL INTELLIGENCE",
-    title:
-      "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    category: "SEMICONDUCTORS",
+    title: "Advanced Chip Makers Push Fault Tracing Earlier as Packaging Complexity Rises",
     excerpt:
-      "Open-source AI takes center stage as Meta's latest model competes across enterprise reasoning benchmarks.",
-    time: "5 hr ago",
+      "More complex semiconductor packaging is increasing the importance of earlier defect detection, process monitoring and manufacturing quality control.",
+    time: "5 hrs ago",
     image: Manu3Img,
+    slug: "manufacturing-advanced-chip-fault-tracing",
   },
   {
     id: 4,
-    category: "SPACE TECHNOLOGY",
-    title:
-      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    category: "SMART MANUFACTURING",
+    title: "AI, Robotics and Digital Twins Reshape the Modern Factory",
     excerpt:
-      "The latest satellite constellation expansion brings high-speed internet to remote regions worldwide.",
-    time: "6 hr ago",
+      "Smart manufacturing technologies are moving deeper into production planning, predictive maintenance, quality control and factory simulation.",
+    time: "6 hrs ago",
     image: Manu1Img,
+    slug: "manufacturing-ai-robotics-digital-twins",
   },
 ];
-
-/* =========================================================
-   LATEST MANUFACTURING NEWS
-========================================================= */
 
 const latestStories: Story[] = [
   {
     id: 1,
-    category: "TECHNOLOGY",
-    title:
-      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
+    category: "MACROECONOMICS",
+    title: "Manufactured-Goods Demand Remains Resilient for Now but Faces Output-Price Pressure",
     excerpt:
-      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South Asia.",
-    time: "12 min ago",
+      "Pantheon Macroeconomics' assessment highlights a manufacturing sector that remains supported by demand while rising output prices create a growing vulnerability.",
+    time: "Just now",
     image: Manu2Img,
+    slug: "manufacturing-demand-output-prices",
   },
   {
     id: 2,
-    category: "TECHNOLOGY",
-    title:
-      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
+    category: "AUTOMOTIVE",
+    title: "Hyundai's 80% U.S. Sourcing Target Signals a New Phase of Supplier Localization",
     excerpt:
-      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
+      "The planned sourcing shift places domestic suppliers at the center of Hyundai's longer-term manufacturing strategy.",
+    time: "1 hr ago",
     image: Manu3Img,
+    slug: "manufacturing-hyundai-80-percent-us-suppliers",
   },
   {
     id: 3,
-    category: "TECHNOLOGY",
-    title:
-      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
+    category: "ROBOTICS",
+    title: "Mind Robotics' $500M Series A Targets Western Manufacturing Labor Gaps",
     excerpt:
-      "IBM and Google announce new advances as enterprise quantum computing moves toward commercial deployment.",
-    time: "2 hr ago",
+      "Industrial robotics investment is increasingly being framed around workforce availability, production capacity and the economics of automation.",
+    time: "2 hrs ago",
     image: Manu1Img,
+    slug: "manufacturing-mind-robotics-500m",
   },
   {
     id: 4,
-    category: "TECHNOLOGY",
-    title:
-      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
+    category: "AUTONOMOUS VEHICLES",
+    title: "Uber-Rivian Partnership Links Vehicle Manufacturing With Autonomous Fleet Scale",
     excerpt:
-      "Apple's latest software update expands on-device translation and generative AI capabilities.",
-    time: "3 hr ago",
+      "A planned 50,000-vehicle robotaxi target by 2031 connects manufacturing capacity with the future scale of autonomous mobility services.",
+    time: "3 hrs ago",
     image: Manu2Img,
+    slug: "manufacturing-uber-rivian-50000-robotaxis",
   },
   {
     id: 5,
-    category: "TECHNOLOGY",
-    title:
-      "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
+    category: "LOGISTICS",
+    title: "DHL's 10 Warehousing Sites Highlight the Logistics Layer Behind AI Infrastructure",
     excerpt:
-      "Open-source AI takes center stage as Meta's latest model competes across enterprise reasoning benchmarks.",
-    time: "5 hr ago",
+      "Warehousing and logistics are becoming increasingly important as data-center manufacturing expands and equipment flows become more complex.",
+    time: "5 hrs ago",
     image: Manu3Img,
+    slug: "manufacturing-dhl-10-warehousing-sites",
   },
   {
     id: 6,
-    category: "TECHNOLOGY",
-    title:
-      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    category: "SEMICONDUCTORS",
+    title: "Chip Manufacturing Moves Fault Detection Earlier in the Production Process",
     excerpt:
-      "The latest satellite constellation expansion brings high-speed internet to remote regions worldwide.",
-    time: "6 hr ago",
+      "Advanced packaging is increasing manufacturing complexity and making early process diagnostics more important for yield and quality.",
+    time: "6 hrs ago",
     image: Manu1Img,
+    slug: "manufacturing-advanced-chip-fault-tracing",
   },
 ];
-
-/* =========================================================
-   AUTOMOTIVE
-========================================================= */
 
 const autoStories: Story[] = [
   {
     id: 1,
-    title:
-      "Manufacturing executives say Middle East tensions are inflating supply-chain costs across transportation-equipment networks.",
-    time: "Just now",
+    title: "Hyundai's 2030 sourcing target would place 80% of vehicle parts with U.S. suppliers.",
+    time: "1 hr ago",
+    slug: "manufacturing-hyundai-80-percent-us-suppliers",
   },
   {
     id: 2,
-    title:
-      "Major automotive suppliers announce new labor agreements as manufacturers expand North American production.",
-    time: "1 hr ago",
+    title: "Tariff uncertainty is encouraging automakers to reassess supplier geography and domestic capacity.",
+    time: "2 hrs ago",
+    slug: "manufacturing-demand-output-prices",
   },
   {
     id: 3,
-    title:
-      "Toyota expands next-generation EV battery production as global demand for electric vehicles rises.",
+    title: "Uber and Rivian's autonomous-vehicle partnership targets 50,000 robotaxis by 2031.",
     time: "3 hrs ago",
+    slug: "manufacturing-uber-rivian-50000-robotaxis",
   },
   {
     id: 4,
-    title:
-      "Volkswagen's Wolfsburg plant becomes one of Europe's largest low-carbon automotive facilities.",
-    time: "4 hrs ago",
+    title: "Vehicle manufacturers are balancing localization, labor availability and energy costs in new investment decisions.",
+    time: "5 hrs ago",
+    slug: "manufacturing-smart-factory-strategy",
   },
   {
     id: 5,
-    title:
-      "Tesla expands manufacturing capacity as next-generation vehicle platform enters production.",
-    time: "6 hrs ago",
+    title: "Domestic supplier partnerships are becoming a larger part of North American manufacturing planning.",
+    time: "7 hrs ago",
+    slug: "manufacturing-domestic-supply-chain-partnerships",
   },
 ];
-
-/* =========================================================
-   ROBOTICS
-========================================================= */
 
 const roboticsStories: Story[] = [
   {
     id: 1,
-    title:
-      "Neura raises capital to scale humanoid and industrial robot manufacturing infrastructure.",
+    title: "Mind Robotics raises $500M Series A to address labor shortages across Western manufacturing.",
     time: "Just now",
+    slug: "manufacturing-mind-robotics-500m",
   },
   {
     id: 2,
-    title:
-      "Boston Dynamics humanoid robots begin pilot assembly operations at a major automotive facility.",
+    title: "IMTS 2026 highlights accelerating investment in industrial AI, robotics and automation.",
     time: "2 hrs ago",
+    slug: "manufacturing-imts-2026-ai-robotics",
   },
   {
     id: 3,
-    title:
-      "Foxconn expands deployment of AI-guided robotic arms across high-volume electronics production.",
+    title: "Robotics investment is increasingly tied to workforce availability and factory throughput.",
     time: "4 hrs ago",
+    slug: "manufacturing-mind-robotics-500m",
   },
   {
     id: 4,
-    title:
-      "ABB's new collaborative robot receives safety certification for human-facing assembly lines.",
+    title: "Digital twins allow manufacturers to simulate production changes before committing to physical reconfiguration.",
     time: "6 hrs ago",
+    slug: "manufacturing-ai-robotics-digital-twins",
   },
   {
     id: 5,
-    title:
-      "Amazon's manufacturing robotics division expands industrial automation research.",
+    title: "Thailand and Southeast Asian manufacturers are weighing automation investment alongside cybersecurity risk.",
     time: "8 hrs ago",
+    slug: "manufacturing-southeast-asia-ai-cybersecurity",
   },
 ];
-
-/* =========================================================
-   SEMICONDUCTORS
-========================================================= */
 
 const semiconductors: Story[] = [
   {
     id: 1,
-    title:
-      "US manufacturing commitments continue to rise as AI infrastructure investment accelerates.",
+    title: "Advanced chip makers are moving fault tracing earlier as packaging complexity raises defect risk.",
     time: "Just now",
+    slug: "manufacturing-advanced-chip-fault-tracing",
   },
   {
     id: 2,
-    title:
-      "CHIPS Act awards support additional semiconductor manufacturing expansion across the United States.",
+    title: "AI hardware manufacturing is increasing the importance of process monitoring and yield management.",
     time: "1 hr ago",
+    slug: "manufacturing-ai-hardware-production",
   },
   {
     id: 3,
-    title:
-      "TSMC expands advanced chip manufacturing capacity as demand for AI processors grows.",
+    title: "Complex packaging is changing how manufacturers approach inspection, testing and quality control.",
     time: "3 hrs ago",
+    slug: "manufacturing-advanced-chip-fault-tracing",
   },
   {
     id: 4,
-    title:
-      "Samsung announces additional investment in next-generation memory manufacturing.",
-    time: "4 hrs ago",
+    title: "Domestic supply-chain partnerships are becoming more important for strategic manufacturing capacity.",
+    time: "5 hrs ago",
+    slug: "manufacturing-domestic-supply-chain-partnerships",
   },
   {
     id: 5,
-    title:
-      "Intel's foundry business expands domestic semiconductor production partnerships.",
-    time: "6 hrs ago",
+    title: "Data-center demand is creating additional pressure across the semiconductor manufacturing ecosystem.",
+    time: "7 hrs ago",
+    slug: "manufacturing-dhl-10-warehousing-sites",
   },
 ];
-
-/* =========================================================
-   AEROSPACE & DEFENSE
-========================================================= */
 
 const aeroDefense: Story[] = [
   {
     id: 1,
-    title:
-      "Airbus backlog reaches new milestone as production ramp-up puts pressure on suppliers.",
+    title: "Manufacturing fragmentation is pushing companies to evaluate regional production capacity more closely.",
     time: "3 hrs ago",
+    slug: "manufacturing-supply-chain-fragmentation",
   },
   {
     id: 2,
-    title:
-      "Space manufacturing facilities accelerate production of next-generation launch systems.",
+    title: "Energy costs are becoming a larger factor in decisions about where energy-intensive production is located.",
     time: "5 hrs ago",
+    slug: "manufacturing-energy-costs",
   },
   {
     id: 3,
-    title:
-      "India's aerospace manufacturing ecosystem expands as domestic production programs grow.",
+    title: "Domestic supply-chain partnerships are emerging as a resilience strategy across industrial sectors.",
     time: "7 hrs ago",
+    slug: "manufacturing-domestic-supply-chain-partnerships",
   },
   {
     id: 4,
-    title:
-      "Defense manufacturers increase capacity to strengthen regional supply-chain resilience.",
+    title: "AI and automation are being deployed to offset workforce constraints while maintaining production capacity.",
     time: "8 hrs ago",
+    slug: "manufacturing-ai-robotics-digital-twins",
   },
 ];
 
-/* =========================================================
-   MANUFACTURING PMI
-========================================================= */
-
 const mfgIndex = [
-  {
-    country: "USA",
-    label: "ISM Manufacturing PMI",
-    value: "54.2",
-    status: "Expanding",
-  },
-  {
-    country: "Germany",
-    label: "Manufacturing PMI",
-    value: "52.4",
-    status: "Expanding",
-  },
-  {
-    country: "China",
-    label: "Caixin PMI",
-    value: "51.8",
-    status: "Expanding",
-  },
-  {
-    country: "India",
-    label: "Manufacturing PMI",
-    value: "58.9",
-    status: "Strong Growth",
-  },
-  {
-    country: "Japan",
-    label: "Manufacturing PMI",
-    value: "49.7",
-    status: "Contracting",
-  },
-  {
-    country: "UK",
-    label: "Manufacturing PMI",
-    value: "50.3",
-    status: "Flat",
-  },
+  { country: "Global", label: "Manufacturing environment", value: "2026", status: "Under pressure" },
+  { country: "U.S.", label: "Industrial strategy", value: "AI + Robotics", status: "Accelerating" },
+  { country: "Automotive", label: "Supplier localization", value: "80%", status: "2030 target" },
+  { country: "Mind Robotics", label: "Series A", value: "$500M", status: "Raised" },
+  { country: "Uber + Rivian", label: "Robotaxi target", value: "50,000", status: "By 2031" },
+  { country: "DHL", label: "Warehousing sites", value: "10", status: "Announced" },
 ];
 
 /* =========================================================
@@ -434,24 +374,8 @@ function AdvertisementBar({
   bottom?: boolean;
 }) {
   return (
-    <div className="relative w-full h-[58px] md:h-[72px] bg-[#102d35] overflow-hidden flex flex-col items-center justify-center text-center">
-      <span className="absolute top-1 right-1 text-[7px] text-gray-400 border border-gray-500 px-1">
-        Advertisement
-      </span>
-
-      <span className="text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-[#64c7e6] font-bold">
-        Google Adsense
-      </span>
-
-      <span className="text-[10px] md:text-[12px] font-semibold mt-0.5 text-white">
-        {bottom
-          ? "Business Solutions | Powered by The Pride Times"
-          : "Advertisement Space"}
-      </span>
-
-      <span className="text-[7px] md:text-[8px] text-[#83b8c8]">
-        728 × 90 · Leaderboard
-      </span>
+    <div className="w-full py-2">
+      <PrideTimesAd variant={bottom ? "second" : "first"} />
     </div>
   );
 }
@@ -739,7 +663,7 @@ function LatestNewsCard({
 
         <div className="mt-2 pt-2 border-t border-gray-100">
           <StoryMeta
-            author="Sagar Kumar"
+            author="The Pride Times Editorial Desk"
             time={story.time}
           />
         </div>
@@ -953,7 +877,7 @@ function IndustryStream({
         {stories.map((story, index) => (
           <Link
             key={story.id}
-            to={specialArticlePath(`manufacturing-industry-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index + 1}`)}
+            to={specialArticlePath(story.slug || `manufacturing-industry-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index + 1}`)}
             className="group block py-2.5 border-b border-gray-200 last:border-0"
           >
             <h3 className="text-[11px] md:text-[12px] leading-[1.4] font-medium text-gray-900 group-hover:text-[#e31b23] transition-colors">
@@ -1122,7 +1046,7 @@ export function ManufacturingPage() {
 
             <div className="mt-3 space-y-4">
               {majorStories.map((story) => (
-                <Link key={story.id} to={specialArticlePath(`manufacturing-major-${story.id}`)} className="block"><MajorStory story={story} /></Link>
+                <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-major-${story.id}`)} className="block"><MajorStory story={story} /></Link>
               ))}
             </div>
 
@@ -1145,7 +1069,7 @@ export function ManufacturingPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6">
             {manufacturingCoverage.map((story) => (
-              <Link key={story.id} to={specialArticlePath(`manufacturing-coverage-${story.id}`)} className="block"><CoverageStory story={story} /></Link>
+              <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-coverage-${story.id}`)} className="block"><CoverageStory story={story} /></Link>
             ))}
           </div>
         </section>
@@ -1166,7 +1090,7 @@ export function ManufacturingPage() {
             {/* NEWS GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {latestStories.map((story) => (
-                <Link key={story.id} to={specialArticlePath(`manufacturing-latest-${story.id}`)} className="block"><LatestNewsCard story={story} /></Link>
+                <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-latest-${story.id}`)} className="block"><LatestNewsCard story={story} /></Link>
               ))}
             </div>
 
@@ -1200,17 +1124,19 @@ export function ManufacturingPage() {
                   "Foxconn's AI-Driven Factories Reduce Human Labor by 70% in Two Years",
                 time: "6 hr ago",
                 image: Manu2Img,
+                slug: "manufacturing-ai-robotics-digital-twins",
               },
               {
                 title:
                   "Industrial Automation Investment Reaches New Record as AI Adoption Accelerates",
                 time: "8 hr ago",
                 image: Manu3Img,
+                slug: "manufacturing-imts-2026-ai-robotics",
               },
             ].map((story, index) => (
               <Link
                 key={story.title}
-                to={specialArticlePath(`manufacturing-more-${index + 1}`)}
+                to={specialArticlePath(story.slug || `manufacturing-more-${index + 1}`)}
                 className="group flex gap-3 py-3 border-b border-gray-200"
               >
                 <div className="w-[85px] h-[60px] shrink-0 overflow-hidden rounded-sm">
