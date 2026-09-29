@@ -554,7 +554,7 @@ function ArticleReader({
    TECHNOLOGY PAGE
 ========================================================= */
 
-export function TechnologyPage() {
+export function InternationalNewsPage() {
   const [selectedArticle, setSelectedArticle] = useState<{
     title: string;
     category?: string;
