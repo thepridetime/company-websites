@@ -37,6 +37,7 @@ import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
 import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
 import { AboutUsPage } from "./components/pages/AboutUsPage";
+import AdSlot from "./components/AdSlot";
 
 // ============================================================
 // LEGAL / SYSTEM PAGES
@@ -68,6 +69,36 @@ interface MagazineLayoutProps {
   topBanner?: boolean;
 }
 
+//function MagazineLayout({
+  //children,
+  //showLeftSidebar = false,
+ //showRightSidebar = false,
+  //topBanner = false,
+//}: //MagazineLayoutProps) {
+ // return (
+    //<div className="min-h-screen bg-white flex flex-col">
+
+      //{/* Website Header */}
+     // <Header />
+
+      //{/* Market ticker */}
+      //<MarketsTicker />
+
+      //{/* Main page content */}
+      //<PageLayout
+        //showLeftSidebar={showLeftSidebar}
+        //showRightSidebar={showRightSidebar}
+        //topBanner={topBanner}
+      //>
+       // {children}
+      //</PageLayout>
+
+     // {/* Website Footer */}
+      //<Footer />
+
+    //</div>
+  //);
+//}
 function MagazineLayout({
   children,
   showLeftSidebar = false,
@@ -76,14 +107,11 @@ function MagazineLayout({
 }: MagazineLayoutProps) {
   return (
     <div className="min-h-screen bg-white flex flex-col">
-
-      {/* Website Header */}
       <Header />
-
-      {/* Market ticker */}
       <MarketsTicker />
 
-      {/* Main page content */}
+      <AdSlot type="top" />
+
       <PageLayout
         showLeftSidebar={showLeftSidebar}
         showRightSidebar={showRightSidebar}
@@ -92,13 +120,12 @@ function MagazineLayout({
         {children}
       </PageLayout>
 
-      {/* Website Footer */}
-      <Footer />
+      <AdSlot type="bottom" />
 
+      <Footer />
     </div>
   );
 }
-
 // ============================================================
 // APPLICATION
 // ============================================================
