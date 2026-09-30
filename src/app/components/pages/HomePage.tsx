@@ -19,7 +19,10 @@ import Ln1Img from "../../../imports/Ln1.png";
 
 import { getQuotes } from "../../../services/marketApi";
 import { TimeAgo } from "../../utils/timeAgo";
-import { articlePath } from "../../data/homepageArticleData";
+import {
+  articlePath,
+  homepageArticles,
+} from "../../data/homepageArticleData";
 
 /* =========================================================
    TYPES
@@ -40,6 +43,49 @@ type MarketItem = {
   change: string;
   up: boolean;
 };
+
+/* =========================================================
+   GOOGLE ADSENSE
+========================================================= */
+
+declare global {
+  interface Window {
+    adsbygoogle?: unknown[];
+  }
+}
+
+function PrideTimesAd() {
+  useEffect(() => {
+    try {
+      window.adsbygoogle = window.adsbygoogle || [];
+      window.adsbygoogle.push({});
+    } catch (error) {
+      console.error("AdSense Error:", error);
+    }
+  }, []);
+
+  return (
+    <section
+      aria-label="Advertisement"
+      className="my-8 overflow-hidden border-y border-gray-100 bg-white py-4"
+    >
+      <div className="mb-2 text-center text-[8px] font-medium uppercase tracking-[0.2em] text-gray-400">
+        Advertisement
+      </div>
+
+      <div className="mx-auto w-full max-w-5xl overflow-hidden">
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot="6033028012"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
+    </section>
+  );
+}
 
 /* =========================================================
    HERO / LEAD STORY
@@ -1274,6 +1320,112 @@ export function HomePage() {
             </div>
           </section>
 
+          <PrideTimesAd />
+
+          {/* =================================================
+              PRIDE TIMES EDITORIAL BLOGS
+          ================================================= */}
+
+          <section className="mb-12">
+            <div
+              className="
+                flex flex-col gap-3 md:flex-row md:items-end md:justify-between
+                border-b-2 border-black pb-3 mb-6
+              "
+            >
+              <div>
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-red-600">
+                  The Pride Times Editorial Desk
+                </span>
+                <h2 className="font-serif text-2xl md:text-3xl font-bold leading-tight mt-1 text-gray-950">
+                  Editorial Blogs
+                </h2>
+                <p className="text-[11px] md:text-xs text-gray-500 leading-[1.6] mt-2 max-w-2xl">
+                  Longer reads built around context, signals and what comes next —
+                  designed for readers who want more than a headline.
+                </p>
+              </div>
+
+              <Link
+                to="/markets"
+                className="shrink-0 text-[9px] font-bold uppercase tracking-[0.14em] text-red-600 inline-flex items-center gap-1"
+              >
+                Explore the newsroom
+                <ArrowRight size={10} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {homepageArticles.slice(0, 6).map((article, index) => (
+                <Link
+                  key={article.slug}
+                  to={articlePath(article.title)}
+                  className="group block border border-gray-200 bg-white rounded-md overflow-hidden hover:border-gray-400 transition-colors"
+                >
+                  <div className="relative overflow-hidden">
+                    <ImageWithFallback
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-[190px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    />
+
+                    <div className="absolute top-3 left-3 flex items-center gap-2">
+                      <span className="bg-white/95 px-2 py-1 text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
+                        {article.category}
+                      </span>
+                      {index === 0 && (
+                        <span className="bg-black px-2 py-1 text-[8px] font-bold uppercase tracking-[0.14em] text-white">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="p-4">
+                    <div className="flex items-center justify-between gap-3 text-[8px] uppercase tracking-[0.13em] text-gray-400">
+                      <span>{article.author}</span>
+                      <span className="inline-flex items-center gap-1 shrink-0">
+                        <Clock size={8} />
+                        {article.readTime}
+                      </span>
+                    </div>
+
+                    <h3 className="font-serif text-lg font-bold leading-[1.18] mt-2 text-gray-950 group-hover:text-red-600 transition-colors">
+                      {article.title}
+                    </h3>
+
+                    <p className="text-[11px] text-gray-600 leading-[1.6] mt-2 line-clamp-3">
+                      {article.dek}
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {article.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-1 rounded-full bg-gray-50 border border-gray-100 text-[8px] font-semibold uppercase tracking-[0.08em] text-gray-500"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                      <span className="text-[9px] text-gray-400">
+                        {article.publishedAt}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-red-600">
+                        Read blog
+                        <ArrowRight size={9} />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <PrideTimesAd />
+
           {/* =================================================
               LATEST BUSINESS NEWS
           ================================================= */}
@@ -1432,6 +1584,8 @@ export function HomePage() {
               ))}
             </div>
           </section>
+
+          <PrideTimesAd />
 
           {/* =================================================
               EDITORIAL PICKS + MAGAZINE
