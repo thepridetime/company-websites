@@ -137,7 +137,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
+        "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -371,7 +371,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: false,
       title:
-        "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
+        "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -426,7 +426,7 @@ const editorsPicks = [
     id: 2,
     category: "WORLD",
     title:
-      "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
+      "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
     excerpt:
       "Indian and Vietnamese leaders met to deepen cooperation on artificial intelligence and defense as the two countries expand their strategic partnership.",
     publishedAt: "2026-09-22T07:00:00Z",
@@ -729,6 +729,7 @@ export function HomePage() {
                 lg:gap-6
               "
             >
+              <p className="sr-only">Editor: Sagar Kumar</p>
 
               {/* LEAD STORY */}
 
