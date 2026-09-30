@@ -9,7 +9,6 @@ import {
   Share2,
 } from "lucide-react";
 
-import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { PrideTimesAd } from "../AdSenseSlots";
 
 import {
@@ -118,7 +117,7 @@ function SpecialArticleEditorial({ article }: { article: SpecialArticle }) {
           </p>
 
           <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-3 border-y border-gray-300 py-4 text-[10px] uppercase tracking-[0.12em] text-gray-500">
-            <span className="font-bold text-gray-800">By {article.author}</span>
+            <span className="font-bold text-gray-800">By Sagar Kumar</span>
             <span className="hidden h-1 w-1 rounded-full bg-red-600 sm:block" />
             <span>{article.publishedAt}</span>
             <span className="flex items-center gap-1.5">
@@ -127,21 +126,6 @@ function SpecialArticleEditorial({ article }: { article: SpecialArticle }) {
             </span>
           </div>
         </header>
-
-        {article.image && (
-          <figure className="mx-auto mt-9 max-w-6xl">
-            <div className="overflow-hidden border border-gray-200 bg-gray-100">
-              <ImageWithFallback
-                src={article.image}
-                alt={article.title}
-                className="h-[300px] w-full object-cover sm:h-[460px] md:h-[590px]"
-              />
-            </div>
-            <figcaption className="mt-2 text-[9px] uppercase tracking-[0.14em] text-gray-400">
-              The Pride Times · {article.section} Desk
-            </figcaption>
-          </figure>
-        )}
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
           <main>
@@ -304,13 +288,6 @@ function SpecialArticleEditorial({ article }: { article: SpecialArticle }) {
                       to={specialArticlePath(story.id)}
                       className="group overflow-hidden border border-gray-200 bg-white"
                     >
-                      {story.image && (
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      )}
 
                       <div className="p-4">
                         <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
@@ -375,7 +352,7 @@ function SpecialArticleEditorial({ article }: { article: SpecialArticle }) {
                     <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
                       Editor
                     </p>
-                    <p className="mt-1 text-sm">The Pride Times Editorial Desk</p>
+                    <p className="mt-1 text-sm">Sagar Kumar</p>
                   </div>
 
                   <div>
@@ -503,7 +480,7 @@ function HomepageArticle({ article }: { article: HomepageArticleType }) {
           <div className="mt-8 flex flex-col gap-5 border-y border-gray-300 py-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#171717] font-serif text-sm font-bold text-white">
-                {article.author.split(" ").map((name) => name[0]).slice(0, 2).join("")}
+                SK
               </div>
 
               <div>
@@ -511,7 +488,7 @@ function HomepageArticle({ article }: { article: HomepageArticleType }) {
                   Written by
                 </p>
                 <p className="mt-0.5 text-sm font-bold text-gray-900">
-                  {article.author}
+                  Sagar Kumar
                 </p>
               </div>
             </div>
@@ -527,23 +504,6 @@ function HomepageArticle({ article }: { article: HomepageArticleType }) {
             </div>
           </div>
         </header>
-
-        {article.image && (
-          <figure className="mx-auto mt-9 max-w-6xl">
-            <div className="overflow-hidden border border-gray-200 bg-gray-100">
-              <ImageWithFallback
-                src={article.image}
-                alt={article.title}
-                className="h-[300px] w-full object-cover sm:h-[460px] md:h-[600px]"
-              />
-            </div>
-
-            <figcaption className="mt-2 flex flex-wrap justify-between gap-2 text-[9px] uppercase tracking-[0.14em] text-gray-400">
-              <span>The Pride Times · {article.category}</span>
-              <span>Editorial image</span>
-            </figcaption>
-          </figure>
-        )}
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-16">
           <main>
@@ -738,13 +698,6 @@ function HomepageArticle({ article }: { article: HomepageArticleType }) {
                       to={articlePath(story.title)}
                       className="group overflow-hidden border border-gray-200 bg-white transition-shadow hover:shadow-lg"
                     >
-                      {story.image && (
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      )}
 
                       <div className="p-4">
                         <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
@@ -818,7 +771,7 @@ function HomepageArticle({ article }: { article: HomepageArticleType }) {
                     <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
                       Author
                     </p>
-                    <p className="mt-1 text-sm">{article.author}</p>
+                    <p className="mt-1 text-sm">Sagar Kumar</p>
                   </div>
 
                   <div>
@@ -875,7 +828,7 @@ function MagazineEditorial({
     ? getRelatedBusinessArticles(article as BusinessArticle, 3)
     : getRelatedTechnologyArticles(article as TechnologyArticle, 3);
 
-  const author = article.author;
+  const author = "Sagar Kumar";
   const dek = article.dek;
   const publishedAt = article.publishedAt;
   const readTime = article.readTime;
@@ -948,22 +901,6 @@ function MagazineEditorial({
             </div>
           </div>
         </header>
-
-        {article.image && (
-          <figure className="mx-auto mt-9 max-w-6xl">
-            <div className="overflow-hidden border border-gray-200 bg-gray-100">
-              <ImageWithFallback
-                src={article.image}
-                alt={article.title}
-                className="h-[300px] w-full object-cover sm:h-[460px] md:h-[600px]"
-              />
-            </div>
-
-            <figcaption className="mt-2 text-[9px] uppercase tracking-[0.14em] text-gray-400">
-              The Pride Times · {article.category}
-            </figcaption>
-          </figure>
-        )}
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-16">
           <main>
@@ -1146,13 +1083,6 @@ function MagazineEditorial({
                       to={isBusiness ? `/article/${story.id}` : `/technology/${story.id}`}
                       className="group overflow-hidden border border-gray-200 bg-white transition-shadow hover:shadow-lg"
                     >
-                      {story.image && (
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      )}
 
                       <div className="p-4">
                         <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
