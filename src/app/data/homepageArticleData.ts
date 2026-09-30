@@ -15,7 +15,12 @@ export type HomepageArticle = {
   publishedAt: string;
   readTime: string;
   highlights: string[];
-  sections: { heading: string; body: string }[];
+  tags: string[];
+  editorNote: string;
+  sections: {
+    heading: string;
+    body: string;
+  }[];
 };
 
 export function articleSlug(title: string) {
@@ -241,19 +246,31 @@ const storySeeds: StorySeed[] = [
 export const homepageArticles: HomepageArticle[] = storySeeds.map((story) => ({
   ...story,
   slug: articleSlug(story.title),
-  readTime: "6 min read",
+  readTime: story.highlights.length >= 4 ? "7 min read" : "6 min read",
+  tags: [
+    story.category.split("|")[0].trim(),
+    "Business",
+    "Analysis",
+    "The Pride Times",
+  ].filter((tag, index, all) => all.indexOf(tag) === index),
+  editorNote:
+    "This Pride Times blog brings the headline into context, separates the immediate signal from the bigger trend, and highlights the developments worth following next.",
   sections: [
     {
-      heading: "Why this matters",
-      body: `The latest development is more than a single market move. It is a signal about ${story.angle}, at a moment when investors, executives and policymakers are recalibrating their assumptions. The first reaction has been visible in prices and headlines, but the more important story is how the change could influence decisions over the coming quarters.`,
+      heading: "The story behind the headline",
+      body: `The central development in this story is ${story.angle}. That matters because the headline captures the immediate change, while the broader question is what the change says about the decisions being made by investors, companies, regulators and other participants in the market. The most useful way to read the development is therefore not as an isolated event, but as part of a larger adjustment already taking shape.`,
     },
     {
-      heading: "The bigger picture",
-      body: `For companies and institutions, the adjustment will be measured through capital allocation, operating costs and confidence. Businesses with strong balance sheets and clear strategic priorities are likely to have more room to adapt, while smaller participants may feel the pressure first. That divide is shaping the competitive landscape and creating new winners as well as new risks.`,
+      heading: "Why it matters now",
+      body: `${story.highlights[0]}. That first signal helps explain why the story has moved onto the radar of the market and the wider business community. At the same time, ${story.highlights[1].toLowerCase()}. Together, those developments point to a period in which established assumptions are being tested and participants have to decide whether the change is temporary or part of a more durable shift.`,
+    },
+    {
+      heading: "What the key signals tell us",
+      body: `${story.highlights[2]}. For readers, the important distinction is between the headline reaction and the underlying business or market mechanism. Prices, investment decisions, operating plans, regulation and customer behaviour can all respond at different speeds, so the next stage of the story will depend on which of those signals proves most persistent.`,
     },
     {
       heading: "What to watch next",
-      body: `The next phase will depend on policy execution, the durability of demand and whether current pressures prove temporary or structural. Market participants will be watching new data, management commentary and the response from regulators. Those signals should reveal whether this is a short-lived reaction or the beginning of a deeper shift.`,
+      body: `The next chapter should be judged by measurable developments rather than headlines alone. For this story, that means watching new data, management commentary, policy execution, capital allocation and the response of the broader market. The key question is whether ${story.angle} develops into a structural trend or remains a shorter-term adjustment.`,
     },
   ],
 }));
@@ -261,4 +278,3 @@ export const homepageArticles: HomepageArticle[] = storySeeds.map((story) => ({
 export function getHomepageArticleBySlug(slug?: string) {
   return homepageArticles.find((article) => article.slug === slug);
 }
-
