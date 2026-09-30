@@ -1,544 +1,738 @@
-import { useEffect } from "react";
+import { Clock, Briefcase } from "lucide-react";
+import type { ReactNode } from "react";
 import { Link } from "react-router";
-import {
-  ArrowRight,
-  Briefcase,
-  Clock,
-  TrendingDown,
-  TrendingUp,
-} from "lucide-react";
-
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { PrideTimesAd } from "../AdSenseSlots";
-
 import {
   hero,
   maDeals,
   earningsNews,
   corporateNews,
   startupNews,
-  type BusinessArticle,
 } from "../../data/businessNewsData";
 
 /* =========================================================
-   SECTION HEADER — EDITORIAL BLOG STYLE
+   SECTION HEADER
 ========================================================= */
 
-function SectionHeader({
-  eyebrow,
-  title,
-  description,
-  link,
-  linkText = "View all",
-}: {
-  eyebrow: string;
-  title: string;
-  description?: string;
-  link?: string;
-  linkText?: string;
-}) {
+function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="mb-6 border-b-2 border-black pb-4">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-red-600">
-            {eyebrow}
-          </p>
-          <h2 className="mt-1 font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-gray-950 sm:text-3xl md:text-4xl">
-            {title}
-          </h2>
-        </div>
+    <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-5">
+      <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
 
-        {link && (
-          <Link
-            to={link}
-            className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.16em] text-red-600 transition-colors hover:text-black"
-          >
-            {linkText}
-            <ArrowRight size={11} />
-          </Link>
-        )}
-      </div>
-
-      {description && (
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-500 sm:text-[15px]">
-          {description}
-        </p>
-      )}
+      <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
+        {title}
+      </h2>
     </div>
   );
 }
 
 /* =========================================================
-   ADAPTERS
+   AD SPACE
 ========================================================= */
 
-function articleExcerpt(article: BusinessArticle) {
-  return article.excerpt || "";
-}
-
-function articleTime(article: BusinessArticle) {
-  return article.time || article.publishedAt || "";
-}
-
-function articleLink(article: BusinessArticle) {
-  return `/article/${article.id}`;
-}
-
-/* =========================================================
-   SMALL STATUS CHIPS
-========================================================= */
-
-function EarningsStatus({ status }: { status: string }) {
-  const positive = status === "BEAT";
-
+function AdSpace({
+  label = "Advertisement Space",
+}: {
+  label?: string;
+}) {
   return (
-    <span
-      className={`inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.12em] ${
-        positive ? "text-green-700" : "text-red-600"
-      }`}
-    >
-      {positive ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
-      {status}
-    </span>
-  );
-}
+    <div className="relative w-full overflow-hidden rounded-sm border border-gray-200 bg-gradient-to-r from-[#102b33] via-[#193944] to-[#28596a]">
+      <div className="flex min-h-[90px] flex-col items-center justify-center px-4 py-5 text-center">
+        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-sky-300">
+          Google AdSense
+        </span>
 
-function DealStatus({ status }: { status: string }) {
-  const tone =
-    status === "Closed"
-      ? "text-green-700"
-      : status === "Pending"
-        ? "text-amber-700"
-        : "text-red-600";
+        <span className="mt-1 text-sm sm:text-base font-semibold text-white">
+          {label}
+        </span>
 
-  return (
-    <span className={`text-[9px] font-bold uppercase tracking-[0.12em] ${tone}`}>
-      {status}
-    </span>
+        <span className="mt-1 text-[8px] sm:text-[9px] text-sky-300">
+          728 × 90 • Leaderboard
+        </span>
+      </div>
+
+      <span className="absolute right-1.5 top-1 text-[7px] text-gray-300">
+        Advertisement
+      </span>
+    </div>
   );
 }
 
 /* =========================================================
-   FEATURE STORY
+   SIDEBAR SPONSORED AD
 ========================================================= */
 
-function LeadStory({ article }: { article: BusinessArticle }) {
+function SponsoredAd() {
   return (
-    <Link
-      to={articleLink(article)}
-      className="group block overflow-hidden border border-gray-200 bg-[#171717]"
-    >
-      <div className="relative h-[360px] overflow-hidden sm:h-[460px] md:h-[520px]">
-        {article.image && (
-          <ImageWithFallback
-            src={article.image}
-            alt={article.title}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]"
-          />
-        )}
+    <div className="rounded-md border border-gray-200 bg-[#faf9f4] overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2">
+        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+          Sponsored Content
+        </span>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+        <span className="text-[8px] text-gray-400">
+          Ad
+        </span>
+      </div>
 
-        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7 md:p-9">
-          <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-red-400">
-            {article.category}
+      <div className="mx-3 mb-3 flex h-[145px] items-center justify-center bg-[#10162f] px-4 text-center">
+        <div>
+          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-400">
+            Featured Partner
           </p>
 
-          <h2 className="mt-3 max-w-4xl font-serif text-3xl font-bold leading-[1.04] tracking-[-0.03em] text-white sm:text-4xl md:text-5xl">
-            {article.title}
-          </h2>
-
-          <p className="mt-4 max-w-3xl text-sm leading-6 text-gray-200 sm:text-base sm:leading-7">
-            {articleExcerpt(article)}
+          <p className="mt-3 text-base font-semibold text-white">
+            Your Ad Here
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[9px] uppercase tracking-[0.15em] text-gray-400">
-            <span className="font-bold text-white">The Pride Times</span>
-            <span>{articleTime(article)}</span>
-            <span className="inline-flex items-center gap-1">
-              <Clock size={11} />
-              Editorial analysis
-            </span>
-          </div>
-
-          <span className="mt-5 inline-flex items-center gap-2 border-b border-white/60 pb-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white">
-            Read the full story
-            <ArrowRight size={11} />
-          </span>
+          <p className="mt-2 text-[9px] leading-4 text-gray-300">
+            Reach 2M+ business readers
+          </p>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
 /* =========================================================
-   ARTICLE CARD
+   MORE STORIES SIDEBAR
 ========================================================= */
 
-function ArticleCard({ article }: { article: BusinessArticle }) {
+function MoreStories({
+  stories,
+}: {
+  stories: {
+    id: string;
+    title: string;
+    time: string;
+    category?: string;
+  }[];
+}) {
   return (
-    <Link
-      to={articleLink(article)}
-      className="group block border-b border-gray-200 pb-5"
-    >
-      {article.image && (
-        <div className="overflow-hidden border border-gray-200 bg-gray-100">
-          <ImageWithFallback
-            src={article.image}
-            alt={article.title}
-            className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.035]"
-          />
-        </div>
-      )}
-
-      <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.2em] text-red-600">
-        {article.category}
-      </p>
-
-      <h3 className="mt-2 font-serif text-xl font-bold leading-tight tracking-[-0.015em] text-gray-950 transition-colors group-hover:text-red-600 sm:text-2xl">
-        {article.title}
-      </h3>
-
-      <p className="mt-3 line-clamp-3 text-sm leading-6 text-gray-600">
-        {articleExcerpt(article)}
-      </p>
-
-      <div className="mt-4 flex items-center gap-2 text-[9px] uppercase tracking-[0.14em] text-gray-400">
-        <Clock size={11} />
-        {articleTime(article)}
+    <div className="mt-5">
+      <div className="border-b-2 border-black pb-2">
+        <h3 className="text-[12px] font-bold uppercase tracking-[0.08em]">
+          More Business Stories
+        </h3>
       </div>
-    </Link>
+
+      <div className="divide-y divide-gray-200">
+        {stories.slice(0, 3).map((story) => (
+          <Link
+            key={story.id}
+            to={`/article/${story.id}`}
+            className="group block py-3"
+          >
+            <div className="flex gap-3">
+              <div className="flex h-[48px] w-[68px] shrink-0 items-center justify-center rounded-sm bg-gray-100">
+                <span className="text-[9px] font-bold uppercase text-gray-400">
+                  News
+                </span>
+              </div>
+
+              <div className="min-w-0">
+                {story.category && (
+                  <span className="text-[8px] font-bold uppercase tracking-[0.1em] text-red-600">
+                    {story.category}
+                  </span>
+                )}
+
+                <h4 className="mt-1 text-[11px] sm:text-xs font-semibold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
+                  {story.title}
+                </h4>
+
+                <span className="mt-1 flex items-center gap-1 text-[9px] text-gray-400">
+                  <Clock size={9} />
+                  {story.time}
+                </span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
 
 /* =========================================================
-   BUSINESS NEWS PAGE
+   STATUS BADGES
+========================================================= */
+
+const earningsBadge: Record<string, string> = {
+  BEAT: "bg-green-600 text-white",
+  MISS: "bg-red-600 text-white",
+};
+
+const dealBadge: Record<string, string> = {
+  Closed: "bg-green-600 text-white",
+  Announced: "bg-blue-600 text-white",
+  Pending: "bg-amber-500 text-white",
+};
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+const TH = ({
+  children,
+  align = "left",
+  className = "",
+}: {
+  children: ReactNode;
+  align?: "left" | "right";
+  className?: string;
+}) => (
+  <th
+    className={`py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 ${
+      align === "right" ? "text-right" : "text-left"
+    } ${className}`}
+  >
+    {children}
+  </th>
+);
+
+/* =========================================================
+   MAIN PAGE
 ========================================================= */
 
 export function BusinessNewsPage() {
   return (
-    <div className="min-h-screen bg-[#f8f7f3] text-[#171717]">
-      <main className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-10 lg:px-8">
-        {/* =====================================================
-            PAGE INTRO
-        ===================================================== */}
-        <header className="mb-8 border-b-2 border-black pb-7">
-          <div className="flex items-end justify-between gap-6">
+    <div className="w-full bg-white text-gray-900 antialiased">
+      <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-9 lg:px-8">
+
+        {/* =================================================
+            PAGE HEADER
+        ================================================= */}
+
+        <header className="border-b-4 border-black pb-5 mb-7 md:mb-8">
+          <div className="flex items-center gap-3.5">
+
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-white">
+              <Briefcase size={19} strokeWidth={1.75} />
+            </div>
+
             <div>
-              <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.24em] text-red-600">
-                <Briefcase size={12} />
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-600">
                 Business Briefing
-              </div>
+              </p>
 
-              <h1 className="mt-3 max-w-5xl font-serif text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-gray-950 sm:text-5xl md:text-6xl">
-                Business &amp; Corporate Affairs
+              <h1 className="mt-1 font-serif text-3xl font-bold leading-tight tracking-tight md:text-[42px]">
+                Business News
               </h1>
-
-              <p className="mt-4 max-w-3xl text-base leading-7 text-gray-600 sm:text-lg">
-                The companies, capital, deals and strategic decisions shaping the
-                business landscape — presented as a deeper editorial briefing,
-                not just a stream of headlines.
-              </p>
             </div>
 
-            <div className="hidden text-right md:block">
-              <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-gray-400">
-                The Pride Times
-              </p>
-              <p className="mt-1 font-serif text-sm font-bold text-gray-900">
-                Business Desk
-              </p>
-            </div>
           </div>
         </header>
 
-        <PrideTimesAd variant="first" />
 
-        {/* =====================================================
-            LEAD + BUSINESS CONTEXT
-        ===================================================== */}
-        <section className="mb-12 grid gap-7 lg:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.75fr)]">
-          <LeadStory article={hero} />
+        {/* =================================================
+            TOP ADVERTISEMENT
+        ================================================= */}
 
-          <aside className="border-t-2 border-black bg-white p-5 sm:p-6">
-            <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-red-600">
-              Why this story matters
-            </p>
+        <div className="mb-7 md:mb-9">
+          <AdSpace />
+        </div>
 
-            <h2 className="mt-2 font-serif text-2xl font-bold leading-tight">
-              The business signals behind the headline
-            </h2>
 
-            <div className="mt-5 divide-y divide-gray-200">
-              {hero.highlights.map((point, index) => (
-                <div key={point} className="flex gap-4 py-4">
-                  <span className="font-serif text-xl font-bold text-red-600">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p className="text-sm leading-6 text-gray-600">{point}</p>
-                </div>
-              ))}
+        {/* =================================================
+            HERO + SIDEBAR
+        ================================================= */}
+
+        <section className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_245px] lg:gap-6">
+
+          {/* =================================================
+              HERO STORY
+          ================================================= */}
+
+          <Link to={`/article/${hero.id}`} className="group block">
+
+            <div className="relative overflow-hidden rounded-md">
+              <ImageWithFallback
+                src={hero.image}
+                alt={hero.title}
+                className="h-[240px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[320px] md:h-[390px] lg:h-[420px]"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-90" />
             </div>
 
-            <Link
-              to={articleLink(hero)}
-              className="mt-4 inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.16em] text-red-600"
-            >
-              Read the analysis
-              <ArrowRight size={11} />
-            </Link>
+            <div className="mt-5">
+
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                {hero.category}
+              </span>
+
+              <h2 className="mt-2 max-w-5xl font-serif text-2xl font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600 sm:text-3xl md:text-4xl lg:text-[40px]">
+                {hero.title}
+              </h2>
+
+              <p className="mt-4 max-w-4xl text-sm leading-[1.7] text-gray-600 md:text-base">
+                {hero.excerpt}
+              </p>
+
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-200 pt-4 text-xs text-gray-400">
+
+                <span className="font-semibold text-gray-600">
+                  By {hero.author}
+                </span>
+
+                <span className="h-1 w-1 rounded-full bg-gray-300" />
+
+                <span className="flex items-center gap-1.5">
+                  <Clock size={11} strokeWidth={2.25} />
+                  {hero.time}
+                </span>
+
+              </div>
+
+            </div>
+          </Link>
+
+
+          {/* =================================================
+              RIGHT SIDEBAR
+          ================================================= */}
+
+          <aside className="lg:pt-0">
+
+            <SponsoredAd />
+
+            <MoreStories stories={corporateNews.slice(3, 6)} />
+
           </aside>
+
         </section>
 
-        {/* =====================================================
-            EARNINGS
-        ===================================================== */
-        <section className="mb-12">
-          <SectionHeader
-            eyebrow="Corporate earnings"
-            title="Corporate Earnings: The Numbers Behind the Headlines"
-            description="A concise view of quarterly results, revenue trends and the financial signals emerging from major companies."
-            link="/business-news"
-            linkText="Business desk"
-          />
 
-          <div className="overflow-x-auto border border-gray-200 bg-white">
-            <table className="min-w-[760px] w-full border-collapse text-left">
-              <thead className="bg-[#171717] text-white">
-                <tr>
-                  {[
-                    "Company",
-                    "EPS",
-                    "Vs. Estimate",
-                    "Revenue",
-                    "Signal",
-                  ].map((heading) => (
-                    <th
-                      key={heading}
-                      className="px-4 py-3 text-[9px] font-bold uppercase tracking-[0.15em]"
-                    >
-                      {heading}
-                    </th>
-                  ))}
+        {/* =================================================
+            EARNINGS
+        ================================================= */}
+
+        <section className="mt-12 mb-12 md:mt-14">
+
+          <SectionHeader title="Corporate Earnings: The Numbers Behind the Headlines" />
+
+          <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
+            A closer look at quarterly results, revenue trends and the financial signals emerging from major companies.
+          </p>
+
+          <div className="overflow-x-auto">
+
+            <table className="w-full min-w-[650px] border-collapse text-sm">
+
+              <thead>
+                <tr className="border-b-2 border-gray-900">
+                  <TH>Company</TH>
+                  <TH align="right">EPS</TH>
+                  <TH align="right">vs Est.</TH>
+                  <TH align="right">Revenue</TH>
+                  <TH align="right">Result</TH>
                 </tr>
               </thead>
-              <tbody>
-                {earningsNews.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-200 last:border-0">
-                    <td className="px-4 py-4">
-                      <p className="font-serif text-base font-bold text-gray-950">
-                        {item.company}
-                      </p>
-                      <p className="mt-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-gray-400">
-                        {item.ticker}
-                      </p>
+
+              <tbody className="divide-y divide-gray-100">
+
+                {earningsNews.map((e) => (
+                  <tr
+                    key={e.ticker}
+                    className="transition-colors hover:bg-gray-50"
+                  >
+
+                    <td className="py-3.5 pr-4">
+                      <span className="font-semibold text-gray-900">
+                        {e.company}
+                      </span>
+
+                      <span className="ml-1.5 text-xs text-gray-400">
+                        ({e.ticker})
+                      </span>
                     </td>
-                    <td className="px-4 py-4 text-sm font-semibold tabular-nums">
-                      {item.eps}
+
+                    <td className="px-3 py-3.5 text-right font-medium tabular-nums text-gray-700">
+                      {e.eps}
                     </td>
-                    <td className="px-4 py-4 text-sm font-semibold tabular-nums">
-                      {item.beat}
+
+                    <td
+                      className={`px-3 py-3.5 text-right font-bold tabular-nums ${
+                        e.status === "BEAT"
+                          ? "text-green-700"
+                          : "text-red-700"
+                      }`}
+                    >
+                      {e.beat}
                     </td>
-                    <td className="px-4 py-4 text-sm font-semibold tabular-nums">
-                      {item.revenue}
+
+                    <td className="px-3 py-3.5 text-right tabular-nums text-gray-600">
+                      {e.revenue}
                     </td>
-                    <td className="px-4 py-4">
-                      <EarningsStatus status={item.status} />
+
+                    <td className="py-3.5 pl-3 text-right">
+
+                      <span
+                        className={`inline-flex rounded-[2px] px-2.5 py-1 text-[10px] font-bold tracking-wide ${earningsBadge[e.status]}`}
+                      >
+                        {e.status}
+                      </span>
+
                     </td>
+
                   </tr>
                 ))}
+
               </tbody>
+
             </table>
+
           </div>
+
         </section>
 
-        <PrideTimesAd variant="second" />
 
-        {/* =====================================================
-            M&A
-        ===================================================== */}
-        <section className="mb-12">
-          <SectionHeader
-            eyebrow="Deals & capital"
-            title="Deals & Capital: Where Money Is Moving"
-            description="Acquisitions, strategic investments and infrastructure transactions that reveal where corporate capital is being deployed."
-            link="/business-news"
-            linkText="Follow the deals"
-          />
+        {/* =================================================
+            M&A TRACKER
+        ================================================= */}
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {maDeals.map((deal) => (
-              <article
-                key={deal.id}
-                className="border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
-                    {deal.sector}
-                  </p>
-                  <DealStatus status={deal.status} />
-                </div>
+        <section className="mb-12 md:mb-14">
 
-                <h3 className="mt-5 font-serif text-xl font-bold leading-tight text-gray-950">
-                  {deal.acquirer}
-                  <span className="mx-2 text-gray-300">→</span>
-                  {deal.target}
-                </h3>
+          <SectionHeader title="Deals & Capital: Where Money Is Moving" />
 
-                <div className="mt-5 flex items-end justify-between border-t border-gray-200 pt-4">
-                  <div>
-                    <p className="text-[8px] font-bold uppercase tracking-[0.15em] text-gray-400">
-                      Deal value
-                    </p>
-                    <p className="mt-1 font-serif text-2xl font-bold text-gray-950">
-                      {deal.value}
-                    </p>
-                  </div>
-                  <ArrowRight size={15} className="text-red-600" />
-                </div>
-              </article>
-            ))}
+          <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
+            Acquisitions, strategic investments and infrastructure deals reshaping industries and corporate balance sheets.
+          </p>
+
+          <div className="overflow-x-auto">
+
+            <table className="w-full min-w-[700px] border-collapse text-sm">
+
+              <thead>
+                <tr className="border-b-2 border-gray-900">
+
+                  <TH>Acquirer</TH>
+
+                  <TH>Target</TH>
+
+                  <TH align="right">
+                    Value
+                  </TH>
+
+                  <TH className="hidden md:table-cell">
+                    Sector
+                  </TH>
+
+                  <TH align="right">
+                    Status
+                  </TH>
+
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-100">
+
+                {maDeals.map((d) => (
+                  <tr
+                    key={d.id}
+                    className="transition-colors hover:bg-gray-50"
+                  >
+
+                    <td className="py-3.5 pr-4 font-semibold text-gray-900">
+                      {d.acquirer}
+                    </td>
+
+                    <td className="px-3 py-3.5 text-gray-600">
+                      {d.target}
+                    </td>
+
+                    <td className="px-3 py-3.5 text-right font-bold tabular-nums text-gray-900">
+                      {d.value}
+                    </td>
+
+                    <td className="hidden px-3 py-3.5 text-xs text-gray-500 md:table-cell">
+                      {d.sector}
+                    </td>
+
+                    <td className="py-3.5 pl-3 text-right">
+
+                      <span
+                        className={`inline-flex rounded-[2px] px-2.5 py-1 text-[10px] font-bold tracking-wide ${dealBadge[d.status]}`}
+                      >
+                        {d.status}
+                      </span>
+
+                    </td>
+
+                  </tr>
+                ))}
+
+              </tbody>
+
+            </table>
+
           </div>
+
         </section>
 
-        {/* =====================================================
-            CORPORATE NEWS
-        ===================================================== */}
-        <section className="mb-12">
-          <SectionHeader
-            eyebrow="Companies in focus"
-            title="Inside Corporate Strategy"
-            description="The decisions behind expansion, technology adoption, leadership, operations and competitive positioning at major companies."
-            link="/business-news"
-            linkText="More company news"
-          />
 
-          <div className="grid gap-x-6 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
-            {corporateNews.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
-        </section>
+        {/* =================================================
+            CORPORATE + STARTUPS
+        ================================================= */}
 
-        <PrideTimesAd variant="fifth" />
+        <section className="grid grid-cols-1 gap-10 border-t-2 border-black pt-10 md:grid-cols-2">
 
-        {/* =====================================================
-            STARTUPS
-        ===================================================== */}
-        <section className="mb-12">
-          <SectionHeader
-            eyebrow="Startup capital & growth"
-            title="The Startup Economy"
-            description="Funding, valuations, acquisitions and strategic moves across the companies building the next generation of technology and services."
-            link="/startup-success"
-            linkText="Startup coverage"
-          />
+          {/* =================================================
+              CORPORATE NEWS
+          ================================================= */}
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            {startupNews.map((article, index) => (
-              <Link
-                key={article.id}
-                to={articleLink(article)}
-                className="group grid gap-5 border-b border-gray-200 pb-6 sm:grid-cols-[180px_1fr]"
-              >
-                {article.image && (
-                  <div className="overflow-hidden border border-gray-200 bg-gray-100">
-                    <ImageWithFallback
-                      src={article.image}
-                      alt={article.title}
-                      className="h-36 w-full object-cover transition-transform duration-500 group-hover:scale-[1.04] sm:h-full"
-                    />
-                  </div>
-                )}
+          <div>
 
-                <div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-serif text-2xl font-bold text-gray-200">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
-                      {article.category}
-                    </span>
-                  </div>
+            <SectionHeader title="Inside Corporate Strategy" />
 
-                  <h3 className="mt-2 font-serif text-xl font-bold leading-tight text-gray-950 transition-colors group-hover:text-red-600 sm:text-2xl">
-                    {article.title}
+            <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
+              The decisions behind expansion, technology adoption, leadership changes and competitive strategy at major companies.
+            </p>
+
+            <div className="space-y-3">
+
+              {corporateNews.slice(0, 3).map((n) => (
+
+                <Link
+                  key={n.id}
+                  to={`/article/${n.id}`}
+                  className="
+                    group
+                    block
+                    rounded-md
+                    border
+                    border-gray-200
+                    bg-white
+                    p-4
+                    transition-all
+                    duration-200
+                    hover:border-gray-300
+                    hover:bg-gray-50
+                  "
+                >
+
+                  <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-red-600">
+                    {n.category}
+                  </span>
+
+                  <h3
+                    className="
+                      mt-1.5
+                      text-sm
+                      font-semibold
+                      leading-[1.5]
+                      text-gray-900
+                      transition-colors
+                      duration-200
+                      group-hover:text-red-600
+                      md:text-[15px]
+                    "
+                  >
+                    {n.title}
                   </h3>
 
-                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-gray-600">
-                    {articleExcerpt(article)}
-                  </p>
-
-                  <span className="mt-4 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 group-hover:text-red-600">
-                    Read story
-                    <ArrowRight size={10} />
+                  <span
+                    className="
+                      mt-2
+                      flex
+                      items-center
+                      gap-1.5
+                      text-[11px]
+                      uppercase
+                      tracking-wide
+                      text-gray-400
+                    "
+                  >
+                    <Clock size={10} strokeWidth={2.25} />
+                    {n.time}
                   </span>
+
+                </Link>
+
+              ))}
+
+            </div>
+
+          </div>
+
+
+          {/* =================================================
+              STARTUPS & VENTURE
+          ================================================= */}
+
+          <div>
+
+            <SectionHeader title="The Startup Economy" />
+
+            <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
+              Funding rounds, valuations, acquisitions and the founders building the next generation of companies.
+            </p>
+
+            <div className="space-y-3">
+
+              {startupNews.map((n) => (
+
+                <Link
+                  key={n.id}
+                  to={`/article/${n.id}`}
+                  className="
+                    group
+                    block
+                    rounded-md
+                    border
+                    border-gray-200
+                    bg-white
+                    p-4
+                    transition-all
+                    duration-200
+                    hover:border-gray-300
+                    hover:bg-gray-50
+                  "
+                >
+
+                  <h3
+                    className="
+                      text-sm
+                      font-semibold
+                      leading-[1.5]
+                      text-gray-900
+                      transition-colors
+                      duration-200
+                      group-hover:text-red-600
+                      md:text-[15px]
+                    "
+                  >
+                    {n.title}
+                  </h3>
+
+                  <span
+                    className="
+                      mt-2
+                      flex
+                      items-center
+                      gap-1.5
+                      text-[11px]
+                      uppercase
+                      tracking-wide
+                      text-gray-400
+                    "
+                  >
+                    <Clock size={10} strokeWidth={2.25} />
+                    {n.time}
+                  </span>
+
+                </Link>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* =================================================
+            SECOND ADVERTISEMENT
+        ================================================= */}
+
+        <div className="my-12 md:my-14">
+          <AdSpace label="Business Solutions | Powered by The Pride Times" />
+        </div>
+
+
+        {/* =================================================
+            SPONSORED EVENTS
+        ================================================= */}
+
+        <section className="rounded-md border border-gray-100 bg-gray-50 p-4 sm:p-5">
+
+          <div className="mb-4 flex items-center gap-2">
+
+            <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+              Industry Events & Executive Briefings
+            </span>
+
+            <span className="text-[9px] text-gray-400">
+              Presented by our partners
+            </span>
+
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+            {[
+              "Global Finance Summit 2026",
+              "Tech Leaders Forum",
+              "Energy Transition Conference",
+              "AI & Business World",
+            ].map((item) => (
+
+              <div
+                key={item}
+                className="flex min-h-[90px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-4 text-center"
+              >
+
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+                  <Briefcase size={13} />
                 </div>
-              </Link>
+
+                <p className="mt-2 text-[10px] font-bold text-gray-900">
+                  {item}
+                </p>
+
+                <p className="mt-1 text-[8px] text-gray-400">
+                  Sponsored Event
+                </p>
+
+              </div>
+
             ))}
+
           </div>
+
         </section>
 
-        {/* =====================================================
-            EDITORIAL NOTE / NEWSLETTER
-        ===================================================== */
-        <section className="grid gap-6 border-t-2 border-black pt-7 lg:grid-cols-[1.4fr_0.8fr]">
-          <div className="bg-white p-6 sm:p-8">
-            <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-red-600">
-              The Pride Times Editorial Desk
-            </p>
-            <h2 className="mt-2 font-serif text-3xl font-bold leading-tight text-gray-950 sm:text-4xl">
-              The Business Brief
-            </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-600 sm:text-base">
-              A concise briefing on companies, capital, strategy and the
-              business decisions shaping the next phase of the global economy.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                to="/business-news"
-                className="inline-flex items-center gap-2 bg-[#171717] px-5 py-3 text-[9px] font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-red-600"
-              >
-                Explore Business
-                <ArrowRight size={11} />
-              </Link>
-            </div>
+
+        {/* =================================================
+            NEWSLETTER
+        ================================================= */}
+
+        <section className="mt-6 rounded-md bg-[#071a2d] px-5 py-8 text-center sm:px-8 md:py-10">
+
+          <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-red-400">
+            The Daily Brief
+          </p>
+
+          <h2 className="mt-2 font-serif text-3xl font-bold text-white md:text-4xl">
+            The Pride Times Business Brief
+          </h2>
+
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-300">
+            A concise briefing on companies, markets, capital and the business decisions shaping tomorrow&apos;s economy.
+          </p>
+
+          <div className="mx-auto mt-5 flex max-w-lg flex-col gap-2 sm:flex-row">
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="h-10 flex-1 rounded-sm border border-gray-500 bg-white/10 px-3 text-xs text-white outline-none placeholder:text-gray-400 focus:border-red-500"
+            />
+
+            <button
+              type="button"
+              className="h-10 rounded-sm bg-red-600 px-5 text-xs font-bold text-white transition-colors hover:bg-red-700"
+            >
+              Subscribe Free
+            </button>
+
           </div>
 
-          <div className="border border-gray-200 bg-[#171717] p-6 text-white sm:p-8">
-            <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-red-400">
-              Newsletter
-            </p>
-            <h2 className="mt-2 font-serif text-2xl font-bold">
-              The Pride Times Business Brief
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-gray-400">
-              The essential corporate developments, deal activity and strategic
-              signals, delivered in a concise editorial format.
-            </p>
-
-            <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <input
-                type="email"
-                placeholder="Your email address"
-                aria-label="Email address"
-                className="min-w-0 flex-1 border border-white/20 bg-white px-4 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-red-500"
-              />
-              <button
-                type="button"
-                className="bg-red-600 px-5 py-3 text-[9px] font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-red-700"
-              >
-                Subscribe
-              </button>
-            </div>
-          </div>
         </section>
 
-        <PrideTimesAd variant="first" />
-      </main>
+      </div>
     </div>
   );
 }
-
-export default BusinessNewsPage;
