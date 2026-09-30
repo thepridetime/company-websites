@@ -1,5 +1,6 @@
-import { Clock, Briefcase } from "lucide-react";
+import { useEffect } from "react";
 import type { ReactNode } from "react";
+import { Clock, Briefcase } from "lucide-react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import {
@@ -27,71 +28,49 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 /* =========================================================
-   AD SPACE
+   REAL GOOGLE ADSENSE
+   Existing Pride Times publisher + slots are preserved.
 ========================================================= */
+type AdSenseWindow = Window & { adsbygoogle?: unknown[] };
 
 function AdSpace({
-  label = "Advertisement Space",
+  slot = "5373718974",
+  inArticle = false,
 }: {
-  label?: string;
+  slot?: "5373718974" | "8042854193";
+  inArticle?: boolean;
 }) {
+  useEffect(() => {
+    try {
+      const adsWindow = window as AdSenseWindow;
+      adsWindow.adsbygoogle = adsWindow.adsbygoogle || [];
+      adsWindow.adsbygoogle.push({});
+    } catch (error) {
+      console.warn("AdSense could not initialize:", error);
+    }
+  }, []);
+
   return (
-    <div className="relative w-full overflow-hidden rounded-sm border border-gray-200 bg-gradient-to-r from-[#102b33] via-[#193944] to-[#28596a]">
-      <div className="flex min-h-[90px] flex-col items-center justify-center px-4 py-5 text-center">
-        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.18em] text-sky-300">
-          Google AdSense
-        </span>
-
-        <span className="mt-1 text-sm sm:text-base font-semibold text-white">
-          {label}
-        </span>
-
-        <span className="mt-1 text-[8px] sm:text-[9px] text-sky-300">
-          728 × 90 • Leaderboard
-        </span>
-      </div>
-
-      <span className="absolute right-1.5 top-1 text-[7px] text-gray-300">
+    <div className="w-full overflow-hidden border-y border-gray-200 bg-white py-4">
+      <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-400">
         Advertisement
-      </span>
+      </p>
+
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block", minHeight: inArticle ? "120px" : "90px" }}
+        data-ad-client="ca-pub-2331501617441941"
+        data-ad-slot={slot}
+        {...(inArticle
+          ? { "data-ad-layout": "in-article", "data-ad-format": "fluid" }
+          : { "data-ad-format": "auto", "data-full-width-responsive": "true" })}
+      />
     </div>
   );
 }
 
-/* =========================================================
-   SIDEBAR SPONSORED AD
-========================================================= */
-
-function SponsoredAd() {
-  return (
-    <div className="rounded-md border border-gray-200 bg-[#faf9f4] overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-          Sponsored Content
-        </span>
-
-        <span className="text-[8px] text-gray-400">
-          Ad
-        </span>
-      </div>
-
-      <div className="mx-3 mb-3 flex h-[145px] items-center justify-center bg-[#10162f] px-4 text-center">
-        <div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-yellow-400">
-            Featured Partner
-          </p>
-
-          <p className="mt-3 text-base font-semibold text-white">
-            Your Ad Here
-          </p>
-
-          <p className="mt-2 text-[9px] leading-4 text-gray-300">
-            Reach 2M+ business readers
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+function SidebarAd() {
+  return <AdSpace slot="5373718974" />;
 }
 
 /* =========================================================
@@ -112,7 +91,7 @@ function MoreStories({
     <div className="mt-5">
       <div className="border-b-2 border-black pb-2">
         <h3 className="text-[12px] font-bold uppercase tracking-[0.08em]">
-          More Business Stories
+          More Stories
         </h3>
       </div>
 
@@ -295,7 +274,7 @@ export function BusinessNewsPage() {
 
           <aside className="lg:pt-0">
 
-            <SponsoredAd />
+            <SidebarAd />
 
             <MoreStories stories={corporateNews.slice(3, 6)} />
 
@@ -394,7 +373,7 @@ export function BusinessNewsPage() {
 
         <section className="mb-12 md:mb-14">
 
-          <SectionHeader title="Deals & Capital: Where Money Is Moving" />
+          <SectionHeader title="Deals &amp; Capital: Where Money Is Moving" />
 
           <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
             Acquisitions, strategic investments and infrastructure deals reshaping industries and corporate balance sheets.
@@ -638,7 +617,7 @@ export function BusinessNewsPage() {
         ================================================= */}
 
         <div className="my-12 md:my-14">
-          <AdSpace label="Business Solutions | Powered by The Pride Times" />
+          <AdSpace slot="8042854193" inArticle />
         </div>
 
 
@@ -651,7 +630,7 @@ export function BusinessNewsPage() {
           <div className="mb-4 flex items-center gap-2">
 
             <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-              Industry Events & Executive Briefings
+              Industry Events &amp; Executive Briefings
             </span>
 
             <span className="text-[9px] text-gray-400">
@@ -701,16 +680,12 @@ export function BusinessNewsPage() {
 
         <section className="mt-6 rounded-md bg-[#071a2d] px-5 py-8 text-center sm:px-8 md:py-10">
 
-          <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-red-400">
-            The Daily Brief
-          </p>
-
-          <h2 className="mt-2 font-serif text-3xl font-bold text-white md:text-4xl">
-            The Pride Times Business Brief
+          <h2 className="font-serif text-xl font-bold text-white md:text-2xl">
+            Stay Ahead with The Pride Times
           </h2>
 
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-300">
-            A concise briefing on companies, markets, capital and the business decisions shaping tomorrow&apos;s economy.
+          <p className="mt-2 text-xs text-gray-300 md:text-sm">
+            A concise briefing on companies, markets, capital and the business decisions shaping tomorrow's economy.
           </p>
 
           <div className="mx-auto mt-5 flex max-w-lg flex-col gap-2 sm:flex-row">
