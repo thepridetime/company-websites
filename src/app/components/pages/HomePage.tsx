@@ -618,21 +618,6 @@ function SectionHeader({
   );
 }
 
-/* =========================================================
-   SAFE ARTICLE LINK
-
-   Only send a story to /article/... when that exact story exists
-   in homepageArticleData. Otherwise use the section link already
-   defined by the homepage card. This prevents "Story not found"
-   pages caused by headline text being different from the editorial
-   article data.
-========================================================= */
-
-function getSafeArticleHref(title: string, fallbackLink: string) {
-  const article = homepageArticles.find((item) => item.title === title);
-
-  return article ? articlePath(article.title) : fallbackLink;
-}
 
 /* =========================================================
    HOME PAGE
@@ -748,7 +733,7 @@ export function HomePage() {
               {/* LEAD STORY */}
 
               <Link
-                to={getSafeArticleHref(heroStory.title, heroStory.link)}
+                to={articlePath(heroStory.title)}
                 className="
                   group
                   relative
@@ -876,7 +861,7 @@ export function HomePage() {
                   </span>
 
                   <Link
-                    to={getSafeArticleHref(centerStories[0].title, centerStories[0].link)}
+                    to={articlePath(centerStories[0].title)}
                     className="group block"
                   >
                     <div className="overflow-hidden rounded-lg">
@@ -929,7 +914,7 @@ export function HomePage() {
                 {/* SECOND MAJOR STORY */}
 
                 <Link
-                  to={getSafeArticleHref(centerStories[1].title, centerStories[1].link)}
+                  to={articlePath(centerStories[1].title)}
                   className="
                     group
                     flex
@@ -1140,7 +1125,7 @@ export function HomePage() {
                   </div>
 
                   <Link
-                    to={getSafeArticleHref(videoFeature.title, videoFeature.link)}
+                    to={articlePath(videoFeature.title)}
                     className="group block"
                   >
                     <div className="relative overflow-hidden rounded-lg">
@@ -1249,7 +1234,7 @@ export function HomePage() {
                     {sidebarNews.map((item) => (
                       <Link
                         key={item.id}
-                        to={getSafeArticleHref(item.title, item.link)}
+                        to={articlePath(item.title)}
                         className="
                           group
                           block
@@ -1345,7 +1330,7 @@ export function HomePage() {
               {latestStories.map((story, index) => (
                 <Link
                   key={story.id}
-                  to={getSafeArticleHref(story.title, story.link)}
+                  to={articlePath(story.title)}
                   className="
                     group
                     grid
@@ -1474,7 +1459,7 @@ export function HomePage() {
                 {editorsPicks.map((pick) => (
                   <Link
                     key={pick.id}
-                    to={getSafeArticleHref(pick.title, pick.link)}
+                    to={articlePath(pick.title)}
                     className="
                       group
                       grid
