@@ -541,7 +541,7 @@ const prideTimes30 = [
     name: "Sam Altman",
     company: "OpenAI",
     sector:
-      "Development and deployment of frontier artificial intelligence through OpenAI's research and products.",
+      "Frontier AI and always-on AI agents, developed and deployed through OpenAI's research and products.",
   },
   {
     rank: 6,
@@ -559,24 +559,24 @@ const prideTimes30 = [
   },
   {
     rank: 8,
-    name: "C.C. Wei",
-    company: "TSMC",
+    name: "John Ternus",
+    company: "Apple",
     sector:
-      "Advanced semiconductor manufacturing serving the global technology industry through TSMC.",
+      "Apple's hardware and product strategy, with AI features such as Siri increasingly central to it.",
   },
   {
     rank: 9,
+    name: "Mark Zuckerberg",
+    company: "Meta",
+    sector:
+      "AI research and consumer platforms across Meta's apps and its push toward advanced AI systems.",
+  },
+  {
+    rank: 10,
     name: "Alex Karp",
     company: "Palantir",
     sector:
       "Enterprise AI and data platforms serving commercial and government markets through Palantir.",
-  },
-  {
-    rank: 10,
-    name: "Mary Barra",
-    company: "General Motors",
-    sector:
-      "Automotive transformation through electrification and technology at General Motors.",
   },
 ];
 
