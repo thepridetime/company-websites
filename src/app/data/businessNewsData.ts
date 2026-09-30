@@ -7,13 +7,21 @@ export type BusinessArticle = {
   id: string;
   category: string;
   title: string;
+  dek: string;
   excerpt?: string;
   author: string;
+  publishedAt: string;
   time: string;
+  readTime: string;
   image?: string;
   highlights: string[];
   sections: { heading: string; body: string }[];
+  tags: string[];
+  editorNote: string;
 };
+
+const HERO_TITLE =
+  "The Great Corporate AI Arms Race: How Fortune 500 Companies Are Spending $2.3 Trillion to Win the Intelligence Economy";
 
 const editorial = (
   title: string,
@@ -27,25 +35,32 @@ const editorial = (
   id: title === HERO_TITLE ? "biz-hero" : "",
   category,
   title,
+  dek: excerpt,
   excerpt,
-  author: "Sagar Kumar",
+  author: "The Pride Times",
+  publishedAt: time,
   time,
+  readTime: "6 min read",
   image,
   highlights,
   sections,
+  tags: [category, "Business", "Corporate Strategy"],
+  editorNote:
+    "This editorial frames the business story around the signals, decisions and operating questions that matter beyond the initial headline.",
 });
-
-const HERO_TITLE =
-  "The Great Corporate AI Arms Race: How Fortune 500 Companies Are Spending $2.3 Trillion to Win the Intelligence Economy";
 
 export const hero: BusinessArticle = {
   id: "biz-hero",
   category: "CORPORATE STRATEGY",
   title: HERO_TITLE,
+  dek:
+    "Microsoft, Google, Amazon, Meta and Apple have collectively committed $2.3 trillion in AI investment through 2030. Every sector — from banking to retail, healthcare to manufacturing — is being redrawn.",
   excerpt:
     "Microsoft, Google, Amazon, Meta and Apple have collectively committed $2.3 trillion in AI investment through 2030. Every sector — from banking to retail, healthcare to manufacturing — is being redrawn.",
-  author: "Sagar Kumar",
+  author: "The Pride Times",
+  publishedAt: "2 hours ago",
   time: "2 hours ago",
+  readTime: "7 min read",
   image:
     "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
   highlights: [
@@ -76,6 +91,9 @@ export const hero: BusinessArticle = {
         "The next stage of the corporate AI race will be measured less by announcements and more by deployment. Product adoption, recurring revenue, productivity improvements and disciplined capital allocation will provide clearer evidence of which strategies are working.",
     },
   ],
+  tags: ["AI", "Corporate Strategy", "Technology", "Investment", "Business"],
+  editorNote:
+    "The AI investment cycle is no longer confined to technology departments. This story looks at the capital commitments, infrastructure requirements and business-model questions that determine whether spending becomes durable economic value.",
 };
 
 export const maDeals = [
@@ -98,7 +116,8 @@ export const earningsNews = [
 const commonSections = (focus: string) => [
   {
     heading: "The development",
-    body: `${focus} is part of a broader corporate story being watched by investors, employees and customers. The immediate announcement provides one data point, but its significance will depend on execution, market demand and how competitors respond.`,
+    body:
+      `${focus} is part of a broader corporate story being watched by investors, employees and customers. The immediate announcement provides one data point, but its significance will depend on execution, market demand and how competitors respond.`,
   },
   {
     heading: "Why businesses are watching",
@@ -127,9 +146,14 @@ const makeArticle = (
   id,
   category,
   title,
-  author: "Sagar Kumar",
+  dek:
+    `${focus}. The development is being followed for its potential effect on corporate strategy, investment and the wider business environment.`,
+  excerpt:
+    `${focus}. The development is being followed for its potential effect on corporate strategy, investment and the wider business environment.`,
+  author: "The Pride Times",
+  publishedAt: time,
   time,
-  excerpt: `${focus} The development is being followed for its potential effect on corporate strategy, investment and the wider business environment.`,
+  readTime: "5 min read",
   highlights: [
     `The central development is ${focus.toLowerCase()}.`,
     "Management strategy and capital allocation will remain important signals.",
@@ -137,6 +161,9 @@ const makeArticle = (
     "Further disclosures will provide more evidence about the longer-term impact.",
   ],
   sections: commonSections(focus),
+  tags: [category, "Business", "Corporate Strategy", "Markets"],
+  editorNote:
+    "This business briefing separates the immediate announcement from the longer-term questions around execution, demand, competition and capital allocation.",
 });
 
 export const corporateNews: BusinessArticle[] = [
@@ -155,14 +182,27 @@ export const startupNews: BusinessArticle[] = [
   makeArticle("biz-startup-4", "STARTUPS", "SpaceX Valuation Hits $350B — Overtakes Boeing and Airbus Combined", "8 hrs ago", "SpaceX has reached a reported $350 billion valuation"),
 ];
 
-export const businessArticles: BusinessArticle[] = [hero, ...corporateNews, ...startupNews];
+export const businessArticles: BusinessArticle[] = [
+  hero,
+  ...corporateNews,
+  ...startupNews,
+];
 
 export function getBusinessArticleById(id: string | undefined) {
   return businessArticles.find((a) => a.id === id);
 }
 
-export function getRelatedBusinessArticles(article: BusinessArticle, limit = 4) {
-  return businessArticles
-    .filter((a) => a.id !== article.id && a.category === article.category)
-    .slice(0, limit);
+export function getRelatedBusinessArticles(
+  article: BusinessArticle,
+  limit = 4
+) {
+  const sameCategory = businessArticles.filter(
+    (a) => a.id !== article.id && a.category === article.category
+  );
+
+  const fallback = businessArticles.filter(
+    (a) => a.id !== article.id && a.category !== article.category
+  );
+
+  return [...sameCategory, ...fallback].slice(0, limit);
 }
