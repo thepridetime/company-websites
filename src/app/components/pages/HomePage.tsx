@@ -94,7 +94,7 @@ function PrideTimesAd() {
 const heroStory = {
   category: "MARKETS | INDIA",
   title:
-    "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
+    "Why India's Derivatives Trading Just Had Its Worst Stretch Since 2024",
   excerpt:
     "Tax changes are weighing on derivatives activity across India's market, with trading falling sharply from earlier levels. The shift highlights the growing effect of tax costs on market activity, according to Bloomberg News.",
   image: HeroImg,
@@ -110,7 +110,7 @@ const centerStories = [
     id: 1,
     tag: "MARKETS",
     title:
-      "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
+      "Small-Caps Are Back: What a 21% Rally From March Lows Says About Risk Appetite",
     excerpt:
       "Investor appetite is returning to smaller companies as domestic risk appetite improves and the segment recovers from its March lows.",
     publishedAt: "2026-09-22T06:00:00Z",
@@ -121,7 +121,7 @@ const centerStories = [
     id: 2,
     tag: "BUSINESS",
     title:
-      "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
+      "Dimon Is Bullish on India, So Why Are Tax Rules Still Making Investors Nervous?",
     excerpt:
       "JPMorgan CEO Jamie Dimon said India's long-term prospects remain strong, while tax rules, regulation and policy uncertainty remain concerns for investors.",
     publishedAt: "2026-09-22T11:26:00Z",
@@ -136,7 +136,7 @@ const centerStories = [
 
 const videoFeature = {
   title:
-    "Alibaba Unveils AI Chip as It Targets Global Data Centre Expansion",
+    "What Alibaba's New AI Chip Reveals About Its Global Data Centre Ambitions",
   image: HeroImg,
   link: "/technology",
 };
@@ -165,7 +165,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
+        "Why India's Derivatives Trading Just Had Its Worst Stretch Since 2024",
       publishedAt: "2026-09-22T10:00:00Z",
       image: Ln1Img,
       link: "/markets",
@@ -174,7 +174,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: true,
       title:
-        "India's Gold Import Standstill Threatens Supply",
+        "What India's Gold Import Standstill Means for Supply",
       publishedAt: "2026-09-22T08:00:00Z",
       image: HeroImg,
       link: "/markets",
@@ -183,7 +183,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
+        "Why India and Vietnam Are Betting on AI and Defense Together",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -192,7 +192,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
+        "Small-Caps Are Back: What a 21% Rally From March Lows Says About Risk Appetite",
       publishedAt: "2026-09-22T06:00:00Z",
       image: LN4Img,
       link: "/markets",
@@ -201,7 +201,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 5,
       hot: true,
       title:
-        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
+        "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
       publishedAt: "2026-09-22T09:24:00Z",
       image: Ln1Img,
       link: "/markets",
@@ -213,7 +213,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
+        "Why India's Derivatives Trading Just Had Its Worst Stretch Since 2024",
       publishedAt: "2026-09-22T10:00:00Z",
       image: HeroImg,
       link: "/markets",
@@ -222,7 +222,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
+        "Small-Caps Are Back: What a 21% Rally From March Lows Says About Risk Appetite",
       publishedAt: "2026-09-22T06:00:00Z",
       image: InsImg,
       link: "/markets",
@@ -231,7 +231,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Asian Currencies Gain Traction After Defensive Moves",
+        "Why Asian Currencies Are Finding Their Footing After Defensive Moves",
       publishedAt: "2026-09-22T04:00:00Z",
       image: LN3Img,
       link: "/markets",
@@ -240,7 +240,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Stocks Rally as Brent Holds Below $100 on Iran Hopes",
+        "Why Stocks Are Rallying: Brent Below $100 and Iran Hopes",
       publishedAt: "2026-09-22T02:00:00Z",
       image: LN4Img,
       link: "/markets",
@@ -252,7 +252,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
+        "Dimon Is Bullish on India, So Why Are Tax Rules Still Making Investors Nervous?",
       publishedAt: "2026-09-22T11:26:00Z",
       image: HeroImg,
       link: "/finance",
@@ -261,7 +261,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
+        "Loan Guarantees for Firms and Airlines: Why India Stepped In as War Bites",
       publishedAt: "2026-09-21T22:00:00Z",
       image: InsImg,
       link: "/finance",
@@ -270,7 +270,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
+        "Dimon Backs Chandrasekaran: What the Tata Rift Means for Investors",
       publishedAt: "2026-09-22T08:36:00Z",
       image: LN3Img,
       link: "/finance",
@@ -279,7 +279,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "India's Gold Import Standstill Threatens Supply",
+        "What India's Gold Import Standstill Means for Supply",
       publishedAt: "2026-09-22T08:00:00Z",
       image: LN4Img,
       link: "/finance",
@@ -291,7 +291,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
+        "Dimon Is Bullish on India, So Why Are Tax Rules Still Making Investors Nervous?",
       publishedAt: "2026-09-22T11:26:00Z",
       image: HeroImg,
       link: "/business-news",
@@ -300,7 +300,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Berger Paints Steps Up Expansion Amid Competition From Birla Opus, JSW Dulux",
+        "Berger Paints Is Expanding Fast, but Can It Hold Ground Against Birla Opus and JSW Dulux?",
       publishedAt: "2026-09-22T09:23:00Z",
       image: InsImg,
       link: "/business-news",
@@ -309,7 +309,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
+        "Dimon Backs Chandrasekaran: What the Tata Rift Means for Investors",
       publishedAt: "2026-09-22T08:36:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -318,7 +318,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "India's Wealthy Youngsters Navigate Factory Floors and Family Offices",
+        "Inside the Next Generation: How India's Wealthy Youngsters Balance Factory Floors and Family Offices",
       publishedAt: "2026-09-22T09:10:00Z",
       image: LN4Img,
       link: "/business-news",
@@ -330,7 +330,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Alibaba Unveils AI Chip as It Targets Global Data Centre Expansion",
+        "What Alibaba's New AI Chip Reveals About Its Global Data Centre Ambitions",
       publishedAt: "2026-09-22T09:08:00Z",
       image: Ln1Img,
       link: "/technology",
@@ -339,7 +339,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: true,
       title:
-        "Satya Nadella to Join OpenAI and Nvidia Leaders at Trump-Xi Dinner",
+        "Why AI's Biggest Names Had a Seat at the Trump-Xi Dinner",
       publishedAt: "2026-09-22T08:08:00Z",
       image: HeroImg,
       link: "/technology",
@@ -348,7 +348,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
+        "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
       publishedAt: "2026-09-22T09:24:00Z",
       image: InsImg,
       link: "/technology",
@@ -357,7 +357,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Alibaba Targets 20 Gigawatts of Global Data Centre Capacity by 2032",
+        "20 Gigawatts by 2032: How Big Is Alibaba's Data Centre Bet?",
       publishedAt: "2026-09-22T09:08:00Z",
       image: LN3Img,
       link: "/technology",
@@ -366,7 +366,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 5,
       hot: false,
       title:
-        "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
+        "What the India-Vietnam AI and Defense Push Means for the Region",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN4Img,
       link: "/technology",
@@ -378,7 +378,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Stocks Rally as Brent Holds Below $100 on Iran Hopes",
+        "Why Stocks Are Rallying: Brent Below $100 and Iran Hopes",
       publishedAt: "2026-09-22T02:00:00Z",
       image: LN4Img,
       link: "/energy",
@@ -387,7 +387,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
+        "Loan Guarantees for Firms and Airlines: Why India Stepped In as War Bites",
       publishedAt: "2026-09-21T22:00:00Z",
       image: HeroImg,
       link: "/energy",
@@ -396,7 +396,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "ReNew Energy Trims Solar Output in India as Grid Constraints Persist",
+        "Why Grid Constraints Are Forcing ReNew Energy to Trim Solar Output",
       publishedAt: "2026-09-22T00:00:00Z",
       image: InsImg,
       link: "/energy",
@@ -405,7 +405,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Gold and Silver Rise on Iran Optimism and a Weaker Dollar",
+        "Why Gold and Silver Are Rising: Iran Optimism Meets a Weaker Dollar",
       publishedAt: "2026-09-22T01:00:00Z",
       image: LN3Img,
       link: "/energy",
@@ -417,7 +417,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: false,
       title:
-        "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
+        "Why India and Vietnam Are Betting on AI and Defense Together",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -426,7 +426,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "India's Wealthy Youngsters Navigate Factory Floors and Family Offices",
+        "Inside the Next Generation: How India's Wealthy Youngsters Balance Factory Floors and Family Offices",
       publishedAt: "2026-09-22T09:10:00Z",
       image: HeroImg,
       link: "/business-news",
@@ -435,7 +435,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "ReNew Energy Trims Solar Output in India as Grid Constraints Persist",
+        "Why Grid Constraints Are Forcing ReNew Energy to Trim Solar Output",
       publishedAt: "2026-09-22T00:00:00Z",
       image: InsImg,
       link: "/energy",
@@ -444,7 +444,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
+        "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
       publishedAt: "2026-09-22T09:24:00Z",
       image: LN4Img,
       link: "/technology",
@@ -461,7 +461,7 @@ const editorsPicks = [
     id: 1,
     category: "MARKETS",
     title:
-      "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
+      "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
     excerpt:
       "India's markets regulator is expanding its use of artificial intelligence to detect manipulation and fraud as trading volumes and data complexity increase across exchanges.",
     publishedAt: "2026-09-22T09:24:00Z",
@@ -472,7 +472,7 @@ const editorsPicks = [
     id: 2,
     category: "WORLD",
     title:
-      "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
+      "Why India and Vietnam Are Betting on AI and Defense Together",
     excerpt:
       "Indian and Vietnamese leaders met to deepen cooperation on artificial intelligence and defense as the two countries expand their strategic partnership.",
     publishedAt: "2026-09-22T07:00:00Z",
@@ -483,7 +483,7 @@ const editorsPicks = [
     id: 3,
     category: "FINANCE",
     title:
-      "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
+      "Dimon Backs Chandrasekaran: What the Tata Rift Means for Investors",
     excerpt:
       "JPMorgan CEO Jamie Dimon voiced support for Tata Sons chairman N. Chandrasekaran while warning that boardroom tensions at the conglomerate could weigh on investor confidence.",
     publishedAt: "2026-09-22T08:36:00Z",
