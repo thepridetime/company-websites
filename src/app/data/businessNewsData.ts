@@ -37,7 +37,7 @@ const editorial = (
   title,
   dek: excerpt,
   excerpt,
-  author: "The Pride Times",
+  author: "Sagar Kumar",
   publishedAt: time,
   time,
   readTime: "6 min read",
@@ -57,7 +57,7 @@ export const hero: BusinessArticle = {
     "Microsoft, Google, Amazon, Meta and Apple have collectively committed $2.3 trillion in AI investment through 2030. Every sector — from banking to retail, healthcare to manufacturing — is being redrawn.",
   excerpt:
     "Microsoft, Google, Amazon, Meta and Apple have collectively committed $2.3 trillion in AI investment through 2030. Every sector — from banking to retail, healthcare to manufacturing — is being redrawn.",
-  author: "The Pride Times",
+  author: "Sagar Kumar",
   publishedAt: "2 hours ago",
   time: "2 hours ago",
   readTime: "7 min read",
@@ -150,7 +150,7 @@ const makeArticle = (
     `${focus}. The development is being followed for its potential effect on corporate strategy, investment and the wider business environment.`,
   excerpt:
     `${focus}. The development is being followed for its potential effect on corporate strategy, investment and the wider business environment.`,
-  author: "The Pride Times",
+  author: "Sagar Kumar",
   publishedAt: time,
   time,
   readTime: "5 min read",
