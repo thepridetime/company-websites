@@ -19,10 +19,7 @@ import Ln1Img from "../../../imports/Ln1.png";
 
 import { getQuotes } from "../../../services/marketApi";
 import { TimeAgo } from "../../utils/timeAgo";
-import {
-  articlePath,
-  homepageArticles,
-} from "../../data/homepageArticleData";
+import { articlePath } from "../../data/homepageArticleData";
 
 /* =========================================================
    TYPES
@@ -45,56 +42,13 @@ type MarketItem = {
 };
 
 /* =========================================================
-   GOOGLE ADSENSE
-========================================================= */
-
-declare global {
-  interface Window {
-    adsbygoogle?: unknown[];
-  }
-}
-
-function PrideTimesAd() {
-  useEffect(() => {
-    try {
-      window.adsbygoogle = window.adsbygoogle || [];
-      window.adsbygoogle.push({});
-    } catch (error) {
-      console.error("AdSense Error:", error);
-    }
-  }, []);
-
-  return (
-    <section
-      aria-label="Advertisement"
-      className="my-8 overflow-hidden border-y border-gray-100 bg-white py-4"
-    >
-      <div className="mb-2 text-center text-[8px] font-medium uppercase tracking-[0.2em] text-gray-400">
-        Advertisement
-      </div>
-
-      <div className="mx-auto w-full max-w-5xl overflow-hidden">
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-2331501617441941"
-          data-ad-slot="6033028012"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
    HERO / LEAD STORY
 ========================================================= */
 
 const heroStory = {
   category: "MARKETS | INDIA",
   title:
-    "Why India's Derivatives Trading Just Had Its Worst Stretch Since 2024",
+    "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
   excerpt:
     "Tax changes are weighing on derivatives activity across India's market, with trading falling sharply from earlier levels. The shift highlights the growing effect of tax costs on market activity, according to Bloomberg News.",
   image: HeroImg,
@@ -110,7 +64,7 @@ const centerStories = [
     id: 1,
     tag: "MARKETS",
     title:
-      "Small-Caps Are Back: What a 21% Rally From March Lows Says About Risk Appetite",
+      "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
     excerpt:
       "Investor appetite is returning to smaller companies as domestic risk appetite improves and the segment recovers from its March lows.",
     publishedAt: "2026-09-22T06:00:00Z",
@@ -121,7 +75,7 @@ const centerStories = [
     id: 2,
     tag: "BUSINESS",
     title:
-      "Dimon Is Bullish on India, So Why Are Tax Rules Still Making Investors Nervous?",
+      "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
     excerpt:
       "JPMorgan CEO Jamie Dimon said India's long-term prospects remain strong, while tax rules, regulation and policy uncertainty remain concerns for investors.",
     publishedAt: "2026-09-22T11:26:00Z",
@@ -136,7 +90,7 @@ const centerStories = [
 
 const videoFeature = {
   title:
-    "What Alibaba's New AI Chip Reveals About Its Global Data Centre Ambitions",
+    "Alibaba Unveils AI Chip as It Targets Global Data Centre Expansion",
   image: HeroImg,
   link: "/technology",
 };
@@ -165,7 +119,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Why India's Derivatives Trading Just Had Its Worst Stretch Since 2024",
+        "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
       publishedAt: "2026-09-22T10:00:00Z",
       image: Ln1Img,
       link: "/markets",
@@ -174,7 +128,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: true,
       title:
-        "What India's Gold Import Standstill Means for Supply",
+        "India's Gold Import Standstill Threatens Supply",
       publishedAt: "2026-09-22T08:00:00Z",
       image: HeroImg,
       link: "/markets",
@@ -183,7 +137,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Why India and Vietnam Are Betting on AI and Defense Together",
+        "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -192,7 +146,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Small-Caps Are Back: What a 21% Rally From March Lows Says About Risk Appetite",
+        "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
       publishedAt: "2026-09-22T06:00:00Z",
       image: LN4Img,
       link: "/markets",
@@ -201,7 +155,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 5,
       hot: true,
       title:
-        "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
+        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
       publishedAt: "2026-09-22T09:24:00Z",
       image: Ln1Img,
       link: "/markets",
@@ -213,7 +167,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Why India's Derivatives Trading Just Had Its Worst Stretch Since 2024",
+        "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
       publishedAt: "2026-09-22T10:00:00Z",
       image: HeroImg,
       link: "/markets",
@@ -222,7 +176,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Small-Caps Are Back: What a 21% Rally From March Lows Says About Risk Appetite",
+        "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
       publishedAt: "2026-09-22T06:00:00Z",
       image: InsImg,
       link: "/markets",
@@ -231,7 +185,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Why Asian Currencies Are Finding Their Footing After Defensive Moves",
+        "Asian Currencies Gain Traction After Defensive Moves",
       publishedAt: "2026-09-22T04:00:00Z",
       image: LN3Img,
       link: "/markets",
@@ -240,7 +194,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Why Stocks Are Rallying: Brent Below $100 and Iran Hopes",
+        "Stocks Rally as Brent Holds Below $100 on Iran Hopes",
       publishedAt: "2026-09-22T02:00:00Z",
       image: LN4Img,
       link: "/markets",
@@ -252,7 +206,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Dimon Is Bullish on India, So Why Are Tax Rules Still Making Investors Nervous?",
+        "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
       publishedAt: "2026-09-22T11:26:00Z",
       image: HeroImg,
       link: "/finance",
@@ -261,7 +215,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Loan Guarantees for Firms and Airlines: Why India Stepped In as War Bites",
+        "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
       publishedAt: "2026-09-21T22:00:00Z",
       image: InsImg,
       link: "/finance",
@@ -270,7 +224,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Dimon Backs Chandrasekaran: What the Tata Rift Means for Investors",
+        "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
       publishedAt: "2026-09-22T08:36:00Z",
       image: LN3Img,
       link: "/finance",
@@ -279,7 +233,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "What India's Gold Import Standstill Means for Supply",
+        "India's Gold Import Standstill Threatens Supply",
       publishedAt: "2026-09-22T08:00:00Z",
       image: LN4Img,
       link: "/finance",
@@ -291,7 +245,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Dimon Is Bullish on India, So Why Are Tax Rules Still Making Investors Nervous?",
+        "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
       publishedAt: "2026-09-22T11:26:00Z",
       image: HeroImg,
       link: "/business-news",
@@ -300,7 +254,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Berger Paints Is Expanding Fast, but Can It Hold Ground Against Birla Opus and JSW Dulux?",
+        "Berger Paints Steps Up Expansion Amid Competition From Birla Opus, JSW Dulux",
       publishedAt: "2026-09-22T09:23:00Z",
       image: InsImg,
       link: "/business-news",
@@ -309,7 +263,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Dimon Backs Chandrasekaran: What the Tata Rift Means for Investors",
+        "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
       publishedAt: "2026-09-22T08:36:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -318,7 +272,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Inside the Next Generation: How India's Wealthy Youngsters Balance Factory Floors and Family Offices",
+        "India's Wealthy Youngsters Navigate Factory Floors and Family Offices",
       publishedAt: "2026-09-22T09:10:00Z",
       image: LN4Img,
       link: "/business-news",
@@ -330,7 +284,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "What Alibaba's New AI Chip Reveals About Its Global Data Centre Ambitions",
+        "Alibaba Unveils AI Chip as It Targets Global Data Centre Expansion",
       publishedAt: "2026-09-22T09:08:00Z",
       image: Ln1Img,
       link: "/technology",
@@ -339,7 +293,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: true,
       title:
-        "Why AI's Biggest Names Had a Seat at the Trump-Xi Dinner",
+        "Satya Nadella to Join OpenAI and Nvidia Leaders at Trump-Xi Dinner",
       publishedAt: "2026-09-22T08:08:00Z",
       image: HeroImg,
       link: "/technology",
@@ -348,7 +302,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
+        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
       publishedAt: "2026-09-22T09:24:00Z",
       image: InsImg,
       link: "/technology",
@@ -357,7 +311,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "20 Gigawatts by 2032: How Big Is Alibaba's Data Centre Bet?",
+        "Alibaba Targets 20 Gigawatts of Global Data Centre Capacity by 2032",
       publishedAt: "2026-09-22T09:08:00Z",
       image: LN3Img,
       link: "/technology",
@@ -366,7 +320,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 5,
       hot: false,
       title:
-        "What the India-Vietnam AI and Defense Push Means for the Region",
+        "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN4Img,
       link: "/technology",
@@ -378,7 +332,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: true,
       title:
-        "Why Stocks Are Rallying: Brent Below $100 and Iran Hopes",
+        "Stocks Rally as Brent Holds Below $100 on Iran Hopes",
       publishedAt: "2026-09-22T02:00:00Z",
       image: LN4Img,
       link: "/energy",
@@ -387,7 +341,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Loan Guarantees for Firms and Airlines: Why India Stepped In as War Bites",
+        "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
       publishedAt: "2026-09-21T22:00:00Z",
       image: HeroImg,
       link: "/energy",
@@ -396,7 +350,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Why Grid Constraints Are Forcing ReNew Energy to Trim Solar Output",
+        "ReNew Energy Trims Solar Output in India as Grid Constraints Persist",
       publishedAt: "2026-09-22T00:00:00Z",
       image: InsImg,
       link: "/energy",
@@ -405,7 +359,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "Why Gold and Silver Are Rising: Iran Optimism Meets a Weaker Dollar",
+        "Gold and Silver Rise on Iran Optimism and a Weaker Dollar",
       publishedAt: "2026-09-22T01:00:00Z",
       image: LN3Img,
       link: "/energy",
@@ -417,7 +371,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 1,
       hot: false,
       title:
-        "Why India and Vietnam Are Betting on AI and Defense Together",
+        "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
       publishedAt: "2026-09-22T07:00:00Z",
       image: LN3Img,
       link: "/business-news",
@@ -426,7 +380,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 2,
       hot: false,
       title:
-        "Inside the Next Generation: How India's Wealthy Youngsters Balance Factory Floors and Family Offices",
+        "India's Wealthy Youngsters Navigate Factory Floors and Family Offices",
       publishedAt: "2026-09-22T09:10:00Z",
       image: HeroImg,
       link: "/business-news",
@@ -435,7 +389,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 3,
       hot: false,
       title:
-        "Why Grid Constraints Are Forcing ReNew Energy to Trim Solar Output",
+        "ReNew Energy Trims Solar Output in India as Grid Constraints Persist",
       publishedAt: "2026-09-22T00:00:00Z",
       image: InsImg,
       link: "/energy",
@@ -444,7 +398,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       id: 4,
       hot: false,
       title:
-        "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
+        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
       publishedAt: "2026-09-22T09:24:00Z",
       image: LN4Img,
       link: "/technology",
@@ -461,7 +415,7 @@ const editorsPicks = [
     id: 1,
     category: "MARKETS",
     title:
-      "How Sebi Is Using AI to Catch Market Manipulation and Fraud",
+      "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
     excerpt:
       "India's markets regulator is expanding its use of artificial intelligence to detect manipulation and fraud as trading volumes and data complexity increase across exchanges.",
     publishedAt: "2026-09-22T09:24:00Z",
@@ -472,7 +426,7 @@ const editorsPicks = [
     id: 2,
     category: "WORLD",
     title:
-      "Why India and Vietnam Are Betting on AI and Defense Together",
+      "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
     excerpt:
       "Indian and Vietnamese leaders met to deepen cooperation on artificial intelligence and defense as the two countries expand their strategic partnership.",
     publishedAt: "2026-09-22T07:00:00Z",
@@ -483,7 +437,7 @@ const editorsPicks = [
     id: 3,
     category: "FINANCE",
     title:
-      "Dimon Backs Chandrasekaran: What the Tata Rift Means for Investors",
+      "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
     excerpt:
       "JPMorgan CEO Jamie Dimon voiced support for Tata Sons chairman N. Chandrasekaran while warning that boardroom tensions at the conglomerate could weigh on investor confidence.",
     publishedAt: "2026-09-22T08:36:00Z",
@@ -541,7 +495,7 @@ const prideTimes30 = [
     name: "Sam Altman",
     company: "OpenAI",
     sector:
-      "Frontier AI and always-on AI agents, developed and deployed through OpenAI's research and products.",
+      "Development and deployment of frontier artificial intelligence through OpenAI's research and products.",
   },
   {
     rank: 6,
@@ -559,24 +513,24 @@ const prideTimes30 = [
   },
   {
     rank: 8,
-    name: "John Ternus",
-    company: "Apple",
+    name: "C.C. Wei",
+    company: "TSMC",
     sector:
-      "Apple's hardware and product strategy, with AI features such as Siri increasingly central to it.",
+      "Advanced semiconductor manufacturing serving the global technology industry through TSMC.",
   },
   {
     rank: 9,
-    name: "Mark Zuckerberg",
-    company: "Meta",
-    sector:
-      "AI research and consumer platforms across Meta's apps and its push toward advanced AI systems.",
-  },
-  {
-    rank: 10,
     name: "Alex Karp",
     company: "Palantir",
     sector:
       "Enterprise AI and data platforms serving commercial and government markets through Palantir.",
+  },
+  {
+    rank: 10,
+    name: "Mary Barra",
+    company: "General Motors",
+    sector:
+      "Automotive transformation through electrification and technology at General Motors.",
   },
 ];
 
@@ -662,6 +616,22 @@ function SectionHeader({
       )}
     </div>
   );
+}
+
+/* =========================================================
+   SAFE ARTICLE LINK
+
+   Only send a story to /article/... when that exact story exists
+   in homepageArticleData. Otherwise use the section link already
+   defined by the homepage card. This prevents "Story not found"
+   pages caused by headline text being different from the editorial
+   article data.
+========================================================= */
+
+function getSafeArticleHref(title: string, fallbackLink: string) {
+  const article = homepageArticles.find((item) => item.title === title);
+
+  return article ? articlePath(article.title) : fallbackLink;
 }
 
 /* =========================================================
@@ -778,7 +748,7 @@ export function HomePage() {
               {/* LEAD STORY */}
 
               <Link
-                to={articlePath(heroStory.title)}
+                to={getSafeArticleHref(heroStory.title, heroStory.link)}
                 className="
                   group
                   relative
@@ -906,7 +876,7 @@ export function HomePage() {
                   </span>
 
                   <Link
-                    to={articlePath(centerStories[0].title)}
+                    to={getSafeArticleHref(centerStories[0].title, centerStories[0].link)}
                     className="group block"
                   >
                     <div className="overflow-hidden rounded-lg">
@@ -959,7 +929,7 @@ export function HomePage() {
                 {/* SECOND MAJOR STORY */}
 
                 <Link
-                  to={articlePath(centerStories[1].title)}
+                  to={getSafeArticleHref(centerStories[1].title, centerStories[1].link)}
                   className="
                     group
                     flex
@@ -1170,7 +1140,7 @@ export function HomePage() {
                   </div>
 
                   <Link
-                    to={articlePath(videoFeature.title)}
+                    to={getSafeArticleHref(videoFeature.title, videoFeature.link)}
                     className="group block"
                   >
                     <div className="relative overflow-hidden rounded-lg">
@@ -1279,7 +1249,7 @@ export function HomePage() {
                     {sidebarNews.map((item) => (
                       <Link
                         key={item.id}
-                        to={articlePath(item.title)}
+                        to={getSafeArticleHref(item.title, item.link)}
                         className="
                           group
                           block
@@ -1319,112 +1289,6 @@ export function HomePage() {
               </aside>
             </div>
           </section>
-
-          <PrideTimesAd />
-
-          {/* =================================================
-              PRIDE TIMES EDITORIAL BLOGS
-          ================================================= */}
-
-          <section className="mb-12">
-            <div
-              className="
-                flex flex-col gap-3 md:flex-row md:items-end md:justify-between
-                border-b-2 border-black pb-3 mb-6
-              "
-            >
-              <div>
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-red-600">
-                  The Pride Times Editorial Desk
-                </span>
-                <h2 className="font-serif text-2xl md:text-3xl font-bold leading-tight mt-1 text-gray-950">
-                  Editorial Blogs
-                </h2>
-                <p className="text-[11px] md:text-xs text-gray-500 leading-[1.6] mt-2 max-w-2xl">
-                  Longer reads built around context, signals and what comes next —
-                  designed for readers who want more than a headline.
-                </p>
-              </div>
-
-              <Link
-                to="/markets"
-                className="shrink-0 text-[9px] font-bold uppercase tracking-[0.14em] text-red-600 inline-flex items-center gap-1"
-              >
-                Explore the newsroom
-                <ArrowRight size={10} />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {homepageArticles.slice(0, 6).map((article, index) => (
-                <Link
-                  key={article.slug}
-                  to={articlePath(article.title)}
-                  className="group block border border-gray-200 bg-white rounded-md overflow-hidden hover:border-gray-400 transition-colors"
-                >
-                  <div className="relative overflow-hidden">
-                    <ImageWithFallback
-                      src={article.image}
-                      alt={article.title}
-                      className="w-full h-[190px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    />
-
-                    <div className="absolute top-3 left-3 flex items-center gap-2">
-                      <span className="bg-white/95 px-2 py-1 text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
-                        {article.category}
-                      </span>
-                      {index === 0 && (
-                        <span className="bg-black px-2 py-1 text-[8px] font-bold uppercase tracking-[0.14em] text-white">
-                          Featured
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="p-4">
-                    <div className="flex items-center justify-between gap-3 text-[8px] uppercase tracking-[0.13em] text-gray-400">
-                      <span>{article.author}</span>
-                      <span className="inline-flex items-center gap-1 shrink-0">
-                        <Clock size={8} />
-                        {article.readTime}
-                      </span>
-                    </div>
-
-                    <h3 className="font-serif text-lg font-bold leading-[1.18] mt-2 text-gray-950 group-hover:text-red-600 transition-colors">
-                      {article.title}
-                    </h3>
-
-                    <p className="text-[11px] text-gray-600 leading-[1.6] mt-2 line-clamp-3">
-                      {article.dek}
-                    </p>
-
-                    <div className="flex flex-wrap gap-1.5 mt-3">
-                      {article.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-1 rounded-full bg-gray-50 border border-gray-100 text-[8px] font-semibold uppercase tracking-[0.08em] text-gray-500"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-                      <span className="text-[9px] text-gray-400">
-                        {article.publishedAt}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-red-600">
-                        Read blog
-                        <ArrowRight size={9} />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-
-          <PrideTimesAd />
 
           {/* =================================================
               LATEST BUSINESS NEWS
@@ -1481,7 +1345,7 @@ export function HomePage() {
               {latestStories.map((story, index) => (
                 <Link
                   key={story.id}
-                  to={articlePath(story.title)}
+                  to={getSafeArticleHref(story.title, story.link)}
                   className="
                     group
                     grid
@@ -1585,8 +1449,6 @@ export function HomePage() {
             </div>
           </section>
 
-          <PrideTimesAd />
-
           {/* =================================================
               EDITORIAL PICKS + MAGAZINE
           ================================================= */}
@@ -1612,7 +1474,7 @@ export function HomePage() {
                 {editorsPicks.map((pick) => (
                   <Link
                     key={pick.id}
-                    to={articlePath(pick.title)}
+                    to={getSafeArticleHref(pick.title, pick.link)}
                     className="
                       group
                       grid
