@@ -1,14 +1,7 @@
+
 import { Fragment, useEffect } from "react";
 import { Link, useParams } from "react-router";
-import {
-  ArrowLeft,
-  Bookmark,
-  Clock,
-  Quote,
-  Share2,
-} from "lucide-react";
-
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ArrowLeft, ArrowRight, Clock, Quote, Share2 } from "lucide-react";
 
 import {
   getHomepageArticleBySlug,
@@ -16,20 +9,17 @@ import {
   articlePath,
   type HomepageArticle as HomepageArticleType,
 } from "../../data/homepageArticleData";
-
 import {
   getBusinessArticleById,
   getRelatedBusinessArticles,
   type BusinessArticle,
 } from "../../data/businessNewsData";
-
 import {
   getTechnologyArticleById,
   getRelatedTechnologyArticles,
   type TechnologyArticle,
   technologyArticlePath,
 } from "../../data/technologyNewsData";
-
 import {
   getSpecialArticleById,
   specialArticlePath,
@@ -38,8 +28,9 @@ import {
 } from "../../data/specialArticleData";
 
 type EditorialArticle = BusinessArticle | TechnologyArticle;
-
 type AdSenseWindow = Window & { adsbygoogle?: unknown[] };
+
+type BlogSection = { heading: string; body: string };
 
 function AdSenseUnit({
   slot,
@@ -59,12 +50,11 @@ function AdSenseUnit({
   }, []);
 
   return (
-    <div className="my-10 w-full border-y border-gray-200 bg-white py-5">
-      <div className="mx-auto max-w-4xl px-2 sm:px-4">
-        <p className="mb-2 text-center text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
+    <div className="my-12 w-full border-y border-slate-200 bg-white py-5">
+      <div className="mx-auto max-w-3xl px-3 sm:px-5">
+        <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
           Advertisement
         </p>
-
         <ins
           className="adsbygoogle"
           style={{ display: "block", minHeight: "90px" }}
@@ -72,10 +62,7 @@ function AdSenseUnit({
           data-ad-slot={slot}
           {...(inArticle
             ? { "data-ad-layout": "in-article", "data-ad-format": "fluid" }
-            : {
-                "data-ad-format": "auto",
-                "data-full-width-responsive": "true",
-              })}
+            : { "data-ad-format": "auto", "data-full-width-responsive": "true" })}
         />
       </div>
     </div>
@@ -86,403 +73,489 @@ function HomepageArticleAd() {
   return <AdSenseUnit slot="6033028012" />;
 }
 
-/* =========================================================
-   SPECIAL ARTICLE SECTION PATH
-========================================================= */
-
 function getSectionPath(section: string) {
   switch (section) {
-    case "Innovation":
-      return "/innovation";
-    case "Cybersecurity":
-      return "/cybersecurity";
-    case "Healthcare":
-      return "/healthcare";
-    case "Manufacturing":
-      return "/manufacturing";
-    case "Business":
-      return "/business-news";
+    case "Innovation": return "/innovation";
+    case "Cybersecurity": return "/cybersecurity";
+    case "Healthcare": return "/healthcare";
+    case "Manufacturing": return "/manufacturing";
+    case "Business": return "/business-news";
     case "International Business":
-    case "International News":
-      return "/international-news";
-    case "Energy":
-      return "/energy";
-    case "Startup Success":
-      return "/startup-success";
-    case "Technology":
-      return "/technology";
-    default:
-      return "/ceospotlight";
+    case "International News": return "/international-news";
+    case "Energy": return "/energy";
+    case "Startup Success": return "/startup-success";
+    case "Technology": return "/technology";
+    default: return "/ceospotlight";
   }
 }
-
-/* =========================================================
-   SPECIAL ARTICLE SECTION NAME
-========================================================= */
 
 function getSectionName(section: string) {
   switch (section) {
-    case "Innovation":
-      return "Innovation";
-    case "Cybersecurity":
-      return "Cybersecurity";
-    case "Healthcare":
-      return "Healthcare";
-    case "Manufacturing":
-      return "Manufacturing";
-    case "Business":
-      return "Business";
-    case "International Business":
-      return "International Business";
-    case "Startup Success":
-      return "Startup Success";
-    case "Technology":
-      return "Technology";
-    case "Energy":
-      return "Energy";
-    default:
-      return "CEO Spotlight";
+    case "Innovation": return "Innovation";
+    case "Cybersecurity": return "Cybersecurity";
+    case "Healthcare": return "Healthcare";
+    case "Manufacturing": return "Manufacturing";
+    case "Business": return "Business";
+    case "International Business": return "International Business";
+    case "Startup Success": return "Startup Success";
+    case "Technology": return "Technology";
+    case "Energy": return "Energy";
+    default: return "CEO Spotlight";
   }
 }
 
-/* =========================================================
-   RELATED SPECIAL ARTICLES
-========================================================= */
+/* Convert announcement-style headlines into explanatory blog headlines. */
+function formatBlogTitle(title: string, category: string) {
+  const cleanTitle = title.replace(/[.!?]+$/, "").trim();
+
+  const actionMatch = cleanTitle.match(
+    /^(.+?)\s+(?:announces|launches|unveils|introduces|raises|secures|expands|posts|surpasses|overtakes|acquires|draws|clears|sells|reports|reaches|hits)\s+(.+)$/i
+  );
+
+  if (actionMatch) {
+    const company = actionMatch[1].trim();
+    const development = actionMatch[2].split(/\s+[—–-]\s+/)[0].trim();
+
+    const context = category && category.toLowerCase() !== "general"
+      ? category.toLowerCase()
+      : "the wider market";
+
+    return `What ${company}'s ${development} means for ${context}`;
+  }
+
+  if (/^(how|why|what|understanding|inside|a guide|the case for)\b/i.test(cleanTitle)) {
+    return cleanTitle;
+  }
+
+  return `A closer look at ${cleanTitle}`;
+}
+
+/* Improve generic section headings without changing the stored article facts. */
+function formatSectionHeading(heading: string, category: string) {
+  const normalized = heading.trim().toLowerCase();
+
+  if (normalized === "the development") return "The development in context";
+  if (normalized === "why it matters") return `Why this matters for ${category.toLowerCase()}`;
+  if (normalized === "the wider context") return "The broader business context";
+  if (normalized === "what to watch next") return "What to watch from here";
+  if (normalized === "what comes next") return "The next signals to watch";
+  if (normalized === "the operating impact") return "How this could affect day-to-day operations";
+  if (normalized === "the market question") return "The commercial question";
+  if (normalized === "the breakthrough in context") return "The idea behind the development";
+
+  return heading;
+}
 
 function specialArticlesForSection(section: string, currentId: string) {
-  return specialArticles.filter(
-    (article) =>
-      article.section === section && article.id !== currentId
+  return specialArticles
+    .filter((article) => article.section === section && article.id !== currentId)
+    .slice(0, 3);
+}
+
+function relatedHomepageArticles(article: HomepageArticleType, limit = 3) {
+  const sameCategory = homepageArticles.filter(
+    (item) => item.slug !== article.slug && item.category === article.category
+  );
+
+  if (sameCategory.length >= limit) return sameCategory.slice(0, limit);
+
+  const fallback = homepageArticles.filter(
+    (item) => item.slug !== article.slug && !sameCategory.includes(item)
+  );
+
+  return [...sameCategory, ...fallback].slice(0, limit);
+}
+
+/* Shared author, date and reading-time information. */
+function BlogMeta({
+  author,
+  date,
+  readTime,
+}: {
+  author: string;
+  date: string;
+  readTime?: string;
+}) {
+  return (
+    <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-slate-200 py-4 text-[11px] text-slate-500">
+      <span className="font-semibold text-slate-800">By {author}</span>
+
+      <span className="hidden h-1 w-1 rounded-full bg-red-600 sm:block" />
+
+      <time>{date}</time>
+
+      {readTime && (
+        <>
+          <span className="hidden h-1 w-1 rounded-full bg-slate-300 sm:block" />
+          <span className="inline-flex items-center gap-1.5">
+            <Clock size={12} />
+            {readTime}
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* Key takeaways at the beginning of every blog post. */
+function BlogHighlights({ points }: { points: string[] }) {
+  if (!points?.length) return null;
+
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-7">
+      <div className="flex items-center gap-2">
+        <span className="h-2 w-2 rounded-full bg-red-600" />
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+          Key takeaways
+        </p>
+      </div>
+
+      <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+        {points.map((point, index) => (
+          <li
+            key={`${index}-${point}`}
+            className="flex gap-3 text-sm leading-6 text-slate-700"
+          >
+            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-bold text-red-600 ring-1 ring-slate-200">
+              {index + 1}
+            </span>
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/* Main long-form blog content. */
+function BlogBody({
+  sections,
+  category,
+  intro,
+  adSlots,
+}: {
+  sections: BlogSection[];
+  category: string;
+  intro?: string;
+  adSlots?: {
+    first: "5373718974" | "5608262547";
+    second: "8042854193" | "6810700989";
+  };
+}) {
+  return (
+    <div className="blog-prose mt-10">
+      {intro && (
+        <p className="mb-10 border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
+          {intro}
+        </p>
+      )}
+
+      {sections.map((section, index) => (
+        <Fragment key={`${section.heading}-${index}`}>
+          <section className="mb-11 scroll-mt-24">
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+              Section {String(index + 1).padStart(2, "0")}
+            </p>
+
+            <h2 className="max-w-3xl font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
+              {formatSectionHeading(section.heading, category)}
+            </h2>
+
+            <p className="mt-5 text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
+              {section.body}
+            </p>
+
+            {index === 0 && intro && (
+              <blockquote className="my-8 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 text-lg font-medium leading-8 text-slate-800 sm:px-7">
+                <Quote size={18} className="mb-2 text-red-600" />
+                {intro}
+              </blockquote>
+            )}
+          </section>
+
+          {index === 0 && adSlots && <AdSenseUnit slot={adSlots.first} />}
+
+          {index === 1 && adSlots && (
+            <AdSenseUnit slot={adSlots.second} inArticle />
+          )}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+/* Blog information sidebar. */
+function BlogSidebar({
+  highlights,
+  category,
+  section,
+}: {
+  highlights: string[];
+  category: string;
+  section: string;
+}) {
+  return (
+    <aside className="space-y-5 lg:sticky lg:top-8 lg:self-start">
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+          In this post
+        </p>
+
+        <h2 className="mt-2 font-serif text-xl font-bold text-slate-950">
+          Key points
+        </h2>
+
+        <ol className="mt-3 divide-y divide-slate-100">
+          {highlights.slice(0, 5).map((point, index) => (
+            <li
+              key={`${index}-${point}`}
+              className="flex gap-3 py-3 text-sm leading-6 text-slate-600"
+            >
+              <span className="font-semibold tabular-nums text-red-600">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span>{point}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="overflow-hidden rounded-2xl bg-[#101827] p-5 text-white">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
+          The Pride Times
+        </p>
+
+        <p className="mt-3 font-serif text-2xl font-semibold leading-tight">
+          Ideas, context and the bigger picture.
+        </p>
+
+        <div className="mt-5 space-y-3 border-t border-white/15 pt-4 text-sm">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
+              Topic
+            </p>
+            <p className="mt-1">{category}</p>
+          </div>
+
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
+              Coverage
+            </p>
+            <p className="mt-1">{section}</p>
+          </div>
+        </div>
+      </section>
+    </aside>
+  );
+}
+
+/* Back navigation and working share action. */
+function ShareAndBack({
+  to,
+  label,
+  title,
+  description,
+}: {
+  to: string;
+  label: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-5">
+      <Link
+        to={to}
+        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-red-600"
+      >
+        <ArrowLeft size={15} />
+        Back to {label}
+      </Link>
+
+      <button
+        type="button"
+        onClick={() => {
+          if (navigator.share) {
+            navigator.share({
+              title,
+              text: description,
+              url: window.location.href,
+            });
+          } else {
+            navigator.clipboard?.writeText(window.location.href);
+          }
+        }}
+        className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+      >
+        <Share2 size={14} />
+        Share this post
+      </button>
+    </div>
+  );
+}
+
+/* Related posts are deliberately text-only: no thumbnails inside blog pages. */
+function RelatedPosts<
+  T extends {
+    id?: string;
+    slug?: string;
+    title: string;
+    category?: string;
+    dek?: string;
+    excerpt?: string;
+  }
+>({
+  items,
+  getHref,
+}: {
+  items: T[];
+  getHref: (item: T) => string;
+}) {
+  if (!items.length) return null;
+
+  return (
+    <section className="mt-14 border-t border-slate-200 pt-8">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+        Keep exploring
+      </p>
+
+      <h2 className="mt-2 font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+        More ideas to explore
+      </h2>
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((item, index) => (
+          <Link
+            key={item.id ?? item.slug ?? index}
+            to={getHref(item)}
+            className="group rounded-xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-red-200 hover:shadow-lg"
+          >
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+              {item.category ?? "The Pride Times"}
+            </p>
+
+            <h3 className="mt-3 font-serif text-lg font-bold leading-snug text-slate-900 transition group-hover:text-red-700">
+              {formatBlogTitle(item.title, item.category ?? "Business")}
+            </h3>
+
+            <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
+              {item.dek ??
+                item.excerpt ??
+                "Explore the context, developments and ideas shaping this topic."}
+            </p>
+
+            <span className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-slate-700 group-hover:text-red-700">
+              Read the post <ArrowRight size={13} />
+            </span>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
 /* =========================================================
-   SPECIAL ARTICLE EDITORIAL
+   SPECIAL BLOGS
 ========================================================= */
 
-function SpecialArticleEditorial({
-  article,
-}: {
-  article: SpecialArticle;
-}) {
-  const related = specialArticlesForSection(
-    article.section,
-    article.id
-  ).slice(0, 3);
-
+function SpecialBlog({ article }: { article: SpecialArticle }) {
+  const related = specialArticlesForSection(article.section, article.id);
   const sectionPath = getSectionPath(article.section);
   const sectionName = getSectionName(article.section);
+  const title = formatBlogTitle(article.title, article.category);
 
   return (
-    <article className="bg-[#f8f7f3] text-[#171717]">
-      <div className="border-b border-black/10 bg-white">
+    <article className="min-h-screen bg-white text-slate-900">
+      <div className="border-b border-slate-200 bg-slate-50/70">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <Link
             to={sectionPath}
-            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500 hover:text-red-600"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-red-600"
           >
-            <ArrowLeft size={13} />
+            <ArrowLeft size={14} />
             Back to {sectionName}
           </Link>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12">
-        <header className="mx-auto max-w-5xl text-center">
-          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-red-600">
-            {article.category}
-          </p>
+      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+        <header className="mx-auto max-w-4xl">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+            <span>The Pride Times Blog</span>
+            <span className="text-slate-300">/</span>
+            <span>{article.category}</span>
+          </div>
 
-          <h1 className="mt-4 font-serif text-3xl font-bold leading-[1.02] tracking-[-0.035em] sm:text-4xl md:text-6xl">
-            {article.title}
+          <h1 className="mt-5 max-w-4xl font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+            {title}
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-600 sm:text-lg md:text-xl">
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
             {article.dek}
           </p>
 
-          <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-3 border-y border-gray-300 py-4 text-[10px] uppercase tracking-[0.12em] text-gray-500">
-            <span className="font-bold text-gray-800">
-              By {article.author}
-            </span>
-
-            <span className="hidden h-1 w-1 rounded-full bg-red-600 sm:block" />
-
-            <span>{article.publishedAt}</span>
-
-            <span className="flex items-center gap-1.5">
-              <Clock size={12} />
-              {article.readTime}
-            </span>
-          </div>
+          <BlogMeta
+            author={article.author}
+            date={article.publishedAt}
+            readTime={article.readTime}
+          />
         </header>
 
-        {article.image && (
-          <figure className="mx-auto mt-9 max-w-6xl">
-            <div className="overflow-hidden border border-gray-200 bg-gray-100">
-              <ImageWithFallback
-                src={article.image}
-                alt={article.title}
-                className="h-[300px] w-full object-cover sm:h-[460px] md:h-[590px]"
-              />
-            </div>
+        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+          <main className="min-w-0">
+            <BlogHighlights points={article.highlights} />
 
-            <figcaption className="mt-2 text-[9px] uppercase tracking-[0.14em] text-gray-400">
-              The Pride Times · {article.section} Desk
-            </figcaption>
-          </figure>
-        )}
+            <BlogBody
+              sections={article.sections}
+              category={article.category}
+              intro={article.dek}
+            />
 
-        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
-          <main>
-            <p className="font-serif text-xl leading-[1.65] text-gray-950 sm:text-2xl">
-              <span className="float-left mr-2 mt-1 font-serif text-6xl font-bold leading-[0.75] text-red-600">
-                {article.dek.charAt(0)}
-              </span>
-              {article.dek}
-            </p>
-
-            <section className="mt-10 border-y-2 border-black py-6">
-              <div className="flex items-center gap-3">
-                <span className="h-2 w-2 rounded-full bg-red-600" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em]">
+            {article.keyFacts?.length > 0 && (
+              <section className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
                   At a glance
                 </p>
-              </div>
 
-              <div className="mt-5 grid gap-0 sm:grid-cols-2">
-                {article.highlights.map((point, index) => (
-                  <div
-                    key={point}
-                    className="flex gap-4 border-b border-gray-200 py-4 sm:pr-5"
-                  >
-                    <span className="font-serif text-2xl font-bold text-red-600">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <p className="text-sm leading-6 text-gray-700">
-                      {point}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
+                <h2 className="mt-2 font-serif text-2xl font-bold text-slate-950">
+                  The details behind the story
+                </h2>
 
-            <div className="mt-10 font-serif text-[17px] leading-[1.9] text-gray-800 sm:text-[18px]">
-              {article.sections.map((section, index) => (
-                <section key={section.heading} className="mb-11">
-                  <p className="mb-2 font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                    {String(index + 1).padStart(2, "0")} · The story
-                  </p>
-
-                  <h2 className="font-serif text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl">
-                    {section.heading}
-                  </h2>
-
-                  <p className="mt-4">{section.body}</p>
-
-                  {index === 0 && (
-                    <blockquote className="my-8 border-l-4 border-red-600 bg-white px-6 py-5 font-serif text-xl font-semibold leading-8 text-gray-950">
-                      <Quote
-                        size={20}
-                        className="mb-2 text-red-600"
-                      />
-                      {article.dek}
-                    </blockquote>
-                  )}
-                </section>
-              ))}
-
-              <section className="border-y border-gray-300 bg-white px-5 py-7 sm:px-8">
-                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                  Key facts
-                </p>
-
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <dl className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
                   {article.keyFacts.map((fact) => (
                     <div
                       key={fact.label}
-                      className="border-l-2 border-red-600 pl-4"
+                      className="border-t border-slate-200 pt-3"
                     >
-                      <p className="font-sans text-[9px] font-bold uppercase tracking-[0.16em] text-gray-400">
+                      <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
                         {fact.label}
-                      </p>
-
-                      <p className="mt-1 font-sans text-sm font-semibold text-gray-950">
+                      </dt>
+                      <dd className="mt-1 text-sm font-semibold text-slate-800">
                         {fact.value}
-                      </p>
+                      </dd>
                     </div>
                   ))}
-                </div>
-              </section>
-
-              <section className="mt-11 border-t-2 border-black pt-7">
-                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                  The takeaway
-                </p>
-
-                <h2 className="mt-2 font-serif text-3xl font-bold leading-tight text-gray-950 sm:text-4xl">
-                  What readers should watch next
-                </h2>
-
-                <p className="mt-4">
-                  The next stage of this story will be defined by measurable
-                  developments rather than headlines alone. Product launches,
-                  customer adoption, investment decisions, independent testing,
-                  partnerships and operating results will provide the clearest
-                  evidence of how the story evolves.
-                </p>
-
-                <ul className="mt-5 space-y-4 font-sans text-sm leading-6 text-gray-700">
-                  {article.highlights.map((point) => (
-                    <li key={point} className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-600" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            </div>
-
-            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-y border-gray-300 py-5">
-              <Link
-                to={sectionPath}
-                className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-gray-600 hover:text-red-600"
-              >
-                <ArrowLeft size={13} />
-                Back to {sectionName}
-              </Link>
-
-              <div className="flex items-center gap-5">
-                <button
-                  type="button"
-                  aria-label="Bookmark article"
-                  className="text-gray-500 hover:text-red-600"
-                >
-                  <Bookmark size={17} />
-                </button>
-
-                <button
-                  type="button"
-                  aria-label="Share article"
-                  className="text-gray-500 hover:text-red-600"
-                  onClick={() => {
-                    if (navigator.share) {
-                      navigator.share({
-                        title: article.title,
-                        text: article.dek,
-                        url: window.location.href,
-                      });
-                    } else {
-                      navigator.clipboard?.writeText(window.location.href);
-                    }
-                  }}
-                >
-                  <Share2 size={17} />
-                </button>
-              </div>
-            </div>
-
-            {related.length > 0 && (
-              <section className="mt-16 border-t-2 border-black pt-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                  Continue reading
-                </p>
-
-                <h2 className="mt-1 font-serif text-3xl font-bold tracking-tight">
-                  More from {sectionName}
-                </h2>
-
-                <div className="mt-6 grid gap-5 md:grid-cols-3">
-                  {related.map((story) => (
-                    <Link
-                      key={story.id}
-                      to={specialArticlePath(story.id)}
-                      className="group overflow-hidden border border-gray-200 bg-white"
-                    >
-                      {story.image && (
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      )}
-
-                      <div className="p-4">
-                        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
-                          {story.category}
-                        </p>
-
-                        <h3 className="mt-2 font-serif text-lg font-bold leading-tight group-hover:text-red-600">
-                          {story.title}
-                        </h3>
-
-                        <p className="mt-2 line-clamp-3 text-xs leading-5 text-gray-500">
-                          {story.dek}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                </dl>
               </section>
             )}
+
+            <ShareAndBack
+              to={sectionPath}
+              label={sectionName}
+              title={title}
+              description={article.dek}
+            />
+
+            <RelatedPosts
+              items={related}
+              getHref={(item) => specialArticlePath(item.id)}
+            />
           </main>
 
-          <aside className="lg:pt-2">
-            <div className="sticky top-6 space-y-6">
-              <section className="border-t-2 border-black bg-white p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-                  Inside the story
-                </p>
-
-                <h2 className="mt-2 font-serif text-2xl font-bold">
-                  Key highlights
-                </h2>
-
-                <ol className="mt-4 divide-y divide-gray-200">
-                  {article.highlights.map((point, index) => (
-                    <li
-                      key={point}
-                      className="flex gap-3 py-4 text-sm leading-6 text-gray-700"
-                    >
-                      <span className="font-serif text-lg font-bold text-red-600">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-
-              <section className="border border-gray-200 bg-[#171717] p-5 text-white">
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-red-400">
-                  Story guide
-                </p>
-
-                <div className="mt-5 space-y-4">
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Publication
-                    </p>
-                    <p className="mt-1 text-sm">The Pride Times</p>
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Editor
-                    </p>
-                    <p className="mt-1 text-sm">Sagar Kumar</p>
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Section
-                    </p>
-                    <p className="mt-1 text-sm">{article.section}</p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </aside>
+          <BlogSidebar
+            highlights={article.highlights}
+            category={article.category}
+            section={article.section}
+          />
         </div>
       </div>
     </article>
@@ -490,15 +563,106 @@ function SpecialArticleEditorial({
 }
 
 /* =========================================================
-   SHARED HELPERS
+   HOMEPAGE BLOGS
+========================================================= */
+
+function HomepageBlog({ article }: { article: HomepageArticleType }) {
+  const related = relatedHomepageArticles(article);
+  const title = formatBlogTitle(article.title, article.category);
+
+  return (
+    <article className="min-h-screen bg-white text-slate-900">
+      <div className="border-b border-slate-200 bg-slate-50/70">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-red-600"
+          >
+            <ArrowLeft size={14} />
+            Back to Home
+          </Link>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+        <header className="mx-auto max-w-4xl">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+            <span>The Pride Times Blog</span>
+            <span className="text-slate-300">/</span>
+            <span>{article.category}</span>
+          </div>
+
+          <h1 className="mt-5 font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+            {title}
+          </h1>
+
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+            {article.dek}
+          </p>
+
+          <BlogMeta
+            author={article.author}
+            date={article.publishedAt}
+            readTime={article.readTime}
+          />
+        </header>
+
+        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+          <main className="min-w-0">
+            <BlogHighlights points={article.highlights} />
+
+            <HomepageArticleAd />
+
+            <BlogBody
+              sections={article.sections}
+              category={article.category}
+              intro={article.dek}
+              adSlots={{
+                first: ["Manufacturing", "Smart Cities", "Supply Chain"].includes(
+                  article.category
+                )
+                  ? "5608262547"
+                  : "5373718974",
+                second: ["Manufacturing", "Smart Cities", "Supply Chain"].includes(
+                  article.category
+                )
+                  ? "6810700989"
+                  : "8042854193",
+              }}
+            />
+
+            <ShareAndBack
+              to="/"
+              label="Home"
+              title={title}
+              description={article.dek}
+            />
+
+            <RelatedPosts
+              items={related}
+              getHref={(item) => articlePath(item.title)}
+            />
+          </main>
+
+          <BlogSidebar
+            highlights={article.highlights}
+            category={article.category}
+            section={article.category}
+          />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
+   DATE / SECTION HELPERS
 ========================================================= */
 
 function formatIsoDate(value: string) {
   const parsed = new Date(value);
 
-  if (Number.isNaN(parsed.getTime())) {
-    return value;
-  }
+  if (Number.isNaN(parsed.getTime())) return value;
 
   return parsed.toLocaleDateString("en-US", {
     month: "long",
@@ -508,346 +672,16 @@ function formatIsoDate(value: string) {
 }
 
 function backToLabel(path: string) {
-  switch (path) {
-    case "/business-news":
-      return "Business News";
-    case "/technology":
-      return "Technology";
-    default:
-      return "Home";
-  }
+  if (path === "/business-news") return "Business";
+  if (path === "/technology") return "Technology";
+  return "Home";
 }
 
 /* =========================================================
-   HOMEPAGE ARTICLE EDITORIAL
+   BUSINESS / TECHNOLOGY BLOGS
 ========================================================= */
 
-function relatedHomepageArticles(
-  article: HomepageArticleType,
-  limit = 3
-) {
-  const sameCategory = homepageArticles.filter(
-    (item) =>
-      item.slug !== article.slug &&
-      item.category === article.category
-  );
-
-  if (sameCategory.length >= limit) {
-    return sameCategory.slice(0, limit);
-  }
-
-  const fallback = homepageArticles.filter(
-    (item) =>
-      item.slug !== article.slug &&
-      !sameCategory.includes(item)
-  );
-
-  return [...sameCategory, ...fallback].slice(0, limit);
-}
-
-function HomepageArticle({
-  article,
-}: {
-  article: HomepageArticleType;
-}) {
-  const related = relatedHomepageArticles(article);
-
-  return (
-    <article className="bg-[#f8f7f3] text-[#171717]">
-      <div className="border-b border-black/10 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500 hover:text-red-600"
-          >
-            <ArrowLeft size={13} />
-            Back to Home
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12">
-        <header className="mx-auto max-w-5xl text-center">
-          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-red-600">
-            {article.category}
-          </p>
-
-          <h1 className="mt-4 font-serif text-3xl font-bold leading-[1.02] tracking-[-0.035em] sm:text-4xl md:text-6xl">
-            {article.title}
-          </h1>
-
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-600 sm:text-lg md:text-xl">
-            {article.dek}
-          </p>
-
-          <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-3 border-y border-gray-300 py-4 text-[10px] uppercase tracking-[0.12em] text-gray-500">
-            <span className="font-bold text-gray-800">
-              By {article.author}
-            </span>
-
-            <span className="hidden h-1 w-1 rounded-full bg-red-600 sm:block" />
-
-            <span>{article.publishedAt}</span>
-
-            <span className="flex items-center gap-1.5">
-              <Clock size={12} />
-              {article.readTime}
-            </span>
-          </div>
-        </header>
-
-        {article.image && (
-          <figure className="mx-auto mt-9 max-w-6xl">
-            <div className="overflow-hidden border border-gray-200 bg-gray-100">
-              <ImageWithFallback
-                src={article.image}
-                alt={article.title}
-                className="h-[300px] w-full object-cover sm:h-[460px] md:h-[590px]"
-              />
-            </div>
-
-            <figcaption className="mt-2 text-[9px] uppercase tracking-[0.14em] text-gray-400">
-              The Pride Times · {article.category}
-            </figcaption>
-          </figure>
-        )}
-
-        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
-          <main>
-            <p className="font-serif text-xl leading-[1.65] text-gray-950 sm:text-2xl">
-              <span className="float-left mr-2 mt-1 font-serif text-6xl font-bold leading-[0.75] text-red-600">
-                {article.dek.charAt(0)}
-              </span>
-              {article.dek}
-            </p>
-
-            <section className="mt-10 border-y-2 border-black py-6">
-              <div className="flex items-center gap-3">
-                <span className="h-2 w-2 rounded-full bg-red-600" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em]">
-                  At a glance
-                </p>
-              </div>
-
-              <div className="mt-5 grid gap-0 sm:grid-cols-2">
-                {article.highlights.map((point, index) => (
-                  <div
-                    key={point}
-                    className="flex gap-4 border-b border-gray-200 py-4 sm:pr-5"
-                  >
-                    <span className="font-serif text-2xl font-bold text-red-600">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-
-                    <p className="text-sm leading-6 text-gray-700">
-                      {point}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <HomepageArticleAd />
-
-            <div className="mt-10 font-serif text-[17px] leading-[1.9] text-gray-800 sm:text-[18px]">
-              {article.sections.map((section, index) => (
-                <Fragment key={section.heading}>
-                  <section className="mb-11">
-                    <p className="mb-2 font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                      {String(index + 1).padStart(2, "0")} · The story
-                    </p>
-
-                    <h2 className="font-serif text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl">
-                      {section.heading}
-                    </h2>
-
-                    <p className="mt-4">{section.body}</p>
-
-                    {index === 0 && (
-                      <blockquote className="my-8 border-l-4 border-red-600 bg-white px-6 py-5 font-serif text-xl font-semibold leading-8 text-gray-950">
-                        <Quote
-                          size={20}
-                          className="mb-2 text-red-600"
-                        />
-                        {article.dek}
-                      </blockquote>
-                    )}
-                  </section>
-
-                  {index === 0 && (
-                    ["Manufacturing", "Smart Cities", "Supply Chain"].includes(
-                      article.section
-                    ) ? (
-                      <AdSenseUnit slot="5608262547" />
-                    ) : (
-                      <AdSenseUnit slot="5373718974" />
-                    )
-                  )}
-
-                  {index === 1 && (
-                    ["Manufacturing", "Smart Cities", "Supply Chain"].includes(
-                      article.section
-                    ) ? (
-                      <AdSenseUnit slot="6810700989" inArticle />
-                    ) : (
-                      <AdSenseUnit slot="8042854193" inArticle />
-                    )
-                  )}
-                </Fragment>
-              ))}
-            </div>
-
-            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-y border-gray-300 py-5">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-gray-600 hover:text-red-600"
-              >
-                <ArrowLeft size={13} />
-                Back to Home
-              </Link>
-
-              <div className="flex items-center gap-5">
-                <button
-                  type="button"
-                  aria-label="Bookmark article"
-                  className="text-gray-500 hover:text-red-600"
-                >
-                  <Bookmark size={17} />
-                </button>
-
-                <button
-                  type="button"
-                  aria-label="Share article"
-                  className="text-gray-500 hover:text-red-600"
-                  onClick={() => {
-                    if (navigator.share) {
-                      navigator.share({
-                        title: article.title,
-                        text: article.dek,
-                        url: window.location.href,
-                      });
-                    } else {
-                      navigator.clipboard?.writeText(window.location.href);
-                    }
-                  }}
-                >
-                  <Share2 size={17} />
-                </button>
-              </div>
-            </div>
-
-            {related.length > 0 && (
-              <section className="mt-16 border-t-2 border-black pt-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                  Continue reading
-                </p>
-
-                <h2 className="mt-1 font-serif text-3xl font-bold tracking-tight">
-                  More stories
-                </h2>
-
-                <div className="mt-6 grid gap-5 md:grid-cols-3">
-                  {related.map((story) => (
-                    <Link
-                      key={story.slug}
-                      to={articlePath(story.title)}
-                      className="group overflow-hidden border border-gray-200 bg-white"
-                    >
-                      {story.image && (
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      )}
-
-                      <div className="p-4">
-                        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
-                          {story.category}
-                        </p>
-
-                        <h3 className="mt-2 font-serif text-lg font-bold leading-tight group-hover:text-red-600">
-                          {story.title}
-                        </h3>
-
-                        <p className="mt-2 line-clamp-3 text-xs leading-5 text-gray-500">
-                          {story.dek}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-          </main>
-
-          <aside className="lg:pt-2">
-            <div className="sticky top-6 space-y-6">
-              <section className="border-t-2 border-black bg-white p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-                  Inside the story
-                </p>
-
-                <h2 className="mt-2 font-serif text-2xl font-bold">
-                  Key highlights
-                </h2>
-
-                <ol className="mt-4 divide-y divide-gray-200">
-                  {article.highlights.map((point, index) => (
-                    <li
-                      key={point}
-                      className="flex gap-3 py-4 text-sm leading-6 text-gray-700"
-                    >
-                      <span className="font-serif text-lg font-bold text-red-600">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-
-              <section className="border border-gray-200 bg-[#171717] p-5 text-white">
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-red-400">
-                  Story guide
-                </p>
-
-                <div className="mt-5 space-y-4">
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Publication
-                    </p>
-                    <p className="mt-1 text-sm">The Pride Times</p>
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Editor
-                    </p>
-                    <p className="mt-1 text-sm">Sagar Kumar</p>
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Section
-                    </p>
-                    <p className="mt-1 text-sm">{article.category}</p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   MAGAZINE EDITORIAL (BUSINESS / TECHNOLOGY ARTICLES)
-========================================================= */
-
-function MagazineEditorial({
+function MagazineBlog({
   article,
   backTo,
 }: {
@@ -855,6 +689,7 @@ function MagazineEditorial({
   backTo: string;
 }) {
   const isBusiness = "time" in article;
+
   const dek = article.excerpt ?? "";
 
   const dateLabel = isBusiness
@@ -866,281 +701,75 @@ function MagazineEditorial({
     : getRelatedTechnologyArticles(article as TechnologyArticle);
 
   const relatedPath = (story: EditorialArticle) =>
-    isBusiness
-      ? `/article/${story.id}`
-      : technologyArticlePath(story.id);
+    isBusiness ? `/article/${story.id}` : technologyArticlePath(story.id);
 
   const sectionLabel = backToLabel(backTo);
+  const title = formatBlogTitle(article.title, article.category);
 
   return (
-    <article className="bg-[#f8f7f3] text-[#171717]">
-      <div className="border-b border-black/10 bg-white">
+    <article className="min-h-screen bg-white text-slate-900">
+      <div className="border-b border-slate-200 bg-slate-50/70">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <Link
             to={backTo}
-            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500 hover:text-red-600"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-red-600"
           >
-            <ArrowLeft size={13} />
+            <ArrowLeft size={14} />
             Back to {sectionLabel}
           </Link>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12">
-        <header className="mx-auto max-w-5xl text-center">
-          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-red-600">
-            {article.category}
-          </p>
+      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+        <header className="mx-auto max-w-4xl">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+            <span>The Pride Times Blog</span>
+            <span className="text-slate-300">/</span>
+            <span>{article.category}</span>
+          </div>
 
-          <h1 className="mt-4 font-serif text-3xl font-bold leading-[1.02] tracking-[-0.035em] sm:text-4xl md:text-6xl">
-            {article.title}
+          <h1 className="mt-5 font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+            {title}
           </h1>
 
           {dek && (
-            <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-600 sm:text-lg md:text-xl">
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
               {dek}
             </p>
           )}
 
-          <div className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-3 border-y border-gray-300 py-4 text-[10px] uppercase tracking-[0.12em] text-gray-500">
-            <span className="font-bold text-gray-800">
-              By {article.author}
-            </span>
-
-            <span className="hidden h-1 w-1 rounded-full bg-red-600 sm:block" />
-
-            <span>{dateLabel}</span>
-          </div>
+          <BlogMeta author={article.author} date={dateLabel} />
         </header>
 
-        {article.image && (
-          <figure className="mx-auto mt-9 max-w-6xl">
-            <div className="overflow-hidden border border-gray-200 bg-gray-100">
-              <ImageWithFallback
-                src={article.image}
-                alt={article.title}
-                className="h-[300px] w-full object-cover sm:h-[460px] md:h-[590px]"
-              />
-            </div>
+        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+          <main className="min-w-0">
+            <BlogHighlights points={article.highlights} />
 
-            <figcaption className="mt-2 text-[9px] uppercase tracking-[0.14em] text-gray-400">
-              The Pride Times · {article.category}
-            </figcaption>
-          </figure>
-        )}
+            <BlogBody
+              sections={article.sections}
+              category={article.category}
+              intro={dek}
+              adSlots={{
+                first: "5373718974",
+                second: "8042854193",
+              }}
+            />
 
-        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
-          <main>
-            {dek && (
-              <p className="font-serif text-xl leading-[1.65] text-gray-950 sm:text-2xl">
-                <span className="float-left mr-2 mt-1 font-serif text-6xl font-bold leading-[0.75] text-red-600">
-                  {dek.charAt(0)}
-                </span>
-                {dek}
-              </p>
-            )}
+            <ShareAndBack
+              to={backTo}
+              label={sectionLabel}
+              title={title}
+              description={dek}
+            />
 
-            <section className="mt-10 border-y-2 border-black py-6">
-              <div className="flex items-center gap-3">
-                <span className="h-2 w-2 rounded-full bg-red-600" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em]">
-                  At a glance
-                </p>
-              </div>
-
-              <div className="mt-5 grid gap-0 sm:grid-cols-2">
-                {article.highlights.map((point, index) => (
-                  <div
-                    key={point}
-                    className="flex gap-4 border-b border-gray-200 py-4 sm:pr-5"
-                  >
-                    <span className="font-serif text-2xl font-bold text-red-600">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-
-                    <p className="text-sm leading-6 text-gray-700">
-                      {point}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <div className="mt-10 font-serif text-[17px] leading-[1.9] text-gray-800 sm:text-[18px]">
-              {article.sections.map((section, index) => (
-                <Fragment key={section.heading}>
-                  <section className="mb-11">
-                    <p className="mb-2 font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                      {String(index + 1).padStart(2, "0")} · The story
-                    </p>
-
-                    <h2 className="font-serif text-3xl font-bold leading-tight tracking-tight text-gray-950 sm:text-4xl">
-                      {section.heading}
-                    </h2>
-
-                    <p className="mt-4">{section.body}</p>
-
-                    {index === 0 && dek && (
-                      <blockquote className="my-8 border-l-4 border-red-600 bg-white px-6 py-5 font-serif text-xl font-semibold leading-8 text-gray-950">
-                        <Quote
-                          size={20}
-                          className="mb-2 text-red-600"
-                        />
-                        {dek}
-                      </blockquote>
-                    )}
-                  </section>
-
-                  {index === 0 && <AdSenseUnit slot="5373718974" />}
-                  {index === 1 && (
-                    <AdSenseUnit slot="8042854193" inArticle />
-                  )}
-                </Fragment>
-              ))}
-            </div>
-
-            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-y border-gray-300 py-5">
-              <Link
-                to={backTo}
-                className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-gray-600 hover:text-red-600"
-              >
-                <ArrowLeft size={13} />
-                Back to {sectionLabel}
-              </Link>
-
-              <div className="flex items-center gap-5">
-                <button
-                  type="button"
-                  aria-label="Bookmark article"
-                  className="text-gray-500 hover:text-red-600"
-                >
-                  <Bookmark size={17} />
-                </button>
-
-                <button
-                  type="button"
-                  aria-label="Share article"
-                  className="text-gray-500 hover:text-red-600"
-                  onClick={() => {
-                    if (navigator.share) {
-                      navigator.share({
-                        title: article.title,
-                        text: dek,
-                        url: window.location.href,
-                      });
-                    } else {
-                      navigator.clipboard?.writeText(window.location.href);
-                    }
-                  }}
-                >
-                  <Share2 size={17} />
-                </button>
-              </div>
-            </div>
-
-            {related.length > 0 && (
-              <section className="mt-16 border-t-2 border-black pt-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
-                  Continue reading
-                </p>
-
-                <h2 className="mt-1 font-serif text-3xl font-bold tracking-tight">
-                  More from {sectionLabel}
-                </h2>
-
-                <div className="mt-6 grid gap-5 md:grid-cols-3">
-                  {related.map((story) => (
-                    <Link
-                      key={story.id}
-                      to={relatedPath(story)}
-                      className="group overflow-hidden border border-gray-200 bg-white"
-                    >
-                      {story.image && (
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      )}
-
-                      <div className="p-4">
-                        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
-                          {story.category}
-                        </p>
-
-                        <h3 className="mt-2 font-serif text-lg font-bold leading-tight group-hover:text-red-600">
-                          {story.title}
-                        </h3>
-
-                        {story.excerpt && (
-                          <p className="mt-2 line-clamp-3 text-xs leading-5 text-gray-500">
-                            {story.excerpt}
-                          </p>
-                        )}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
+            <RelatedPosts items={related} getHref={relatedPath} />
           </main>
 
-          <aside className="lg:pt-2">
-            <div className="sticky top-6 space-y-6">
-              <section className="border-t-2 border-black bg-white p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-                  Inside the story
-                </p>
-
-                <h2 className="mt-2 font-serif text-2xl font-bold">
-                  Key highlights
-                </h2>
-
-                <ol className="mt-4 divide-y divide-gray-200">
-                  {article.highlights.map((point, index) => (
-                    <li
-                      key={point}
-                      className="flex gap-3 py-4 text-sm leading-6 text-gray-700"
-                    >
-                      <span className="font-serif text-lg font-bold text-red-600">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-
-              <section className="border border-gray-200 bg-[#171717] p-5 text-white">
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-red-400">
-                  Story guide
-                </p>
-
-                <div className="mt-5 space-y-4">
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Publication
-                    </p>
-                    <p className="mt-1 text-sm">The Pride Times</p>
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Editor
-                    </p>
-                    <p className="mt-1 text-sm">Sagar Kumar</p>
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400">
-                      Section
-                    </p>
-                    <p className="mt-1 text-sm">{article.category}</p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </aside>
+          <BlogSidebar
+            highlights={article.highlights}
+            category={article.category}
+            section={sectionLabel}
+          />
         </div>
       </div>
     </article>
@@ -1149,65 +778,47 @@ function MagazineEditorial({
 
 /* =========================================================
    ARTICLE ROUTER
+   Keep all existing article lookup paths.
 ========================================================= */
 
 export function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
 
-  // Check special articles first to preserve their existing routes.
   const specialArticle = getSpecialArticleById(id);
-
-  if (specialArticle) {
-    return <SpecialArticleEditorial article={specialArticle} />;
-  }
+  if (specialArticle) return <SpecialBlog article={specialArticle} />;
 
   const homepageArticle = getHomepageArticleBySlug(id);
-
-  if (homepageArticle) {
-    return <HomepageArticle article={homepageArticle} />;
-  }
+  if (homepageArticle) return <HomepageBlog article={homepageArticle} />;
 
   const businessArticle = getBusinessArticleById(id);
-
   if (businessArticle) {
-    return (
-      <MagazineEditorial
-        article={businessArticle}
-        backTo="/business-news"
-      />
-    );
+    return <MagazineBlog article={businessArticle} backTo="/business-news" />;
   }
 
   const technologyArticle = getTechnologyArticleById(id);
-
   if (technologyArticle) {
-    return (
-      <MagazineEditorial
-        article={technologyArticle}
-        backTo="/technology"
-      />
-    );
+    return <MagazineBlog article={technologyArticle} backTo="/technology" />;
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-        Story not found
+        The Pride Times Blog
       </p>
 
-      <h1 className="mt-3 font-serif text-3xl font-bold">
-        We couldn't find that article
+      <h1 className="mt-4 font-serif text-3xl font-bold tracking-tight text-slate-950">
+        We couldn't find this post
       </h1>
 
-      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-gray-500">
-        The story may have moved or its link may be outdated.
+      <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-slate-500">
+        The post may have moved or its link may be outdated.
       </p>
 
       <Link
         to="/"
-        className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-red-600"
+        className="mt-7 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-xs font-semibold text-white transition hover:bg-red-600"
       >
-        <ArrowLeft size={13} />
+        <ArrowLeft size={14} />
         Back to home
       </Link>
     </div>
