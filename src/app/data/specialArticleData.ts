@@ -1027,8 +1027,8 @@ cybersecurityArticles.forEach((article) => {
 
 
 /* =========================================================
-   SMART CITIES + SUPPLY CHAIN
-   Centralized article records for all cards on these pages.
+   SECTION ARTICLE BUILDER
+   Centralized helper for seed-based article records.
 ========================================================= */
 
 type SectionArticleSeed = {
@@ -1078,6 +1078,67 @@ function buildSectionArticle(seed: SectionArticleSeed): SpecialArticle {
     ],
   });
 }
+
+/* =========================================================
+   CYBERSECURITY PAGE FEED
+   IDs are generated with the SAME slug logic as
+   cyberArticleId() in CybersecurityPage.tsx, so every card
+   on that page resolves to an article record.
+========================================================= */
+
+function slugifyTitle(title: string) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+const cyberFeedSeeds: SectionArticleSeed[] = [
+  // Hero articles
+  ["CYBER THREAT INTELLIGENCE", "PwC 2026 Global Digital Trust Insights: Enterprises Escalate Defense Spending", "PwC's survey of 3,887 executives in 72 countries shows cybersecurity now sits at the top tier of board-level concerns, with AI-driven attacks accelerating security investment."],
+  ["CYBER THREAT INTELLIGENCE", "KPMG: AI-Dominated Business Environments Raise Security Stakes", "KPMG's Global Tech Report 2026 identifies cybersecurity as the prerequisite for realizing AI value as deployments outpace security frameworks."],
+
+  // Threat alerts (More Stories sidebar)
+  ["CRITICAL", "CVE-2026-1247: Zero-Day in OpenSSL Affects 400M Servers Worldwide", "A critical OpenSSL zero-day is putting a very large installed base of servers at risk."],
+  ["HIGH", "BlackCat Ransomware Group Targets Healthcare Organizations in 12 Countries", "A ransomware campaign is targeting healthcare organizations across multiple countries."],
+  ["HIGH", "Lazarus Group Steals $340M from Crypto Exchange Using Novel Smart Contract Exploit", "A novel smart-contract exploit was used in a large crypto exchange theft."],
+  ["MEDIUM", "Phishing Campaign Impersonating IMF Emails Targets G20 Finance Ministries", "A phishing campaign impersonating the IMF is targeting G20 finance ministries."],
+  ["MEDIUM", "New Android Spyware Found in 230 Apps on Google Play Store", "Researchers found spyware embedded in hundreds of Play Store apps."],
+
+  // Latest Cybersecurity News
+  ["RANSOMWARE", "LockBit 4.0 Launches Unprecedented Attack on UK National Health Service Systems", "A major ransomware attack is hitting UK NHS systems."],
+  ["AI SECURITY", "GPT-7 Used to Generate Undetectable Phishing Emails at Scale — New Research", "New research shows AI-generated phishing at scale evading detection."],
+  ["DATA BREACH", "1.4 Billion User Records Exposed in Major Social Media Platform Breach", "A large social media breach exposed billions of user records."],
+  ["AI SYSTEMS", "Hackers exploit AI-powered customer support systems and breach Amazon's One Medical, exposing sensitive healthcare records.", "Attackers abused AI-powered support systems to access sensitive healthcare records."],
+
+  // AI & National Infrastructure
+  ["AI & INFRASTRUCTURE", "H200 shipments to China resume under authorization — the compute chokepoint persists at the intersection of export controls and national security.", "Authorized H200 shipments resume while export controls keep compute a national-security chokepoint."],
+  ["AI & INFRASTRUCTURE", "U.S. announces restrictions on Chinese humanoid and quadruped robots plus certain power inverters, extending export policy to physical AI.", "New U.S. restrictions extend export policy to physical AI and power equipment."],
+  ["AI & INFRASTRUCTURE", "AI agents as cyber operators: August disclosures show models taking unauthorized cyber actions under test conditions, raising new enterprise control questions.", "Disclosures show AI models taking unauthorized cyber actions in tests."],
+  ["AI & INFRASTRUCTURE", "100+ tech firms publicly urge governments to strengthen defenses against AI-driven hacking, reframing cybersecurity as infrastructure-level risk.", "Over 100 tech firms urge stronger government defenses against AI-driven hacking."],
+  ["AI & INFRASTRUCTURE", "IBM and Together AI sign a $240M agreement pairing IBM Cloud with thousands of Nvidia Blackwell processors for an AI inference cluster.", "IBM and Together AI sign a $240M AI inference cluster agreement."],
+
+  // Policy & Defense
+  ["POLICY & DEFENSE", "Pentagon's Cyber Command Gets $8.7B Budget Increase for FY2027", "Cyber Command receives a major budget increase for FY2027."],
+  ["POLICY & DEFENSE", "NATO Expands Joint Cyber Defense Initiative Across Member States", "NATO is expanding its joint cyber defense initiative."],
+  ["POLICY & DEFENSE", "CISA Issues Emergency Directive on Critical Infrastructure Security", "CISA issues an emergency directive on critical infrastructure security."],
+  ["POLICY & DEFENSE", "European Union Approves New Cybersecurity Framework for AI Systems", "The EU approves a new cybersecurity framework for AI systems."],
+].map(([category, title, dek]) => ({
+  id: slugifyTitle(title),
+  section: "Cybersecurity",
+  category,
+  title,
+  dek,
+}));
+
+const cyberFeedArticles = cyberFeedSeeds.map(buildSectionArticle);
+
+
+/* =========================================================
+   INTERNATIONAL BUSINESS + STARTUP SUCCESS
+========================================================= */
+
 const internationalSeeds: SectionArticleSeed[] = [
   {
     id: "international-china-manufacturing-pmi-542",
@@ -1676,6 +1737,7 @@ const energyArticles: SpecialArticle[] = [
 
 const whiteHouseWatchArticles: SpecialArticle[] = [];
 const worldWatchArticles: SpecialArticle[] = [];
+
 export const specialArticles: SpecialArticle[] = [
   ...healthcareArticles,
   ...manufacturingArticles,
@@ -1688,6 +1750,7 @@ export const specialArticles: SpecialArticle[] = [
   innovationHero,
   ...innovationStories,
   ...cybersecurityArticles,
+  ...cyberFeedArticles, // cards on the Cybersecurity page (slug-matched IDs)
   ...internationalBusinessArticles,
   ...startupSuccessArticles,
   ...whiteHouseWatchArticles,
