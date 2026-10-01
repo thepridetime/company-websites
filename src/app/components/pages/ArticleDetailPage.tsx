@@ -1,4 +1,3 @@
-
 import { Fragment, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, Quote, Share2 } from "lucide-react";
@@ -32,6 +31,10 @@ type AdSenseWindow = Window & { adsbygoogle?: unknown[] };
 
 type BlogSection = { heading: string; body: string };
 
+/* Shared keyboard-focus style so every interactive element is accessible. */
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2";
+
 function AdSenseUnit({
   slot,
   inArticle = false,
@@ -50,9 +53,9 @@ function AdSenseUnit({
   }, []);
 
   return (
-    <div className="my-12 w-full border-y border-slate-200 bg-white py-5">
+    <div className="clear-both my-12 w-full overflow-hidden border-y border-slate-200 bg-white py-5">
       <div className="mx-auto max-w-3xl px-3 sm:px-5">
-        <p className="mb-3 text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+        <p className="mb-3 select-none text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
           Advertisement
         </p>
         <ins
@@ -180,15 +183,15 @@ function BlogMeta({
     <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-slate-200 py-4 text-[11px] text-slate-500">
       <span className="font-semibold text-slate-800">By {author}</span>
 
-      <span className="hidden h-1 w-1 rounded-full bg-red-600 sm:block" />
+      <span className="hidden h-1 w-1 shrink-0 rounded-full bg-red-600 sm:block" />
 
-      <time>{date}</time>
+      <time className="tabular-nums">{date}</time>
 
       {readTime && (
         <>
-          <span className="hidden h-1 w-1 rounded-full bg-slate-300 sm:block" />
-          <span className="inline-flex items-center gap-1.5">
-            <Clock size={12} />
+          <span className="hidden h-1 w-1 shrink-0 rounded-full bg-slate-300 sm:block" />
+          <span className="inline-flex items-center gap-1.5 tabular-nums">
+            <Clock size={12} className="shrink-0" />
             {readTime}
           </span>
         </>
@@ -204,7 +207,7 @@ function BlogHighlights({ points }: { points: string[] }) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-7">
       <div className="flex items-center gap-2">
-        <span className="h-2 w-2 rounded-full bg-red-600" />
+        <span className="h-2 w-2 shrink-0 rounded-full bg-red-600" />
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
           Key takeaways
         </p>
@@ -214,12 +217,12 @@ function BlogHighlights({ points }: { points: string[] }) {
         {points.map((point, index) => (
           <li
             key={`${index}-${point}`}
-            className="flex gap-3 text-sm leading-6 text-slate-700"
+            className="flex items-start gap-3 text-sm leading-6 text-slate-700"
           >
-            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-bold text-red-600 ring-1 ring-slate-200">
+            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-bold tabular-nums text-red-600 ring-1 ring-slate-200">
               {index + 1}
             </span>
-            <span>{point}</span>
+            <span className="min-w-0 text-pretty break-words">{point}</span>
           </li>
         ))}
       </ul>
@@ -245,7 +248,7 @@ function BlogBody({
   return (
     <div className="blog-prose mt-10">
       {intro && (
-        <p className="mb-10 border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
+        <p className="mb-10 text-pretty break-words border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
           {intro}
         </p>
       )}
@@ -257,16 +260,16 @@ function BlogBody({
               Section {String(index + 1).padStart(2, "0")}
             </p>
 
-            <h2 className="max-w-3xl font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
+            <h2 className="max-w-3xl text-balance break-words font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
               {formatSectionHeading(section.heading, category)}
             </h2>
 
-            <p className="mt-5 text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
+            <p className="mt-5 text-pretty break-words text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
               {section.body}
             </p>
 
             {index === 0 && intro && (
-              <blockquote className="my-8 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 text-lg font-medium leading-8 text-slate-800 sm:px-7">
+              <blockquote className="my-8 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 text-pretty break-words text-lg font-medium not-italic leading-8 text-slate-800 shadow-sm sm:px-7">
                 <Quote size={18} className="mb-2 text-red-600" />
                 {intro}
               </blockquote>
@@ -296,12 +299,12 @@ function BlogSidebar({
 }) {
   return (
     <aside className="space-y-5 lg:sticky lg:top-8 lg:self-start">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.04)] transition-shadow duration-300 hover:shadow-[0_12px_36px_rgba(15,23,42,0.08)]">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
           In this post
         </p>
 
-        <h2 className="mt-2 font-serif text-xl font-bold text-slate-950">
+        <h2 className="mt-2 text-balance font-serif text-xl font-bold text-slate-950">
           Key points
         </h2>
 
@@ -309,23 +312,23 @@ function BlogSidebar({
           {highlights.slice(0, 5).map((point, index) => (
             <li
               key={`${index}-${point}`}
-              className="flex gap-3 py-3 text-sm leading-6 text-slate-600"
+              className="flex items-start gap-3 py-3 text-sm leading-6 text-slate-600"
             >
-              <span className="font-semibold tabular-nums text-red-600">
+              <span className="shrink-0 font-semibold tabular-nums text-red-600">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span>{point}</span>
+              <span className="min-w-0 text-pretty break-words">{point}</span>
             </li>
           ))}
         </ol>
       </section>
 
-      <section className="overflow-hidden rounded-2xl bg-[#101827] p-5 text-white">
+      <section className="overflow-hidden rounded-2xl bg-[#101827] p-5 text-white shadow-[0_8px_30px_rgba(15,23,42,0.12)]">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
           The Pride Times
         </p>
 
-        <p className="mt-3 font-serif text-2xl font-semibold leading-tight">
+        <p className="mt-3 text-balance font-serif text-2xl font-semibold leading-tight">
           Ideas, context and the bigger picture.
         </p>
 
@@ -334,14 +337,14 @@ function BlogSidebar({
             <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
               Topic
             </p>
-            <p className="mt-1">{category}</p>
+            <p className="mt-1 break-words">{category}</p>
           </div>
 
           <div>
             <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
               Coverage
             </p>
-            <p className="mt-1">{section}</p>
+            <p className="mt-1 break-words">{section}</p>
           </div>
         </div>
       </section>
@@ -365,9 +368,12 @@ function ShareAndBack({
     <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-5">
       <Link
         to={to}
-        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-red-600"
+        className={`group inline-flex items-center gap-2 rounded-sm text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
       >
-        <ArrowLeft size={15} />
+        <ArrowLeft
+          size={15}
+          className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+        />
         Back to {label}
       </Link>
 
@@ -384,7 +390,7 @@ function ShareAndBack({
             navigator.clipboard?.writeText(window.location.href);
           }
         }}
-        className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+        className={`inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 transition-colors duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-700 active:scale-[0.98] motion-reduce:active:scale-100 ${focusRing}`}
       >
         <Share2 size={14} />
         Share this post
@@ -418,7 +424,7 @@ function RelatedPosts<
         Keep exploring
       </p>
 
-      <h2 className="mt-2 font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+      <h2 className="mt-2 text-balance font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
         More ideas to explore
       </h2>
 
@@ -427,24 +433,28 @@ function RelatedPosts<
           <Link
             key={item.id ?? item.slug ?? index}
             to={getHref(item)}
-            className="group rounded-xl border border-slate-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:border-red-200 hover:shadow-lg"
+            className={`group flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-1 hover:border-red-200 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${focusRing}`}
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
               {item.category ?? "The Pride Times"}
             </p>
 
-            <h3 className="mt-3 font-serif text-lg font-bold leading-snug text-slate-900 transition group-hover:text-red-700">
+            <h3 className="mt-3 text-balance break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
               {formatBlogTitle(item.title, item.category ?? "Business")}
             </h3>
 
-            <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
+            <p className="mt-3 line-clamp-3 text-pretty break-words text-sm leading-6 text-slate-500">
               {item.dek ??
                 item.excerpt ??
                 "Explore the context, developments and ideas shaping this topic."}
             </p>
 
-            <span className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-slate-700 group-hover:text-red-700">
-              Read the post <ArrowRight size={13} />
+            <span className="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:text-red-700">
+              Read the post
+              <ArrowRight
+                size={13}
+                className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+              />
             </span>
           </Link>
         ))}
@@ -464,14 +474,17 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
   const title = formatBlogTitle(article.title, article.category);
 
   return (
-    <article className="min-h-screen bg-white text-slate-900">
+    <article className="min-h-screen bg-white text-slate-900 antialiased">
       <div className="border-b border-slate-200 bg-slate-50/70">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <Link
             to={sectionPath}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-red-600"
+            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
           >
-            <ArrowLeft size={14} />
+            <ArrowLeft
+              size={14}
+              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+            />
             Back to {sectionName}
           </Link>
         </div>
@@ -485,11 +498,11 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 max-w-4xl font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-5 max-w-4xl text-balance break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+          <p className="mt-6 max-w-3xl text-pretty break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
             {article.dek}
           </p>
 
@@ -516,7 +529,7 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
                   At a glance
                 </p>
 
-                <h2 className="mt-2 font-serif text-2xl font-bold text-slate-950">
+                <h2 className="mt-2 text-balance font-serif text-2xl font-bold text-slate-950">
                   The details behind the story
                 </h2>
 
@@ -524,12 +537,12 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
                   {article.keyFacts.map((fact) => (
                     <div
                       key={fact.label}
-                      className="border-t border-slate-200 pt-3"
+                      className="min-w-0 border-t border-slate-200 pt-3"
                     >
                       <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
                         {fact.label}
                       </dt>
-                      <dd className="mt-1 text-sm font-semibold text-slate-800">
+                      <dd className="mt-1 break-words text-sm font-semibold text-slate-800">
                         {fact.value}
                       </dd>
                     </div>
@@ -571,14 +584,17 @@ function HomepageBlog({ article }: { article: HomepageArticleType }) {
   const title = formatBlogTitle(article.title, article.category);
 
   return (
-    <article className="min-h-screen bg-white text-slate-900">
+    <article className="min-h-screen bg-white text-slate-900 antialiased">
       <div className="border-b border-slate-200 bg-slate-50/70">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-red-600"
+            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
           >
-            <ArrowLeft size={14} />
+            <ArrowLeft
+              size={14}
+              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+            />
             Back to Home
           </Link>
         </div>
@@ -592,11 +608,11 @@ function HomepageBlog({ article }: { article: HomepageArticleType }) {
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-5 text-balance break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+          <p className="mt-6 max-w-3xl text-pretty break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
             {article.dek}
           </p>
 
@@ -707,14 +723,17 @@ function MagazineBlog({
   const title = formatBlogTitle(article.title, article.category);
 
   return (
-    <article className="min-h-screen bg-white text-slate-900">
+    <article className="min-h-screen bg-white text-slate-900 antialiased">
       <div className="border-b border-slate-200 bg-slate-50/70">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <Link
             to={backTo}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-red-600"
+            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
           >
-            <ArrowLeft size={14} />
+            <ArrowLeft
+              size={14}
+              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+            />
             Back to {sectionLabel}
           </Link>
         </div>
@@ -728,12 +747,12 @@ function MagazineBlog({
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-5 text-balance break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
           {dek && (
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+            <p className="mt-6 max-w-3xl text-pretty break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
               {dek}
             </p>
           )}
@@ -801,22 +820,22 @@ export function ArticleDetailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-24 text-center antialiased sm:px-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
         The Pride Times Blog
       </p>
 
-      <h1 className="mt-4 font-serif text-3xl font-bold tracking-tight text-slate-950">
+      <h1 className="mt-4 text-balance font-serif text-3xl font-bold tracking-tight text-slate-950">
         We couldn't find this post
       </h1>
 
-      <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-slate-500">
+      <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-7 text-slate-500">
         The post may have moved or its link may be outdated.
       </p>
 
       <Link
         to="/"
-        className="mt-7 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-xs font-semibold text-white transition hover:bg-red-600"
+        className={`mt-7 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-xs font-semibold text-white transition-colors duration-200 hover:bg-red-600 ${focusRing}`}
       >
         <ArrowLeft size={14} />
         Back to home
