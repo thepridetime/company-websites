@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import {
@@ -10,13 +10,12 @@ import {
   Play,
 } from "lucide-react";
 
-import HeroImg from "../../../imports/heroimage.png";
-import InsImg from "../../../imports/Insightimage.png";
-import LN3Img from "../../../imports/LN3image.png";
-import LN4Img from "../../../imports/LN4image.png";
-import EdipickImg from "../../../imports/Edipickimage.png";
-import Pt30Img from "../../../imports/pt30image.png";
-import Ln1Img from "../../../imports/Ln1.png";
+import EnergyImg from "../../../imports/energy-facility.png";
+import DataCenterImg from "../../../imports/ai-data-centre.png";
+import RoboticsImg from "../../../imports/industrial-robotics.png";
+import SupplyChainImg from "../../../imports/global-supply-chain.png";
+import HealthcareImg from "../../../imports/ai-healthcare.png";
+import CybersecurityImg from "../../../imports/cybersecurity-operations.png";
 
 import { getQuotes } from "../../../services/marketApi";
 import { articlePath } from "../../data/homepageArticleData";
@@ -39,11 +38,6 @@ type MarketItem = {
   value: string | number;
   change: string;
   up: boolean;
-};
-
-type MarketSnapshot = {
-  Indices: MarketItem[];
-  Crypto: MarketItem[];
 };
 
 /* =========================================================
@@ -98,8 +92,8 @@ const heroStory = {
   title:
     "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
   excerpt:
-    "Oil supply interruptions, tanker-route risks and volatile freight costs are reshaping the global energy outlook. The Pride Times report tracks demand forecasts, inventory drawdowns and the production losses behind the disruption.",
-  image: HeroImg,
+    "Oil supply interruptions, tanker-route risks and volatile freight costs are reshaping the global energy outlook. The Pride Times report tracks the demand forecast, inventory drawdowns and peak Gulf production losses behind the disruption.",
+  image: EnergyImg,
   link: "/markets",
 };
 
@@ -112,7 +106,7 @@ const centerStories = [
     excerpt:
       "Data-centre electricity demand is projected to approach 1,000 TWh by 2030, making secure power access and grid readiness central to the next phase of AI infrastructure.",
     publishedAt: "September 2026",
-    image: LN4Img,
+    image: DataCenterImg,
     link: "/technology",
   },
   {
@@ -123,7 +117,7 @@ const centerStories = [
     excerpt:
       "Companies are balancing resilience against cost as tariffs, commodity prices and regional sourcing strategies reshape trade networks.",
     publishedAt: "September 2026",
-    image: InsImg,
+    image: SupplyChainImg,
     link: "/supply-chain",
   },
 ];
@@ -131,9 +125,13 @@ const centerStories = [
 const videoFeature = {
   title:
     "Autonomous Systems Move Into Mobility, Warehousing and Industrial Operations",
-  image: HeroImg,
+  image: RoboticsImg,
   link: "/innovation",
 };
+
+/* =========================================================
+   LATEST NEWS TABS
+========================================================= */
 
 const latestNewsTabs = [
   "All",
@@ -147,7 +145,6 @@ const latestNewsTabs = [
 
 /* =========================================================
    LATEST NEWS DATA
-   Keep titles aligned with homepageArticleData.ts.
 ========================================================= */
 
 const latestNewsData: Record<string, NewsItem[]> = {
@@ -158,7 +155,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
       publishedAt: "September 2026",
-      image: HeroImg,
+      image: EnergyImg,
       link: "/markets",
     },
     {
@@ -167,7 +164,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
       publishedAt: "September 2026",
-      image: InsImg,
+      image: DataCenterImg,
       link: "/technology",
     },
     {
@@ -176,7 +173,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
       publishedAt: "September 2026",
-      image: LN3Img,
+      image: CybersecurityImg,
       link: "/cybersecurity",
     },
     {
@@ -185,7 +182,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
       publishedAt: "September 2026",
-      image: LN4Img,
+      image: SupplyChainImg,
       link: "/supply-chain",
     },
     {
@@ -194,7 +191,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
       publishedAt: "September 2026",
-      image: EdipickImg,
+      image: HealthcareImg,
       link: "/healthcare",
     },
   ],
@@ -206,7 +203,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
       publishedAt: "September 2026",
-      image: HeroImg,
+      image: EnergyImg,
       link: "/markets",
     },
     {
@@ -215,7 +212,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention",
       publishedAt: "September 2026",
-      image: EdipickImg,
+      image: SupplyChainImg,
       link: "/markets",
     },
     {
@@ -224,7 +221,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation",
       publishedAt: "September 2026",
-      image: LN3Img,
+      image: EnergyImg,
       link: "/world",
     },
   ],
@@ -236,7 +233,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
       publishedAt: "September 2026",
-      image: InsImg,
+      image: DataCenterImg,
       link: "/technology",
     },
     {
@@ -245,7 +242,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "AI Moves From Assistive Tools to Autonomous Enterprise Workflows",
       publishedAt: "September 2026",
-      image: LN4Img,
+      image: RoboticsImg,
       link: "/technology",
     },
     {
@@ -254,7 +251,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "U.S.–China AI Competition Expands From Models to Global Infrastructure",
       publishedAt: "September 2026",
-      image: LN3Img,
+      image: DataCenterImg,
       link: "/world",
     },
   ],
@@ -266,7 +263,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
       publishedAt: "September 2026",
-      image: EdipickImg,
+      image: CybersecurityImg,
       link: "/cybersecurity",
     },
     {
@@ -275,7 +272,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
       publishedAt: "September 2026",
-      image: LN3Img,
+      image: CybersecurityImg,
       link: "/cybersecurity",
     },
   ],
@@ -287,7 +284,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
       publishedAt: "September 2026",
-      image: HeroImg,
+      image: EnergyImg,
       link: "/energy",
     },
     {
@@ -296,7 +293,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
       publishedAt: "September 2026",
-      image: InsImg,
+      image: DataCenterImg,
       link: "/energy",
     },
     {
@@ -305,7 +302,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility",
       publishedAt: "September 2026",
-      image: LN4Img,
+      image: RoboticsImg,
       link: "/smart-cities",
     },
   ],
@@ -317,7 +314,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
       publishedAt: "September 2026",
-      image: EdipickImg,
+      image: HealthcareImg,
       link: "/healthcare",
     },
     {
@@ -326,7 +323,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
       publishedAt: "September 2026",
-      image: LN4Img,
+      image: RoboticsImg,
       link: "/manufacturing",
     },
     {
@@ -335,7 +332,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility",
       publishedAt: "September 2026",
-      image: InsImg,
+      image: RoboticsImg,
       link: "/smart-cities",
     },
     {
@@ -344,7 +341,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
       publishedAt: "September 2026",
-      image: LN3Img,
+      image: SupplyChainImg,
       link: "/supply-chain",
     },
   ],
@@ -356,7 +353,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation",
       publishedAt: "September 2026",
-      image: HeroImg,
+      image: EnergyImg,
       link: "/world",
     },
     {
@@ -365,7 +362,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "U.S.–China AI Competition Expands From Models to Global Infrastructure",
       publishedAt: "September 2026",
-      image: LN3Img,
+      image: DataCenterImg,
       link: "/world",
     },
     {
@@ -374,7 +371,7 @@ const latestNewsData: Record<string, NewsItem[]> = {
       title:
         "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention",
       publishedAt: "September 2026",
-      image: EdipickImg,
+      image: SupplyChainImg,
       link: "/markets",
     },
   ],
@@ -393,7 +390,7 @@ const editorsPicks = [
     excerpt:
       "AI is accelerating the speed of cyber exploitation, putting critical infrastructure and industrial operators under pressure to shorten remediation cycles.",
     publishedAt: "September 2026",
-    image: EdipickImg,
+    image: CybersecurityImg,
     link: "/cybersecurity",
   },
   {
@@ -404,7 +401,7 @@ const editorsPicks = [
     excerpt:
       "Software-led systems and AI tools are improving inventory visibility, demand forecasting and supplier-risk management across healthcare.",
     publishedAt: "September 2026",
-    image: LN3Img,
+    image: HealthcareImg,
     link: "/healthcare",
   },
   {
@@ -415,7 +412,7 @@ const editorsPicks = [
     excerpt:
       "Robotics, digital twins and domestic supplier partnerships are becoming part of the manufacturing response to labour, tariff and energy pressures.",
     publishedAt: "September 2026",
-    image: Ln1Img,
+    image: RoboticsImg,
     link: "/manufacturing",
   },
 ];
@@ -428,7 +425,7 @@ const magazinePreview = {
   title: "The 2026 Global Industry Outlook",
   subtitle:
     "Energy security, AI infrastructure, supply-chain resilience and the forces reshaping global business.",
-  image: Pt30Img,
+  image: SupplyChainImg,
 };
 
 /* =========================================================
@@ -509,7 +506,7 @@ const prideTimes30 = [
 ];
 
 /* =========================================================
-   SMALL COMPONENTS
+   CHANGE CHIP
 ========================================================= */
 
 function ChangeChip({
@@ -521,7 +518,7 @@ function ChangeChip({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 text-[10px] font-semibold tabular-nums ${
+      className={`flex items-center gap-1 text-[10px] font-semibold tabular-nums ${
         up ? "text-green-600" : "text-red-600"
       }`}
     >
@@ -535,6 +532,10 @@ function ChangeChip({
   );
 }
 
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
 function SectionHeader({
   title,
   link,
@@ -546,42 +547,20 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-5 flex items-center justify-between border-b-2 border-black pb-2.5">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
         {title}
       </h2>
 
       {link && (
         <Link
           to={link}
-          className="inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wide text-red-600 transition-colors hover:text-red-800"
+          className="flex items-center gap-1 text-[9px] font-semibold text-red-600"
         >
           {linkText}
-          <ArrowRight size={10} />
+          <ArrowRight size={9} />
         </Link>
       )}
     </div>
-  );
-}
-
-/* =========================================================
-   IMAGE COMPONENT
-========================================================= */
-
-function StoryImage({
-  src,
-  alt,
-  className,
-}: {
-  src: string;
-  alt: string;
-  className: string;
-}) {
-  return (
-    <ImageWithFallback
-      src={src}
-      alt={alt}
-      className={`${className} object-cover`}
-    />
   );
 }
 
@@ -590,18 +569,18 @@ function StoryImage({
 ========================================================= */
 
 export function HomePage() {
-  const [activeMarketTab, setActiveMarketTab] =
-    useState<"Indices" | "Crypto">("Indices");
+  const [activeMarketTab, setActiveMarketTab] = useState<
+    "Indices" | "Crypto"
+  >("Indices");
 
   const [activeNewsTab, setActiveNewsTab] = useState("All");
 
-  const [marketSnapshotData, setMarketSnapshotData] =
-    useState<MarketSnapshot>({
-      Indices: [],
-      Crypto: [],
-    });
-
-  const [marketLoading, setMarketLoading] = useState(true);
+  const [marketSnapshotData, setMarketSnapshotData] = useState<
+    Record<string, MarketItem[]>
+  >({
+    Indices: [],
+    Crypto: [],
+  });
 
   /* =======================================================
      MARKET DATA
@@ -612,47 +591,30 @@ export function HomePage() {
 
     const loadMarketData = async () => {
       try {
-        setMarketLoading(true);
-
         const data = await getQuotes();
 
-        if (!isMounted) return;
+        const indices = (data.indices ?? []).map((item: any) => ({
+          symbol: item.name,
+          value: item.value,
+          change: String(item.change ?? ""),
+          up: Boolean(item.up),
+        }));
 
-        const indices = Array.isArray(data?.indices)
-          ? data.indices
-          : [];
-
-        const crypto = Array.isArray(data?.crypto)
-          ? data.crypto
-          : [];
-
-        const formatMarketItems = (items: any[]): MarketItem[] =>
-          items
-            .filter((item) => item && item.name != null)
-            .map((item) => ({
-              symbol: String(item.name),
-              value: item.value ?? "—",
-              change: String(item.change ?? "—"),
-              up: Boolean(item.up),
-            }));
-
-        setMarketSnapshotData({
-          Indices: formatMarketItems(indices),
-          Crypto: formatMarketItems(crypto),
-        });
-      } catch (error) {
-        console.error("Market API Error:", error);
+        const crypto = (data.crypto ?? []).map((item: any) => ({
+          symbol: item.name,
+          value: item.value,
+          change: String(item.change ?? ""),
+          up: Boolean(item.up),
+        }));
 
         if (isMounted) {
           setMarketSnapshotData({
-            Indices: [],
-            Crypto: [],
+            Indices: indices,
+            Crypto: crypto,
           });
         }
-      } finally {
-        if (isMounted) {
-          setMarketLoading(false);
-        }
+      } catch (error) {
+        console.error("Market API Error:", error);
       }
     };
 
@@ -671,11 +633,6 @@ export function HomePage() {
     latestNewsData[activeNewsTab] || latestNewsData.All;
 
   const latestStories = selectedNews.slice(0, 5);
-
-  /* =======================================================
-     SIDEBAR NEWS
-     Avoid repeating the main lead and featured stories.
-  ======================================================= */
 
   const featuredTitles = new Set([
     heroStory.title,
@@ -699,35 +656,33 @@ export function HomePage() {
     )
     .slice(0, 5);
 
-  const currentMarketItems =
-    marketSnapshotData[activeMarketTab] || [];
+  /* =======================================================
+     RENDER
+  ======================================================= */
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <main className="pb-16 pt-4 md:pt-6">
-
           {/* =================================================
               TOP STORIES / NEWSROOM LEAD
           ================================================= */}
 
           <section className="mb-8 border-b border-gray-300 pb-8">
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.15fr_1fr_0.85fr] lg:gap-6">
-
               {/* LEAD STORY */}
 
               <Link
                 to={articlePath(heroStory.title)}
-                aria-label={`Read: ${heroStory.title}`}
-                className="group relative block min-h-[430px] overflow-hidden rounded-lg border border-gray-200 bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600 lg:min-h-[500px]"
+                className="group relative block min-h-[430px] overflow-hidden rounded-lg border border-gray-200 bg-black lg:min-h-[500px]"
               >
-                <StoryImage
+                <ImageWithFallback
                   src={heroStory.image}
                   alt={heroStory.title}
-                  className="absolute inset-0 h-full w-full transition-transform duration-700 group-hover:scale-[1.04]"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                 <span className="absolute left-4 top-4 rounded-[2px] bg-red-600 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white">
                   {heroStory.category}
@@ -738,11 +693,11 @@ export function HomePage() {
                     {heroStory.title}
                   </h1>
 
-                  <p className="mt-3 line-clamp-3 text-[12px] leading-[1.65] text-gray-200 md:text-[13px]">
+                  <p className="mt-3 line-clamp-3 text-[12px] leading-[1.6] text-gray-200 md:text-[13px]">
                     {heroStory.excerpt}
                   </p>
 
-                  <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-white transition-colors group-hover:border-red-400 group-hover:text-red-300">
+                  <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
                     Read Full Story
                     <ArrowRight size={12} />
                   </span>
@@ -761,11 +716,11 @@ export function HomePage() {
                     to={articlePath(centerStories[0].title)}
                     className="group block"
                   >
-                    <div className="overflow-hidden rounded-lg bg-gray-100">
-                      <StoryImage
+                    <div className="overflow-hidden rounded-lg">
+                      <ImageWithFallback
                         src={centerStories[0].image}
                         alt={centerStories[0].title}
-                        className="h-[220px] w-full transition-transform duration-700 group-hover:scale-[1.03] md:h-[250px]"
+                        className="h-[220px] w-full rounded-lg object-cover transition-transform duration-700 group-hover:scale-[1.03] md:h-[250px]"
                       />
                     </div>
 
@@ -773,7 +728,7 @@ export function HomePage() {
                       {centerStories[0].title}
                     </h2>
 
-                    <p className="mt-2 line-clamp-3 text-[12px] leading-[1.65] text-gray-600">
+                    <p className="mt-2 line-clamp-3 text-[12px] leading-[1.6] text-gray-600">
                       {centerStories[0].excerpt}
                     </p>
                   </Link>
@@ -785,11 +740,11 @@ export function HomePage() {
                   to={articlePath(centerStories[1].title)}
                   className="group flex gap-3 border-t border-gray-200 pt-4"
                 >
-                  <div className="h-[75px] w-[105px] shrink-0 overflow-hidden rounded-md bg-gray-100">
-                    <StoryImage
+                  <div className="h-[75px] w-[105px] shrink-0 overflow-hidden rounded-md">
+                    <ImageWithFallback
                       src={centerStories[1].image}
                       alt={centerStories[1].title}
-                      className="h-full w-full transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full rounded-md object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
@@ -798,7 +753,7 @@ export function HomePage() {
                       {centerStories[1].tag}
                     </span>
 
-                    <h3 className="mt-1 line-clamp-2 text-[13px] font-bold leading-[1.4] text-gray-900 transition-colors group-hover:text-red-600">
+                    <h3 className="mt-1 line-clamp-2 text-[13px] font-bold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
                       {centerStories[1].title}
                     </h3>
 
@@ -809,10 +764,10 @@ export function HomePage() {
                   </div>
                 </Link>
 
-                {/* MARKET SNAPSHOT */}
+                {/* MARKET CONTEXT */}
 
                 <div className="mt-5 border-t border-gray-200 pt-4">
-                  <div className="mb-2 flex items-center justify-between gap-3">
+                  <div className="mb-2 flex items-center justify-between">
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
                       Market Snapshot
                     </h3>
@@ -823,8 +778,7 @@ export function HomePage() {
                           key={tab}
                           type="button"
                           onClick={() => setActiveMarketTab(tab)}
-                          aria-pressed={activeMarketTab === tab}
-                          className={`text-[9px] font-semibold uppercase tracking-wide transition-colors ${
+                          className={`text-[9px] font-semibold uppercase tracking-wide ${
                             activeMarketTab === tab
                               ? "text-red-600"
                               : "text-gray-400 hover:text-gray-700"
@@ -837,15 +791,12 @@ export function HomePage() {
                   </div>
 
                   <div className="divide-y divide-gray-100">
-                    {marketLoading ? (
-                      <div className="py-4 text-[10px] text-gray-400">
-                        Loading market data...
-                      </div>
-                    ) : currentMarketItems.length > 0 ? (
-                      currentMarketItems.slice(0, 4).map((market) => (
+                    {(marketSnapshotData[activeMarketTab] || [])
+                      .slice(0, 4)
+                      .map((market) => (
                         <div
                           key={market.symbol}
-                          className="flex items-center justify-between gap-3 py-2"
+                          className="flex items-center justify-between py-2"
                         >
                           <span className="text-[10px] font-semibold text-gray-800">
                             {market.symbol}
@@ -862,17 +813,12 @@ export function HomePage() {
                             />
                           </div>
                         </div>
-                      ))
-                    ) : (
-                      <div className="py-4 text-[10px] text-gray-400">
-                        Market data is currently unavailable.
-                      </div>
-                    )}
+                      ))}
                   </div>
 
                   <Link
                     to="/markets"
-                    className="mt-2 flex w-fit items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-red-600 transition-colors hover:text-red-800"
+                    className="mt-2 flex w-fit items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-red-600"
                   >
                     View All Markets
                     <ArrowRight size={9} />
@@ -883,7 +829,6 @@ export function HomePage() {
               {/* RIGHT NEWSROOM COLUMN */}
 
               <aside className="min-w-0">
-
                 {/* VIDEO */}
 
                 <div className="border-b border-gray-200 pb-5">
@@ -904,11 +849,11 @@ export function HomePage() {
                     to={articlePath(videoFeature.title)}
                     className="group block"
                   >
-                    <div className="relative overflow-hidden rounded-lg bg-gray-100">
-                      <StoryImage
+                    <div className="relative overflow-hidden rounded-lg">
+                      <ImageWithFallback
                         src={videoFeature.image}
                         alt={videoFeature.title}
-                        className="h-[175px] w-full transition-transform duration-700 group-hover:scale-[1.03]"
+                        className="h-[175px] w-full rounded-lg object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                       />
 
                       <div className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/25">
@@ -922,7 +867,7 @@ export function HomePage() {
                       </div>
                     </div>
 
-                    <h3 className="mt-2.5 text-[13px] font-semibold leading-[1.45] text-gray-900 transition-colors group-hover:text-red-600">
+                    <h3 className="mt-2.5 text-[13px] font-semibold leading-[1.4] text-gray-900 transition-colors group-hover:text-red-600">
                       {videoFeature.title}
                     </h3>
                   </Link>
@@ -953,7 +898,7 @@ export function HomePage() {
                             {item.publishedAt}
                           </span>
 
-                          <span className="text-[11px] font-medium leading-[1.45] text-gray-800 transition-colors group-hover:text-red-600">
+                          <span className="text-[11px] font-medium leading-[1.4] text-gray-800 transition-colors group-hover:text-red-600">
                             {item.title}
                           </span>
                         </div>
@@ -985,7 +930,6 @@ export function HomePage() {
                   key={tab}
                   type="button"
                   onClick={() => setActiveNewsTab(tab)}
-                  aria-pressed={activeNewsTab === tab}
                   className={`whitespace-nowrap text-[10px] font-semibold uppercase tracking-wide transition-colors ${
                     activeNewsTab === tab
                       ? "text-red-600"
@@ -1004,17 +948,17 @@ export function HomePage() {
                 <Link
                   key={`${activeNewsTab}-${story.id}`}
                   to={articlePath(story.title)}
-                  className="group grid grid-cols-[55px_95px_1fr] items-center gap-3 py-4 transition-colors hover:bg-gray-50/70 md:grid-cols-[65px_130px_1fr] md:gap-5"
+                  className="group grid grid-cols-[55px_95px_1fr] items-center gap-3 py-4 md:grid-cols-[65px_130px_1fr] md:gap-5"
                 >
                   <div className="text-[9px] font-semibold tabular-nums text-gray-400">
                     {story.publishedAt}
                   </div>
 
-                  <div className="h-[60px] overflow-hidden rounded-md bg-gray-100 md:h-[72px]">
-                    <StoryImage
+                  <div className="h-[60px] overflow-hidden rounded-md md:h-[72px]">
+                    <ImageWithFallback
                       src={story.image}
                       alt={story.title}
-                      className="h-full w-full transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
@@ -1037,7 +981,7 @@ export function HomePage() {
                       </span>
                     </div>
 
-                    <h3 className="font-serif text-base font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600 md:text-lg">
+                    <h3 className="font-serif text-base font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600 md:text-lg">
                       {story.title}
                     </h3>
                   </div>
@@ -1053,7 +997,6 @@ export function HomePage() {
           ================================================= */}
 
           <section className="mb-12 grid grid-cols-1 gap-7 lg:grid-cols-[1.7fr_0.8fr]">
-
             {/* EDITOR'S PICKS */}
 
             <div>
@@ -1069,11 +1012,11 @@ export function HomePage() {
                     to={articlePath(pick.title)}
                     className="group grid grid-cols-[120px_1fr] gap-4 py-4 sm:grid-cols-[155px_1fr]"
                   >
-                    <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[100px]">
-                      <StoryImage
+                    <div className="h-[80px] w-full overflow-hidden rounded-md sm:h-[100px]">
+                      <ImageWithFallback
                         src={pick.image}
                         alt={pick.title}
-                        className="h-full w-full rounded-md transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full rounded-md object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
 
@@ -1082,11 +1025,11 @@ export function HomePage() {
                         {pick.category}
                       </span>
 
-                      <h3 className="mt-1 font-serif text-base font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600 md:text-lg">
+                      <h3 className="mt-1 font-serif text-base font-bold leading-[1.2] text-gray-900 transition-colors group-hover:text-red-600 md:text-lg">
                         {pick.title}
                       </h3>
 
-                      <p className="mt-1 hidden line-clamp-2 text-[10px] leading-[1.6] text-gray-500 sm:block">
+                      <p className="mt-1 hidden line-clamp-2 text-[10px] leading-[1.5] text-gray-500 sm:block">
                         {pick.excerpt}
                       </p>
 
@@ -1110,15 +1053,15 @@ export function HomePage() {
                 className="group block overflow-hidden rounded-md bg-black"
               >
                 <div className="overflow-hidden">
-                  <StoryImage
+                  <ImageWithFallback
                     src={magazinePreview.image}
                     alt={magazinePreview.title}
-                    className="h-[210px] w-full transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="h-[210px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 </div>
 
                 <div className="p-4">
-                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-400">
+                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
                     Pride Times Magazine
                   </span>
 
@@ -1126,11 +1069,11 @@ export function HomePage() {
                     {magazinePreview.title}
                   </h3>
 
-                  <p className="mt-1.5 text-[11px] leading-[1.6] text-gray-400">
+                  <p className="mt-1.5 text-[11px] leading-[1.5] text-gray-400">
                     {magazinePreview.subtitle}
                   </p>
 
-                  <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/50 pb-1 text-[9px] font-bold uppercase tracking-wide text-white transition-colors group-hover:border-red-500 group-hover:text-red-300">
+                  <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/50 pb-1 text-[9px] font-bold uppercase tracking-wide text-white">
                     Read Digital Edition
                     <ArrowRight size={10} />
                   </span>
@@ -1154,7 +1097,7 @@ export function HomePage() {
               {prideTimes30.map((leader) => (
                 <div
                   key={leader.rank}
-                  className="flex items-start gap-4 rounded-md border border-gray-200 p-4 transition-all duration-300 hover:border-gray-400 hover:shadow-sm"
+                  className="flex items-start gap-4 rounded-md border border-gray-200 p-4 transition-colors hover:border-gray-300"
                 >
                   <span className="w-8 shrink-0 font-serif text-2xl font-bold tabular-nums text-gray-200">
                     {String(leader.rank).padStart(2, "0")}
@@ -1164,11 +1107,12 @@ export function HomePage() {
                     <p className="text-[13px] font-bold text-gray-900">
                       {leader.name}
                       <span className="font-normal text-gray-400">
-                        {" "}· {leader.company}
+                        {" "}
+                        · {leader.company}
                       </span>
                     </p>
 
-                    <p className="mt-1 text-[10px] leading-[1.6] text-gray-500">
+                    <p className="mt-1 text-[10px] leading-[1.5] text-gray-500">
                       {leader.sector}
                     </p>
                   </div>
