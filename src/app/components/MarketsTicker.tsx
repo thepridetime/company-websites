@@ -16,13 +16,16 @@ interface TickerCard {
 }
 
 function parseChange(value: unknown): number | null {
-  const parsed = Number.parseFloat(String(value ?? "").replace("%", ""));
+  const parsed = Number.parseFloat(
+    String(value ?? "").replace("%", "")
+  );
+
   return Number.isFinite(parsed) ? parsed : null;
 }
 
 /* =========================================================
    MARKETS TAB LINK HELPER
-   Builds /markets?tab=<Tab> so MarketsPage opens the right tab
+   Builds /markets?tab=<Tab>
 ========================================================= */
 
 const marketTab = (tab: string) =>
@@ -30,9 +33,7 @@ const marketTab = (tab: string) =>
 
 /* =========================================================
    MEGA MENU COLUMNS
-   Company section removed:
-   - About Us
-   - Contact Us
+   Only Markets, Industries and More sections
 ========================================================= */
 
 const megaMenuColumns = [
@@ -46,11 +47,16 @@ const megaMenuColumns = [
       { label: "Crypto", path: marketTab("Crypto") },
       { label: "Mutual Funds", path: marketTab("Mutual Funds") },
       { label: "ETFs", path: marketTab("ETFs") },
-      { label: "Government Bonds", path: marketTab("Government Bonds") },
-      { label: "Global Markets", path: marketTab("Global Markets") },
+      {
+        label: "Government Bonds",
+        path: marketTab("Government Bonds"),
+      },
+      {
+        label: "Global Markets",
+        path: marketTab("Global Markets"),
+      },
     ],
   },
-
   {
     title: "Industries",
     links: [
@@ -63,7 +69,6 @@ const megaMenuColumns = [
       { label: "Supply Chain", path: "/supply-chain" },
     ],
   },
-
   {
     title: "More",
     links: [
@@ -143,7 +148,10 @@ export function MarketsTicker() {
           setCards(tickerData);
         }
       } catch (error) {
-        console.error("Failed to load market ticker data:", error);
+        console.error(
+          "Failed to load market ticker data:",
+          error
+        );
       }
     };
 
@@ -185,7 +193,8 @@ export function MarketsTicker() {
 
     if (halfway <= 0) return;
 
-    offsetRef.current += direction === "left" ? -amount : amount;
+    offsetRef.current +=
+      direction === "left" ? -amount : amount;
 
     if (offsetRef.current < 0) {
       offsetRef.current += halfway;
@@ -263,14 +272,15 @@ export function MarketsTicker() {
   return (
     <div className="pt-securities-bar relative w-full">
       <div className="pt-container flex items-stretch">
-        {/* =================================================
-            MENU BUTTON
-        ================================================= */}
+
+        {/* MENU BUTTON */}
 
         <div className="relative flex flex-shrink-0 items-center">
           <button
             type="button"
-            onClick={() => setShowSecurities((previous) => !previous)}
+            onClick={() =>
+              setShowSecurities((previous) => !previous)
+            }
             aria-label="Top Securities menu"
             aria-expanded={showSecurities}
             aria-haspopup="true"
@@ -307,16 +317,16 @@ export function MarketsTicker() {
                 borderTop: "5px solid #000000",
                 display: "inline-block",
                 marginTop: "2px",
-                transform: showSecurities ? "rotate(180deg)" : "none",
+                transform: showSecurities
+                  ? "rotate(180deg)"
+                  : "none",
                 transition: "transform 0.15s ease",
               }}
             />
           </button>
         </div>
 
-        {/* =================================================
-            MARKET TICKER
-        ================================================= */}
+        {/* MARKET TICKER */}
 
         <div
           className="relative flex min-w-0 flex-1 items-center gap-2 pl-3"
@@ -400,15 +410,22 @@ export function MarketsTicker() {
 
       {/* =====================================================
           MEGA MENU
+          Three equal-width columns with uniform spacing
       ===================================================== */}
 
       {showSecurities && (
         <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
           <div className="pt-container">
-            <div className="pt-mega-menu-inner">
+
+            {/* THREE COLUMN LAYOUT */}
+
+            <div className="grid grid-cols-1 gap-8 py-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12">
               {megaMenuColumns.map((column) => (
-                <div key={column.title}>
-                  <h4 className="pt-mega-menu-heading">
+                <div
+                  key={column.title}
+                  className="min-w-0"
+                >
+                  <h4 className="pt-mega-menu-heading mb-5">
                     {column.title}
                   </h4>
 
@@ -417,7 +434,9 @@ export function MarketsTicker() {
                       <li key={link.label}>
                         <Link
                           to={link.path}
-                          onClick={() => setShowSecurities(false)}
+                          onClick={() =>
+                            setShowSecurities(false)
+                          }
                         >
                           {link.label}
                         </Link>
@@ -428,11 +447,9 @@ export function MarketsTicker() {
               ))}
             </div>
 
-            {/* =================================================
-                MEGA MENU UTILITY LINKS
-            ================================================= */}
+            {/* UTILITY LINKS */}
 
-            <div className="pt-mega-menu-utility">
+            <div className="pt-mega-menu-utility flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-gray-200 py-5">
               <Link
                 to="/signup"
                 onClick={() => setShowSecurities(false)}
