@@ -1,3 +1,4 @@
+
 import { Fragment, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, Quote, Share2 } from "lucide-react";
@@ -8,17 +9,20 @@ import {
   articlePath,
   type HomepageArticle as HomepageArticleType,
 } from "../../data/homepageArticleData";
+
 import {
   getBusinessArticleById,
   getRelatedBusinessArticles,
   type BusinessArticle,
 } from "../../data/businessNewsData";
+
 import {
   getTechnologyArticleById,
   getRelatedTechnologyArticles,
   type TechnologyArticle,
   technologyArticlePath,
 } from "../../data/technologyNewsData";
+
 import {
   getSpecialArticleById,
   specialArticlePath,
@@ -27,24 +31,40 @@ import {
 } from "../../data/specialArticleData";
 
 type EditorialArticle = BusinessArticle | TechnologyArticle;
-type AdSenseWindow = Window & { adsbygoogle?: unknown[] };
 
-type BlogSection = { heading: string; body: string };
+type AdSenseWindow = Window & {
+  adsbygoogle?: unknown[];
+};
 
-/* Shared keyboard-focus style so every interactive element is accessible. */
+type BlogSection = {
+  heading: string;
+  body: string;
+};
+
+/* Shared keyboard-focus style. */
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2";
+
+/* =========================================================
+   ADSENSE
+========================================================= */
 
 function AdSenseUnit({
   slot,
   inArticle = false,
 }: {
-  slot: "5373718974" | "8042854193" | "6033028012" | "5608262547" | "6810700989";
+  slot:
+    | "5373718974"
+    | "8042854193"
+    | "6033028012"
+    | "5608262547"
+    | "6810700989";
   inArticle?: boolean;
 }) {
   useEffect(() => {
     try {
       const adsWindow = window as AdSenseWindow;
+
       adsWindow.adsbygoogle = adsWindow.adsbygoogle || [];
       adsWindow.adsbygoogle.push({});
     } catch (error) {
@@ -58,14 +78,21 @@ function AdSenseUnit({
         <p className="mb-3 select-none text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
           Advertisement
         </p>
+
         <ins
           className="adsbygoogle"
           style={{ display: "block", minHeight: "90px" }}
           data-ad-client="ca-pub-2331501617441941"
           data-ad-slot={slot}
           {...(inArticle
-            ? { "data-ad-layout": "in-article", "data-ad-format": "fluid" }
-            : { "data-ad-format": "auto", "data-full-width-responsive": "true" })}
+            ? {
+                "data-ad-layout": "in-article",
+                "data-ad-format": "fluid",
+              }
+            : {
+                "data-ad-format": "auto",
+                "data-full-width-responsive": "true",
+              })}
         />
       </div>
     </div>
@@ -76,38 +103,83 @@ function HomepageArticleAd() {
   return <AdSenseUnit slot="6033028012" />;
 }
 
+/* =========================================================
+   SECTION HELPERS
+========================================================= */
+
 function getSectionPath(section: string) {
   switch (section) {
-    case "Innovation": return "/innovation";
-    case "Cybersecurity": return "/cybersecurity";
-    case "Healthcare": return "/healthcare";
-    case "Manufacturing": return "/manufacturing";
-    case "Business": return "/business-news";
+    case "Innovation":
+      return "/innovation";
+
+    case "Cybersecurity":
+      return "/cybersecurity";
+
+    case "Healthcare":
+      return "/healthcare";
+
+    case "Manufacturing":
+      return "/manufacturing";
+
+    case "Business":
+      return "/business-news";
+
     case "International Business":
-    case "International News": return "/international-news";
-    case "Energy": return "/energy";
-    case "Startup Success": return "/startup-success";
-    case "Technology": return "/technology";
-    default: return "/ceospotlight";
+    case "International News":
+      return "/international-news";
+
+    case "Energy":
+      return "/energy";
+
+    case "Startup Success":
+      return "/startup-success";
+
+    case "Technology":
+      return "/technology";
+
+    default:
+      return "/ceospotlight";
   }
 }
 
 function getSectionName(section: string) {
   switch (section) {
-    case "Innovation": return "Innovation";
-    case "Cybersecurity": return "Cybersecurity";
-    case "Healthcare": return "Healthcare";
-    case "Manufacturing": return "Manufacturing";
-    case "Business": return "Business";
-    case "International Business": return "International Business";
-    case "Startup Success": return "Startup Success";
-    case "Technology": return "Technology";
-    case "Energy": return "Energy";
-    default: return "CEO Spotlight";
+    case "Innovation":
+      return "Innovation";
+
+    case "Cybersecurity":
+      return "Cybersecurity";
+
+    case "Healthcare":
+      return "Healthcare";
+
+    case "Manufacturing":
+      return "Manufacturing";
+
+    case "Business":
+      return "Business";
+
+    case "International Business":
+      return "International Business";
+
+    case "Startup Success":
+      return "Startup Success";
+
+    case "Technology":
+      return "Technology";
+
+    case "Energy":
+      return "Energy";
+
+    default:
+      return "CEO Spotlight";
   }
 }
 
-/* Convert announcement-style headlines into explanatory blog headlines. */
+/* =========================================================
+   BLOG HEADLINE FORMATTING
+========================================================= */
+
 function formatBlogTitle(title: string, category: string) {
   const cleanTitle = title.replace(/[.!?]+$/, "").trim();
 
@@ -117,59 +189,115 @@ function formatBlogTitle(title: string, category: string) {
 
   if (actionMatch) {
     const company = actionMatch[1].trim();
-    const development = actionMatch[2].split(/\s+[—–-]\s+/)[0].trim();
 
-    const context = category && category.toLowerCase() !== "general"
-      ? category.toLowerCase()
-      : "the wider market";
+    const development = actionMatch[2]
+      .split(/\s+[—–-]\s+/)[0]
+      .trim();
+
+    const context =
+      category && category.toLowerCase() !== "general"
+        ? category.toLowerCase()
+        : "the wider market";
 
     return `What ${company}'s ${development} means for ${context}`;
   }
 
-  if (/^(how|why|what|understanding|inside|a guide|the case for)\b/i.test(cleanTitle)) {
+  if (
+    /^(how|why|what|understanding|inside|a guide|the case for)\b/i.test(
+      cleanTitle
+    )
+  ) {
     return cleanTitle;
   }
 
   return `A closer look at ${cleanTitle}`;
 }
 
-/* Improve generic section headings without changing the stored article facts. */
+/* =========================================================
+   BLOG SECTION HEADINGS
+========================================================= */
+
 function formatSectionHeading(heading: string, category: string) {
   const normalized = heading.trim().toLowerCase();
 
-  if (normalized === "the development") return "The development in context";
-  if (normalized === "why it matters") return `Why this matters for ${category.toLowerCase()}`;
-  if (normalized === "the wider context") return "The broader business context";
-  if (normalized === "what to watch next") return "What to watch from here";
-  if (normalized === "what comes next") return "The next signals to watch";
-  if (normalized === "the operating impact") return "How this could affect day-to-day operations";
-  if (normalized === "the market question") return "The commercial question";
-  if (normalized === "the breakthrough in context") return "The idea behind the development";
+  if (normalized === "the development") {
+    return "The development in context";
+  }
+
+  if (normalized === "why it matters") {
+    return `Why this matters for ${category.toLowerCase()}`;
+  }
+
+  if (normalized === "the wider context") {
+    return "The broader business context";
+  }
+
+  if (normalized === "what to watch next") {
+    return "What to watch from here";
+  }
+
+  if (normalized === "what comes next") {
+    return "The next signals to watch";
+  }
+
+  if (normalized === "the operating impact") {
+    return "How this could affect day-to-day operations";
+  }
+
+  if (normalized === "the market question") {
+    return "The commercial question";
+  }
+
+  if (normalized === "the breakthrough in context") {
+    return "The idea behind the development";
+  }
 
   return heading;
 }
 
-function specialArticlesForSection(section: string, currentId: string) {
+/* =========================================================
+   RELATED ARTICLE HELPERS
+========================================================= */
+
+function specialArticlesForSection(
+  section: string,
+  currentId: string
+) {
   return specialArticles
-    .filter((article) => article.section === section && article.id !== currentId)
+    .filter(
+      (article) =>
+        article.section === section && article.id !== currentId
+    )
     .slice(0, 3);
 }
 
-function relatedHomepageArticles(article: HomepageArticleType, limit = 3) {
+function relatedHomepageArticles(
+  article: HomepageArticleType,
+  limit = 3
+) {
   const sameCategory = homepageArticles.filter(
-    (item) => item.slug !== article.slug && item.category === article.category
+    (item) =>
+      item.slug !== article.slug &&
+      item.category === article.category
   );
 
-  if (sameCategory.length >= limit) return sameCategory.slice(0, limit);
+  if (sameCategory.length >= limit) {
+    return sameCategory.slice(0, limit);
+  }
 
   const fallback = homepageArticles.filter(
-    (item) => item.slug !== article.slug && !sameCategory.includes(item)
+    (item) =>
+      item.slug !== article.slug &&
+      !sameCategory.includes(item)
   );
 
   return [...sameCategory, ...fallback].slice(0, limit);
 }
 
-/* Shared author, date and reading-time information. */
+/* =========================================================
+   BLOG META
+========================================================= */
+
 function BlogMeta({
   author,
   date,
@@ -181,7 +309,9 @@ function BlogMeta({
 }) {
   return (
     <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-slate-200 py-4 text-[11px] text-slate-500">
-      <span className="font-semibold text-slate-800">By {author}</span>
+      <span className="font-semibold text-slate-800">
+        By {author}
+      </span>
 
       <span className="hidden h-1 w-1 shrink-0 rounded-full bg-red-600 sm:block" />
 
@@ -190,6 +320,7 @@ function BlogMeta({
       {readTime && (
         <>
           <span className="hidden h-1 w-1 shrink-0 rounded-full bg-slate-300 sm:block" />
+
           <span className="inline-flex items-center gap-1.5 tabular-nums">
             <Clock size={12} className="shrink-0" />
             {readTime}
@@ -200,14 +331,22 @@ function BlogMeta({
   );
 }
 
-/* Key takeaways at the beginning of every blog post. */
-function BlogHighlights({ points }: { points: string[] }) {
+/* =========================================================
+   BLOG HIGHLIGHTS
+========================================================= */
+
+function BlogHighlights({
+  points,
+}: {
+  points: string[];
+}) {
   if (!points?.length) return null;
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-7">
       <div className="flex items-center gap-2">
         <span className="h-2 w-2 shrink-0 rounded-full bg-red-600" />
+
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
           Key takeaways
         </p>
@@ -222,7 +361,10 @@ function BlogHighlights({ points }: { points: string[] }) {
             <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-bold tabular-nums text-red-600 ring-1 ring-slate-200">
               {index + 1}
             </span>
-            <span className="min-w-0 text-pretty break-words">{point}</span>
+
+            <span className="min-w-0 break-words text-pretty">
+              {point}
+            </span>
           </li>
         ))}
       </ul>
@@ -230,7 +372,10 @@ function BlogHighlights({ points }: { points: string[] }) {
   );
 }
 
-/* Main long-form blog content. */
+/* =========================================================
+   BLOG BODY
+========================================================= */
+
 function BlogBody({
   sections,
   category,
@@ -248,7 +393,7 @@ function BlogBody({
   return (
     <div className="blog-prose mt-10">
       {intro && (
-        <p className="mb-10 text-pretty break-words border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
+        <p className="mb-10 border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
           {intro}
         </p>
       )}
@@ -260,26 +405,31 @@ function BlogBody({
               Section {String(index + 1).padStart(2, "0")}
             </p>
 
-            <h2 className="max-w-3xl text-balance break-words font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
+            <h2 className="max-w-3xl break-words font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
               {formatSectionHeading(section.heading, category)}
             </h2>
 
-            <p className="mt-5 text-pretty break-words text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
+            <p className="mt-5 break-words text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
               {section.body}
             </p>
 
             {index === 0 && intro && (
-              <blockquote className="my-8 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 text-pretty break-words text-lg font-medium not-italic leading-8 text-slate-800 shadow-sm sm:px-7">
+              <blockquote className="my-8 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 text-lg font-medium not-italic leading-8 text-slate-800 shadow-sm sm:px-7">
                 <Quote size={18} className="mb-2 text-red-600" />
                 {intro}
               </blockquote>
             )}
           </section>
 
-          {index === 0 && adSlots && <AdSenseUnit slot={adSlots.first} />}
+          {index === 0 && adSlots && (
+            <AdSenseUnit slot={adSlots.first} />
+          )}
 
           {index === 1 && adSlots && (
-            <AdSenseUnit slot={adSlots.second} inArticle />
+            <AdSenseUnit
+              slot={adSlots.second}
+              inArticle
+            />
           )}
         </Fragment>
       ))}
@@ -287,7 +437,10 @@ function BlogBody({
   );
 }
 
-/* Blog information sidebar. */
+/* =========================================================
+   BLOG SIDEBAR
+========================================================= */
+
 function BlogSidebar({
   highlights,
   category,
@@ -304,7 +457,7 @@ function BlogSidebar({
           In this post
         </p>
 
-        <h2 className="mt-2 text-balance font-serif text-xl font-bold text-slate-950">
+        <h2 className="mt-2 font-serif text-xl font-bold text-slate-950">
           Key points
         </h2>
 
@@ -317,7 +470,10 @@ function BlogSidebar({
               <span className="shrink-0 font-semibold tabular-nums text-red-600">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="min-w-0 text-pretty break-words">{point}</span>
+
+              <span className="min-w-0 break-words">
+                {point}
+              </span>
             </li>
           ))}
         </ol>
@@ -328,7 +484,7 @@ function BlogSidebar({
           The Pride Times
         </p>
 
-        <p className="mt-3 text-balance font-serif text-2xl font-semibold leading-tight">
+        <p className="mt-3 font-serif text-2xl font-semibold leading-tight">
           Ideas, context and the bigger picture.
         </p>
 
@@ -337,6 +493,7 @@ function BlogSidebar({
             <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
               Topic
             </p>
+
             <p className="mt-1 break-words">{category}</p>
           </div>
 
@@ -344,6 +501,7 @@ function BlogSidebar({
             <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
               Coverage
             </p>
+
             <p className="mt-1 break-words">{section}</p>
           </div>
         </div>
@@ -352,7 +510,10 @@ function BlogSidebar({
   );
 }
 
-/* Back navigation and working share action. */
+/* =========================================================
+   SHARE AND BACK NAVIGATION
+========================================================= */
+
 function ShareAndBack({
   to,
   label,
@@ -374,6 +535,7 @@ function ShareAndBack({
           size={15}
           className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
         />
+
         Back to {label}
       </Link>
 
@@ -385,9 +547,15 @@ function ShareAndBack({
               title,
               text: description,
               url: window.location.href,
+            }).catch((error) => {
+              if (error?.name !== "AbortError") {
+                console.warn("Unable to share:", error);
+              }
             });
           } else {
-            navigator.clipboard?.writeText(window.location.href);
+            navigator.clipboard?.writeText(
+              window.location.href
+            );
           }
         }}
         className={`inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 transition-colors duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-700 active:scale-[0.98] motion-reduce:active:scale-100 ${focusRing}`}
@@ -399,7 +567,11 @@ function ShareAndBack({
   );
 }
 
-/* Related posts are deliberately text-only: no thumbnails inside blog pages. */
+/* =========================================================
+   RELATED POSTS
+   Text-only cards: no article thumbnails.
+========================================================= */
+
 function RelatedPosts<
   T extends {
     id?: string;
@@ -424,7 +596,7 @@ function RelatedPosts<
         Keep exploring
       </p>
 
-      <h2 className="mt-2 text-balance font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+      <h2 className="mt-2 font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
         More ideas to explore
       </h2>
 
@@ -439,11 +611,14 @@ function RelatedPosts<
               {item.category ?? "The Pride Times"}
             </p>
 
-            <h3 className="mt-3 text-balance break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
-              {formatBlogTitle(item.title, item.category ?? "Business")}
+            <h3 className="mt-3 break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
+              {formatBlogTitle(
+                item.title,
+                item.category ?? "Business"
+              )}
             </h3>
 
-            <p className="mt-3 line-clamp-3 text-pretty break-words text-sm leading-6 text-slate-500">
+            <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-500">
               {item.dek ??
                 item.excerpt ??
                 "Explore the context, developments and ideas shaping this topic."}
@@ -451,6 +626,7 @@ function RelatedPosts<
 
             <span className="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:text-red-700">
               Read the post
+
               <ArrowRight
                 size={13}
                 className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
@@ -467,11 +643,23 @@ function RelatedPosts<
    SPECIAL BLOGS
 ========================================================= */
 
-function SpecialBlog({ article }: { article: SpecialArticle }) {
-  const related = specialArticlesForSection(article.section, article.id);
+function SpecialBlog({
+  article,
+}: {
+  article: SpecialArticle;
+}) {
+  const related = specialArticlesForSection(
+    article.section,
+    article.id
+  );
+
   const sectionPath = getSectionPath(article.section);
   const sectionName = getSectionName(article.section);
-  const title = formatBlogTitle(article.title, article.category);
+
+  const title = formatBlogTitle(
+    article.title,
+    article.category
+  );
 
   return (
     <article className="min-h-screen bg-white text-slate-900 antialiased">
@@ -485,6 +673,7 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
               size={14}
               className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
             />
+
             Back to {sectionName}
           </Link>
         </div>
@@ -494,15 +683,17 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             <span>The Pride Times Blog</span>
+
             <span className="text-slate-300">/</span>
+
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 max-w-4xl text-balance break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-5 max-w-4xl break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
-          <p className="mt-6 max-w-3xl text-pretty break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+          <p className="mt-6 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
             {article.dek}
           </p>
 
@@ -529,7 +720,7 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
                   At a glance
                 </p>
 
-                <h2 className="mt-2 text-balance font-serif text-2xl font-bold text-slate-950">
+                <h2 className="mt-2 font-serif text-2xl font-bold text-slate-950">
                   The details behind the story
                 </h2>
 
@@ -542,6 +733,7 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
                       <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
                         {fact.label}
                       </dt>
+
                       <dd className="mt-1 break-words text-sm font-semibold text-slate-800">
                         {fact.value}
                       </dd>
@@ -560,7 +752,9 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
 
             <RelatedPosts
               items={related}
-              getHref={(item) => specialArticlePath(item.id)}
+              getHref={(item) =>
+                specialArticlePath(item.id)
+              }
             />
           </main>
 
@@ -579,9 +773,23 @@ function SpecialBlog({ article }: { article: SpecialArticle }) {
    HOMEPAGE BLOGS
 ========================================================= */
 
-function HomepageBlog({ article }: { article: HomepageArticleType }) {
+function HomepageBlog({
+  article,
+}: {
+  article: HomepageArticleType;
+}) {
   const related = relatedHomepageArticles(article);
-  const title = formatBlogTitle(article.title, article.category);
+
+  const title = formatBlogTitle(
+    article.title,
+    article.category
+  );
+
+  const isExpandedAdCategory = [
+    "Manufacturing",
+    "Smart Cities",
+    "Supply Chain",
+  ].includes(article.category);
 
   return (
     <article className="min-h-screen bg-white text-slate-900 antialiased">
@@ -595,6 +803,7 @@ function HomepageBlog({ article }: { article: HomepageArticleType }) {
               size={14}
               className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
             />
+
             Back to Home
           </Link>
         </div>
@@ -604,15 +813,17 @@ function HomepageBlog({ article }: { article: HomepageArticleType }) {
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             <span>The Pride Times Blog</span>
+
             <span className="text-slate-300">/</span>
+
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 text-balance break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-5 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
-          <p className="mt-6 max-w-3xl text-pretty break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+          <p className="mt-6 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
             {article.dek}
           </p>
 
@@ -634,14 +845,11 @@ function HomepageBlog({ article }: { article: HomepageArticleType }) {
               category={article.category}
               intro={article.dek}
               adSlots={{
-                first: ["Manufacturing", "Smart Cities", "Supply Chain"].includes(
-                  article.category
-                )
+                first: isExpandedAdCategory
                   ? "5608262547"
                   : "5373718974",
-                second: ["Manufacturing", "Smart Cities", "Supply Chain"].includes(
-                  article.category
-                )
+
+                second: isExpandedAdCategory
                   ? "6810700989"
                   : "8042854193",
               }}
@@ -656,7 +864,9 @@ function HomepageBlog({ article }: { article: HomepageArticleType }) {
 
             <RelatedPosts
               items={related}
-              getHref={(item) => articlePath(item.title)}
+              getHref={(item) =>
+                articlePath(item.title)
+              }
             />
           </main>
 
@@ -678,7 +888,9 @@ function HomepageBlog({ article }: { article: HomepageArticleType }) {
 function formatIsoDate(value: string) {
   const parsed = new Date(value);
 
-  if (Number.isNaN(parsed.getTime())) return value;
+  if (Number.isNaN(parsed.getTime())) {
+    return value;
+  }
 
   return parsed.toLocaleDateString("en-US", {
     month: "long",
@@ -688,8 +900,14 @@ function formatIsoDate(value: string) {
 }
 
 function backToLabel(path: string) {
-  if (path === "/business-news") return "Business";
-  if (path === "/technology") return "Technology";
+  if (path === "/business-news") {
+    return "Business";
+  }
+
+  if (path === "/technology") {
+    return "Technology";
+  }
+
   return "Home";
 }
 
@@ -710,17 +928,29 @@ function MagazineBlog({
 
   const dateLabel = isBusiness
     ? (article as BusinessArticle).time
-    : formatIsoDate((article as TechnologyArticle).publishedAt);
+    : formatIsoDate(
+        (article as TechnologyArticle).publishedAt
+      );
 
   const related = isBusiness
-    ? getRelatedBusinessArticles(article as BusinessArticle)
-    : getRelatedTechnologyArticles(article as TechnologyArticle);
+    ? getRelatedBusinessArticles(
+        article as BusinessArticle
+      )
+    : getRelatedTechnologyArticles(
+        article as TechnologyArticle
+      );
 
   const relatedPath = (story: EditorialArticle) =>
-    isBusiness ? `/article/${story.id}` : technologyArticlePath(story.id);
+    isBusiness
+      ? `/article/${story.id}`
+      : technologyArticlePath(story.id);
 
   const sectionLabel = backToLabel(backTo);
-  const title = formatBlogTitle(article.title, article.category);
+
+  const title = formatBlogTitle(
+    article.title,
+    article.category
+  );
 
   return (
     <article className="min-h-screen bg-white text-slate-900 antialiased">
@@ -734,6 +964,7 @@ function MagazineBlog({
               size={14}
               className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
             />
+
             Back to {sectionLabel}
           </Link>
         </div>
@@ -743,21 +974,26 @@ function MagazineBlog({
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             <span>The Pride Times Blog</span>
+
             <span className="text-slate-300">/</span>
+
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 text-balance break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-5 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
           {dek && (
-            <p className="mt-6 max-w-3xl text-pretty break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+            <p className="mt-6 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
               {dek}
             </p>
           )}
 
-          <BlogMeta author={article.author} date={dateLabel} />
+          <BlogMeta
+            author={article.author}
+            date={dateLabel}
+          />
         </header>
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
@@ -781,7 +1017,10 @@ function MagazineBlog({
               description={dek}
             />
 
-            <RelatedPosts items={related} getHref={relatedPath} />
+            <RelatedPosts
+              items={related}
+              getHref={relatedPath}
+            />
           </main>
 
           <BlogSidebar
@@ -797,26 +1036,60 @@ function MagazineBlog({
 
 /* =========================================================
    ARTICLE ROUTER
-   Keep all existing article lookup paths.
 ========================================================= */
 
 export function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
 
+  /*
+   * IMPORTANT FIX:
+   * React Router can reuse this component when a related
+   * article is clicked. The browser may otherwise retain
+   * the previous article's scroll position.
+   *
+   * This effect runs every time the article ID changes,
+   * ensuring that the newly opened article starts at the top.
+   */
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [id]);
+
   const specialArticle = getSpecialArticleById(id);
-  if (specialArticle) return <SpecialBlog article={specialArticle} />;
+
+  if (specialArticle) {
+    return <SpecialBlog article={specialArticle} />;
+  }
 
   const homepageArticle = getHomepageArticleBySlug(id);
-  if (homepageArticle) return <HomepageBlog article={homepageArticle} />;
+
+  if (homepageArticle) {
+    return <HomepageBlog article={homepageArticle} />;
+  }
 
   const businessArticle = getBusinessArticleById(id);
+
   if (businessArticle) {
-    return <MagazineBlog article={businessArticle} backTo="/business-news" />;
+    return (
+      <MagazineBlog
+        article={businessArticle}
+        backTo="/business-news"
+      />
+    );
   }
 
   const technologyArticle = getTechnologyArticleById(id);
+
   if (technologyArticle) {
-    return <MagazineBlog article={technologyArticle} backTo="/technology" />;
+    return (
+      <MagazineBlog
+        article={technologyArticle}
+        backTo="/technology"
+      />
+    );
   }
 
   return (
@@ -825,11 +1098,11 @@ export function ArticleDetailPage() {
         The Pride Times Blog
       </p>
 
-      <h1 className="mt-4 text-balance font-serif text-3xl font-bold tracking-tight text-slate-950">
+      <h1 className="mt-4 font-serif text-3xl font-bold tracking-tight text-slate-950">
         We couldn't find this post
       </h1>
 
-      <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-7 text-slate-500">
+      <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-slate-500">
         The post may have moved or its link may be outdated.
       </p>
 
