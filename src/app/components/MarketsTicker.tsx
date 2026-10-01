@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import {
@@ -24,10 +25,14 @@ function parseChange(value: unknown): number | null {
    Builds /markets?tab=<Tab> so MarketsPage opens the right tab
 ========================================================= */
 
-const marketTab = (tab: string) => `/markets?tab=${encodeURIComponent(tab)}`;
+const marketTab = (tab: string) =>
+  `/markets?tab=${encodeURIComponent(tab)}`;
 
 /* =========================================================
    MEGA MENU COLUMNS
+   Company section removed:
+   - About Us
+   - Contact Us
 ========================================================= */
 
 const megaMenuColumns = [
@@ -59,7 +64,6 @@ const megaMenuColumns = [
     ],
   },
 
-  /* Removed from "More": Featured, Breaking News */
   {
     title: "More",
     links: [
@@ -69,23 +73,6 @@ const megaMenuColumns = [
       { label: "Cover Stories", path: "/cover-stories" },
       { label: "White House Watch", path: "/white-house-watch" },
       { label: "World & Geopolitics", path: "/world" },
-    ],
-  },
-
-  /* =======================================================
-     COMPANY
-
-     Removed:
-     - Advertise
-     - Careers
-     - Press Room
-  ======================================================= */
-
-  {
-    title: "Company",
-    links: [
-      { label: "About Us", path: "/about-us" },
-      { label: "Contact Us", path: "/contact-us" },
     ],
   },
 ];
@@ -108,56 +95,66 @@ export function MarketsTicker() {
   ======================================================= */
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadData = async () => {
       try {
         const data = await getQuotes();
 
         const tickerData: (TickerCard | null)[] = [
-          ...data.usIndices.map((item: any) => ({
+          ...(data.usIndices ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.stocks.map((item: any) => ({
+          ...(data.stocks ?? []).map((item: any) => ({
             symbol: item.symbol ?? item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.crypto.map((item: any) => ({
+          ...(data.crypto ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.commodities.map((item: any) => ({
+          ...(data.commodities ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.indianIndices.map((item: any) => ({
+          ...(data.indianIndices ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
         ].filter(
           (item): item is TickerCard =>
-            item !== null && item.change !== null
+            item !== null &&
+            item.change !== null &&
+            Boolean(item.symbol) &&
+            Boolean(item.value)
         );
 
-        setCards(tickerData);
+        if (isMounted) {
+          setCards(tickerData);
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Failed to load market ticker data:", error);
       }
     };
 
     loadData();
 
-    const interval = setInterval(loadData, 60000);
+    const interval = window.setInterval(loadData, 60000);
 
-    return () => clearInterval(interval);
+    return () => {
+      isMounted = false;
+      window.clearInterval(interval);
+    };
   }, []);
 
   /* =======================================================
@@ -167,11 +164,11 @@ export function MarketsTicker() {
   useEffect(() => {
     if (!showSecurities) return;
 
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setShowSecurities(false);
     }, 9000);
 
-    return () => clearTimeout(timer);
+    return () => window.clearTimeout(timer);
   }, [showSecurities]);
 
   /* =======================================================
@@ -186,8 +183,9 @@ export function MarketsTicker() {
     const amount = (172 + 16) * 2;
     const halfway = el.scrollWidth / 2;
 
-    offsetRef.current +=
-      direction === "left" ? -amount : amount;
+    if (halfway <= 0) return;
+
+    offsetRef.current += direction === "left" ? -amount : amount;
 
     if (offsetRef.current < 0) {
       offsetRef.current += halfway;
@@ -222,13 +220,15 @@ export function MarketsTicker() {
       if (el && !isPausedRef.current) {
         const halfway = el.scrollWidth / 2;
 
-        offsetRef.current += speed;
+        if (halfway > 0) {
+          offsetRef.current += speed;
 
-        if (offsetRef.current >= halfway) {
-          offsetRef.current -= halfway;
+          if (offsetRef.current >= halfway) {
+            offsetRef.current -= halfway;
+          }
+
+          el.style.transform = `translateX(-${offsetRef.current}px)`;
         }
-
-        el.style.transform = `translateX(-${offsetRef.current}px)`;
       }
 
       rafRef.current = requestAnimationFrame(step);
@@ -237,8 +237,9 @@ export function MarketsTicker() {
     rafRef.current = requestAnimationFrame(step);
 
     return () => {
-      if (rafRef.current) {
+      if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
     };
   }, [cards]);
@@ -260,19 +261,19 @@ export function MarketsTicker() {
   ======================================================= */
 
   return (
-    <div className="pt-securities-bar w-full relative">
+    <div className="pt-securities-bar relative w-full">
       <div className="pt-container flex items-stretch">
-
         {/* =================================================
             MENU BUTTON
         ================================================= */}
 
-        <div className="relative flex-shrink-0 flex items-center">
+        <div className="relative flex flex-shrink-0 items-center">
           <button
             type="button"
-            onClick={() => setShowSecurities(!showSecurities)}
+            onClick={() => setShowSecurities((previous) => !previous)}
             aria-label="Top Securities menu"
             aria-expanded={showSecurities}
+            aria-haspopup="true"
             style={{
               width: "95px",
               height: "40px",
@@ -306,9 +307,7 @@ export function MarketsTicker() {
                 borderTop: "5px solid #000000",
                 display: "inline-block",
                 marginTop: "2px",
-                transform: showSecurities
-                  ? "rotate(180deg)"
-                  : "none",
+                transform: showSecurities ? "rotate(180deg)" : "none",
                 transition: "transform 0.15s ease",
               }}
             />
@@ -320,14 +319,15 @@ export function MarketsTicker() {
         ================================================= */}
 
         <div
-          className="relative flex items-center flex-1 min-w-0 pl-3 gap-2"
+          className="relative flex min-w-0 flex-1 items-center gap-2 pl-3"
           onMouseEnter={pauseAutoScroll}
           onMouseLeave={resumeAutoScroll}
         >
           {/* LEFT ARROW */}
 
           <button
-            className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
+            type="button"
+            className="pt-securities-scroll-arrow hidden items-center justify-center sm:flex"
             onClick={() => {
               pauseAutoScroll();
               scrollByAmount("left");
@@ -340,20 +340,20 @@ export function MarketsTicker() {
           {/* TICKER TRACK */}
 
           <div
-            className="overflow-hidden py-2 flex-1"
+            className="flex-1 overflow-hidden py-2"
             onTouchStart={pauseAutoScroll}
             onTouchEnd={resumeAutoScroll}
           >
             <div
               ref={trackRef}
-              className="flex items-center gap-4 w-max will-change-transform"
+              className="flex w-max items-center gap-4 will-change-transform"
             >
-              {[...cards, ...cards].map((card, i) => (
+              {[...cards, ...cards].map((card, index) => (
                 <div
-                  key={`${card.symbol}-${i}`}
-                  className="pt-market-card flex items-center gap-2 flex-shrink-0"
+                  key={`${card.symbol}-${index}`}
+                  className="pt-market-card flex flex-shrink-0 items-center gap-2"
                 >
-                  <span className="text-xs text-gray-400 font-medium truncate">
+                  <span className="truncate text-xs font-medium text-gray-400">
                     {card.symbol}
                   </span>
 
@@ -385,7 +385,8 @@ export function MarketsTicker() {
           {/* RIGHT ARROW */}
 
           <button
-            className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
+            type="button"
+            className="pt-securities-scroll-arrow hidden items-center justify-center sm:flex"
             onClick={() => {
               pauseAutoScroll();
               scrollByAmount("right");
@@ -404,9 +405,7 @@ export function MarketsTicker() {
       {showSecurities && (
         <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
           <div className="pt-container">
-
             <div className="pt-mega-menu-inner">
-
               {megaMenuColumns.map((column) => (
                 <div key={column.title}>
                   <h4 className="pt-mega-menu-heading">
@@ -418,9 +417,7 @@ export function MarketsTicker() {
                       <li key={link.label}>
                         <Link
                           to={link.path}
-                          onClick={() =>
-                            setShowSecurities(false)
-                          }
+                          onClick={() => setShowSecurities(false)}
                         >
                           {link.label}
                         </Link>
@@ -429,7 +426,6 @@ export function MarketsTicker() {
                   </ul>
                 </div>
               ))}
-
             </div>
 
             {/* =================================================
@@ -465,7 +461,6 @@ export function MarketsTicker() {
                 Terms of Use
               </Link>
             </div>
-
           </div>
         </div>
       )}
