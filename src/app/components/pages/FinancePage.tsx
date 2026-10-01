@@ -6,7 +6,8 @@ import InsImg from "../../../imports/Insightimage.png";
 import LN4Img from "../../../imports/LN4image.png";
 import FIN3Img from "../../../imports/FIN3.png";
 import FIN4Img from "../../../imports/FIN4.png";
-import FIN5Img from "../../../imports/FIN5.png";
+import FIN5Img from "../../../imports/FIN5.png";
+
 import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
@@ -222,19 +223,7 @@ function SectionHeader({
 
 function AdBanner({ bottom = false }: { bottom?: boolean }) {
   return (
-    <div className="finance-ad-banner">
-      <span className="finance-ad-label">GOOGLE ADSENSE</span>
-
-      <strong>
-        {bottom
-          ? "Business Solutions | Powered by The Pride Times"
-          : "Advertisement Space"}
-      </strong>
-
-      <small>728 × 90 • Leaderboard</small>
-
-      <span className="finance-ad-tag">Advertisement</span>
-    </div>
+    <PrideTimesAd variant={bottom ? "second" : "first"} className="my-4 md:my-5" />
   );
 }
 

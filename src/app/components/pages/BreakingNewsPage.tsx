@@ -283,25 +283,7 @@ function SectionHeader({
 
 function AdBanner({ label = "Advertisement Space" }) {
   return (
-    <div className="relative w-full h-[76px] md:h-[90px] bg-gradient-to-r from-[#10272d] via-[#17343c] to-[#285666] flex items-center justify-center overflow-hidden">
-      <div className="text-center">
-        <p className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] text-sky-300">
-          Google Adsense
-        </p>
-
-        <p className="mt-1 text-xs md:text-sm font-bold text-white">
-          {label}
-        </p>
-
-        <p className="mt-0.5 text-[8px] md:text-[9px] text-sky-200">
-          728 × 90 · Leaderboard
-        </p>
-      </div>
-
-      <span className="absolute top-1 right-1 text-[7px] bg-white/80 text-gray-500 px-1">
-        Advertisement
-      </span>
-    </div>
+    <PrideTimesAd variant="first" className="my-4 md:my-5" />
   );
 }
 
