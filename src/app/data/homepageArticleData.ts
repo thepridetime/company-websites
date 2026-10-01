@@ -1,3 +1,4 @@
+
 import HeroImg from "../../imports/heroimage.png";
 import InsImg from "../../imports/Insightimage.png";
 import LN3Img from "../../imports/LN3image.png";
@@ -17,10 +18,7 @@ export type HomepageArticle = {
   highlights: string[];
   tags: string[];
   editorNote: string;
-  sections: {
-    heading: string;
-    body: string;
-  }[];
+  sections: { heading: string; body: string }[];
 };
 
 export function articleSlug(title: string) {
@@ -40,239 +38,231 @@ type StorySeed = {
   category: string;
   dek: string;
   image: string;
-  author: string;
-  publishedAt: string;
   angle: string;
   highlights: string[];
+  publishedAt: string;
 };
 
 const storySeeds: StorySeed[] = [
   {
-    title: "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
-    category: "Markets | India",
-    dek: "India's derivatives market is absorbing a sharp reset as higher transaction costs push traders to rethink leverage, turnover and risk.",
+    title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
+    category: "Energy | Global Markets",
+    dek: "Oil supply interruptions, tanker-route risks and volatile freight costs are reshaping the global energy outlook, while demand forecasts and inventory trends point to a market facing pressure on several fronts.",
     image: HeroImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the tax-led shift in derivatives activity",
-    highlights: ["Trading volumes have dropped sharply from earlier peaks", "Higher costs are changing short-term trading strategies", "The reset could reward more disciplined, longer-horizon investors"],
-  },
-  {
-    title: "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
-    category: "Markets",
-    dek: "A broad recovery in smaller Indian companies is bringing fresh optimism to a segment investors had treated cautiously for much of the year.",
-    image: LN4Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the return of risk appetite in India's small-cap universe",
-    highlights: ["The segment has rallied 21% from its March low", "Domestic flows are supporting breadth beyond large caps", "Analysts still see valuation and liquidity risks"],
-  },
-  {
-    title: "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
-    category: "Business",
-    dek: "Jamie Dimon sees durable growth potential in India, but warns that policy complexity can make investors hesitate at the margin.",
-    image: InsImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the balance between India's growth story and investor certainty",
-    highlights: ["Long-term demand and demographics remain key strengths", "Tax and regulatory uncertainty are raising the cost of patience", "Global investors are watching policy execution closely"],
-  },
-  {
-    title: "Alibaba Unveils AI Chip as It Targets Global Data Centre Expansion",
-    category: "Technology",
-    dek: "Alibaba is pairing a new artificial-intelligence chip with an ambitious data-centre push as Chinese technology companies build more of their own stack.",
-    image: HeroImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the race to build an end-to-end AI infrastructure platform",
-    highlights: ["The chip is designed to support Alibaba's cloud ambitions", "Data-centre capacity is becoming a strategic advantage", "The move adds pressure to an increasingly competitive market"],
-  },
-  {
-    title: "India's Gold Import Standstill Threatens Supply",
-    category: "Markets | Commodities",
-    dek: "A pause in gold imports is tightening an important supply channel just as Indian buyers and jewellers prepare for a seasonally stronger period.",
-    image: HeroImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the pressure building across India's gold supply chain",
-    highlights: ["Import disruption is creating uncertainty for refiners and jewellers", "Premiums and inventories are becoming more important signals", "Demand may remain resilient despite higher prices"],
-  },
-  {
-    title: "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
-    category: "Technology | World",
-    dek: "India and Vietnam are expanding cooperation around artificial intelligence, digital infrastructure and defense as both governments deepen a broader strategic partnership.",
-    image: LN4Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the growing role of technology in India–Vietnam strategic cooperation",
+    publishedAt: "September 2026",
+    angle:
+      "the interaction between Gulf supply disruption, weaker demand forecasts, inventory drawdowns and higher transport risk",
     highlights: [
-      "AI cooperation is becoming part of a wider strategic relationship",
-      "Defense and digital infrastructure are being discussed alongside economic ties",
-      "Supply-chain resilience is an important shared priority",
+      "Gulf supply disruptions cut production by more than 10 million barrels per day at peak",
+      "The IEA September outlook forecasts global oil demand falling by 2.5 million barrels per day",
+      "Global oil inventories have drawn down 507 million barrels cumulatively since February 2026",
+      "Tanker attacks and freight-rate increases are adding volatility to oil logistics",
     ],
   },
   {
-    title: "India, Vietnam Deepen AI and Defense Ties After Modi-Lam Meeting",
-    category: "World",
-    dek: "India and Vietnam are widening their strategic partnership, with technology, defense and resilient supply chains at the centre of the relationship.",
-    image: LN3Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the strategic logic behind a closer India–Vietnam partnership",
-    highlights: ["AI cooperation is moving alongside traditional defense ties", "Both countries want more resilient regional supply chains", "The relationship reflects a wider Indo-Pacific realignment"],
+    title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
+    category: "Technology | Energy",
+    dek: "The next phase of artificial-intelligence infrastructure depends not only on chips and computing capacity, but also on reliable power, grid access and the ability to bring generation and storage online in time.",
+    image: InsImg,
+    publishedAt: "September 2026",
+    angle:
+      "the growing dependence of AI infrastructure on electricity supply, grid capacity and energy planning",
+    highlights: [
+      "Data-centre electricity demand is projected to approach 1,000 TWh by 2030",
+      "Secure power access is increasingly outpacing construction readiness as a constraint",
+      "Grid bottlenecks are delaying new AI data-centre capacity",
+      "Developers are being pushed to secure generation and storage earlier in project planning",
+    ],
   },
   {
-    title: "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
-    category: "Markets | Regulation",
-    dek: "India's markets regulator is expanding its use of artificial intelligence to spot suspicious behaviour across faster, more complex exchanges.",
+    title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
+    category: "Supply Chain | Global Trade",
+    dek: "Companies are reassessing sourcing, logistics and inventory strategies as geopolitical fragmentation, tariffs, commodity costs and AI-enabled procurement reshape the economics of global trade.",
+    image: LN3Img,
+    publishedAt: "September 2026",
+    angle:
+      "the shift from lowest-cost sourcing toward more resilient and diversified supply networks",
+    highlights: [
+      "Global goods trade reached approximately $13.7 trillion in the first half of 2026",
+      "China-plus-one, nearshoring and friendshoring strategies are accelerating",
+      "Trade growth partly reflects higher prices rather than equivalent volume growth",
+      "Middle East freight disruption and semiconductor complexity remain key risk factors",
+    ],
+  },
+  {
+    title: "AI Moves From Assistive Tools to Autonomous Enterprise Workflows",
+    category: "Technology | Artificial Intelligence",
+    dek: "Artificial intelligence is moving deeper into business operations, with agentic systems and embedded procurement tools entering workflows across finance, logistics, healthcare and industrial activity.",
+    image: LN4Img,
+    publishedAt: "September 2026",
+    angle:
+      "the transition from employee-facing AI assistance toward systems that can coordinate and execute multi-step work",
+    highlights: [
+      "Agentic AI and embedded procurement tools are entering enterprise workflows",
+      "AI adoption is shifting from assistive applications toward autonomous systems",
+      "The U.S.–China competition combines model capability with deployment scale",
+      "Regulatory frameworks are evolving alongside broader AI adoption",
+    ],
+  },
+  {
+    title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
+    category: "Cybersecurity | Critical Infrastructure",
+    dek: "AI is accelerating both cyberattacks and defensive capabilities, increasing pressure on organizations to identify, prioritize and remediate vulnerabilities before they can be exploited.",
     image: EdipickImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the regulator's technology-led response to market abuse",
-    highlights: ["Automated monitoring can connect signals across multiple venues", "The regulator still needs human review and due process", "Faster detection may improve confidence in the market"],
+    publishedAt: "September 2026",
+    angle:
+      "the shrinking response window between vulnerability disclosure and exploitation",
+    highlights: [
+      "A 48-hour patching window for many critical flaws is becoming an industry standard",
+      "AI is helping attackers weaponize vulnerabilities more quickly",
+      "Utilities, power grids and manufacturing are among the exposed critical systems",
+      "Governments are accelerating cybersecurity requirements for critical infrastructure",
+    ],
   },
   {
-    title: "Asian Currencies Gain Traction After Defensive Moves",
-    category: "Markets | Asia",
-    dek: "Asian currencies are finding firmer ground after a period of defensive positioning, as traders reassess growth, rates and regional risk.",
-    image: LN3Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the return of confidence to Asian foreign-exchange markets",
-    highlights: ["Defensive positioning had left many currencies undervalued", "Rate expectations remain the most important swing factor", "Regional trade flows are supporting a more constructive tone"],
-  },
-  {
-    title: "Stocks Rally as Brent Holds Below $100 on Iran Hopes",
-    category: "Energy | Markets",
-    dek: "Equities are rising as oil prices remain below a psychologically important threshold and investors look for signs of easing geopolitical risk.",
-    image: LN4Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the relationship between oil, geopolitics and investor confidence",
-    highlights: ["Brent below $100 is easing some inflation concerns", "Energy-sensitive sectors are leading the market response", "The rally remains vulnerable to any fresh supply shock"],
-  },
-  {
-    title: "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
-    category: "Finance | India",
-    dek: "A new loan-guarantee plan is intended to keep credit moving to companies and airlines facing an unusually volatile operating environment.",
-    image: HeroImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 21, 2026",
-    angle: "the effort to protect credit channels during a period of disruption",
-    highlights: ["Guarantees can reduce lenders' reluctance to extend working capital", "Airlines and trade-linked businesses face the most immediate pressure", "Execution will determine whether the plan reaches smaller firms"],
-  },
-  {
-    title: "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
-    category: "Finance | Leadership",
-    dek: "Support for Tata Sons chairman N. Chandrasekaran comes as investors examine how governance tensions could affect one of India's most important business groups.",
+    title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
+    category: "Healthcare | Supply Chain",
+    dek: "Hospitals and healthcare suppliers are investing in software-led systems to improve inventory visibility, demand forecasting and supplier-risk management as costs and traceability requirements rise.",
     image: Ln1Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "why governance has become central to the Tata investment story",
-    highlights: ["The Tata group remains a major source of investment and jobs", "Boardroom uncertainty can raise the risk premium investors demand", "Leadership continuity is being watched across the conglomerate"],
+    publishedAt: "September 2026",
+    angle:
+      "the move toward more visible, software-enabled and resilient healthcare supply networks",
+    highlights: [
+      "The global healthcare supply-chain market was valued at $3.20 billion in 2025",
+      "The market is forecast to reach $8.60 billion by 2034",
+      "Software-led solutions account for 58% of the market and cloud delivery 56%",
+      "AI is supporting real-time inventory visibility and supplier-risk monitoring",
+    ],
   },
   {
-    title: "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
-    category: "Energy | Business",
-    dek: "The policy response is designed to keep businesses operating while higher fuel, insurance and logistics costs test corporate balance sheets.",
-    image: HeroImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 21, 2026",
-    angle: "how war-related costs are moving from energy markets into company finances",
-    highlights: ["Fuel and insurance costs are arriving together", "Working-capital support matters most for transport businesses", "The policy response is also a test of economic resilience"],
-  },
-  {
-    title: "Berger Paints Steps Up Expansion Amid Competition From Birla Opus, JSW Dulux",
-    category: "Business | Companies",
-    dek: "India's paint industry is entering a more competitive phase as established brands defend distribution, pricing power and premium customers.",
-    image: InsImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the strategic fight for India's next wave of home-improvement demand",
-    highlights: ["New capacity is intensifying competition across regions", "Distribution remains as important as brand recognition", "Premium products may protect margins as rivalry grows"],
-  },
-  {
-    title: "India's Wealthy Youngsters Navigate Factory Floors and Family Offices",
-    category: "Business | Next Generation",
-    dek: "A new generation of Indian business heirs is moving between operating companies, family offices and technology-led ventures.",
+    title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
+    category: "Manufacturing | Industry",
+    dek: "Manufacturers are weighing tariff uncertainty, labour shortages and energy costs against investment in robotics, digital twins and domestic supplier networks.",
     image: LN4Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the changing role of India's next-generation business leaders",
-    highlights: ["Young leaders are seeking operating experience earlier", "Family offices are becoming engines for experimentation", "Succession is being shaped by technology and global exposure"],
+    publishedAt: "September 2026",
+    angle:
+      "the effort to improve manufacturing productivity while rebuilding supply-chain resilience",
+    highlights: [
+      "Hyundai plans to source 80% of vehicle parts from U.S. suppliers by 2030",
+      "Mind Robotics raised a $500 million Series A to address manufacturing labour shortages",
+      "Uber and Rivian announced a robotaxi partnership targeting 50,000 vehicles by 2031",
+      "Advanced chip packaging is increasing the importance of earlier fault detection",
+    ],
   },
   {
-    title: "Satya Nadella to Join OpenAI and Nvidia Leaders at Trump-Xi Dinner",
-    category: "Technology | Global",
-    dek: "The gathering brings together leaders at the centre of the AI economy as governments and companies negotiate the next phase of technology competition.",
-    image: HeroImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the diplomatic and commercial stakes of the AI supply chain",
-    highlights: ["AI leaders are increasingly part of high-level economic diplomacy", "Semiconductors and cloud infrastructure remain strategic issues", "Business decisions are being made alongside geopolitical calculations"],
-  },
-  {
-    title: "Alibaba Targets 20 Gigawatts of Global Data Centre Capacity by 2032",
-    category: "Technology | Infrastructure",
-    dek: "Alibaba's data-centre ambition underscores how much power, capital and connectivity the next generation of cloud computing will require.",
-    image: LN3Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the infrastructure economics behind the global AI boom",
-    highlights: ["Twenty gigawatts would represent a major global footprint", "Power availability is becoming a constraint on expansion", "Cloud demand is reshaping real-estate and energy planning"],
-  },
-  {
-    title: "ReNew Energy Trims Solar Output in India as Grid Constraints Persist",
-    category: "Energy | India",
-    dek: "Grid bottlenecks are forcing renewable developers to manage output even as India's demand for cleaner electricity continues to grow.",
+    title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility",
+    category: "Smart Cities | Infrastructure",
+    dek: "Urban infrastructure plans are increasingly linking AI platforms with energy management, public safety, EV charging, autonomous mobility and more connected logistics networks.",
     image: InsImg,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the infrastructure gap between renewable generation and reliable power delivery",
-    highlights: ["Curtailment can reduce the effective return on new projects", "Transmission investment is becoming as urgent as generation", "Storage and flexible demand could ease the bottleneck"],
+    publishedAt: "September 2026",
+    angle:
+      "the integration of digital platforms with the physical systems that keep cities operating",
+    highlights: [
+      "AI platforms are expanding into retail analytics, healthcare monitoring and public safety",
+      "Grid modernisation is central to EV charging and data-centre integration",
+      "Robotaxis and delivery drones are reshaping urban logistics planning",
+      "Cross-border storage and logistics capacity is expanding in Southeast Asia",
+    ],
   },
   {
-    title: "Gold and Silver Rise on Iran Optimism and a Weaker Dollar",
-    category: "Markets | Commodities",
-    dek: "Precious metals are gaining as geopolitical hopes, currency moves and demand for defensive assets pull prices in the same direction.",
+    title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation",
+    category: "World | Geopolitics",
+    dek: "The 2026 global outlook is being shaped by energy-market disruption, trade fragmentation and uneven regional exposure, with emerging economies particularly sensitive to commodity prices and dollar financing costs.",
+    image: HeroImg,
+    publishedAt: "September 2026",
+    angle:
+      "the transmission of geopolitical and commodity shocks into growth, inflation and financing conditions",
+    highlights: [
+      "The World Bank projects global growth slowing to 2.5% in 2026",
+      "The IMF baseline cited in the report is 3.1% global growth",
+      "Emerging markets face exposure to commodity volatility and dollar financing costs",
+      "Energy and food security, inflation and fiscal sustainability remain central policy priorities",
+    ],
+  },
+  {
+    title: "U.S.–China AI Competition Expands From Models to Global Infrastructure",
+    category: "World | Technology & Geopolitics",
+    dek: "The technology contest between the United States and China increasingly spans semiconductors, data-centre infrastructure, energy, mobility and industrial deployment.",
     image: LN3Img,
-    author: "Sagar Kumar",
-    publishedAt: "September 22, 2026",
-    angle: "the forces reshaping the precious-metals trade",
-    highlights: ["A weaker dollar makes metals more attractive to overseas buyers", "Geopolitical risk is supporting safe-haven demand", "Investors are balancing optimism with continued uncertainty"],
+    publishedAt: "September 2026",
+    angle:
+      "the different strategic strengths of advanced AI model development and large-scale technology deployment",
+    highlights: [
+      "The U.S. is building leading model capabilities",
+      "China is pursuing deployment scale and infrastructure foundations",
+      "Semiconductors and energy access remain strategic inputs",
+      "Businesses are factoring geopolitical risk into investment and sourcing decisions",
+    ],
+  },
+  {
+    title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention",
+    category: "Markets | Forex & Commodities",
+    dek: "Reserve managers are diversifying holdings amid geopolitical and financial risk, while currency and government-bond markets reflect diverging central-bank policy paths.",
+    image: EdipickImg,
+    publishedAt: "September 2026",
+    angle:
+      "the relationship between reserve diversification, gold demand, currency exposure and global financial risk",
+    highlights: [
+      "Central banks are increasing gold holdings as a hedge against geopolitical and financial risk",
+      "The U.S. dollar's share of central-bank holdings has declined as diversification continues",
+      "Government bond markets reflect diverging central-bank policy paths",
+      "Inflation remains elevated in several major economies",
+    ],
+  },
+  {
+    title: "Autonomous Systems Move Into Mobility, Warehousing and Industrial Operations",
+    category: "Innovation | CEO Spotlight",
+    dek: "Autonomous robotics, robotaxis and AI-enabled industrial systems are becoming central themes in investment decisions across manufacturing, transport and logistics.",
+    image: LN4Img,
+    publishedAt: "September 2026",
+    angle:
+      "the expansion of autonomous systems from technology demonstrations into business operations",
+    highlights: [
+      "Mind Robotics is targeting labour shortages with autonomous robotics",
+      "Uber and Rivian announced plans for 50,000 autonomous robotaxis by 2031",
+      "Manufacturers are investing in AI, robotics and digital-twin technology",
+      "Supply-chain operators are expanding warehouse and data-centre logistics capacity",
+    ],
+  },
+];
+
+const editorialSections = [
+  {
+    heading: "The story behind the development",
+    body: (story: StorySeed) =>
+      `The central issue is ${story.angle}. The report places this development within a wider operating environment in which companies, investors and policymakers are adjusting to changes in costs, infrastructure, technology and geopolitical risk. The headline is the entry point; the underlying mechanisms explain why the issue matters across sectors.`,
+  },
+  {
+    heading: "The evidence and key signals",
+    body: (story: StorySeed) =>
+      `${story.highlights[0]}. ${story.highlights[1]}. These indicators show how the issue is developing and where pressure or opportunity is accumulating. They should be read together rather than as isolated data points, because decisions in one part of the system can affect costs, capacity and confidence elsewhere.`,
+  },
+  {
+    heading: "What it means for business and markets",
+    body: (story: StorySeed) =>
+      `For businesses, the practical questions concern investment timing, operating resilience, access to infrastructure and exposure to policy or supply disruption. For investors and readers, the report's signals provide a framework for tracking how the trend moves from headline coverage into measurable commercial and economic effects.`,
+  },
+  {
+    heading: "What to watch next",
+    body: (story: StorySeed) =>
+      `The next stage should be assessed through new data, policy execution, company investment plans and evidence of whether the pressures described here are easing or becoming structural. The key indicators to follow are: ${story.highlights
+        .slice(0, 3)
+        .join("; ")}.`,
   },
 ];
 
 export const homepageArticles: HomepageArticle[] = storySeeds.map((story) => ({
   ...story,
   slug: articleSlug(story.title),
+  author: "Sagar Kumar",
   readTime: story.highlights.length >= 4 ? "7 min read" : "6 min read",
-  tags: [
-    story.category.split("|")[0].trim(),
-    "Business",
-    "Analysis",
-    "The Pride Times",
-  ].filter((tag, index, all) => all.indexOf(tag) === index),
+  tags: [story.category.split("|")[0].trim(), "Analysis", "The Pride Times"],
   editorNote:
-    "This Pride Times blog brings the headline into context, separates the immediate signal from the bigger trend, and highlights the developments worth following next.",
-  sections: [
-    {
-      heading: "The story behind the headline",
-      body: `The central development in this story is ${story.angle}. That matters because the headline captures the immediate change, while the broader question is what the change says about the decisions being made by investors, companies, regulators and other participants in the market. The most useful way to read the development is therefore not as an isolated event, but as part of a larger adjustment already taking shape.`,
-    },
-    {
-      heading: "Why it matters now",
-      body: `${story.highlights[0]}. That first signal helps explain why the story has moved onto the radar of the market and the wider business community. At the same time, ${story.highlights[1].toLowerCase()}. Together, those developments point to a period in which established assumptions are being tested and participants have to decide whether the change is temporary or part of a more durable shift.`,
-    },
-    {
-      heading: "What the key signals tell us",
-      body: `${story.highlights[2]}. For readers, the important distinction is between the headline reaction and the underlying business or market mechanism. Prices, investment decisions, operating plans, regulation and customer behaviour can all respond at different speeds, so the next stage of the story will depend on which of those signals proves most persistent.`,
-    },
-    {
-      heading: "What to watch next",
-      body: `The next chapter should be judged by measurable developments rather than headlines alone. For this story, that means watching new data, management commentary, policy execution, capital allocation and the response of the broader market. The key question is whether ${story.angle} develops into a structural trend or remains a shorter-term adjustment.`,
-    },
-  ],
+    "This report-led Pride Times briefing connects the immediate development with the wider market, industry and geopolitical forces shaping the story.",
+  sections: editorialSections.map((section) => ({
+    heading: section.heading,
+    body: section.body(story),
+  })),
 }));
 
 export function getHomepageArticleBySlug(slug?: string) {
