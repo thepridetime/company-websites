@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -38,6 +39,11 @@ type MarketItem = {
   value: string | number;
   change: string;
   up: boolean;
+};
+
+type MarketSnapshot = {
+  Indices: MarketItem[];
+  Crypto: MarketItem[];
 };
 
 /* =========================================================
@@ -89,8 +95,10 @@ function PrideTimesAd() {
 
 const heroStory = {
   category: "ENERGY | GLOBAL MARKETS",
-  title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
-  excerpt: "Oil supply interruptions, tanker-route risks and volatile freight costs are reshaping the global energy outlook. The Pride Times report tracks the demand forecast, inventory drawdowns and peak Gulf production losses behind the disruption.",
+  title:
+    "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
+  excerpt:
+    "Oil supply interruptions, tanker-route risks and volatile freight costs are reshaping the global energy outlook. The Pride Times report tracks demand forecasts, inventory drawdowns and the production losses behind the disruption.",
   image: HeroImg,
   link: "/markets",
 };
@@ -99,8 +107,10 @@ const centerStories = [
   {
     id: 1,
     tag: "TECHNOLOGY | ENERGY",
-    title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
-    excerpt: "Data-centre electricity demand is projected to approach 1,000 TWh by 2030, making secure power access and grid readiness central to the next phase of AI infrastructure.",
+    title:
+      "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
+    excerpt:
+      "Data-centre electricity demand is projected to approach 1,000 TWh by 2030, making secure power access and grid readiness central to the next phase of AI infrastructure.",
     publishedAt: "September 2026",
     image: LN4Img,
     link: "/technology",
@@ -108,8 +118,10 @@ const centerStories = [
   {
     id: 2,
     tag: "SUPPLY CHAIN",
-    title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
-    excerpt: "Companies are balancing resilience against cost as tariffs, commodity prices and regional sourcing strategies reshape trade networks.",
+    title:
+      "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
+    excerpt:
+      "Companies are balancing resilience against cost as tariffs, commodity prices and regional sourcing strategies reshape trade networks.",
     publishedAt: "September 2026",
     image: InsImg,
     link: "/supply-chain",
@@ -117,50 +129,254 @@ const centerStories = [
 ];
 
 const videoFeature = {
-  title: "Autonomous Systems Move Into Mobility, Warehousing and Industrial Operations",
+  title:
+    "Autonomous Systems Move Into Mobility, Warehousing and Industrial Operations",
   image: HeroImg,
   link: "/innovation",
 };
 
-const latestNewsTabs = ["All", "Markets", "Technology", "Cybersecurity", "Energy", "Industries", "World"];
+const latestNewsTabs = [
+  "All",
+  "Markets",
+  "Technology",
+  "Cybersecurity",
+  "Energy",
+  "Industries",
+  "World",
+];
+
+/* =========================================================
+   LATEST NEWS DATA
+   Keep titles aligned with homepageArticleData.ts.
+========================================================= */
 
 const latestNewsData: Record<string, NewsItem[]> = {
   All: [
-    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: HeroImg, link: "/markets" },
-    { id: 2, hot: true, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: InsImg, link: "/technology" },
-    { id: 3, hot: true, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: LN3Img, link: "/cybersecurity" },
-    { id: 4, hot: false, title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise", publishedAt: "September 2026", image: LN4Img, link: "/supply-chain" },
-    { id: 5, hot: false, title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience", publishedAt: "September 2026", image: EdipickImg, link: "/healthcare" },
+    {
+      id: 1,
+      hot: true,
+      title:
+        "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
+      publishedAt: "September 2026",
+      image: HeroImg,
+      link: "/markets",
+    },
+    {
+      id: 2,
+      hot: true,
+      title:
+        "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
+      publishedAt: "September 2026",
+      image: InsImg,
+      link: "/technology",
+    },
+    {
+      id: 3,
+      hot: true,
+      title:
+        "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
+      publishedAt: "September 2026",
+      image: LN3Img,
+      link: "/cybersecurity",
+    },
+    {
+      id: 4,
+      hot: false,
+      title:
+        "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
+      publishedAt: "September 2026",
+      image: LN4Img,
+      link: "/supply-chain",
+    },
+    {
+      id: 5,
+      hot: false,
+      title:
+        "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
+      publishedAt: "September 2026",
+      image: EdipickImg,
+      link: "/healthcare",
+    },
   ],
+
   Markets: [
-    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: HeroImg, link: "/markets" },
-    { id: 2, hot: false, title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention", publishedAt: "September 2026", image: EdipickImg, link: "/markets" },
-    { id: 3, hot: false, title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation", publishedAt: "September 2026", image: LN3Img, link: "/world" },
+    {
+      id: 1,
+      hot: true,
+      title:
+        "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
+      publishedAt: "September 2026",
+      image: HeroImg,
+      link: "/markets",
+    },
+    {
+      id: 2,
+      hot: false,
+      title:
+        "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention",
+      publishedAt: "September 2026",
+      image: EdipickImg,
+      link: "/markets",
+    },
+    {
+      id: 3,
+      hot: false,
+      title:
+        "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation",
+      publishedAt: "September 2026",
+      image: LN3Img,
+      link: "/world",
+    },
   ],
+
   Technology: [
-    { id: 1, hot: true, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: InsImg, link: "/technology" },
-    { id: 2, hot: false, title: "AI Moves From Assistive Tools to Autonomous Enterprise Workflows", publishedAt: "September 2026", image: LN4Img, link: "/technology" },
-    { id: 3, hot: false, title: "U.S.–China AI Competition Expands From Models to Global Infrastructure", publishedAt: "September 2026", image: LN3Img, link: "/world" },
+    {
+      id: 1,
+      hot: true,
+      title:
+        "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
+      publishedAt: "September 2026",
+      image: InsImg,
+      link: "/technology",
+    },
+    {
+      id: 2,
+      hot: false,
+      title:
+        "AI Moves From Assistive Tools to Autonomous Enterprise Workflows",
+      publishedAt: "September 2026",
+      image: LN4Img,
+      link: "/technology",
+    },
+    {
+      id: 3,
+      hot: false,
+      title:
+        "U.S.–China AI Competition Expands From Models to Global Infrastructure",
+      publishedAt: "September 2026",
+      image: LN3Img,
+      link: "/world",
+    },
   ],
+
   Cybersecurity: [
-    { id: 1, hot: true, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: EdipickImg, link: "/cybersecurity" },
-    { id: 2, hot: false, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: LN3Img, link: "/cybersecurity" },
+    {
+      id: 1,
+      hot: true,
+      title:
+        "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
+      publishedAt: "September 2026",
+      image: EdipickImg,
+      link: "/cybersecurity",
+    },
+    {
+      id: 2,
+      hot: false,
+      title:
+        "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
+      publishedAt: "September 2026",
+      image: LN3Img,
+      link: "/cybersecurity",
+    },
   ],
+
   Energy: [
-    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: HeroImg, link: "/energy" },
-    { id: 2, hot: false, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: InsImg, link: "/energy" },
-    { id: 3, hot: false, title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility", publishedAt: "September 2026", image: LN4Img, link: "/smart-cities" },
+    {
+      id: 1,
+      hot: true,
+      title:
+        "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
+      publishedAt: "September 2026",
+      image: HeroImg,
+      link: "/energy",
+    },
+    {
+      id: 2,
+      hot: false,
+      title:
+        "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
+      publishedAt: "September 2026",
+      image: InsImg,
+      link: "/energy",
+    },
+    {
+      id: 3,
+      hot: false,
+      title:
+        "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility",
+      publishedAt: "September 2026",
+      image: LN4Img,
+      link: "/smart-cities",
+    },
   ],
+
   Industries: [
-    { id: 1, hot: false, title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience", publishedAt: "September 2026", image: EdipickImg, link: "/healthcare" },
-    { id: 2, hot: false, title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite", publishedAt: "September 2026", image: LN4Img, link: "/manufacturing" },
-    { id: 3, hot: false, title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility", publishedAt: "September 2026", image: InsImg, link: "/smart-cities" },
-    { id: 4, hot: false, title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise", publishedAt: "September 2026", image: LN3Img, link: "/supply-chain" },
+    {
+      id: 1,
+      hot: false,
+      title:
+        "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
+      publishedAt: "September 2026",
+      image: EdipickImg,
+      link: "/healthcare",
+    },
+    {
+      id: 2,
+      hot: false,
+      title:
+        "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
+      publishedAt: "September 2026",
+      image: LN4Img,
+      link: "/manufacturing",
+    },
+    {
+      id: 3,
+      hot: false,
+      title:
+        "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility",
+      publishedAt: "September 2026",
+      image: InsImg,
+      link: "/smart-cities",
+    },
+    {
+      id: 4,
+      hot: false,
+      title:
+        "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
+      publishedAt: "September 2026",
+      image: LN3Img,
+      link: "/supply-chain",
+    },
   ],
+
   World: [
-    { id: 1, hot: true, title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation", publishedAt: "September 2026", image: HeroImg, link: "/world" },
-    { id: 2, hot: false, title: "U.S.–China AI Competition Expands From Models to Global Infrastructure", publishedAt: "September 2026", image: LN3Img, link: "/world" },
-    { id: 3, hot: false, title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention", publishedAt: "September 2026", image: EdipickImg, link: "/markets" },
+    {
+      id: 1,
+      hot: true,
+      title:
+        "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation",
+      publishedAt: "September 2026",
+      image: HeroImg,
+      link: "/world",
+    },
+    {
+      id: 2,
+      hot: false,
+      title:
+        "U.S.–China AI Competition Expands From Models to Global Infrastructure",
+      publishedAt: "September 2026",
+      image: LN3Img,
+      link: "/world",
+    },
+    {
+      id: 3,
+      hot: false,
+      title:
+        "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention",
+      publishedAt: "September 2026",
+      image: EdipickImg,
+      link: "/markets",
+    },
   ],
 };
 
@@ -172,8 +388,10 @@ const editorsPicks = [
   {
     id: 1,
     category: "CYBERSECURITY",
-    title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
-    excerpt: "AI is accelerating the speed of cyber exploitation, putting critical infrastructure and industrial operators under pressure to shorten remediation cycles.",
+    title:
+      "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
+    excerpt:
+      "AI is accelerating the speed of cyber exploitation, putting critical infrastructure and industrial operators under pressure to shorten remediation cycles.",
     publishedAt: "September 2026",
     image: EdipickImg,
     link: "/cybersecurity",
@@ -181,8 +399,10 @@ const editorsPicks = [
   {
     id: 2,
     category: "HEALTHCARE",
-    title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
-    excerpt: "Software-led systems and AI tools are improving inventory visibility, demand forecasting and supplier-risk management across healthcare.",
+    title:
+      "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
+    excerpt:
+      "Software-led systems and AI tools are improving inventory visibility, demand forecasting and supplier-risk management across healthcare.",
     publishedAt: "September 2026",
     image: LN3Img,
     link: "/healthcare",
@@ -190,8 +410,10 @@ const editorsPicks = [
   {
     id: 3,
     category: "MANUFACTURING",
-    title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
-    excerpt: "Robotics, digital twins and domestic supplier partnerships are becoming part of the manufacturing response to labour, tariff and energy pressures.",
+    title:
+      "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
+    excerpt:
+      "Robotics, digital twins and domestic supplier partnerships are becoming part of the manufacturing response to labour, tariff and energy pressures.",
     publishedAt: "September 2026",
     image: Ln1Img,
     link: "/manufacturing",
@@ -287,7 +509,7 @@ const prideTimes30 = [
 ];
 
 /* =========================================================
-   CHANGE CHIP
+   SMALL COMPONENTS
 ========================================================= */
 
 function ChangeChip({
@@ -299,7 +521,7 @@ function ChangeChip({
 }) {
   return (
     <span
-      className={`text-[10px] font-semibold tabular-nums flex items-center gap-1 ${
+      className={`inline-flex items-center gap-1 text-[10px] font-semibold tabular-nums ${
         up ? "text-green-600" : "text-red-600"
       }`}
     >
@@ -308,15 +530,10 @@ function ChangeChip({
       ) : (
         <TrendingDown size={10} strokeWidth={2.25} />
       )}
-
       {change}
     </span>
   );
 }
-
-/* =========================================================
-   SECTION HEADER
-========================================================= */
 
 function SectionHeader({
   title,
@@ -328,47 +545,46 @@ function SectionHeader({
   linkText?: string;
 }) {
   return (
-    <div
-      className="
-        flex
-        items-center
-        justify-between
-        border-b-2
-        border-black
-        pb-2.5
-        mb-5
-      "
-    >
-      <h2
-        className="
-          text-[12px]
-          font-bold
-          uppercase
-          tracking-[0.16em]
-        "
-      >
+    <div className="mb-5 flex items-center justify-between border-b-2 border-black pb-2.5">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
         {title}
       </h2>
 
       {link && (
         <Link
           to={link}
-          className="
-            text-[9px]
-            font-semibold
-            text-red-600
-            flex
-            items-center
-            gap-1
-          "
+          className="inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wide text-red-600 transition-colors hover:text-red-800"
         >
           {linkText}
-          <ArrowRight size={9} />
+          <ArrowRight size={10} />
         </Link>
       )}
     </div>
   );
 }
+
+/* =========================================================
+   IMAGE COMPONENT
+========================================================= */
+
+function StoryImage({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt: string;
+  className: string;
+}) {
+  return (
+    <ImageWithFallback
+      src={src}
+      alt={alt}
+      className={`${className} object-cover`}
+    />
+  );
+}
+
 /* =========================================================
    HOME PAGE
 ========================================================= */
@@ -379,43 +595,72 @@ export function HomePage() {
 
   const [activeNewsTab, setActiveNewsTab] = useState("All");
 
-  const [marketSnapshotData, setMarketSnapshotData] = useState<
-    Record<string, MarketItem[]>
-  >({
-    Indices: [],
-    Crypto: [],
-  });
+  const [marketSnapshotData, setMarketSnapshotData] =
+    useState<MarketSnapshot>({
+      Indices: [],
+      Crypto: [],
+    });
+
+  const [marketLoading, setMarketLoading] = useState(true);
 
   /* =======================================================
      MARKET DATA
   ======================================================= */
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadMarketData = async () => {
       try {
+        setMarketLoading(true);
+
         const data = await getQuotes();
 
-        setMarketSnapshotData({
-          Indices: data.indices.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: item.change,
-            up: item.up,
-          })),
+        if (!isMounted) return;
 
-          Crypto: data.crypto.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: item.change,
-            up: item.up,
-          })),
+        const indices = Array.isArray(data?.indices)
+          ? data.indices
+          : [];
+
+        const crypto = Array.isArray(data?.crypto)
+          ? data.crypto
+          : [];
+
+        const formatMarketItems = (items: any[]): MarketItem[] =>
+          items
+            .filter((item) => item && item.name != null)
+            .map((item) => ({
+              symbol: String(item.name),
+              value: item.value ?? "—",
+              change: String(item.change ?? "—"),
+              up: Boolean(item.up),
+            }));
+
+        setMarketSnapshotData({
+          Indices: formatMarketItems(indices),
+          Crypto: formatMarketItems(crypto),
         });
       } catch (error) {
         console.error("Market API Error:", error);
+
+        if (isMounted) {
+          setMarketSnapshotData({
+            Indices: [],
+            Crypto: [],
+          });
+        }
+      } finally {
+        if (isMounted) {
+          setMarketLoading(false);
+        }
       }
     };
 
     loadMarketData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   /* =======================================================
@@ -427,10 +672,11 @@ export function HomePage() {
 
   const latestStories = selectedNews.slice(0, 5);
 
-  // Sidebar ticker: sitewide reverse-chron feed, de-duplicated across
-  // tabs by title and filtered to exclude whatever is already shown
-  // as the Hero/Major/Video stories above, so the same headline
-  // doesn't render twice on the page.
+  /* =======================================================
+     SIDEBAR NEWS
+     Avoid repeating the main lead and featured stories.
+  ======================================================= */
+
   const featuredTitles = new Set([
     heroStory.title,
     centerStories[0].title,
@@ -453,139 +699,50 @@ export function HomePage() {
     )
     .slice(0, 5);
 
+  const currentMarketItems =
+    marketSnapshotData[activeMarketTab] || [];
+
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <main className="pt-4 md:pt-6 pb-16">
+    <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="pb-16 pt-4 md:pt-6">
 
           {/* =================================================
               TOP STORIES / NEWSROOM LEAD
           ================================================= */}
 
-          <section
-            className="
-              pb-8
-              mb-8
-              border-b
-              border-gray-300
-            "
-          >
-            <div
-              className="
-                grid
-                grid-cols-1
-                lg:grid-cols-[1.15fr_1fr_0.85fr]
-                gap-5
-                lg:gap-6
-              "
-            >
+          <section className="mb-8 border-b border-gray-300 pb-8">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.15fr_1fr_0.85fr] lg:gap-6">
 
               {/* LEAD STORY */}
 
               <Link
                 to={articlePath(heroStory.title)}
-                className="
-                  group
-                  relative
-                  block
-                  overflow-hidden
-                  rounded-lg
-                  border
-                  border-gray-200
-                  min-h-[430px]
-                  lg:min-h-[500px]
-                  bg-black
-                "
+                aria-label={`Read: ${heroStory.title}`}
+                className="group relative block min-h-[430px] overflow-hidden rounded-lg border border-gray-200 bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600 lg:min-h-[500px]"
               >
-                <ImageWithFallback
+                <StoryImage
                   src={heroStory.image}
                   alt={heroStory.title}
-                  className="
-                    absolute
-                    inset-0
-                    w-full
-                    h-full
-                    object-cover
-                    transition-transform
-                    duration-700
-                    group-hover:scale-[1.04]
-                  "
+                  className="absolute inset-0 h-full w-full transition-transform duration-700 group-hover:scale-[1.04]"
                 />
 
-                <div
-                  className="
-                    absolute
-                    inset-0
-                    bg-gradient-to-t
-                    from-black/90
-                    via-black/35
-                    to-transparent
-                  "
-                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
 
-                <span
-                  className="
-                    absolute
-                    top-4
-                    left-4
-                    bg-red-600
-                    text-white
-                    px-3
-                    py-1
-                    text-[9px]
-                    font-bold
-                    tracking-[0.16em]
-                    uppercase
-                    rounded-[2px]
-                  "
-                >
+                <span className="absolute left-4 top-4 rounded-[2px] bg-red-600 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white">
                   {heroStory.category}
                 </span>
 
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                  <h1
-                    className="
-                      font-serif
-                      text-2xl
-                      md:text-[30px]
-                      lg:text-[34px]
-                      font-bold
-                      leading-[1.08]
-                      text-white
-                    "
-                  >
+                  <h1 className="font-serif text-2xl font-bold leading-[1.08] text-white md:text-[30px] lg:text-[34px]">
                     {heroStory.title}
                   </h1>
 
-                  <p
-                    className="
-                      text-[12px]
-                      md:text-[13px]
-                      text-gray-200
-                      leading-[1.6]
-                      mt-3
-                      line-clamp-3
-                    "
-                  >
+                  <p className="mt-3 line-clamp-3 text-[12px] leading-[1.65] text-gray-200 md:text-[13px]">
                     {heroStory.excerpt}
                   </p>
 
-                  <span
-                    className="
-                      inline-flex
-                      items-center
-                      gap-1.5
-                      text-[10px]
-                      font-bold
-                      text-white
-                      uppercase
-                      tracking-wide
-                      mt-4
-                      border-b
-                      border-white/60
-                      pb-1
-                    "
-                  >
+                  <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-white transition-colors group-hover:border-red-400 group-hover:text-red-300">
                     Read Full Story
                     <ArrowRight size={12} />
                   </span>
@@ -596,17 +753,7 @@ export function HomePage() {
 
               <div className="min-w-0">
                 <div className="mb-4">
-                  <span
-                    className="
-                      block
-                      text-[9px]
-                      font-bold
-                      text-red-600
-                      uppercase
-                      tracking-[0.15em]
-                      mb-2
-                    "
-                  >
+                  <span className="mb-2 block text-[9px] font-bold uppercase tracking-[0.15em] text-red-600">
                     {centerStories[0].tag}
                   </span>
 
@@ -614,48 +761,19 @@ export function HomePage() {
                     to={articlePath(centerStories[0].title)}
                     className="group block"
                   >
-                    <div className="overflow-hidden rounded-lg">
-                      <ImageWithFallback
+                    <div className="overflow-hidden rounded-lg bg-gray-100">
+                      <StoryImage
                         src={centerStories[0].image}
                         alt={centerStories[0].title}
-                        className="
-                          w-full
-                          h-[220px]
-                          md:h-[250px]
-                          object-cover
-                          rounded-lg
-                          transition-transform
-                          duration-700
-                          group-hover:scale-[1.03]
-                        "
+                        className="h-[220px] w-full transition-transform duration-700 group-hover:scale-[1.03] md:h-[250px]"
                       />
                     </div>
 
-                    <h2
-                      className="
-                        font-serif
-                        text-xl
-                        md:text-2xl
-                        font-bold
-                        leading-[1.15]
-                        mt-3
-                        text-gray-950
-                        group-hover:text-red-600
-                        transition-colors
-                      "
-                    >
+                    <h2 className="mt-3 font-serif text-xl font-bold leading-[1.15] text-gray-950 transition-colors group-hover:text-red-600 md:text-2xl">
                       {centerStories[0].title}
                     </h2>
 
-                    <p
-                      className="
-                        text-[12px]
-                        text-gray-600
-                        mt-2
-                        leading-[1.6]
-                        line-clamp-3
-                      "
-                    >
+                    <p className="mt-2 line-clamp-3 text-[12px] leading-[1.65] text-gray-600">
                       {centerStories[0].excerpt}
                     </p>
                   </Link>
@@ -665,114 +783,52 @@ export function HomePage() {
 
                 <Link
                   to={articlePath(centerStories[1].title)}
-                  className="
-                    group
-                    flex
-                    gap-3
-                    pt-4
-                    border-t
-                    border-gray-200
-                  "
+                  className="group flex gap-3 border-t border-gray-200 pt-4"
                 >
-                  <div
-                    className="
-                      shrink-0
-                      w-[105px]
-                      h-[75px]
-                      overflow-hidden
-                      rounded-md
-                    "
-                  >
-                    <ImageWithFallback
+                  <div className="h-[75px] w-[105px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+                    <StoryImage
                       src={centerStories[1].image}
                       alt={centerStories[1].title}
-                      className="
-                        w-full
-                        h-full
-                        object-cover
-                        rounded-md
-                        transition-transform
-                        duration-500
-                        group-hover:scale-105
-                      "
+                      className="h-full w-full transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <span
-                      className="
-                        text-[9px]
-                        font-bold
-                        text-red-600
-                        uppercase
-                        tracking-[0.14em]
-                      "
-                    >
+                    <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                       {centerStories[1].tag}
                     </span>
 
-                    <h3
-                      className="
-                        text-[13px]
-                        font-bold
-                        leading-[1.35]
-                        mt-1
-                        text-gray-900
-                        group-hover:text-red-600
-                        transition-colors
-                        line-clamp-2
-                      "
-                    >
+                    <h3 className="mt-1 line-clamp-2 text-[13px] font-bold leading-[1.4] text-gray-900 transition-colors group-hover:text-red-600">
                       {centerStories[1].title}
                     </h3>
 
-                    <span
-                      className="
-                        flex
-                        items-center
-                        gap-1
-                        text-[10px]
-                        text-gray-400
-                        mt-2
-                      "
-                    >
+                    <span className="mt-2 flex items-center gap-1 text-[10px] text-gray-400">
                       <Clock size={9} />
                       {centerStories[1].publishedAt}
                     </span>
                   </div>
                 </Link>
 
-                {/* MARKET CONTEXT */}
+                {/* MARKET SNAPSHOT */}
 
                 <div className="mt-5 border-t border-gray-200 pt-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3
-                      className="
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-[0.15em]
-                      "
-                    >
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
                       Market Snapshot
                     </h3>
-                                        <div className="flex gap-3">
+
+                    <div className="flex gap-3">
                       {(["Indices", "Crypto"] as const).map((tab) => (
                         <button
                           key={tab}
                           type="button"
                           onClick={() => setActiveMarketTab(tab)}
-                          className={`
-                            text-[9px]
-                            font-semibold
-                            uppercase
-                            tracking-wide
-                            ${
-                              activeMarketTab === tab
-                                ? "text-red-600"
-                                : "text-gray-400 hover:text-gray-700"
-                            }
-                          `}
+                          aria-pressed={activeMarketTab === tab}
+                          className={`text-[9px] font-semibold uppercase tracking-wide transition-colors ${
+                            activeMarketTab === tab
+                              ? "text-red-600"
+                              : "text-gray-400 hover:text-gray-700"
+                          }`}
                         >
                           {tab}
                         </button>
@@ -781,36 +837,22 @@ export function HomePage() {
                   </div>
 
                   <div className="divide-y divide-gray-100">
-                    {(marketSnapshotData[activeMarketTab] || [])
-                      .slice(0, 4)
-                      .map((market) => (
+                    {marketLoading ? (
+                      <div className="py-4 text-[10px] text-gray-400">
+                        Loading market data...
+                      </div>
+                    ) : currentMarketItems.length > 0 ? (
+                      currentMarketItems.slice(0, 4).map((market) => (
                         <div
                           key={market.symbol}
-                          className="
-                            py-2
-                            flex
-                            items-center
-                            justify-between
-                          "
+                          className="flex items-center justify-between gap-3 py-2"
                         >
-                          <span
-                            className="
-                              text-[10px]
-                              font-semibold
-                              text-gray-800
-                            "
-                          >
+                          <span className="text-[10px] font-semibold text-gray-800">
                             {market.symbol}
                           </span>
 
                           <div className="flex items-center gap-3">
-                            <span
-                              className="
-                                text-[10px]
-                                text-gray-500
-                                tabular-nums
-                              "
-                            >
+                            <span className="text-[10px] tabular-nums text-gray-500">
                               {market.value}
                             </span>
 
@@ -820,23 +862,17 @@ export function HomePage() {
                             />
                           </div>
                         </div>
-                      ))}
+                      ))
+                    ) : (
+                      <div className="py-4 text-[10px] text-gray-400">
+                        Market data is currently unavailable.
+                      </div>
+                    )}
                   </div>
 
                   <Link
                     to="/markets"
-                    className="
-                      mt-2
-                      text-[9px]
-                      font-bold
-                      text-red-600
-                      flex
-                      items-center
-                      gap-1
-                      uppercase
-                      tracking-wide
-                      w-fit
-                    "
+                    className="mt-2 flex w-fit items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-red-600 transition-colors hover:text-red-800"
                   >
                     View All Markets
                     <ArrowRight size={9} />
@@ -847,95 +883,46 @@ export function HomePage() {
               {/* RIGHT NEWSROOM COLUMN */}
 
               <aside className="min-w-0">
+
                 {/* VIDEO */}
 
-                <div className="pb-5 border-b border-gray-200">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="border-b border-gray-200 pb-5">
+                  <div className="mb-3 flex items-center justify-between">
                     <h2 className="font-serif text-lg font-bold">
                       Today's Videos
                     </h2>
 
-                    <button
-                      type="button"
-                      className="
-                        border
-                        border-gray-300
-                        rounded-full
-                        px-3
-                        py-1
-                        text-[9px]
-                        font-medium
-                        hover:border-gray-500
-                        transition-colors
-                      "
+                    <Link
+                      to="/innovation"
+                      className="rounded-full border border-gray-300 px-3 py-1 text-[9px] font-medium transition-colors hover:border-gray-500"
                     >
                       Explore More
-                    </button>
+                    </Link>
                   </div>
 
                   <Link
                     to={articlePath(videoFeature.title)}
                     className="group block"
                   >
-                    <div className="relative overflow-hidden rounded-lg">
-                      <ImageWithFallback
+                    <div className="relative overflow-hidden rounded-lg bg-gray-100">
+                      <StoryImage
                         src={videoFeature.image}
                         alt={videoFeature.title}
-                        className="
-                          w-full
-                          h-[175px]
-                          object-cover
-                          rounded-lg
-                          transition-transform
-                          duration-700
-                          group-hover:scale-[1.03]
-                        "
+                        className="h-[175px] w-full transition-transform duration-700 group-hover:scale-[1.03]"
                       />
 
-                      <div
-                        className="
-                          absolute
-                          inset-0
-                          flex
-                          items-center
-                          justify-center
-                          bg-black/10
-                          group-hover:bg-black/25
-                          transition-colors
-                        "
-                      >
-                        <div
-                          className="
-                            w-11
-                            h-11
-                            rounded-full
-                            bg-white/95
-                            flex
-                            items-center
-                            justify-center
-                            shadow-md
-                          "
-                        >
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/25">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 shadow-md">
                           <Play
                             size={16}
                             fill="black"
-                            className="text-black ml-0.5"
+                            className="ml-0.5 text-black"
                           />
                         </div>
                       </div>
                     </div>
 
-                    <h3
-                      className="
-                        text-[13px]
-                        font-semibold
-                        leading-[1.4]
-                        mt-2.5
-                        text-gray-900
-                        group-hover:text-red-600
-                        transition-colors
-                      "
-                    >
+                    <h3 className="mt-2.5 text-[13px] font-semibold leading-[1.45] text-gray-900 transition-colors group-hover:text-red-600">
                       {videoFeature.title}
                     </h3>
                   </Link>
@@ -944,37 +931,12 @@ export function HomePage() {
                 {/* LATEST NEWS STREAM */}
 
                 <div className="pt-5">
-                  <div
-                    className="
-                      flex
-                      items-center
-                      justify-between
-                      border-b
-                      border-gray-200
-                      pb-2
-                      mb-1
-                    "
-                  >
-                    <h2
-                      className="
-                        text-[11px]
-                        font-bold
-                        uppercase
-                        tracking-[0.16em]
-                        text-red-600
-                      "
-                    >
+                  <div className="mb-1 flex items-center justify-between border-b border-gray-200 pb-2">
+                    <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
                       Latest News
                     </h2>
 
-                    <span
-                      className="
-                        text-[8px]
-                        uppercase
-                        tracking-wide
-                        text-gray-400
-                      "
-                    >
+                    <span className="text-[8px] uppercase tracking-wide text-gray-400">
                       Newsroom
                     </span>
                   </div>
@@ -984,35 +946,14 @@ export function HomePage() {
                       <Link
                         key={item.id}
                         to={articlePath(item.title)}
-                        className="
-                          group
-                          block
-                          py-3
-                        "
+                        className="group block py-3"
                       >
                         <div className="flex gap-3">
-                          <span
-                            className="
-                              shrink-0
-                              text-[9px]
-                              font-semibold
-                              text-red-600
-                              w-[45px]
-                            "
-                          >
+                          <span className="w-[45px] shrink-0 text-[9px] font-semibold text-red-600">
                             {item.publishedAt}
                           </span>
 
-                          <span
-                            className="
-                              text-[11px]
-                              font-medium
-                              leading-[1.4]
-                              text-gray-800
-                              group-hover:text-red-600
-                              transition-colors
-                            "
-                          >
+                          <span className="text-[11px] font-medium leading-[1.45] text-gray-800 transition-colors group-hover:text-red-600">
                             {item.title}
                           </span>
                         </div>
@@ -1038,37 +979,18 @@ export function HomePage() {
 
             {/* NEWSROOM FILTER */}
 
-            <div
-              className="
-                flex
-                items-center
-                gap-5
-                overflow-x-auto
-                no-scrollbar
-                border-b
-                border-gray-200
-                pb-3
-                mb-1
-              "
-            >
+            <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
               {latestNewsTabs.map((tab) => (
                 <button
                   key={tab}
                   type="button"
                   onClick={() => setActiveNewsTab(tab)}
-                  className={`
-                    text-[10px]
-                    font-semibold
-                    whitespace-nowrap
-                    uppercase
-                    tracking-wide
-                    transition-colors
-                    ${
-                      activeNewsTab === tab
-                        ? "text-red-600"
-                        : "text-gray-400 hover:text-gray-700"
-                    }
-                  `}
+                  aria-pressed={activeNewsTab === tab}
+                  className={`whitespace-nowrap text-[10px] font-semibold uppercase tracking-wide transition-colors ${
+                    activeNewsTab === tab
+                      ? "text-red-600"
+                      : "text-gray-400 hover:text-gray-700"
+                  }`}
                 >
                   {tab}
                 </button>
@@ -1078,127 +1000,60 @@ export function HomePage() {
             {/* CHRONOLOGICAL NEWS STREAM */}
 
             <div className="divide-y divide-gray-200">
-              {latestStories.map((story, index) => (
+              {latestStories.map((story) => (
                 <Link
-                  key={story.id}
+                  key={`${activeNewsTab}-${story.id}`}
                   to={articlePath(story.title)}
-                  className="
-                    group
-                    grid
-                    grid-cols-[55px_95px_1fr]
-                    md:grid-cols-[65px_130px_1fr]
-                    gap-3
-                    md:gap-5
-                    py-4
-                    items-center
-                  "
+                  className="group grid grid-cols-[55px_95px_1fr] items-center gap-3 py-4 transition-colors hover:bg-gray-50/70 md:grid-cols-[65px_130px_1fr] md:gap-5"
                 >
-                  <div
-                    className="
-                      text-[9px]
-                      font-semibold
-                      text-gray-400
-                      tabular-nums
-                    "
-                  >
+                  <div className="text-[9px] font-semibold tabular-nums text-gray-400">
                     {story.publishedAt}
                   </div>
 
-                  <div
-                    className="
-                      h-[60px]
-                      md:h-[72px]
-                      overflow-hidden
-                      rounded-md
-                    "
-                  >
-                    <ImageWithFallback
+                  <div className="h-[60px] overflow-hidden rounded-md bg-gray-100 md:h-[72px]">
+                    <StoryImage
                       src={story.image}
                       alt={story.title}
-                      className="
-                        w-full
-                        h-full
-                        object-cover
-                        transition-transform
-                        duration-500
-                        group-hover:scale-105
-                      "
+                      className="h-full w-full transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="mb-1 flex items-center gap-2">
                       <span
-                        className={`
-                          text-[8px]
-                          font-bold
-                          uppercase
-                          tracking-[0.14em]
-                          ${
-                            story.hot
-                              ? "text-red-600"
-                              : "text-gray-400"
-                          }
-                        `}
+                        className={`text-[8px] font-bold uppercase tracking-[0.14em] ${
+                          story.hot ? "text-red-600" : "text-gray-400"
+                        }`}
                       >
                         {story.hot ? "Breaking" : "Latest"}
                       </span>
 
-                      <span className="text-[8px] text-gray-300">
-                        •
-                      </span>
+                      <span className="text-[8px] text-gray-300">•</span>
 
-                      <span
-                        className="
-                          text-[8px]
-                          font-semibold
-                          uppercase
-                          tracking-[0.12em]
-                          text-gray-400
-                        "
-                      >
+                      <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-gray-400">
                         {activeNewsTab === "All"
                           ? "Business"
                           : activeNewsTab}
                       </span>
                     </div>
 
-                    <h3
-                      className="
-                        font-serif
-                        text-base
-                        md:text-lg
-                        font-bold
-                        leading-[1.25]
-                        text-gray-900
-                        group-hover:text-red-600
-                        transition-colors
-                      "
-                    >
+                    <h3 className="font-serif text-base font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600 md:text-lg">
                       {story.title}
                     </h3>
                   </div>
-
-                  <span className="hidden">{index}</span>
                 </Link>
               ))}
             </div>
           </section>
 
           <PrideTimesAd />
-                    {/* =================================================
+
+          {/* =================================================
               EDITORIAL PICKS + MAGAZINE
           ================================================= */}
 
-          <section
-            className="
-              grid
-              grid-cols-1
-              lg:grid-cols-[1.7fr_0.8fr]
-              gap-7
-              mb-12
-            "
-          >
+          <section className="mb-12 grid grid-cols-1 gap-7 lg:grid-cols-[1.7fr_0.8fr]">
+
             {/* EDITOR'S PICKS */}
 
             <div>
@@ -1212,92 +1067,30 @@ export function HomePage() {
                   <Link
                     key={pick.id}
                     to={articlePath(pick.title)}
-                    className="
-                      group
-                      grid
-                      grid-cols-[120px_1fr]
-                      sm:grid-cols-[155px_1fr]
-                      gap-4
-                      py-4
-                    "
+                    className="group grid grid-cols-[120px_1fr] gap-4 py-4 sm:grid-cols-[155px_1fr]"
                   >
-                    <div
-                      className="
-                        w-full
-                        h-[80px]
-                        sm:h-[100px]
-                        overflow-hidden
-                        rounded-md
-                      "
-                    >
-                      <ImageWithFallback
+                    <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[100px]">
+                      <StoryImage
                         src={pick.image}
                         alt={pick.title}
-                        className="
-                          w-full
-                          h-full
-                          object-cover
-                          rounded-md
-                          transition-transform
-                          duration-500
-                          group-hover:scale-105
-                        "
+                        className="h-full w-full rounded-md transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
 
                     <div className="min-w-0">
-                      <span
-                        className="
-                          text-[8px]
-                          font-bold
-                          text-red-600
-                          uppercase
-                          tracking-[0.14em]
-                        "
-                      >
+                      <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
                         {pick.category}
                       </span>
 
-                      <h3
-                        className="
-                          font-serif
-                          text-base
-                          md:text-lg
-                          font-bold
-                          leading-[1.2]
-                          mt-1
-                          text-gray-900
-                          group-hover:text-red-600
-                          transition-colors
-                        "
-                      >
+                      <h3 className="mt-1 font-serif text-base font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600 md:text-lg">
                         {pick.title}
                       </h3>
 
-                      <p
-                        className="
-                          hidden
-                          sm:block
-                          text-[10px]
-                          text-gray-500
-                          leading-[1.5]
-                          mt-1
-                          line-clamp-2
-                        "
-                      >
+                      <p className="mt-1 hidden line-clamp-2 text-[10px] leading-[1.6] text-gray-500 sm:block">
                         {pick.excerpt}
                       </p>
 
-                      <span
-                        className="
-                          flex
-                          items-center
-                          gap-1
-                          text-[9px]
-                          text-gray-400
-                          mt-1.5
-                        "
-                      >
+                      <span className="mt-1.5 flex items-center gap-1 text-[9px] text-gray-400">
                         <Clock size={8} />
                         {pick.publishedAt}
                       </span>
@@ -1310,88 +1103,34 @@ export function HomePage() {
             {/* MAGAZINE */}
 
             <div>
-              <SectionHeader
-                title="Magazine"
-                link="/magazine"
-              />
+              <SectionHeader title="Magazine" link="/magazine" />
 
               <Link
                 to="/magazine"
-                className="
-                  group
-                  block
-                  overflow-hidden
-                  rounded-md
-                  bg-black
-                "
+                className="group block overflow-hidden rounded-md bg-black"
               >
                 <div className="overflow-hidden">
-                  <ImageWithFallback
+                  <StoryImage
                     src={magazinePreview.image}
                     alt={magazinePreview.title}
-                    className="
-                      w-full
-                      h-[210px]
-                      object-cover
-                      transition-transform
-                      duration-700
-                      group-hover:scale-[1.04]
-                    "
+                    className="h-[210px] w-full transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 </div>
 
                 <div className="p-4">
-                  <span
-                    className="
-                      text-[8px]
-                      font-bold
-                      uppercase
-                      tracking-[0.16em]
-                      text-gray-500
-                    "
-                  >
+                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-400">
                     Pride Times Magazine
                   </span>
 
-                  <h3
-                    className="
-                      font-serif
-                      text-xl
-                      font-bold
-                      text-white
-                      mt-1
-                    "
-                  >
+                  <h3 className="mt-1 font-serif text-xl font-bold text-white">
                     {magazinePreview.title}
                   </h3>
 
-                  <p
-                    className="
-                      text-[11px]
-                      text-gray-400
-                      leading-[1.5]
-                      mt-1.5
-                    "
-                  >
+                  <p className="mt-1.5 text-[11px] leading-[1.6] text-gray-400">
                     {magazinePreview.subtitle}
                   </p>
 
-                  <span
-                    className="
-                      inline-flex
-                      items-center
-                      gap-1.5
-                      text-[9px]
-                      font-bold
-                      uppercase
-                      tracking-wide
-                      text-white
-                      border-b
-                      border-white/50
-                      pb-1
-                      mt-4
-                    "
-                  >
+                  <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/50 pb-1 text-[9px] font-bold uppercase tracking-wide text-white transition-colors group-hover:border-red-500 group-hover:text-red-300">
                     Read Digital Edition
                     <ArrowRight size={10} />
                   </span>
@@ -1411,67 +1150,25 @@ export function HomePage() {
               linkText="Full List"
             />
 
-            <div
-              className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                gap-3
-              "
-            >
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {prideTimes30.map((leader) => (
                 <div
                   key={leader.rank}
-                  className="
-                    flex
-                    items-start
-                    gap-4
-                    p-4
-                    border
-                    border-gray-200
-                    rounded-md
-                    hover:border-gray-300
-                    transition-colors
-                  "
+                  className="flex items-start gap-4 rounded-md border border-gray-200 p-4 transition-all duration-300 hover:border-gray-400 hover:shadow-sm"
                 >
-                  <span
-                    className="
-                      font-serif
-                      text-2xl
-                      font-bold
-                      text-gray-200
-                      tabular-nums
-                      shrink-0
-                      w-8
-                    "
-                  >
+                  <span className="w-8 shrink-0 font-serif text-2xl font-bold tabular-nums text-gray-200">
                     {String(leader.rank).padStart(2, "0")}
                   </span>
 
                   <div className="min-w-0">
-                    <p
-                      className="
-                        text-[13px]
-                        font-bold
-                        text-gray-900
-                      "
-                    >
+                    <p className="text-[13px] font-bold text-gray-900">
                       {leader.name}
-
                       <span className="font-normal text-gray-400">
-                        {" "}
-                        · {leader.company}
+                        {" "}· {leader.company}
                       </span>
                     </p>
 
-                    <p
-                      className="
-                        text-[10px]
-                        text-gray-500
-                        leading-[1.5]
-                        mt-1
-                      "
-                    >
+                    <p className="mt-1 text-[10px] leading-[1.6] text-gray-500">
                       {leader.sector}
                     </p>
                   </div>
