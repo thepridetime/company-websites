@@ -15,6 +15,7 @@ import RoboticsImg from "../../../imports/warehouse-robotics.png";
 import SupplyChainImg from "../../../imports/supply-chain-map.png";
 import HealthcareImg from "../../../imports/ai-healthcare.png";
 import CyberImg from "../../../imports/cyber-ops.png";
+import MagazineImg from "../../../imports/pt30image.png"; // original magazine image (unchanged)
 
 import { getQuotes } from "../../../services/marketApi";
 import { articlePath } from "../../data/homepageArticleData";
@@ -26,7 +27,10 @@ import { articlePath } from "../../data/homepageArticleData";
 type NewsItem = {
   id: number;
   hot: boolean;
+  category: string;
+  tabs: string[];
   title: string;
+  excerpt: string;
   publishedAt: string;
   image: string;
   link: string;
@@ -83,7 +87,7 @@ function PrideTimesAd() {
 }
 
 /* =========================================================
-   HERO / LEAD STORY
+   TOP STORIES (HERO, CENTRE, VIDEO)
 ========================================================= */
 
 const heroStory = {
@@ -124,56 +128,27 @@ const videoFeature = {
   link: "/innovation",
 };
 
-const latestNewsTabs = ["All", "Markets", "Technology", "Cybersecurity", "Energy", "Industries", "World"];
-
-const latestNewsData: Record<string, NewsItem[]> = {
-  All: [
-    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: EnergyImg, link: "/markets" },
-    { id: 2, hot: true, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: DataCentreImg, link: "/technology" },
-    { id: 3, hot: true, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: CyberImg, link: "/cybersecurity" },
-    { id: 4, hot: false, title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise", publishedAt: "September 2026", image: SupplyChainImg, link: "/supply-chain" },
-    { id: 5, hot: false, title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience", publishedAt: "September 2026", image: HealthcareImg, link: "/healthcare" },
-  ],
-  Markets: [
-    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: EnergyImg, link: "/markets" },
-    { id: 2, hot: false, title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention", publishedAt: "September 2026", image: SupplyChainImg, link: "/markets" },
-    { id: 3, hot: false, title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation", publishedAt: "September 2026", image: RoboticsImg, link: "/world" },
-  ],
-  Technology: [
-    { id: 1, hot: true, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: DataCentreImg, link: "/technology" },
-    { id: 2, hot: false, title: "AI Moves From Assistive Tools to Autonomous Enterprise Workflows", publishedAt: "September 2026", image: RoboticsImg, link: "/technology" },
-    { id: 3, hot: false, title: "U.S.–China AI Competition Expands From Models to Global Infrastructure", publishedAt: "September 2026", image: CyberImg, link: "/world" },
-  ],
-  Cybersecurity: [
-    { id: 1, hot: true, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: CyberImg, link: "/cybersecurity" },
-    { id: 2, hot: false, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: DataCentreImg, link: "/cybersecurity" },
-  ],
-  Energy: [
-    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: EnergyImg, link: "/energy" },
-    { id: 2, hot: false, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: DataCentreImg, link: "/energy" },
-    { id: 3, hot: false, title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility", publishedAt: "September 2026", image: RoboticsImg, link: "/smart-cities" },
-  ],
-  Industries: [
-    { id: 1, hot: false, title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience", publishedAt: "September 2026", image: HealthcareImg, link: "/healthcare" },
-    { id: 2, hot: false, title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite", publishedAt: "September 2026", image: RoboticsImg, link: "/manufacturing" },
-    { id: 3, hot: false, title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility", publishedAt: "September 2026", image: DataCentreImg, link: "/smart-cities" },
-    { id: 4, hot: false, title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise", publishedAt: "September 2026", image: SupplyChainImg, link: "/supply-chain" },
-  ],
-  World: [
-    { id: 1, hot: true, title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation", publishedAt: "September 2026", image: EnergyImg, link: "/world" },
-    { id: 2, hot: false, title: "U.S.–China AI Competition Expands From Models to Global Infrastructure", publishedAt: "September 2026", image: DataCentreImg, link: "/world" },
-    { id: 3, hot: false, title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention", publishedAt: "September 2026", image: SupplyChainImg, link: "/markets" },
-  ],
-};
-
 /* =========================================================
-   EDITOR'S PICKS
+   LATEST NEWS (single merged list: one story = one entry)
+   Stories already featured above are intentionally NOT repeated.
 ========================================================= */
 
-const editorsPicks = [
+const latestNewsTabs = [
+  "All",
+  "Markets",
+  "Technology",
+  "Cybersecurity",
+  "Energy",
+  "Industries",
+  "World",
+];
+
+const latestNews: NewsItem[] = [
   {
     id: 1,
+    hot: true,
     category: "CYBERSECURITY",
+    tabs: ["Cybersecurity"],
     title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
     excerpt:
       "AI is accelerating the speed of cyber exploitation, putting critical infrastructure and industrial operators under pressure to shorten remediation cycles.",
@@ -183,7 +158,9 @@ const editorsPicks = [
   },
   {
     id: 2,
+    hot: true,
     category: "HEALTHCARE",
+    tabs: ["Industries"],
     title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
     excerpt:
       "Software-led systems and AI tools are improving inventory visibility, demand forecasting and supplier-risk management across healthcare.",
@@ -193,13 +170,75 @@ const editorsPicks = [
   },
   {
     id: 3,
+    hot: false,
     category: "MANUFACTURING",
+    tabs: ["Industries"],
     title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
     excerpt:
       "Robotics, digital twins and domestic supplier partnerships are becoming part of the manufacturing response to labour, tariff and energy pressures.",
     publishedAt: "September 2026",
     image: RoboticsImg,
     link: "/manufacturing",
+  },
+  {
+    id: 4,
+    hot: false,
+    category: "MARKETS",
+    tabs: ["Markets", "World"],
+    title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention",
+    excerpt:
+      "Reserve managers are weighing currency exposure against gold holdings as geopolitical risk shapes allocation decisions.",
+    publishedAt: "September 2026",
+    image: EnergyImg,
+    link: "/markets",
+  },
+  {
+    id: 5,
+    hot: false,
+    category: "WORLD",
+    tabs: ["Markets", "World"],
+    title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation",
+    excerpt:
+      "Energy disruption and trade fragmentation are weighing on growth forecasts across major economies.",
+    publishedAt: "September 2026",
+    image: SupplyChainImg,
+    link: "/world",
+  },
+  {
+    id: 6,
+    hot: false,
+    category: "TECHNOLOGY",
+    tabs: ["Technology"],
+    title: "AI Moves From Assistive Tools to Autonomous Enterprise Workflows",
+    excerpt:
+      "Enterprises are shifting from AI assistants to agents that run multi-step business processes with limited human input.",
+    publishedAt: "September 2026",
+    image: RoboticsImg,
+    link: "/technology",
+  },
+  {
+    id: 7,
+    hot: false,
+    category: "TECHNOLOGY | WORLD",
+    tabs: ["Technology", "World"],
+    title: "U.S.–China AI Competition Expands From Models to Global Infrastructure",
+    excerpt:
+      "The AI race is moving beyond model quality to chips, data centres and the networks that connect them.",
+    publishedAt: "September 2026",
+    image: CyberImg,
+    link: "/world",
+  },
+  {
+    id: 8,
+    hot: false,
+    category: "ENERGY | CITIES",
+    tabs: ["Energy", "Technology", "Industries"],
+    title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility",
+    excerpt:
+      "City planners are combining AI, grid upgrades and mobility projects into integrated infrastructure programmes.",
+    publishedAt: "September 2026",
+    image: DataCentreImg,
+    link: "/smart-cities",
   },
 ];
 
@@ -211,7 +250,7 @@ const magazinePreview = {
   title: "The 2026 Global Industry Outlook",
   subtitle:
     "Energy security, AI infrastructure, supply-chain resilience and the forces reshaping global business.",
-  image: SupplyChainImg,
+  image: MagazineImg,
 };
 
 /* =========================================================
@@ -334,39 +373,13 @@ export function HomePage() {
   }, []);
 
   /* =======================================================
-     SELECTED NEWS
+     LATEST NEWS FILTER
   ======================================================= */
 
-  const selectedNews =
-    latestNewsData[activeNewsTab] || latestNewsData.All;
-
-  const latestStories = selectedNews.slice(0, 5);
-
-  // Sidebar ticker: sitewide reverse-chron feed, de-duplicated across
-  // tabs by title and filtered to exclude whatever is already shown
-  // as the Hero/Major/Video stories above, so the same headline
-  // doesn't render twice on the page.
-  const featuredTitles = new Set([
-    heroStory.title,
-    centerStories[0].title,
-    centerStories[1].title,
-    videoFeature.title,
-  ]);
-
-  const sidebarNews = Array.from(
-    new Map(
-      Object.values(latestNewsData)
-        .flat()
-        .map((item) => [item.title, item])
-    ).values()
-  )
-    .filter((item) => !featuredTitles.has(item.title))
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() -
-        new Date(a.publishedAt).getTime()
-    )
-    .slice(0, 5);
+  const latestStories =
+    activeNewsTab === "All"
+      ? latestNews
+      : latestNews.filter((story) => story.tabs.includes(activeNewsTab));
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
@@ -536,12 +549,10 @@ export function HomePage() {
                 </div>
               </div>
 
-              {/* RIGHT NEWSROOM COLUMN */}
+              {/* RIGHT COLUMN: VIDEO */}
 
               <aside className="min-w-0">
-                {/* VIDEO */}
-
-                <div className="pb-5 border-b border-gray-200">
+                <div className="pb-5">
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-serif text-lg font-bold">
                       Today's Videos
@@ -582,40 +593,6 @@ export function HomePage() {
                     </h3>
                   </Link>
                 </div>
-
-                {/* LATEST NEWS STREAM */}
-
-                <div className="pt-5">
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
-                    <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-                      Latest News
-                    </h2>
-
-                    <span className="text-[8px] uppercase tracking-wide text-gray-400">
-                      Newsroom
-                    </span>
-                  </div>
-
-                  <div className="divide-y divide-gray-100">
-                    {sidebarNews.map((item) => (
-                      <Link
-                        key={item.id}
-                        to={articlePath(item.title)}
-                        className="group block py-3"
-                      >
-                        <div className="flex gap-3">
-                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[45px]">
-                            {item.publishedAt}
-                          </span>
-
-                          <span className="text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
-                            {item.title}
-                          </span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
               </aside>
             </div>
           </section>
@@ -623,129 +600,89 @@ export function HomePage() {
           <PrideTimesAd />
 
           {/* =================================================
-              LATEST BUSINESS NEWS
-          ================================================= */}
-
-          <section className="mb-10">
-            <SectionHeader
-              title="Latest Pride Times Report"
-              link="/business-news"
-            />
-
-            {/* NEWSROOM FILTER */}
-
-            <div className="flex items-center gap-5 overflow-x-auto no-scrollbar border-b border-gray-200 pb-3 mb-1">
-              {latestNewsTabs.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setActiveNewsTab(tab)}
-                  className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
-                    activeNewsTab === tab
-                      ? "text-red-600"
-                      : "text-gray-400 hover:text-gray-700"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            {/* CHRONOLOGICAL NEWS STREAM */}
-
-            <div className="divide-y divide-gray-200">
-              {latestStories.map((story, index) => (
-                <Link
-                  key={story.id}
-                  to={articlePath(story.title)}
-                  className="group grid grid-cols-[55px_95px_1fr] md:grid-cols-[65px_130px_1fr] gap-3 md:gap-5 py-4 items-center"
-                >
-                  <div className="text-[9px] font-semibold text-gray-400 tabular-nums">
-                    {story.publishedAt}
-                  </div>
-
-                  <div className="h-[60px] md:h-[72px] overflow-hidden rounded-md">
-                    <ImageWithFallback
-                      src={story.image}
-                      alt={story.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className={`text-[8px] font-bold uppercase tracking-[0.14em] ${
-                          story.hot ? "text-red-600" : "text-gray-400"
-                        }`}
-                      >
-                        {story.hot ? "Breaking" : "Latest"}
-                      </span>
-
-                      <span className="text-[8px] text-gray-300">•</span>
-
-                      <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-gray-400">
-                        {activeNewsTab === "All" ? "Business" : activeNewsTab}
-                      </span>
-                    </div>
-
-                    <h3 className="font-serif text-base md:text-lg font-bold leading-[1.25] text-gray-900 group-hover:text-red-600 transition-colors">
-                      {story.title}
-                    </h3>
-                  </div>
-
-                  <span className="hidden">{index}</span>
-                </Link>
-              ))}
-            </div>
-          </section>
-
-          <PrideTimesAd />
-
-          {/* =================================================
-              EDITORIAL PICKS + MAGAZINE
+              LATEST NEWS (merged) + MAGAZINE
           ================================================= */}
 
           <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
-            {/* EDITOR'S PICKS */}
+
+            {/* LATEST NEWS */}
 
             <div>
               <SectionHeader
-                title="The Pride Times: Editor's Briefing"
-                link="/leadership"
+                title="Latest News"
+                link="/business-news"
               />
 
+              {/* FILTER TABS */}
+
+              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar border-b border-gray-200 pb-3 mb-1">
+                {latestNewsTabs.map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setActiveNewsTab(tab)}
+                    className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
+                      activeNewsTab === tab
+                        ? "text-red-600"
+                        : "text-gray-400 hover:text-gray-700"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* STORY LIST */}
+
               <div className="divide-y divide-gray-200">
-                {editorsPicks.map((pick) => (
+                {latestStories.length === 0 && (
+                  <p className="py-6 text-[11px] text-gray-400">
+                    No stories in this category yet.
+                  </p>
+                )}
+
+                {latestStories.map((story) => (
                   <Link
-                    key={pick.id}
-                    to={articlePath(pick.title)}
+                    key={story.id}
+                    to={articlePath(story.title)}
                     className="group grid grid-cols-[120px_1fr] sm:grid-cols-[155px_1fr] gap-4 py-4"
                   >
                     <div className="w-full h-[80px] sm:h-[100px] overflow-hidden rounded-md">
                       <ImageWithFallback
-                        src={pick.image}
-                        alt={pick.title}
+                        src={story.image}
+                        alt={story.title}
                         className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
 
                     <div className="min-w-0">
-                      <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                        {pick.category}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-[8px] font-bold uppercase tracking-[0.14em] ${
+                            story.hot ? "text-red-600" : "text-gray-400"
+                          }`}
+                        >
+                          {story.hot ? "Breaking" : "Latest"}
+                        </span>
+
+                        <span className="text-[8px] text-gray-300">•</span>
+
+                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                          {story.category}
+                        </span>
+                      </div>
 
                       <h3 className="font-serif text-base md:text-lg font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {pick.title}
+                        {story.title}
                       </h3>
 
                       <p className="hidden sm:block text-[10px] text-gray-500 leading-[1.5] mt-1 line-clamp-2">
-                        {pick.excerpt}
+                        {story.excerpt}
                       </p>
 
                       <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
                         <Clock size={8} />
-                        {pick.publishedAt}
+                        {story.publishedAt}
                       </span>
                     </div>
                   </Link>
@@ -791,6 +728,8 @@ export function HomePage() {
               </Link>
             </div>
           </section>
+
+          <PrideTimesAd />
 
           {/* =================================================
               PRIDE TIMES 30
