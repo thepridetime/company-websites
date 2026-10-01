@@ -6,7 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { getQuotes } from "../../../services/marketApi";
+import { getQuotes } from "../../../services/marketApi";
+
 import { PrideTimesAd } from "../AdSenseSlots";
 
 interface TickerCard {
@@ -443,6 +444,96 @@ const tabs: MarketTab[] = [
   "Global Markets",
 ];
 
+interface DataTable {
+  title: string;
+  columns: string[];
+  rows: string[][];
+}
+
+// Static sample data. Real API se replace karna ho to getQuotes() se map kar sakte ho.
+const marketTables: Partial<Record<MarketTab, DataTable>> = {
+  Commodities: {
+    title: "Commodities",
+    columns: ["Commodity", "Price", "Change", "Unit"],
+    rows: [
+      ["Gold", "2,345.60", "+0.42%", "USD / oz"],
+      ["Silver", "29.84", "+0.95%", "USD / oz"],
+      ["Crude Oil (WTI)", "78.45", "-0.63%", "USD / bbl"],
+      ["Brent Crude", "82.10", "-0.48%", "USD / bbl"],
+      ["Natural Gas", "2.67", "+1.80%", "USD / MMBtu"],
+      ["Copper", "4.52", "+0.74%", "USD / lb"],
+      ["Platinum", "982.30", "-0.21%", "USD / oz"],
+      ["Wheat", "5.92", "+0.33%", "USD / bu"],
+    ],
+  },
+  Forex: {
+    title: "Forex",
+    columns: ["Pair", "Rate", "Change", "Day Range"],
+    rows: [
+      ["USD/INR", "83.42", "+0.08%", "83.30 – 83.48"],
+      ["EUR/USD", "1.0845", "-0.12%", "1.0820 – 1.0880"],
+      ["GBP/USD", "1.2710", "+0.15%", "1.2670 – 1.2740"],
+      ["USD/JPY", "155.30", "+0.34%", "154.70 – 155.60"],
+      ["AUD/USD", "0.6650", "-0.27%", "0.6630 – 0.6690"],
+      ["USD/CAD", "1.3680", "+0.05%", "1.3650 – 1.3710"],
+      ["USD/CHF", "0.9020", "-0.09%", "0.8995 – 0.9050"],
+      ["EUR/INR", "90.48", "-0.04%", "90.20 – 90.70"],
+    ],
+  },
+  "Mutual Funds": {
+    title: "Mutual Funds",
+    columns: ["Fund", "Category", "NAV (₹)", "Change", "1Y Return"],
+    rows: [
+      ["Parag Parikh Flexi Cap", "Flexi Cap", "78.42", "+0.38%", "+32.5%"],
+      ["SBI Bluechip Fund", "Large Cap", "92.15", "+0.45%", "+24.8%"],
+      ["HDFC Mid-Cap Opportunities", "Mid Cap", "152.60", "+0.71%", "+38.2%"],
+      ["Axis Bluechip Fund", "Large Cap", "59.30", "+0.29%", "+18.6%"],
+      ["Nippon India Small Cap", "Small Cap", "164.85", "+1.05%", "+45.1%"],
+      ["ICICI Pru Technology", "Sectoral", "198.70", "-0.32%", "+29.4%"],
+    ],
+  },
+  ETFs: {
+    title: "Exchange Traded Funds",
+    columns: ["Symbol", "Name", "Price", "Change", "AUM"],
+    rows: [
+      ["SPY", "SPDR S&P 500 ETF", "$528.40", "+0.62%", "$510B"],
+      ["QQQ", "Invesco QQQ Trust", "$452.18", "+0.91%", "$265B"],
+      ["VTI", "Vanguard Total Stock Market", "$262.75", "+0.58%", "$410B"],
+      ["IWM", "iShares Russell 2000", "$205.30", "+0.44%", "$62B"],
+      ["GLD", "SPDR Gold Shares", "$218.90", "+0.40%", "$60B"],
+      ["EEM", "iShares MSCI Emerging Markets", "$41.25", "-0.18%", "$18B"],
+      ["NIFTYBEES", "Nippon Nifty 50 BeES", "₹258.40", "+0.36%", "₹28,000 Cr"],
+    ],
+  },
+  "Government Bonds": {
+    title: "Government Bonds",
+    columns: ["Country", "2Y Yield", "10Y Yield", "Change"],
+    rows: [
+      ["United States", "4.72%", "4.28%", "+0.03%"],
+      ["United Kingdom", "4.35%", "4.15%", "-0.02%"],
+      ["Germany", "2.85%", "2.45%", "+0.01%"],
+      ["Japan", "0.35%", "0.95%", "+0.02%"],
+      ["India", "6.85%", "7.05%", "-0.01%"],
+      ["Australia", "4.00%", "4.20%", "+0.04%"],
+      ["Canada", "4.10%", "3.60%", "-0.03%"],
+    ],
+  },
+  "Global Markets": {
+    title: "Global Markets",
+    columns: ["Index", "Region", "Value", "Change", "YTD"],
+    rows: [
+      ["Nikkei 225", "Japan", "38,420.50", "+0.74%", "+14.8%"],
+      ["Hang Seng", "Hong Kong", "17,890.30", "-0.55%", "-4.2%"],
+      ["FTSE 100", "UK", "8,210.45", "+0.28%", "+6.2%"],
+      ["Shanghai Composite", "China", "3,105.60", "+0.12%", "+4.4%"],
+      ["Nifty 50", "India", "22,650.80", "+0.41%", "+11.6%"],
+      ["Sensex", "India", "74,500.25", "+0.39%", "+10.3%"],
+      ["KOSPI", "South Korea", "2,730.15", "+0.66%", "+2.8%"],
+      ["S&P/ASX 200", "Australia", "7,780.90", "+0.19%", "+2.5%"],
+    ],
+  },
+};
+
 export function MarketsPage() {
   interface IndexRow {
     name: string;
@@ -591,6 +682,8 @@ export function MarketsPage() {
       {isPositive(value) ? "▲" : "▼"} {value}
     </span>
   );
+
+  const genericTable = marketTables[activeTab];
 
   return (
     <main className="min-h-screen bg-white text-[#17140F]">
@@ -805,12 +898,55 @@ export function MarketsPage() {
             </section>
           )}
 
-          {/* Tabs without data yet use the same clean editorial treatment. */}
-          {!["Overview", "Stocks", "Indices", "Crypto"].includes(activeTab) && (
-            <section className="py-10 text-center">
-              <h2 className="font-serif text-2xl font-bold">{activeTab}</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm text-[#777]">
-                Market data for {activeTab.toLowerCase()} will appear here.
+          {/* Commodities, Forex, Mutual Funds, ETFs, Government Bonds, Global Markets
+              — all rendered from the generic marketTables config above. */}
+          {genericTable && (
+            <section aria-labelledby="generic-table-heading">
+              <h2
+                id="generic-table-heading"
+                className="mb-4 font-serif text-[18px] font-bold"
+              >
+                {genericTable.title}
+              </h2>
+
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[620px] border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-black">
+                      {genericTable.columns.map((col) => (
+                        <th
+                          key={col}
+                          className="py-2 pr-4 text-[10px] font-bold uppercase"
+                        >
+                          {col}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {genericTable.rows.map((row) => (
+                      <tr
+                        key={row[0]}
+                        className="border-b border-[#ececec] last:border-b-0"
+                      >
+                        {row.map((cell, i) => (
+                          <td
+                            key={i}
+                            className={`py-2.5 pr-4 text-[11px] ${
+                              i === 0 ? "font-semibold" : "font-mono text-[#555]"
+                            }`}
+                          >
+                            {/^[+-]\d/.test(cell) ? <Change value={cell} /> : cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="mt-3 text-[10px] text-[#999]">
+                Sample data for display purposes only.
               </p>
             </section>
           )}
