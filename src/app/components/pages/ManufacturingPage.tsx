@@ -44,6 +44,8 @@ interface HeroStory {
    HERO DATA
 ========================================================= */
 
+const HERO_SLUG = "manufacturing-reshoring-2026";
+
 const hero: HeroStory = {
   category: "MANUFACTURING",
   title:
@@ -445,12 +447,14 @@ function MoreStories() {
         "Foxconn's AI-Driven Factories Reduce Human Labor by 70% in Two Years",
       time: "6 hr ago",
       image: Manu2Img,
+      slug: "manufacturing-ai-robotics-digital-twins",
     },
     {
       title:
         "Industrial Automation Investment Reaches New Record as AI Adoption Accelerates",
       time: "8 hr ago",
       image: Manu3Img,
+      slug: "manufacturing-imts-2026-ai-robotics",
     },
   ];
 
@@ -463,8 +467,9 @@ function MoreStories() {
       </div>
 
       {stories.map((story) => (
-        <article
+        <Link
           key={story.title}
+          to={specialArticlePath(story.slug)}
           className="group flex gap-2.5 py-2.5 border-b border-gray-200 last:border-b-0"
         >
           <div className="w-[60px] h-[46px] shrink-0 overflow-hidden rounded-sm">
@@ -488,7 +493,7 @@ function MoreStories() {
               {story.time}
             </p>
           </div>
-        </article>
+        </Link>
       ))}
     </div>
   );
@@ -693,9 +698,10 @@ function NewsroomStream() {
 
       <div className="mt-1">
         {latestStories.map((story) => (
-          <article
+          <Link
             key={`newsroom-${story.id}`}
-            className="group py-2.5 border-b border-gray-200"
+            to={specialArticlePath(story.slug || HERO_SLUG)}
+            className="group block py-2.5 border-b border-gray-200"
           >
             <div className="flex items-start gap-2">
               <Clock
@@ -717,7 +723,7 @@ function NewsroomStream() {
                 </p>
               </div>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </aside>
@@ -876,7 +882,7 @@ function IndustryStream({
       <div>
         {stories.map((story, index) => (
           <Link
-            key={story.id}
+            key={`${story.id}-${index}`}
             to={specialArticlePath(story.slug || `manufacturing-industry-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index + 1}`)}
             className="group block py-2.5 border-b border-gray-200 last:border-0"
           >
@@ -1033,7 +1039,9 @@ export function ManufacturingPage() {
 
           {/* LEAD STORY */}
           <div className="min-w-0">
-            <Link to={specialArticlePath("manufacturing-reshoring") } className="block"><HeroStoryCard story={hero} /></Link>
+            <Link to={specialArticlePath(HERO_SLUG)} className="block">
+              <HeroStoryCard story={hero} />
+            </Link>
           </div>
 
           {/* MAJOR STORIES RAIL */}
@@ -1046,7 +1054,9 @@ export function ManufacturingPage() {
 
             <div className="mt-3 space-y-4">
               {majorStories.map((story) => (
-                <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-major-${story.id}`)} className="block"><MajorStory story={story} /></Link>
+                <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-major-${story.id}`)} className="block">
+                  <MajorStory story={story} />
+                </Link>
               ))}
             </div>
 
@@ -1069,7 +1079,9 @@ export function ManufacturingPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6">
             {manufacturingCoverage.map((story) => (
-              <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-coverage-${story.id}`)} className="block"><CoverageStory story={story} /></Link>
+              <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-coverage-${story.id}`)} className="block">
+                <CoverageStory story={story} />
+              </Link>
             ))}
           </div>
         </section>
@@ -1090,7 +1102,9 @@ export function ManufacturingPage() {
             {/* NEWS GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {latestStories.map((story) => (
-                <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-latest-${story.id}`)} className="block"><LatestNewsCard story={story} /></Link>
+                <Link key={story.id} to={specialArticlePath(story.slug || `manufacturing-latest-${story.id}`)} className="block">
+                  <LatestNewsCard story={story} />
+                </Link>
               ))}
             </div>
 
