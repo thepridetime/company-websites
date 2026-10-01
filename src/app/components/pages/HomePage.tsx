@@ -18,7 +18,6 @@ import Pt30Img from "../../../imports/pt30image.png";
 import Ln1Img from "../../../imports/Ln1.png";
 
 import { getQuotes } from "../../../services/marketApi";
-import { TimeAgo } from "../../utils/timeAgo";
 import { articlePath } from "../../data/homepageArticleData";
 
 /* =========================================================
@@ -42,367 +41,126 @@ type MarketItem = {
 };
 
 /* =========================================================
+   GOOGLE ADSENSE
+========================================================= */
+
+declare global {
+  interface Window {
+    adsbygoogle?: unknown[];
+  }
+}
+
+function PrideTimesAd() {
+  useEffect(() => {
+    try {
+      window.adsbygoogle = window.adsbygoogle || [];
+      window.adsbygoogle.push({});
+    } catch (error) {
+      console.error("AdSense Error:", error);
+    }
+  }, []);
+
+  return (
+    <section
+      aria-label="Advertisement"
+      className="my-8 overflow-hidden border-y border-gray-100 bg-white py-4"
+    >
+      <div className="mb-2 text-center text-[8px] font-medium uppercase tracking-[0.2em] text-gray-400">
+        Advertisement
+      </div>
+
+      <div className="mx-auto w-full max-w-5xl overflow-hidden">
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot="6033028012"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
    HERO / LEAD STORY
 ========================================================= */
 
 const heroStory = {
-  category: "MARKETS | INDIA",
-  title:
-    "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
-  excerpt:
-    "Tax changes are weighing on derivatives activity across India's market, with trading falling sharply from earlier levels. The shift highlights the growing effect of tax costs on market activity, according to Bloomberg News.",
+  category: "ENERGY | GLOBAL MARKETS",
+  title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
+  excerpt: "Oil supply interruptions, tanker-route risks and volatile freight costs are reshaping the global energy outlook. The Pride Times report tracks the demand forecast, inventory drawdowns and peak Gulf production losses behind the disruption.",
   image: HeroImg,
   link: "/markets",
 };
 
-/* =========================================================
-   MAJOR STORIES
-========================================================= */
-
 const centerStories = [
   {
     id: 1,
-    tag: "MARKETS",
-    title:
-      "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
-    excerpt:
-      "Investor appetite is returning to smaller companies as domestic risk appetite improves and the segment recovers from its March lows.",
-    publishedAt: "2026-09-22T06:00:00Z",
+    tag: "TECHNOLOGY | ENERGY",
+    title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
+    excerpt: "Data-centre electricity demand is projected to approach 1,000 TWh by 2030, making secure power access and grid readiness central to the next phase of AI infrastructure.",
+    publishedAt: "September 2026",
     image: LN4Img,
-    link: "/markets",
+    link: "/technology",
   },
   {
     id: 2,
-    tag: "BUSINESS",
-    title:
-      "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
-    excerpt:
-      "JPMorgan CEO Jamie Dimon said India's long-term prospects remain strong, while tax rules, regulation and policy uncertainty remain concerns for investors.",
-    publishedAt: "2026-09-22T11:26:00Z",
+    tag: "SUPPLY CHAIN",
+    title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
+    excerpt: "Companies are balancing resilience against cost as tariffs, commodity prices and regional sourcing strategies reshape trade networks.",
+    publishedAt: "September 2026",
     image: InsImg,
-    link: "/business-news",
+    link: "/supply-chain",
   },
 ];
 
-/* =========================================================
-   VIDEO FEATURE
-========================================================= */
-
 const videoFeature = {
-  title:
-    "Alibaba Unveils AI Chip as It Targets Global Data Centre Expansion",
+  title: "Autonomous Systems Move Into Mobility, Warehousing and Industrial Operations",
   image: HeroImg,
-  link: "/technology",
+  link: "/innovation",
 };
 
-/* =========================================================
-   LATEST NEWS TABS
-========================================================= */
-
-const latestNewsTabs = [
-  "All",
-  "Markets",
-  "Finance",
-  "Business",
-  "Technology",
-  "Energy",
-  "More",
-];
-
-/* =========================================================
-   LATEST NEWS DATA
-========================================================= */
+const latestNewsTabs = ["All", "Markets", "Technology", "Cybersecurity", "Energy", "Industries", "World"];
 
 const latestNewsData: Record<string, NewsItem[]> = {
   All: [
-    {
-      id: 1,
-      hot: true,
-      title:
-        "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
-      publishedAt: "2026-09-22T10:00:00Z",
-      image: Ln1Img,
-      link: "/markets",
-    },
-    {
-      id: 2,
-      hot: true,
-      title:
-        "India's Gold Import Standstill Threatens Supply",
-      publishedAt: "2026-09-22T08:00:00Z",
-      image: HeroImg,
-      link: "/markets",
-    },
-    {
-      id: 3,
-      hot: false,
-      title:
-        "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
-      publishedAt: "2026-09-22T07:00:00Z",
-      image: LN3Img,
-      link: "/business-news",
-    },
-    {
-      id: 4,
-      hot: false,
-      title:
-        "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
-      publishedAt: "2026-09-22T06:00:00Z",
-      image: LN4Img,
-      link: "/markets",
-    },
-    {
-      id: 5,
-      hot: true,
-      title:
-        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
-      publishedAt: "2026-09-22T09:24:00Z",
-      image: Ln1Img,
-      link: "/markets",
-    },
+    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: HeroImg, link: "/markets" },
+    { id: 2, hot: true, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: InsImg, link: "/technology" },
+    { id: 3, hot: true, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: LN3Img, link: "/cybersecurity" },
+    { id: 4, hot: false, title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise", publishedAt: "September 2026", image: LN4Img, link: "/supply-chain" },
+    { id: 5, hot: false, title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience", publishedAt: "September 2026", image: EdipickImg, link: "/healthcare" },
   ],
-
   Markets: [
-    {
-      id: 1,
-      hot: true,
-      title:
-        "India's Derivatives Trading Falls Most Since 2024 as Taxes Bite",
-      publishedAt: "2026-09-22T10:00:00Z",
-      image: HeroImg,
-      link: "/markets",
-    },
-    {
-      id: 2,
-      hot: false,
-      title:
-        "Indian Small-Caps Enter Bull Market After 21% Rally From March Lows",
-      publishedAt: "2026-09-22T06:00:00Z",
-      image: InsImg,
-      link: "/markets",
-    },
-    {
-      id: 3,
-      hot: false,
-      title:
-        "Asian Currencies Gain Traction After Defensive Moves",
-      publishedAt: "2026-09-22T04:00:00Z",
-      image: LN3Img,
-      link: "/markets",
-    },
-    {
-      id: 4,
-      hot: false,
-      title:
-        "Stocks Rally as Brent Holds Below $100 on Iran Hopes",
-      publishedAt: "2026-09-22T02:00:00Z",
-      image: LN4Img,
-      link: "/markets",
-    },
+    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: HeroImg, link: "/markets" },
+    { id: 2, hot: false, title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention", publishedAt: "September 2026", image: EdipickImg, link: "/markets" },
+    { id: 3, hot: false, title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation", publishedAt: "September 2026", image: LN3Img, link: "/world" },
   ],
-
-  Finance: [
-    {
-      id: 1,
-      hot: true,
-      title:
-        "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
-      publishedAt: "2026-09-22T11:26:00Z",
-      image: HeroImg,
-      link: "/finance",
-    },
-    {
-      id: 2,
-      hot: false,
-      title:
-        "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
-      publishedAt: "2026-09-21T22:00:00Z",
-      image: InsImg,
-      link: "/finance",
-    },
-    {
-      id: 3,
-      hot: false,
-      title:
-        "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
-      publishedAt: "2026-09-22T08:36:00Z",
-      image: LN3Img,
-      link: "/finance",
-    },
-    {
-      id: 4,
-      hot: false,
-      title:
-        "India's Gold Import Standstill Threatens Supply",
-      publishedAt: "2026-09-22T08:00:00Z",
-      image: LN4Img,
-      link: "/finance",
-    },
-  ],
-
-  Business: [
-    {
-      id: 1,
-      hot: true,
-      title:
-        "JPMorgan CEO Dimon Says India's Outlook Is Strong but Tax Rules Worry Investors",
-      publishedAt: "2026-09-22T11:26:00Z",
-      image: HeroImg,
-      link: "/business-news",
-    },
-    {
-      id: 2,
-      hot: false,
-      title:
-        "Berger Paints Steps Up Expansion Amid Competition From Birla Opus, JSW Dulux",
-      publishedAt: "2026-09-22T09:23:00Z",
-      image: InsImg,
-      link: "/business-news",
-    },
-    {
-      id: 3,
-      hot: false,
-      title:
-        "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
-      publishedAt: "2026-09-22T08:36:00Z",
-      image: LN3Img,
-      link: "/business-news",
-    },
-    {
-      id: 4,
-      hot: false,
-      title:
-        "India's Wealthy Youngsters Navigate Factory Floors and Family Offices",
-      publishedAt: "2026-09-22T09:10:00Z",
-      image: LN4Img,
-      link: "/business-news",
-    },
-  ],
-
   Technology: [
-    {
-      id: 1,
-      hot: true,
-      title:
-        "Alibaba Unveils AI Chip as It Targets Global Data Centre Expansion",
-      publishedAt: "2026-09-22T09:08:00Z",
-      image: Ln1Img,
-      link: "/technology",
-    },
-    {
-      id: 2,
-      hot: true,
-      title:
-        "Satya Nadella to Join OpenAI and Nvidia Leaders at Trump-Xi Dinner",
-      publishedAt: "2026-09-22T08:08:00Z",
-      image: HeroImg,
-      link: "/technology",
-    },
-    {
-      id: 3,
-      hot: false,
-      title:
-        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
-      publishedAt: "2026-09-22T09:24:00Z",
-      image: InsImg,
-      link: "/technology",
-    },
-    {
-      id: 4,
-      hot: false,
-      title:
-        "Alibaba Targets 20 Gigawatts of Global Data Centre Capacity by 2032",
-      publishedAt: "2026-09-22T09:08:00Z",
-      image: LN3Img,
-      link: "/technology",
-    },
-    {
-      id: 5,
-      hot: false,
-      title:
-        "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
-      publishedAt: "2026-09-22T07:00:00Z",
-      image: LN4Img,
-      link: "/technology",
-    },
+    { id: 1, hot: true, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: InsImg, link: "/technology" },
+    { id: 2, hot: false, title: "AI Moves From Assistive Tools to Autonomous Enterprise Workflows", publishedAt: "September 2026", image: LN4Img, link: "/technology" },
+    { id: 3, hot: false, title: "U.S.–China AI Competition Expands From Models to Global Infrastructure", publishedAt: "September 2026", image: LN3Img, link: "/world" },
   ],
-
+  Cybersecurity: [
+    { id: 1, hot: true, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: EdipickImg, link: "/cybersecurity" },
+    { id: 2, hot: false, title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities", publishedAt: "September 2026", image: LN3Img, link: "/cybersecurity" },
+  ],
   Energy: [
-    {
-      id: 1,
-      hot: true,
-      title:
-        "Stocks Rally as Brent Holds Below $100 on Iran Hopes",
-      publishedAt: "2026-09-22T02:00:00Z",
-      image: LN4Img,
-      link: "/energy",
-    },
-    {
-      id: 2,
-      hot: false,
-      title:
-        "India Clears Loan Guarantee Plan as War Pressures Firms and Airlines",
-      publishedAt: "2026-09-21T22:00:00Z",
-      image: HeroImg,
-      link: "/energy",
-    },
-    {
-      id: 3,
-      hot: false,
-      title:
-        "ReNew Energy Trims Solar Output in India as Grid Constraints Persist",
-      publishedAt: "2026-09-22T00:00:00Z",
-      image: InsImg,
-      link: "/energy",
-    },
-    {
-      id: 4,
-      hot: false,
-      title:
-        "Gold and Silver Rise on Iran Optimism and a Weaker Dollar",
-      publishedAt: "2026-09-22T01:00:00Z",
-      image: LN3Img,
-      link: "/energy",
-    },
+    { id: 1, hot: true, title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure", publishedAt: "September 2026", image: HeroImg, link: "/energy" },
+    { id: 2, hot: false, title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint", publishedAt: "September 2026", image: InsImg, link: "/energy" },
+    { id: 3, hot: false, title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility", publishedAt: "September 2026", image: LN4Img, link: "/smart-cities" },
   ],
-
-  More: [
-    {
-      id: 1,
-      hot: false,
-      title:
-        "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
-      publishedAt: "2026-09-22T07:00:00Z",
-      image: LN3Img,
-      link: "/business-news",
-    },
-    {
-      id: 2,
-      hot: false,
-      title:
-        "India's Wealthy Youngsters Navigate Factory Floors and Family Offices",
-      publishedAt: "2026-09-22T09:10:00Z",
-      image: HeroImg,
-      link: "/business-news",
-    },
-    {
-      id: 3,
-      hot: false,
-      title:
-        "ReNew Energy Trims Solar Output in India as Grid Constraints Persist",
-      publishedAt: "2026-09-22T00:00:00Z",
-      image: InsImg,
-      link: "/energy",
-    },
-    {
-      id: 4,
-      hot: false,
-      title:
-        "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
-      publishedAt: "2026-09-22T09:24:00Z",
-      image: LN4Img,
-      link: "/technology",
-    },
+  Industries: [
+    { id: 1, hot: false, title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience", publishedAt: "September 2026", image: EdipickImg, link: "/healthcare" },
+    { id: 2, hot: false, title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite", publishedAt: "September 2026", image: LN4Img, link: "/manufacturing" },
+    { id: 3, hot: false, title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility", publishedAt: "September 2026", image: InsImg, link: "/smart-cities" },
+    { id: 4, hot: false, title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise", publishedAt: "September 2026", image: LN3Img, link: "/supply-chain" },
+  ],
+  World: [
+    { id: 1, hot: true, title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation", publishedAt: "September 2026", image: HeroImg, link: "/world" },
+    { id: 2, hot: false, title: "U.S.–China AI Competition Expands From Models to Global Infrastructure", publishedAt: "September 2026", image: LN3Img, link: "/world" },
+    { id: 3, hot: false, title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention", publishedAt: "September 2026", image: EdipickImg, link: "/markets" },
   ],
 };
 
@@ -413,36 +171,30 @@ const latestNewsData: Record<string, NewsItem[]> = {
 const editorsPicks = [
   {
     id: 1,
-    category: "MARKETS",
-    title:
-      "Sebi Expands AI Use to Combat Market Manipulation and Fraud",
-    excerpt:
-      "India's markets regulator is expanding its use of artificial intelligence to detect manipulation and fraud as trading volumes and data complexity increase across exchanges.",
-    publishedAt: "2026-09-22T09:24:00Z",
+    category: "CYBERSECURITY",
+    title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
+    excerpt: "AI is accelerating the speed of cyber exploitation, putting critical infrastructure and industrial operators under pressure to shorten remediation cycles.",
+    publishedAt: "September 2026",
     image: EdipickImg,
-    link: "/markets",
+    link: "/cybersecurity",
   },
   {
     id: 2,
-    category: "WORLD",
-    title:
-      "India and Vietnam Deepen AI and Defense Cooperation as Leaders Meet",
-    excerpt:
-      "Indian and Vietnamese leaders met to deepen cooperation on artificial intelligence and defense as the two countries expand their strategic partnership.",
-    publishedAt: "2026-09-22T07:00:00Z",
+    category: "HEALTHCARE",
+    title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
+    excerpt: "Software-led systems and AI tools are improving inventory visibility, demand forecasting and supplier-risk management across healthcare.",
+    publishedAt: "September 2026",
     image: LN3Img,
-    link: "/business-news",
+    link: "/healthcare",
   },
   {
     id: 3,
-    category: "FINANCE",
-    title:
-      "Dimon Backs Chandrasekaran as Tata Rift Raises Investment Concerns",
-    excerpt:
-      "JPMorgan CEO Jamie Dimon voiced support for Tata Sons chairman N. Chandrasekaran while warning that boardroom tensions at the conglomerate could weigh on investor confidence.",
-    publishedAt: "2026-09-22T08:36:00Z",
+    category: "MANUFACTURING",
+    title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
+    excerpt: "Robotics, digital twins and domestic supplier partnerships are becoming part of the manufacturing response to labour, tariff and energy pressures.",
+    publishedAt: "September 2026",
     image: Ln1Img,
-    link: "/finance",
+    link: "/manufacturing",
   },
 ];
 
@@ -451,9 +203,9 @@ const editorsPicks = [
 ========================================================= */
 
 const magazinePreview = {
-  title: "The AI Revolution",
+  title: "The 2026 Global Industry Outlook",
   subtitle:
-    "How artificial intelligence is reshaping business, economies, technology, and the future of work.",
+    "Energy security, AI infrastructure, supply-chain resilience and the forces reshaping global business.",
   image: Pt30Img,
 };
 
@@ -617,8 +369,6 @@ function SectionHeader({
     </div>
   );
 }
-
-
 /* =========================================================
    HOME PAGE
 ========================================================= */
@@ -729,7 +479,6 @@ export function HomePage() {
                 lg:gap-6
               "
             >
-              <p className="sr-only">Editor: Sagar Kumar</p>
 
               {/* LEAD STORY */}
 
@@ -988,7 +737,7 @@ export function HomePage() {
                       "
                     >
                       <Clock size={9} />
-                      <TimeAgo iso={centerStories[1].publishedAt} />
+                      {centerStories[1].publishedAt}
                     </span>
                   </div>
                 </Link>
@@ -1007,8 +756,7 @@ export function HomePage() {
                     >
                       Market Snapshot
                     </h3>
-
-                    <div className="flex gap-3">
+                                        <div className="flex gap-3">
                       {(["Indices", "Crypto"] as const).map((tab) => (
                         <button
                           key={tab}
@@ -1252,7 +1000,7 @@ export function HomePage() {
                               w-[45px]
                             "
                           >
-                            <TimeAgo iso={item.publishedAt} />
+                            {item.publishedAt}
                           </span>
 
                           <span
@@ -1276,13 +1024,15 @@ export function HomePage() {
             </div>
           </section>
 
+          <PrideTimesAd />
+
           {/* =================================================
               LATEST BUSINESS NEWS
           ================================================= */}
 
           <section className="mb-10">
             <SectionHeader
-              title="Latest Business News"
+              title="Latest Pride Times Report"
               link="/business-news"
             />
 
@@ -1351,7 +1101,7 @@ export function HomePage() {
                       tabular-nums
                     "
                   >
-                    <TimeAgo iso={story.publishedAt} />
+                    {story.publishedAt}
                   </div>
 
                   <div
@@ -1435,7 +1185,8 @@ export function HomePage() {
             </div>
           </section>
 
-          {/* =================================================
+          <PrideTimesAd />
+                    {/* =================================================
               EDITORIAL PICKS + MAGAZINE
           ================================================= */}
 
@@ -1452,7 +1203,7 @@ export function HomePage() {
 
             <div>
               <SectionHeader
-                title="Editor's Picks"
+                title="The Pride Times: Editor's Briefing"
                 link="/leadership"
               />
 
@@ -1548,7 +1299,7 @@ export function HomePage() {
                         "
                       >
                         <Clock size={8} />
-                        <TimeAgo iso={pick.publishedAt} />
+                        {pick.publishedAt}
                       </span>
                     </div>
                   </Link>
@@ -1655,7 +1406,7 @@ export function HomePage() {
 
           <section>
             <SectionHeader
-              title="Pride Times 30 — Leaders to Watch in 2026"
+              title="Industry Leaders Shaping the 2026 Transition"
               link="/billionaires"
               linkText="Full List"
             />
