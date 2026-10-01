@@ -34,6 +34,7 @@ type NewsItem = {
   publishedAt: string;
   image: string;
   link: string;
+  inSidebar?: boolean; // true = shown in sidebar stream only (not in main list)
 };
 
 type MarketItem = {
@@ -129,7 +130,9 @@ const videoFeature = {
 };
 
 /* =========================================================
-   LATEST NEWS (single merged list: one story = one entry)
+   LATEST NEWS
+   One story = one entry. A story is shown EITHER in the main
+   list OR in the sidebar stream (inSidebar: true), never both.
    Stories already featured above are intentionally NOT repeated.
 ========================================================= */
 
@@ -191,6 +194,7 @@ const latestNews: NewsItem[] = [
     publishedAt: "September 2026",
     image: EnergyImg,
     link: "/markets",
+    inSidebar: true,
   },
   {
     id: 5,
@@ -215,6 +219,7 @@ const latestNews: NewsItem[] = [
     publishedAt: "September 2026",
     image: RoboticsImg,
     link: "/technology",
+    inSidebar: true,
   },
   {
     id: 7,
@@ -227,6 +232,7 @@ const latestNews: NewsItem[] = [
     publishedAt: "September 2026",
     image: CyberImg,
     link: "/world",
+    inSidebar: true,
   },
   {
     id: 8,
@@ -373,13 +379,17 @@ export function HomePage() {
   }, []);
 
   /* =======================================================
-     LATEST NEWS FILTER
+     NEWS SPLIT: SIDEBAR STREAM vs MAIN LIST (no overlap)
   ======================================================= */
+
+  const sidebarNews = latestNews.filter((story) => story.inSidebar);
+
+  const mainNews = latestNews.filter((story) => !story.inSidebar);
 
   const latestStories =
     activeNewsTab === "All"
-      ? latestNews
-      : latestNews.filter((story) => story.tabs.includes(activeNewsTab));
+      ? mainNews
+      : mainNews.filter((story) => story.tabs.includes(activeNewsTab));
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
@@ -549,10 +559,12 @@ export function HomePage() {
                 </div>
               </div>
 
-              {/* RIGHT COLUMN: VIDEO */}
+              {/* RIGHT NEWSROOM COLUMN */}
 
               <aside className="min-w-0">
-                <div className="pb-5">
+                {/* VIDEO */}
+
+                <div className="pb-5 border-b border-gray-200">
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-serif text-lg font-bold">
                       Today's Videos
@@ -593,6 +605,40 @@ export function HomePage() {
                     </h3>
                   </Link>
                 </div>
+
+                {/* LATEST NEWS STREAM (sidebar headlines) */}
+
+                <div className="pt-5">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                    <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
+                      Latest News
+                    </h2>
+
+                    <span className="text-[8px] uppercase tracking-wide text-gray-400">
+                      Newsroom
+                    </span>
+                  </div>
+
+                  <div className="divide-y divide-gray-100">
+                    {sidebarNews.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={articlePath(item.title)}
+                        className="group block py-3"
+                      >
+                        <div className="flex gap-3">
+                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[45px]">
+                            {item.publishedAt}
+                          </span>
+
+                          <span className="text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
+                            {item.title}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </aside>
             </div>
           </section>
@@ -600,7 +646,7 @@ export function HomePage() {
           <PrideTimesAd />
 
           {/* =================================================
-              LATEST NEWS (merged) + MAGAZINE
+              LATEST NEWS (main list) + MAGAZINE
           ================================================= */}
 
           <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
