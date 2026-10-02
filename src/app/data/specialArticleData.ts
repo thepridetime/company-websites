@@ -1735,6 +1735,279 @@ const energyArticles: SpecialArticle[] = [
   },
 ];
 
+
+
+/* =========================================================
+   MARKETS — BLOG-STYLE ARTICLES
+   Source: Global Corporate News Digest (Oct 2026),
+   "1 Markets & Finance" section only.
+========================================================= */
+
+const marketAuthor = "Sagar Kumar";
+const marketDate = "October 2, 2026";
+const marketReadTime = "5 MIN READ";
+
+const marketArticles: SpecialArticle[] = [
+
+  /* ------------------------------------------------------- */
+  {
+    id: "market-altamira-retail",
+    section: "Markets",
+    category: "LONDON · EARNINGS",
+    title: "Why Altamira Retail's Record Quarter Says a Lot About Industrial Demand",
+    dek: "Altamira Retail just posted second-quarter revenue of $47.1B, ahead of what analysts expected. Here's what's behind the number and what we should watch next.",
+    author: marketAuthor,
+    publishedAt: marketDate,
+    readTime: marketReadTime,
+    highlights: [
+      "Second-quarter revenue came in at $47.1B, ahead of analyst forecasts.",
+      "Demand in industrial strengthened across both Asia and Europe.",
+      "Shares moved 12.1% in early trading while peers stayed broadly flat.",
+      "Attention now turns to treasury yields and how fast results can be delivered.",
+    ],
+    sections: [
+      {
+        heading: "The quick version",
+        body: "Altamira Retail reported second-quarter revenue of $47.1B, beating analyst forecasts. The company credits a rebound in industrial demand that showed up across Asia and Europe. It's the kind of result that gets a lot of attention because it suggests demand is firmer than many people feared.",
+      },
+      {
+        heading: "How the market reacted",
+        body: "Investors responded cautiously but positively. Altamira's shares moved 12.1% in early trading, while peers in the sector were broadly flat. That gap matters: it tells us traders see this as a company story first, not just a sector tailwind. Market participants said the next thing they'll look at is treasury yields, and how quickly Altamira can turn headlines into measurable results.",
+      },
+      {
+        heading: "What management is saying",
+        body: "Speaking at a briefing in London, chairperson Daniel Whitfield said the company isn't reacting to a single quarter. The focus, he said, is on positioning for the next decade of demand, which takes patient capital and clear priorities. That's a useful framing: it signals that management wants investors to judge the strategy over years, not weeks.",
+      },
+      {
+        heading: "The part worth being careful about",
+        body: "Not everyone is sold. Some shareholders and commentators question whether the timeline is realistic, pointing to elevated interest rates, supply bottlenecks and a tight labour market. Regulators in Poland and neighbouring markets will also need to review parts of the plan, and approvals there have been taking longer in recent years, although most reviews finish without major changes. Analyst Rafael Novak of Halvorsen Securities summed up the mood: execution, not ambition, will decide who benefits.",
+      },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Altamira Retail" },
+      { label: "HQ / Focus", value: "London / Poland" },
+      { label: "Est. Value", value: "US$ 14.3 billion" },
+      { label: "Sector", value: "Industrial" },
+      { label: "Analyst View", value: "Halvorsen Securities: Watch closely" },
+    ],
+  },
+
+  /* ------------------------------------------------------- */
+  {
+    id: "market-ironwood-foods",
+    section: "Markets",
+    category: "MUMBAI · BUYBACKS",
+    title: "What Ironwood Foods' Buyback Tells Us About Confidence in Capital Markets",
+    dek: "The board of Ironwood Foods has authorised an $8.3B share repurchase programme over the next 24 months. Let's unpack what that signals and where the risks are.",
+    author: marketAuthor,
+    publishedAt: marketDate,
+    readTime: marketReadTime,
+    highlights: [
+      "The board authorised an $8.3B repurchase programme to run over 24 months.",
+      "Shares moved 19.2% in early trading.",
+      "Management does not expect the plan to affect its dividend or investment-grade rating.",
+      "Ironwood plans a detailed update with its next earnings release.",
+    ],
+    sections: [
+      {
+        heading: "What was announced",
+        body: "Ironwood Foods' board has authorised an $8.3B repurchase programme that will run over the next 24 months. Buybacks are one of the clearest ways a company can say it believes in its own value, so the market tends to pay close attention when a big one lands.",
+      },
+      {
+        heading: "How it's being funded",
+        body: "Financial terms were only partly disclosed. The company put the capital requirement at roughly $36.7 billion over three years, funded through a mix of operating cash flow and existing credit facilities. The reassuring part for income investors: management said it doesn't expect the plan to change its dividend policy or its investment-grade credit rating.",
+      },
+      {
+        heading: "The market's reaction",
+        body: "Shares of Ironwood moved 19.2% in early trading while peers were broadly flat, and observers said attention will now turn to credit conditions. Halvorsen Securities rates the move as cautiously positive. Its research also notes that announcements in this area rose 21% year on year, so Ironwood is part of a bigger trend rather than a one-off.",
+      },
+      {
+        heading: "What to watch next",
+        body: "Ironwood says it will share a detailed update alongside its next earnings release, including milestones, budgets and risk factors. Competitors are watching too: Stratos Holdings declined to comment but is reportedly reviewing its own strategy. And skeptics, like Zurich-based portfolio manager Olivia Duarte, say the ambition is clear but the proof will be in delivery.",
+      },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Ironwood Foods" },
+      { label: "HQ / Focus", value: "Mumbai / Chile" },
+      { label: "Est. Value", value: "US$ 36.7 billion" },
+      { label: "Sector", value: "Energy" },
+      { label: "Analyst View", value: "Halvorsen Securities: Cautiously positive" },
+    ],
+  },
+
+  /* ------------------------------------------------------- */
+  {
+    id: "market-ardent-materials",
+    section: "Markets",
+    category: "LONDON · CREDIT",
+    title: "How Ardent Materials Turned a Bond Sale Into a Show of Investor Demand",
+    dek: "Ardent Materials priced an $18.6B multi-tranche bond issue and investors wanted more than three times what was on offer. What does that tell us about credit appetite?",
+    author: marketAuthor,
+    publishedAt: marketDate,
+    readTime: marketReadTime,
+    highlights: [
+      "Ardent priced an $18.6B multi-tranche bond issue.",
+      "Orders were more than three times the amount offered.",
+      "Meridian Advisory says announcements in this area rose 19% year on year.",
+      "Management plans to update investors with its next earnings release.",
+    ],
+    sections: [
+      {
+        heading: "An oversubscribed deal",
+        body: "When a bond is oversubscribed, it simply means more investors wanted in than there were bonds available. Ardent Materials priced an $18.6B multi-tranche issue, and orders came in at more than three times the amount offered. That's a strong sign that credit buyers are comfortable with the company.",
+      },
+      {
+        heading: "Where the money is going",
+        body: "Financial terms were disclosed in part. The plan is expected to need roughly $29.1 billion of capital over three years, funded by operating cash flow and existing credit facilities. Management said it doesn't expect any change to its dividend policy or investment-grade rating.",
+      },
+      {
+        heading: "The bigger trend",
+        body: "Analysts at Meridian Advisory see the move as consistent with broader trends in credit conditions. Their view is that companies that act early tend to secure better terms and stronger partners. They also report that announcements in this area rose 19% year on year, led by companies in North America, Europe and East Asia.",
+      },
+      {
+        heading: "Risks and people impact",
+        body: "The risk, as Meridian's Tomas Adeyemi puts it, is execution. Regulators in Indonesia and nearby markets will review parts of the plan, and approvals there have been slower lately. On the people side, Ardent says it has grown its Indonesian workforce by 19% in two years, and plans to consult staff and invest in digital and technical training.",
+      },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Ardent Materials" },
+      { label: "HQ / Focus", value: "London / Indonesia" },
+      { label: "Est. Value", value: "US$ 29.1 billion" },
+      { label: "Sector", value: "Energy" },
+      { label: "Analyst View", value: "Meridian Advisory: Watch closely" },
+    ],
+  },
+
+  /* ------------------------------------------------------- */
+  {
+    id: "market-bluestem-technologies",
+    section: "Markets",
+    category: "STOCKHOLM · EQUITIES",
+    title: "Why a Profit Warning Sent Bluestem Technologies Shares Sliding",
+    dek: "Bluestem Technologies told investors earnings will fall short of expectations, and the stock fell sharply. Here's how to think about a profit warning.",
+    author: marketAuthor,
+    publishedAt: marketDate,
+    readTime: marketReadTime,
+    highlights: [
+      "Shares fell sharply after management warned earnings would miss expectations.",
+      "Meridian Advisory rates the stock as cautiously positive.",
+      "Bluestem has grown its Canadian workforce by 12% over two years.",
+      "Management says the plan shouldn't affect its dividend or credit rating.",
+    ],
+    sections: [
+      {
+        heading: "What happened",
+        body: "Shares of Bluestem Technologies slid after management warned that earnings would come in below expectations. A profit warning is one of the more unsettling things a company can tell the market, because investors price in future profits, and any gap between promise and reality gets punished quickly.",
+      },
+      {
+        heading: "Why warnings hit so hard",
+        body: "Markets don't just react to the size of the miss. They react to what it implies about the next few quarters. That's why even a company that has been growing, as Bluestem has, with its Canadian workforce up 12% over two years, can see its share price drop in a single session.",
+      },
+      {
+        heading: "The reassuring details",
+        body: "Management said it doesn't expect the plan to affect its dividend policy or its investment-grade credit rating, and that the capital need is roughly $30.4 billion over three years, funded through operating cash flow and existing credit lines. Meridian Advisory's Elena Whitfield describes the move as consistent with broader trends in equity valuations, and the firm's overall view is cautiously positive.",
+      },
+      {
+        heading: "What to keep an eye on",
+        body: "Skeptics like London portfolio manager Hiroshi Adeyemi argue the ambition is clear but delivery is what counts, pointing to high interest rates, supply bottlenecks and a tight labour market. Competitors are also paying attention: Altamira Capital is reportedly reviewing its own strategy in light of the news.",
+      },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Bluestem Technologies" },
+      { label: "HQ / Focus", value: "Stockholm / Canada" },
+      { label: "Est. Value", value: "US$ 30.4 billion" },
+      { label: "Sector", value: "Technology" },
+      { label: "Analyst View", value: "Meridian Advisory: Cautiously positive" },
+    ],
+  },
+
+  /* ------------------------------------------------------- */
+  {
+    id: "market-ardent-retail",
+    section: "Markets",
+    category: "WARSAW · EARNINGS",
+    title: "Why Ardent Retail's Record Half-Year Is a Technology Demand Story",
+    dek: "Ardent Retail reported first-half revenue of $45.2B, ahead of forecasts, as technology demand strengthened across Asia and Europe. A quick guide to the numbers and the debate around them.",
+    author: marketAuthor,
+    publishedAt: marketDate,
+    readTime: marketReadTime,
+    highlights: [
+      "First-half revenue reached $45.2B, ahead of analyst forecasts.",
+      "Technology demand strengthened across Asia and Europe.",
+      "Shares moved 19.1% in early trading while peers were broadly flat.",
+      "Pemberton Analytics says announcements in this area rose 28% year on year.",
+    ],
+    sections: [
+      {
+        heading: "The headline numbers",
+        body: "Ardent Retail posted first-half revenue of $45.2B, beating analyst forecasts. The company says the driver was technology demand, which strengthened across both Asia and Europe. For a retail-linked name, that's a notable signal about where customer spending is heading.",
+      },
+      {
+        heading: "How investors responded",
+        body: "Ardent's shares moved 19.1% in early trading, while the rest of the sector was broadly flat. Market participants said attention will now shift to credit conditions and how quickly the company can convert announcements into real results. Pemberton Analytics rates the situation as constructive and notes that announcements in this area rose 28% year on year.",
+      },
+      {
+        heading: "Funding and what customers will see",
+        body: "The company disclosed some financial terms: roughly $38.2 billion in capital over three years, funded from operating cash flow and existing credit facilities, with no expected change to dividend policy or investment-grade rating. Customers may notice changes first, with service improvements and new product options rolling out gradually, starting in Warsaw before expanding. Pricing, it says, will stay competitive, though it wouldn't commit to specific figures.",
+      },
+      {
+        heading: "The debate",
+        body: "Skeptics, including Toronto-based portfolio manager Mateo Nakamura, say the timeline looks ambitious given elevated interest rates, supply bottlenecks and a tight labour market. Regulators in Nigeria and nearby markets will also review parts of the plan, and Lumina Materials is reportedly reassessing its own strategy in response. As Pemberton's Lars Nakamura puts it, execution, not ambition, decides who benefits.",
+      },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Ardent Retail" },
+      { label: "HQ / Focus", value: "Warsaw / Nigeria" },
+      { label: "Est. Value", value: "US$ 38.2 billion" },
+      { label: "Sector", value: "Technology" },
+      { label: "Analyst View", value: "Pemberton Analytics: Constructive" },
+    ],
+  },
+
+  /* ------------------------------------------------------- */
+  {
+    id: "market-verdant-motors",
+    section: "Markets",
+    category: "SÃO PAULO · LISTINGS",
+    title: "What Verdant Motors' São Paulo Listing Means for Investors",
+    dek: "Verdant Motors has begun trading on the São Paulo exchange, giving institutional investors in the region a new way in. Here's why cross-border listings matter.",
+    author: marketAuthor,
+    publishedAt: marketDate,
+    readTime: marketReadTime,
+    highlights: [
+      "Verdant Motors began trading on the São Paulo exchange.",
+      "The listing widens access for institutional investors in the region.",
+      "Shares moved 4.6% in early trading while peers were broadly flat.",
+      "Calder & Voss Research says to watch closely.",
+    ],
+    sections: [
+      {
+        heading: "Why companies cross-list",
+        body: "A cross-border listing lets a company reach investors it couldn't easily reach before. For Verdant Motors, trading in São Paulo widens access for institutional investors in the region, which can mean a broader shareholder base and, over time, better liquidity.",
+      },
+      {
+        heading: "First reactions",
+        body: "Verdant's shares moved 4.6% in early trading, a calmer response than some of the other stories in this week's markets coverage, while peers were broadly flat. Observers said attention will now turn to credit conditions and how fast the company turns announcements into measurable results.",
+      },
+      {
+        heading: "What the company says",
+        body: "Speaking at a briefing in São Paulo, president Priya Petrov said the move reflects a long-term view and isn't a reaction to a single quarter. Customers may see changes first, with service improvements and new product options introduced gradually, beginning in São Paulo. The company also plans a detailed update with its next earnings release, covering milestones, budgets and risk factors.",
+      },
+      {
+        heading: "Risks and what to watch",
+        body: "Calder & Voss Research frames the listing as consistent with broader trends in capital markets and advises watching closely. Authorities in several jurisdictions, including Japan, will need to review aspects of the plan, and approvals there have been slower in recent years. Skeptics such as Toronto-based portfolio manager Fatima Duarte say delivery will matter more than ambition, and Helix Materials is reportedly reviewing its own strategy.",
+      },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Verdant Motors" },
+      { label: "HQ / Focus", value: "São Paulo / Japan" },
+      { label: "Est. Value", value: "US$ 25.1 billion" },
+      { label: "Sector", value: "Technology" },
+      { label: "Analyst View", value: "Calder & Voss Research: Watch closely" },
+    ],
+  },
+];
+
 const whiteHouseWatchArticles: SpecialArticle[] = [];
 const worldWatchArticles: SpecialArticle[] = [];
 
@@ -1758,6 +2031,7 @@ export const specialArticles: SpecialArticle[] = [
   ...smartCitiesArticles,
   ...supplyChainArticles,
   ...energyArticles,
+  ...marketArticles,
 ];
 
 export function getSpecialArticleById(id?: string) {
