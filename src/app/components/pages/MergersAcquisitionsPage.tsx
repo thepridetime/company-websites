@@ -21,11 +21,10 @@ import {
   getRelatedMAArticles,
   type MAArticle,
   type MADeal,
-} from "../../../data/mergersAcquisitionsData";
+} from "../../data/mergersAcquisitionsData";
 
 /* =========================================================
    ADSENSE
-   Separate M&A page placements.
 ========================================================= */
 
 type AdSenseWindow = Window & {
@@ -235,22 +234,10 @@ function DealTracker() {
 
       <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         {[
-          {
-            label: "Listed entries",
-            value: maDeals.length,
-          },
-          {
-            label: "Announced",
-            value: announced,
-          },
-          {
-            label: "Pending",
-            value: pending,
-          },
-          {
-            label: "Closed",
-            value: closed,
-          },
+          { label: "Listed entries", value: maDeals.length },
+          { label: "Announced", value: announced },
+          { label: "Pending", value: pending },
+          { label: "Closed", value: closed },
         ].map((item) => (
           <div
             key={item.label}
@@ -492,15 +479,12 @@ function MANewsletter() {
 
 /* =========================================================
    LANDING PAGE
-   Route: /mergers-acquisitions
 ========================================================= */
 
 export function MergersAcquisitionsPage() {
   return (
     <main className="w-full bg-white text-gray-900 antialiased">
       <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-9 lg:px-8">
-
-        {/* MASTHEAD */}
         <header className="mb-7 border-b-4 border-black pb-5 md:mb-8">
           <div className="flex flex-wrap items-end justify-between gap-5">
             <div className="flex items-center gap-3.5">
@@ -526,12 +510,10 @@ export function MergersAcquisitionsPage() {
           </div>
         </header>
 
-        {/* TOP AD */}
         <div className="mb-8 md:mb-10">
           <MAAdSpace />
         </div>
 
-        {/* TOPICS */}
         <section className="mb-9">
           <div className="mb-3 flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
@@ -544,7 +526,6 @@ export function MergersAcquisitionsPage() {
           <TopicNavigation />
         </section>
 
-        {/* HERO + SIDEBAR */}
         <section className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-8">
           <article className="min-w-0">
             <Link
@@ -599,7 +580,6 @@ export function MergersAcquisitionsPage() {
             </div>
           </article>
 
-          {/* RIGHT EDITORIAL SIDEBAR */}
           <aside>
             <div className="border-b-2 border-black pb-3">
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
@@ -636,10 +616,8 @@ export function MergersAcquisitionsPage() {
           </aside>
         </section>
 
-        {/* DEAL TRACKER */}
         <DealTracker />
 
-        {/* FEATURED ANALYSIS */}
         <section className="mt-14 border-t-2 border-black pt-9 md:mt-16">
           <SectionHeading
             eyebrow="The business of deal making"
@@ -658,7 +636,6 @@ export function MergersAcquisitionsPage() {
           </div>
         </section>
 
-        {/* MORE ARTICLES */}
         <section className="mt-12">
           <div className="mb-5 flex items-end justify-between gap-4 border-b border-gray-200 pb-3">
             <div>
@@ -686,10 +663,8 @@ export function MergersAcquisitionsPage() {
           </div>
         </section>
 
-        {/* PROCESS FEATURE */}
         <DealProcess />
 
-        {/* SECOND AD */}
         <div className="my-12 md:my-14">
           <MAAdSpace slot="8042854193" inArticle />
         </div>
@@ -703,8 +678,7 @@ export function MergersAcquisitionsPage() {
 }
 
 /* =========================================================
-   ARTICLE DETAIL PAGE
-   Route: /mergers-acquisitions/:slug
+   ARTICLE DETAIL
 ========================================================= */
 
 function MAArticleDetail({ article }: { article: MAArticle }) {
@@ -717,8 +691,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
   return (
     <main className="min-h-screen bg-white text-gray-900">
       <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-10 lg:px-8">
-
-        {/* BACK LINK */}
         <Link
           to="/mergers-acquisitions"
           className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.13em] text-gray-500 transition-colors hover:text-red-600"
@@ -727,7 +699,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
           Back to M&A
         </Link>
 
-        {/* ARTICLE HEADER */}
         <header className="mx-auto mt-8 max-w-4xl border-b border-gray-200 pb-7">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-red-600">
             {article.category}
@@ -759,13 +730,8 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
           </div>
         </header>
 
-        {/* ARTICLE BODY + SIDEBAR */}
         <div className="mx-auto mt-9 grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_270px] lg:gap-14">
-
-          {/* MAIN ARTICLE */}
           <article className="min-w-0">
-
-            {/* INTRODUCTION */}
             <div className="border-l-2 border-red-600 bg-gray-50 px-5 py-5">
               <p className="text-[9px] font-bold uppercase tracking-[0.17em] text-red-600">
                 The central argument
@@ -776,7 +742,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               </p>
             </div>
 
-            {/* KEY TAKEAWAYS */}
             <section className="mt-9 border-y border-gray-200 py-6">
               <h2 className="font-serif text-xl font-bold text-gray-950">
                 Key takeaways
@@ -799,7 +764,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               </ul>
             </section>
 
-            {/* LONG-FORM BLOG CONTENT */}
             <div className="mt-9 space-y-9">
               {article.sections.map((section, index) => (
                 <section key={section.heading}>
@@ -822,7 +786,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               ))}
             </div>
 
-            {/* EDITOR NOTE */}
             <section className="mt-10 border-t-2 border-black pt-5">
               <p className="text-[9px] font-bold uppercase tracking-[0.17em] text-red-600">
                 Editorial note
@@ -833,7 +796,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               </p>
             </section>
 
-            {/* TAGS */}
             <div className="mt-7 flex flex-wrap gap-2 border-t border-gray-200 pt-5">
               {article.tags.map((tag) => (
                 <span
@@ -846,7 +808,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
             </div>
           </article>
 
-          {/* SIDEBAR */}
           <aside className="space-y-7 lg:pt-0">
             <div className="border-t-2 border-black bg-white p-5">
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
@@ -915,12 +876,10 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
           </aside>
         </div>
 
-        {/* IN-ARTICLE AD */}
         <div className="mx-auto my-12 max-w-6xl">
           <MAAdSpace slot="8042854193" inArticle />
         </div>
 
-        {/* RELATED ARTICLES */}
         {related.length > 0 && (
           <section className="mx-auto mt-12 max-w-6xl border-t-2 border-black pt-8">
             <div className="mb-5">
