@@ -8,8 +8,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import { getQuotes } from "../../../services/marketApi";
-import { PrideTimesAd } from "../AdSenseSlots";
+import { getQuotes } from "../../services/marketApi";
 import { specialArticles } from "../../data/specialArticleData";
 
 // Markets articles are maintained in the shared specialArticle.ts data file.
@@ -85,36 +84,40 @@ export function MarketsTicker() {
 
   // Fetch live market data.
   useEffect(() => {
+    let isMounted = true;
+
     const loadData = async () => {
       try {
         const data = await getQuotes();
 
+        if (!isMounted) return;
+
         const tickerData: (TickerCard | null)[] = [
-          ...data.usIndices.map((item: any) => ({
+          ...(data.usIndices ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.stocks.map((item: any) => ({
+          ...(data.stocks ?? []).map((item: any) => ({
             symbol: item.symbol ?? item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.crypto.map((item: any) => ({
+          ...(data.crypto ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.commodities.map((item: any) => ({
+          ...(data.commodities ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...data.indianIndices.map((item: any) => ({
+          ...(data.indianIndices ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
@@ -132,20 +135,23 @@ export function MarketsTicker() {
 
     loadData();
 
-    const interval = setInterval(loadData, 60000);
+    const interval = window.setInterval(loadData, 60000);
 
-    return () => clearInterval(interval);
+    return () => {
+      isMounted = false;
+      window.clearInterval(interval);
+    };
   }, []);
 
   // Automatically close the mega-menu after 9 seconds.
   useEffect(() => {
     if (!showSecurities) return;
 
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setShowSecurities(false);
     }, 9000);
 
-    return () => clearTimeout(timer);
+    return () => window.clearTimeout(timer);
   }, [showSecurities]);
 
   // Manually scroll the market ticker.
@@ -156,6 +162,8 @@ export function MarketsTicker() {
 
     const amount = (172 + 16) * 2;
     const halfway = el.scrollWidth / 2;
+
+    if (halfway <= 0) return;
 
     offsetRef.current += direction === "left" ? -amount : amount;
 
@@ -171,8 +179,8 @@ export function MarketsTicker() {
     el.style.transform = `translateX(-${offsetRef.current}px)`;
 
     window.setTimeout(() => {
-      if (el) {
-        el.style.transition = "none";
+      if (trackRef.current) {
+        trackRef.current.style.transition = "none";
       }
     }, 400);
   };
@@ -206,6 +214,7 @@ export function MarketsTicker() {
     return () => {
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
     };
   }, [cards]);
@@ -790,8 +799,7 @@ export function MarketsPage() {
           </p>
         </div>
       </div>
-
-      <PrideTimesAd variant="first" />
     </main>
   );
 }
+
