@@ -1,6 +1,6 @@
 
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router";
 import {
   TrendingUp,
   TrendingDown,
@@ -8,11 +8,14 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import { getQuotes } from "../../services/marketApi";
+import { getQuotes } from "../../../services/marketApi";
+import { PrideTimesAd } from "../AdSenseSlots";
+import { specialArticles } from "../../data/specialArticleData";
 
-/* =========================================================
-   TYPES
-========================================================= */
+// Markets articles are maintained in the shared specialArticle.ts data file.
+const marketArticles = specialArticles.filter(
+  (article) => article.section === "Markets"
+);
 
 interface TickerCard {
   symbol: string;
@@ -20,56 +23,56 @@ interface TickerCard {
   change: number;
 }
 
-type MarketTab =
-  | "Overview"
-  | "Regional Snapshot"
-  | "Market Themes"
-  | "Market Stories";
-
-interface MarketMenuItem {
-  label: MarketTab;
-  path: string;
-}
-
-/* =========================================================
-   MARKET MENU
-   Matches the sections available in MarketsPage.
-========================================================= */
-
-const marketTabs: MarketMenuItem[] = [
-  {
-    label: "Overview",
-    path: "/markets",
-  },
-  {
-    label: "Regional Snapshot",
-    path: "/markets?tab=Regional%20Snapshot",
-  },
-  {
-    label: "Market Themes",
-    path: "/markets?tab=Market%20Themes",
-  },
-  {
-    label: "Market Stories",
-    path: "/markets?tab=Market%20Stories",
-  },
-];
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
 function parseChange(value: unknown): number | null {
-  const parsed = Number.parseFloat(
-    String(value ?? "").replace("%", "")
-  );
-
+  const parsed = Number.parseFloat(String(value ?? "").replace("%", ""));
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-/* =========================================================
-   MARKETS TICKER
-========================================================= */
+/* Builds /markets?tab=<Tab> so MarketsPage opens the matching tab. */
+const marketTab = (tab: string) =>
+  `/markets?tab=${encodeURIComponent(tab)}`;
+
+/* Bloomberg-style mega-menu columns. */
+const megaMenuColumns = [
+  {
+    title: "Markets",
+    links: [
+      { label: "Overview", path: marketTab("Overview") },
+      { label: "Regional Snapshot", path: marketTab("Regional Snapshot") },
+      { label: "Market Themes", path: marketTab("Market Themes") },
+      { label: "Market Stories", path: marketTab("Market Stories") },
+    ],
+  },
+  {
+    title: "Industries",
+    links: [
+      { label: "Technology", path: "/technology" },
+      { label: "Cybersecurity", path: "/cybersecurity" },
+      { label: "Energy", path: "/energy" },
+      { label: "Healthcare", path: "/healthcare" },
+      { label: "Manufacturing", path: "/manufacturing" },
+      { label: "Smart Cities", path: "/smart-cities" },
+      { label: "Supply Chain", path: "/supply-chain" },
+    ],
+  },
+  {
+    title: "More",
+    links: [
+      { label: "Business News", path: "/business-news" },
+      { label: "International Business", path: "/international-news" },
+      { label: "Startup Success", path: "/startup-success" },
+      { label: "CEO Spotlight", path: "/ceospotlight" },
+      { label: "Magazines", path: "/magazine" },
+      { label: "Innovation", path: "/innovation" },
+      { label: "White House Watch", path: "/white-house-watch" },
+      { label: "World & Geopolitics", path: "/world" },
+      {
+        label: "Mergers & Acquisitions",
+        path: "/mergers-acquisitions",
+      },
+    ],
+  },
+];
 
 export function MarketsTicker() {
   const [cards, setCards] = useState<TickerCard[]>([]);
@@ -80,122 +83,81 @@ export function MarketsTicker() {
   const isPausedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
 
-  /* -------------------------------------------------------
-     FETCH MARKET DATA
-
-     Refreshes live market quotes every 60 seconds.
-  ------------------------------------------------------- */
-
+  // Fetch live market data.
   useEffect(() => {
-    let isMounted = true;
-
     const loadData = async () => {
       try {
         const data = await getQuotes();
 
-        const tickerData: TickerCard[] = [
-          ...(data.usIndices ?? []).map((item: any) => ({
+        const tickerData: (TickerCard | null)[] = [
+          ...data.usIndices.map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...(data.stocks ?? []).map((item: any) => ({
+          ...data.stocks.map((item: any) => ({
             symbol: item.symbol ?? item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...(data.crypto ?? []).map((item: any) => ({
+          ...data.crypto.map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...(data.commodities ?? []).map((item: any) => ({
+          ...data.commodities.map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
 
-          ...(data.indianIndices ?? []).map((item: any) => ({
+          ...data.indianIndices.map((item: any) => ({
             symbol: item.name,
             value: item.value,
             change: parseChange(item.change),
           })),
         ].filter(
           (item): item is TickerCard =>
-            item.change !== null &&
-            item.symbol !== undefined &&
-            item.value !== undefined
+            item !== null && item.change !== null
         );
 
-        if (isMounted) {
-          setCards(tickerData);
-        }
+        setCards(tickerData);
       } catch (error) {
-        console.error(
-          "Failed to load market ticker data:",
-          error
-        );
+        console.error("Failed to load market ticker data:", error);
       }
     };
 
     loadData();
 
-    const interval = window.setInterval(loadData, 60000);
+    const interval = setInterval(loadData, 60000);
 
-    return () => {
-      isMounted = false;
-      window.clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, []);
 
-  /* -------------------------------------------------------
-     AUTO-CLOSE MARKETS MENU
-  ------------------------------------------------------- */
-
+  // Automatically close the mega-menu after 9 seconds.
   useEffect(() => {
     if (!showSecurities) return;
 
-    const timer = window.setTimeout(() => {
+    const timer = setTimeout(() => {
       setShowSecurities(false);
     }, 9000);
 
-    return () => window.clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [showSecurities]);
 
-  /* -------------------------------------------------------
-     PAUSE / RESUME TICKER
-  ------------------------------------------------------- */
+  // Manually scroll the market ticker.
+  const scrollByAmount = (direction: "left" | "right") => {
+    const el = trackRef.current;
 
-  const pauseAutoScroll = () => {
-    isPausedRef.current = true;
-  };
+    if (!el) return;
 
-  const resumeAutoScroll = () => {
-    isPausedRef.current = false;
-  };
+    const amount = (172 + 16) * 2;
+    const halfway = el.scrollWidth / 2;
 
-  /* -------------------------------------------------------
-     MANUAL TICKER SCROLL
-  ------------------------------------------------------- */
-
-  const scrollByAmount = (
-    direction: "left" | "right"
-  ) => {
-    const element = trackRef.current;
-
-    if (!element) return;
-
-    const halfway = element.scrollWidth / 2;
-
-    if (halfway <= 0) return;
-
-    const amount = Math.min(376, halfway);
-
-    offsetRef.current +=
-      direction === "left" ? -amount : amount;
+    offsetRef.current += direction === "left" ? -amount : amount;
 
     if (offsetRef.current < 0) {
       offsetRef.current += halfway;
@@ -205,44 +167,35 @@ export function MarketsTicker() {
       offsetRef.current -= halfway;
     }
 
-    element.style.transition = "transform 0.4s ease";
-    element.style.transform =
-      `translateX(-${offsetRef.current}px)`;
+    el.style.transition = "transform 0.4s ease";
+    el.style.transform = `translateX(-${offsetRef.current}px)`;
 
     window.setTimeout(() => {
-      if (element) {
-        element.style.transition = "none";
+      if (el) {
+        el.style.transition = "none";
       }
     }, 400);
   };
 
-  /* -------------------------------------------------------
-     CONTINUOUS AUTO-SCROLL
-
-     Bloomberg-style moving market ticker.
-  ------------------------------------------------------- */
-
+  // Continuous auto-scroll.
   useEffect(() => {
     if (cards.length === 0) return;
 
     const speed = 0.5;
 
     const step = () => {
-      const element = trackRef.current;
+      const el = trackRef.current;
 
-      if (element && !isPausedRef.current) {
-        const halfway = element.scrollWidth / 2;
+      if (el && !isPausedRef.current) {
+        const halfway = el.scrollWidth / 2;
 
-        if (halfway > 0) {
-          offsetRef.current += speed;
+        offsetRef.current += speed;
 
-          if (offsetRef.current >= halfway) {
-            offsetRef.current -= halfway;
-          }
-
-          element.style.transform =
-            `translateX(-${offsetRef.current}px)`;
+        if (halfway > 0 && offsetRef.current >= halfway) {
+          offsetRef.current -= halfway;
         }
+
+        el.style.transform = `translateX(-${offsetRef.current}px)`;
       }
 
       rafRef.current = requestAnimationFrame(step);
@@ -253,44 +206,32 @@ export function MarketsTicker() {
     return () => {
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
       }
     };
   }, [cards]);
 
-  /* -------------------------------------------------------
-     MENU HANDLERS
-  ------------------------------------------------------- */
+  const pauseAutoScroll = () => {
+    isPausedRef.current = true;
+  };
 
-  const toggleMenu = () => {
-    setShowSecurities((previous) => !previous);
+  const resumeAutoScroll = () => {
+    isPausedRef.current = false;
   };
 
   const closeMenu = () => {
     setShowSecurities(false);
   };
 
-  /* =======================================================
-     RENDER
-  ======================================================= */
-
   return (
-    <div className="pt-securities-bar relative w-full">
-
+    <div className="pt-securities-bar w-full relative">
       <div className="pt-container flex items-stretch">
-
-        {/* ================================================
-            MARKETS MENU BUTTON
-        ================================================ */}
-
-        <div className="relative flex flex-shrink-0 items-center">
-
+        {/* Menu trigger */}
+        <div className="relative flex-shrink-0 flex items-center">
           <button
             type="button"
-            onClick={toggleMenu}
-            aria-label="Markets navigation menu"
+            onClick={() => setShowSecurities((previous) => !previous)}
+            aria-label="Top Securities menu"
             aria-expanded={showSecurities}
-            aria-controls="pt-markets-menu"
             style={{
               width: "95px",
               height: "40px",
@@ -324,149 +265,533 @@ export function MarketsTicker() {
                 borderTop: "5px solid #000000",
                 display: "inline-block",
                 marginTop: "2px",
-                transform: showSecurities
-                  ? "rotate(180deg)"
-                  : "none",
+                transform: showSecurities ? "rotate(180deg)" : "none",
                 transition: "transform 0.15s ease",
               }}
             />
           </button>
-
         </div>
 
-        {/* ================================================
-            LIVE MARKET TICKER
-        ================================================ */}
-
+        {/* Continuously auto-scrolling market cards */}
         <div
-          className="relative flex min-w-0 flex-1 items-center gap-2 pl-3"
+          className="relative flex items-center flex-1 min-w-0 pl-3 gap-2"
           onMouseEnter={pauseAutoScroll}
           onMouseLeave={resumeAutoScroll}
         >
-
-          {/* Previous */}
-
           <button
             type="button"
-            className="pt-securities-scroll-arrow hidden items-center justify-center sm:flex"
+            className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
             onClick={() => {
               pauseAutoScroll();
               scrollByAmount("left");
             }}
-            aria-label="Scroll market ticker left"
+            aria-label="Scroll left"
           >
             <ChevronLeft size={16} />
           </button>
 
-          {/* Ticker cards */}
-
           <div
-            className="flex-1 overflow-hidden py-2"
+            className="overflow-hidden py-2 flex-1"
             onTouchStart={pauseAutoScroll}
             onTouchEnd={resumeAutoScroll}
           >
             <div
               ref={trackRef}
-              className="flex w-max items-center gap-4 will-change-transform"
+              className="flex items-center gap-4 w-max will-change-transform"
             >
-              {[...cards, ...cards].map(
-                (card, index) => (
-                  <div
-                    key={`${card.symbol}-${index}`}
-                    className="pt-market-card flex flex-shrink-0 items-center gap-2"
+              {[...cards, ...cards].map((card, i) => (
+                <div
+                  key={`${card.symbol}-${i}`}
+                  className="pt-market-card flex items-center gap-2 flex-shrink-0"
+                >
+                  <span className="text-xs text-gray-400 font-medium truncate">
+                    {card.symbol}
+                  </span>
+
+                  <span className="text-sm font-semibold">
+                    {card.value}
+                  </span>
+
+                  <span
+                    className={`flex items-center gap-0.5 text-xs font-medium ${
+                      card.change >= 0
+                        ? "pt-market-card-positive"
+                        : "pt-market-card-negative"
+                    }`}
                   >
+                    {card.change >= 0 ? (
+                      <TrendingUp size={11} />
+                    ) : (
+                      <TrendingDown size={11} />
+                    )}
 
-                    <span className="truncate text-xs font-medium text-gray-400">
-                      {card.symbol}
-                    </span>
-
-                    <span className="text-sm font-semibold">
-                      {card.value}
-                    </span>
-
-                    <span
-                      className={`flex items-center gap-0.5 text-xs font-medium ${
-                        card.change >= 0
-                          ? "pt-market-card-positive"
-                          : "pt-market-card-negative"
-                      }`}
-                    >
-                      {card.change >= 0 ? (
-                        <TrendingUp size={11} />
-                      ) : (
-                        <TrendingDown size={11} />
-                      )}
-
-                      {card.change >= 0 ? "+" : ""}
-                      {card.change}%
-                    </span>
-
-                  </div>
-                )
-              )}
+                    {card.change >= 0 ? "+" : ""}
+                    {card.change}%
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Next */}
-
           <button
             type="button"
-            className="pt-securities-scroll-arrow hidden items-center justify-center sm:flex"
+            className="pt-securities-scroll-arrow hidden sm:flex items-center justify-center"
             onClick={() => {
               pauseAutoScroll();
               scrollByAmount("right");
             }}
-            aria-label="Scroll market ticker right"
+            aria-label="Scroll right"
           >
             <ChevronRight size={16} />
           </button>
-
         </div>
       </div>
 
-      {/* ================================================
-          MARKETS MEGA MENU
-
-          Only sections available in MarketsPage.
-      ================================================ */}
-
+      {/* Mega menu */}
       {showSecurities && (
-        <div
-          id="pt-markets-menu"
-          className="pt-mega-menu absolute inset-x-0 top-full z-50"
-        >
-
+        <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
           <div className="pt-container">
-
             <div className="pt-mega-menu-inner">
+              {megaMenuColumns.map((column) => (
+                <div key={column.title}>
+                  <h4 className="pt-mega-menu-heading">
+                    {column.title}
+                  </h4>
 
-              <div>
-                <h4 className="pt-mega-menu-heading">
-                  Markets Dashboard
-                </h4>
+                  <ul className="flex flex-col gap-2">
+                    {column.links.map((link) => (
+                      <li key={link.label}>
+                        <Link to={link.path} onClick={closeMenu}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
 
-                <ul className="flex flex-col gap-2">
+            <div className="pt-mega-menu-utility">
+              <Link to="/signup" onClick={closeMenu}>
+                Sign Up
+              </Link>
 
-                  {marketTabs.map((tab) => (
-                    <li key={tab.label}>
-                      <Link
-                        to={tab.path}
-                        onClick={closeMenu}
-                      >
-                        {tab.label}
-                      </Link>
-                    </li>
-                  ))}
+              <Link to="/magazine" onClick={closeMenu}>
+                Digital Edition
+              </Link>
 
-                </ul>
-              </div>
+              <Link to="/Privacy" onClick={closeMenu}>
+                Privacy Policy
+              </Link>
 
+              <Link to="/terms" onClick={closeMenu}>
+                Terms of Use
+              </Link>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
 
+/* =========================================================
+   MARKETS PAGE
+   Data source: Global Corporate News Digest (Oct 2026)
+   — "Market Snapshot" + "1 Markets & Finance" section only.
+========================================================= */
+
+type MarketTab =
+  | "Overview"
+  | "Regional Snapshot"
+  | "Market Themes"
+  | "Market Stories";
+
+const tabs: MarketTab[] = [
+  "Overview",
+  "Regional Snapshot",
+  "Market Themes",
+  "Market Stories",
+];
+
+/* ---------- Market Snapshot (Illustrative) ---------- */
+
+interface RegionRow {
+  region: string;
+  dealValue: number;
+  earningsGrowth: number;
+  hiringOutlook: "Mixed" | "Stable";
+}
+
+const regionalSnapshot: RegionRow[] = [
+  {
+    region: "North America",
+    dealValue: 21.4,
+    earningsGrowth: 10.3,
+    hiringOutlook: "Mixed",
+  },
+  {
+    region: "Europe",
+    dealValue: 48.5,
+    earningsGrowth: 13.8,
+    hiringOutlook: "Mixed",
+  },
+  {
+    region: "Asia-Pacific",
+    dealValue: 4.4,
+    earningsGrowth: 3.6,
+    hiringOutlook: "Stable",
+  },
+  {
+    region: "Latin America",
+    dealValue: 38.5,
+    earningsGrowth: 17.7,
+    hiringOutlook: "Mixed",
+  },
+  {
+    region: "Middle East & Africa",
+    dealValue: 15.7,
+    earningsGrowth: 7.8,
+    hiringOutlook: "Stable",
+  },
+];
+
+/* ---------- Markets & Finance — Section at a glance ---------- */
+
+interface ThemeRow {
+  theme: string;
+  momentum: string;
+  outlook: "Neutral" | "Positive";
+}
+
+const marketThemes: ThemeRow[] = [
+  {
+    theme: "Capital markets",
+    momentum: "Building",
+    outlook: "Neutral",
+  },
+  {
+    theme: "Credit conditions",
+    momentum: "Moderate",
+    outlook: "Neutral",
+  },
+  {
+    theme: "Treasury yields",
+    momentum: "Uneven",
+    outlook: "Neutral",
+  },
+  {
+    theme: "Equity valuations",
+    momentum: "Moderate",
+    outlook: "Positive",
+  },
+];
+
+const maxDealValue = Math.max(
+  ...regionalSnapshot.map((region) => region.dealValue)
+);
+
+export function MarketsPage() {
+  // Active tab is synchronized with the URL query parameter.
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const tabParam = searchParams.get("tab") as MarketTab | null;
+
+  const activeTab: MarketTab =
+    tabParam && tabs.includes(tabParam) ? tabParam : "Overview";
+
+  const selectTab = (tab: MarketTab) =>
+    setSearchParams(tab === "Overview" ? {} : { tab });
+
+  const hiringBadge: Record<RegionRow["hiringOutlook"], string> = {
+    Mixed: "bg-amber-50 text-amber-700",
+    Stable: "bg-emerald-50 text-emerald-700",
+  };
+
+  const outlookBadge: Record<ThemeRow["outlook"], string> = {
+    Neutral: "bg-gray-100 text-gray-600",
+    Positive: "bg-emerald-50 text-emerald-700",
+  };
+
+  const showSnapshot =
+    activeTab === "Overview" || activeTab === "Regional Snapshot";
+
+  const showThemes =
+    activeTab === "Overview" || activeTab === "Market Themes";
+
+  const showStories =
+    activeTab === "Overview" || activeTab === "Market Stories";
+
+  return (
+    <main className="min-h-screen bg-white text-[#17140F]">
+      <div className="pt-container">
+        {/* Red editorial rule */}
+        <div className="border-t-[3px] border-[#d71920] pt-4 sm:pt-5" />
+
+        {/* Page heading */}
+        <header className="pb-5">
+          <h1 className="font-serif text-[30px] font-bold leading-tight sm:text-[36px]">
+            Markets Dashboard
+          </h1>
+
+          <p className="mt-1 text-[13px] text-[#777]">
+            Capital flows, earnings, rate expectations and the deals that moved global markets.
+          </p>
+        </header>
+
+        {/* Tabs */}
+        <nav
+          aria-label="Markets sections"
+          className="border-b border-[#dedede]"
+        >
+          <div className="flex min-w-0 gap-7 overflow-x-auto">
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => selectTab(tab)}
+                className={`relative whitespace-nowrap pb-3 pt-1 text-[12px] font-semibold transition ${
+                  activeTab === tab
+                    ? "text-[#d71920]"
+                    : "text-[#666] hover:text-black"
+                }`}
+              >
+                {tab}
+
+                {activeTab === tab && (
+                  <span className="absolute inset-x-0 bottom-[-1px] h-[2px] bg-[#d71920]" />
+                )}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {/* Dashboard content */}
+        <div className="pb-16 pt-5 sm:pt-6">
+          {/* Regional Snapshot */}
+          {showSnapshot && (
+            <section aria-labelledby="regional-snapshot-heading">
+              <h2
+                id="regional-snapshot-heading"
+                className="font-serif text-[18px] font-bold"
+              >
+                Market Snapshot
+              </h2>
+
+              <p className="mb-4 mt-1 text-[11px] text-[#777]">
+                Illustrative regional indicators.
+              </p>
+
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[620px] border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-black">
+                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
+                        Region
+                      </th>
+                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
+                        Deal Value (US$ bn)
+                      </th>
+                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
+                        Earnings Growth
+                      </th>
+                      <th className="py-2 text-[10px] font-bold uppercase">
+                        Hiring Outlook
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {regionalSnapshot.map((row) => (
+                      <tr
+                        key={row.region}
+                        className="border-b border-[#ececec] last:border-b-0"
+                      >
+                        <td className="py-2.5 pr-4 text-[11px] font-semibold">
+                          {row.region}
+                        </td>
+
+                        <td className="py-2.5 pr-4 text-[11px]">
+                          <div className="flex items-center gap-3">
+                            <span className="w-10 font-mono font-bold text-[#555]">
+                              {row.dealValue.toFixed(1)}
+                            </span>
+
+                            <span className="h-1.5 w-28 overflow-hidden rounded-full bg-[#f0f0f0]">
+                              <span
+                                className="block h-full rounded-full bg-[#d71920]"
+                                style={{
+                                  width: `${(row.dealValue / maxDealValue) * 100}%`,
+                                }}
+                              />
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-2.5 pr-4 text-[11px] font-semibold text-emerald-600">
+                          ▲ {row.earningsGrowth.toFixed(1)}%
+                        </td>
+
+                        <td className="py-2.5 text-[11px]">
+                          <span
+                            className={`inline-flex rounded-[3px] px-2 py-0.5 text-[10px] font-bold ${hiringBadge[row.hiringOutlook]}`}
+                          >
+                            {row.hiringOutlook}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* Market Themes */}
+          {showThemes && (
+            <section
+              aria-labelledby="market-themes-heading"
+              className={showSnapshot ? "mt-7 sm:mt-8" : ""}
+            >
+              <h2
+                id="market-themes-heading"
+                className="font-serif text-[18px] font-bold"
+              >
+                Markets &amp; Finance: Section at a Glance
+              </h2>
+
+              <p className="mb-4 mt-1 text-[11px] text-[#777]">
+                Capital flows, earnings, rate expectations and the deals that moved global markets.
+              </p>
+
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[520px] border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-black">
+                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
+                        Theme
+                      </th>
+                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
+                        Momentum
+                      </th>
+                      <th className="py-2 text-[10px] font-bold uppercase">
+                        Outlook
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {marketThemes.map((row) => (
+                      <tr
+                        key={row.theme}
+                        className="border-b border-[#ececec] last:border-b-0"
+                      >
+                        <td className="py-2.5 pr-4 text-[11px] font-semibold">
+                          {row.theme}
+                        </td>
+
+                        <td className="py-2.5 pr-4 text-[11px] text-[#555]">
+                          {row.momentum}
+                        </td>
+
+                        <td className="py-2.5 text-[11px]">
+                          <span
+                            className={`inline-flex rounded-[3px] px-2 py-0.5 text-[10px] font-bold ${outlookBadge[row.outlook]}`}
+                          >
+                            {row.outlook}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          {/* Market Stories */}
+          {showStories && (
+            <section
+              aria-labelledby="market-stories-heading"
+              className={
+                showSnapshot || showThemes ? "mt-7 sm:mt-8" : ""
+              }
+            >
+              <h2
+                id="market-stories-heading"
+                className="mb-4 font-serif text-[18px] font-bold"
+              >
+                Markets &amp; Finance Stories
+              </h2>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {marketArticles.map((story) => (
+                  <Link
+                    key={story.id}
+                    to={`/article/${story.id}`}
+                    className="group flex flex-col rounded-[7px] border border-[#dedede] bg-white p-4 transition-[border-color,box-shadow] duration-200 hover:border-[#d71920]/40 hover:shadow-md"
+                  >
+                    <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#d71920]">
+                      {story.category}
+                    </div>
+
+                    <h3 className="mt-2 font-serif text-[16px] font-bold leading-snug transition-colors duration-200 group-hover:text-[#d71920]">
+                      {story.title}
+                    </h3>
+
+                    <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-[#555]">
+                      {story.dek}
+                    </p>
+
+                    <p className="mt-2 text-[10px] text-[#999]">
+                      By {story.author} &nbsp;·&nbsp; {story.readTime}
+                    </p>
+
+                    <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 border-t border-[#ececec] pt-3 text-[11px]">
+                      {story.keyFacts.map((fact) => (
+                        <Fragment key={fact.label}>
+                          <dt className="text-[10px] font-bold uppercase text-[#999]">
+                            {fact.label}
+                          </dt>
+
+                          <dd
+                            className={
+                              fact.label === "Est. Value"
+                                ? "font-mono font-bold"
+                                : fact.label === "Company"
+                                  ? "font-semibold"
+                                  : ""
+                            }
+                          >
+                            {fact.value}
+                          </dd>
+                        </Fragment>
+                      ))}
+                    </dl>
+
+                    <span className="mt-4 inline-flex items-center gap-1 text-[11px] font-semibold text-[#d71920]">
+                      Read the post
+
+                      <span
+                        aria-hidden="true"
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <p className="mt-6 text-[10px] text-[#999]">
+            Illustrative data for display purposes only.
+          </p>
+        </div>
+      </div>
+
+      <PrideTimesAd variant="first" />
+    </main>
+  );
+}
