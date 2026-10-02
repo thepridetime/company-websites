@@ -14,10 +14,10 @@ import {
 /* =========================================================
    NEW IMAGES (company-websites/src/imports)
 ========================================================= */
-import businessStockDrop from "../../imports/business-stock-drop.png";
-import businessAviationJet from "../../imports/business-aviation-jet.png";
-import businessJioDigital from "../../imports/business-jio-digital.png";
-import businessGoldmanNyse from "../../imports/business-goldman-nyse.png";
+import businessStockDrop from "../../../imports/business-stock-drop.png";
+import businessAviationJet from "../../../imports/business-aviation-jet.png";
+import businessJioDigital from "../../../imports/business-jio-digital.png";
+import businessGoldmanNyse from "../../../imports/business-goldman-nyse.png";
 
 // Hero image
 const heroImage = businessStockDrop;
