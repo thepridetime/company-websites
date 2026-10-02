@@ -9,7 +9,7 @@ import {
 import { getQuotes } from "../../../services/marketApi";
 
 import { PrideTimesAd } from "../AdSenseSlots";
-import { specialArticles } from "../../data/specialArticle";
+import { specialArticles } from "../../data/specialArticleData";
 
 // Markets articles are maintained in the shared specialArticle.ts data file.
 const marketArticles = specialArticles.filter(
