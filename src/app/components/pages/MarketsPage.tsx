@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import {
   TrendingUp,
@@ -9,6 +9,7 @@ import {
 import { getQuotes } from "../../../services/marketApi";
 
 import { PrideTimesAd } from "../AdSenseSlots";
+import { marketArticles } from "../../data/marketArticleData";
 
 interface TickerCard {
   symbol: string;
@@ -461,115 +462,9 @@ const marketThemes: ThemeRow[] = [
   { theme: "Equity valuations", momentum: "Moderate", outlook: "Positive" },
 ];
 
-/* ---------- Markets & Finance — Stories ---------- */
-
-interface MarketStory {
-  id: string;
-  headline: string;
-  city: string;
-  author: string;
-  summary: string;
-  facts: {
-    company: string;
-    focus: string;
-    value: string;
-    sector: string;
-    analyst: string;
-  };
-}
-
-const marketStories: MarketStory[] = [
-  {
-    id: "altamira-retail",
-    headline: "Altamira Retail posts record quarterly earnings as industrial demand rebounds",
-    city: "London",
-    author: "Sagar Kumar",
-    summary:
-      "Altamira Retail reported the second quarter revenue of $47.1B, ahead of analyst forecasts, as demand in industrial strengthened across Asia and Europe.",
-    facts: {
-      company: "Altamira Retail",
-      focus: "London / Poland",
-      value: "US$ 14.3 billion",
-      sector: "Industrial",
-      analyst: "Halvorsen Securities: Watch closely",
-    },
-  },
-  {
-    id: "ironwood-foods",
-    headline: "Ironwood Foods announces $48.4B share buyback programme",
-    city: "Mumbai",
-    author: "Sagar Kumar",
-    summary:
-      "The board of Ironwood Foods authorised a $8.3B repurchase programme to run over the next 24 months.",
-    facts: {
-      company: "Ironwood Foods",
-      focus: "Mumbai / Chile",
-      value: "US$ 36.7 billion",
-      sector: "Energy",
-      analyst: "Halvorsen Securities: Cautiously positive",
-    },
-  },
-  {
-    id: "ardent-materials",
-    headline: "Ardent Materials raises $2.9B in oversubscribed bond offering",
-    city: "London",
-    author: "Sagar Kumar",
-    summary:
-      "Ardent Materials priced a $18.6B multi-tranche bond issue that drew orders more than three times the amount offered.",
-    facts: {
-      company: "Ardent Materials",
-      focus: "London / Indonesia",
-      value: "US$ 29.1 billion",
-      sector: "Energy",
-      analyst: "Meridian Advisory: Watch closely",
-    },
-  },
-  {
-    id: "bluestem-technologies",
-    headline: "Bluestem Technologies shares slide as profit warning rattles investors",
-    city: "Stockholm",
-    author: "Sagar Kumar",
-    summary:
-      "Shares of Bluestem Technologies fell sharply after management warned that earnings would fall short of expectations.",
-    facts: {
-      company: "Bluestem Technologies",
-      focus: "Stockholm / Canada",
-      value: "US$ 30.4 billion",
-      sector: "Technology",
-      analyst: "Meridian Advisory: Cautiously positive",
-    },
-  },
-  {
-    id: "ardent-retail",
-    headline: "Ardent Retail posts record quarterly earnings as technology demand rebounds",
-    city: "Warsaw",
-    author: "Sagar Kumar",
-    summary:
-      "Ardent Retail reported the first half revenue of $45.2B, ahead of analyst forecasts, as demand in technology strengthened across Asia and Europe.",
-    facts: {
-      company: "Ardent Retail",
-      focus: "Warsaw / Nigeria",
-      value: "US$ 38.2 billion",
-      sector: "Technology",
-      analyst: "Pemberton Analytics: Constructive",
-    },
-  },
-  {
-    id: "verdant-motors",
-    headline: "Verdant Motors completes cross-border listing on São Paulo exchange",
-    city: "São Paulo",
-    author: "Sagar Kumar",
-    summary:
-      "Verdant Motors began trading on the São Paulo exchange, widening access to institutional investors in the region.",
-    facts: {
-      company: "Verdant Motors",
-      focus: "São Paulo / Japan",
-      value: "US$ 25.1 billion",
-      sector: "Technology",
-      analyst: "Calder & Voss Research: Watch closely",
-    },
-  },
-];
+/* ---------- Markets & Finance — Stories ----------
+   Cards come from src/app/data/marketArticleData.ts and open the
+   full blog post at /article/:id. */
 
 const maxDealValue = Math.max(...regionalSnapshot.map((r) => r.dealValue));
 
@@ -792,56 +687,59 @@ export function MarketsPage() {
               </h2>
 
               <div className="grid gap-4 md:grid-cols-2">
-                {marketStories.map((story) => (
-                  <article
+                {marketArticles.map((story) => (
+                  <Link
                     key={story.id}
-                    className="flex flex-col rounded-[7px] border border-[#dedede] bg-white p-4"
+                    to={`/article/${story.id}`}
+                    className="group flex flex-col rounded-[7px] border border-[#dedede] bg-white p-4 transition-[border-color,box-shadow] duration-200 hover:border-[#d71920]/40 hover:shadow-md"
                   >
                     <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#d71920]">
-                      {story.city} &nbsp;|&nbsp; Markets &amp; Finance
+                      {story.category}
                     </div>
 
-                    <h3 className="mt-2 font-serif text-[16px] font-bold leading-snug">
-                      {story.headline}
+                    <h3 className="mt-2 font-serif text-[16px] font-bold leading-snug transition-colors duration-200 group-hover:text-[#d71920]">
+                      {story.title}
                     </h3>
 
-                    <p className="mt-2 text-[12px] font-semibold leading-relaxed text-[#444]">
-                      {story.summary}
+                    <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-[#555]">
+                      {story.dek}
                     </p>
 
                     <p className="mt-2 text-[10px] text-[#999]">
-                      By {story.author}
+                      By {story.author} &nbsp;·&nbsp; {story.readTime}
                     </p>
 
                     <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 border-t border-[#ececec] pt-3 text-[11px]">
-                      <dt className="font-bold uppercase text-[10px] text-[#999]">
-                        Company
-                      </dt>
-                      <dd className="font-semibold">{story.facts.company}</dd>
-
-                      <dt className="font-bold uppercase text-[10px] text-[#999]">
-                        HQ / Focus
-                      </dt>
-                      <dd>{story.facts.focus}</dd>
-
-                      <dt className="font-bold uppercase text-[10px] text-[#999]">
-                        Est. Value
-                      </dt>
-                      <dd className="font-mono font-bold">
-                        {story.facts.value}
-                      </dd>
-
-                      <dt className="font-bold uppercase text-[10px] text-[#999]">
-                        Sector
-                      </dt>
-                      <dd>{story.facts.sector}</dd>
-
-                      <dt className="font-bold uppercase text-[10px] text-[#999]">
-                        Analyst View
-                      </dt>
-                      <dd>{story.facts.analyst}</dd>
+                      {story.keyFacts.map((fact) => (
+                        <Fragment key={fact.label}>
+                          <dt className="text-[10px] font-bold uppercase text-[#999]">
+                            {fact.label}
+                          </dt>
+                          <dd
+                            className={
+                              fact.label === "Est. Value"
+                                ? "font-mono font-bold"
+                                : fact.label === "Company"
+                                ? "font-semibold"
+                                : ""
+                            }
+                          >
+                            {fact.value}
+                          </dd>
+                        </Fragment>
+                      ))}
                     </dl>
-                  </article>
+
+                    <span className="mt-4 inline-flex items-center gap-1 text-[11px] font-semibold text-[#d71920]">
+                      Read the post
+                      <span
+                        aria-hidden="true"
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </Link>
                 ))}
               </div>
             </section>
