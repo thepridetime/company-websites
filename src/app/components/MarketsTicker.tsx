@@ -8,7 +8,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import { getQuotes } from "../../../services/marketApi";
+import { getQuotes } from "../../services/marketApi";
+
+/* =========================================================
+   TYPES
+========================================================= */
 
 interface TickerCard {
   symbol: string;
@@ -16,17 +20,23 @@ interface TickerCard {
   change: number;
 }
 
-/* Parse market percentage change safely. */
-function parseChange(value: unknown): number | null {
-  const parsed = Number.parseFloat(
-    String(value ?? "").replace("%", "")
-  );
+type MarketTab =
+  | "Overview"
+  | "Regional Snapshot"
+  | "Market Themes"
+  | "Market Stories";
 
-  return Number.isFinite(parsed) ? parsed : null;
+interface MarketMenuItem {
+  label: MarketTab;
+  path: string;
 }
 
-/* Markets page tabs */
-const marketTabs = [
+/* =========================================================
+   MARKET MENU
+   Matches the sections available in MarketsPage.
+========================================================= */
+
+const marketTabs: MarketMenuItem[] = [
   {
     label: "Overview",
     path: "/markets",
@@ -45,6 +55,22 @@ const marketTabs = [
   },
 ];
 
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function parseChange(value: unknown): number | null {
+  const parsed = Number.parseFloat(
+    String(value ?? "").replace("%", "")
+  );
+
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+/* =========================================================
+   MARKETS TICKER
+========================================================= */
+
 export function MarketsTicker() {
   const [cards, setCards] = useState<TickerCard[]>([]);
   const [showSecurities, setShowSecurities] = useState(false);
@@ -54,9 +80,11 @@ export function MarketsTicker() {
   const isPausedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
 
-  /* -----------------------------------------
-     Fetch live market ticker data
-  ----------------------------------------- */
+  /* -------------------------------------------------------
+     FETCH MARKET DATA
+
+     Refreshes live market quotes every 60 seconds.
+  ------------------------------------------------------- */
 
   useEffect(() => {
     let isMounted = true;
@@ -106,7 +134,10 @@ export function MarketsTicker() {
           setCards(tickerData);
         }
       } catch (error) {
-        console.error("Failed to load market ticker data:", error);
+        console.error(
+          "Failed to load market ticker data:",
+          error
+        );
       }
     };
 
@@ -120,9 +151,9 @@ export function MarketsTicker() {
     };
   }, []);
 
-  /* -----------------------------------------
-     Automatically close the menu
-  ----------------------------------------- */
+  /* -------------------------------------------------------
+     AUTO-CLOSE MARKETS MENU
+  ------------------------------------------------------- */
 
   useEffect(() => {
     if (!showSecurities) return;
@@ -134,19 +165,34 @@ export function MarketsTicker() {
     return () => window.clearTimeout(timer);
   }, [showSecurities]);
 
-  /* -----------------------------------------
-     Manual ticker scrolling
-  ----------------------------------------- */
+  /* -------------------------------------------------------
+     PAUSE / RESUME TICKER
+  ------------------------------------------------------- */
 
-  const scrollByAmount = (direction: "left" | "right") => {
+  const pauseAutoScroll = () => {
+    isPausedRef.current = true;
+  };
+
+  const resumeAutoScroll = () => {
+    isPausedRef.current = false;
+  };
+
+  /* -------------------------------------------------------
+     MANUAL TICKER SCROLL
+  ------------------------------------------------------- */
+
+  const scrollByAmount = (
+    direction: "left" | "right"
+  ) => {
     const element = trackRef.current;
 
     if (!element) return;
 
-    const amount = (172 + 16) * 2;
     const halfway = element.scrollWidth / 2;
 
     if (halfway <= 0) return;
+
+    const amount = Math.min(376, halfway);
 
     offsetRef.current +=
       direction === "left" ? -amount : amount;
@@ -160,7 +206,8 @@ export function MarketsTicker() {
     }
 
     element.style.transition = "transform 0.4s ease";
-    element.style.transform = `translateX(-${offsetRef.current}px)`;
+    element.style.transform =
+      `translateX(-${offsetRef.current}px)`;
 
     window.setTimeout(() => {
       if (element) {
@@ -169,9 +216,11 @@ export function MarketsTicker() {
     }, 400);
   };
 
-  /* -----------------------------------------
-     Continuous ticker auto-scroll
-  ----------------------------------------- */
+  /* -------------------------------------------------------
+     CONTINUOUS AUTO-SCROLL
+
+     Bloomberg-style moving market ticker.
+  ------------------------------------------------------- */
 
   useEffect(() => {
     if (cards.length === 0) return;
@@ -209,30 +258,36 @@ export function MarketsTicker() {
     };
   }, [cards]);
 
-  const pauseAutoScroll = () => {
-    isPausedRef.current = true;
-  };
+  /* -------------------------------------------------------
+     MENU HANDLERS
+  ------------------------------------------------------- */
 
-  const resumeAutoScroll = () => {
-    isPausedRef.current = false;
+  const toggleMenu = () => {
+    setShowSecurities((previous) => !previous);
   };
 
   const closeMenu = () => {
     setShowSecurities(false);
   };
 
+  /* =======================================================
+     RENDER
+  ======================================================= */
+
   return (
     <div className="pt-securities-bar relative w-full">
+
       <div className="pt-container flex items-stretch">
 
-        {/* Markets menu trigger */}
+        {/* ================================================
+            MARKETS MENU BUTTON
+        ================================================ */}
 
         <div className="relative flex flex-shrink-0 items-center">
+
           <button
             type="button"
-            onClick={() =>
-              setShowSecurities((previous) => !previous)
-            }
+            onClick={toggleMenu}
             aria-label="Markets navigation menu"
             aria-expanded={showSecurities}
             aria-controls="pt-markets-menu"
@@ -276,15 +331,21 @@ export function MarketsTicker() {
               }}
             />
           </button>
+
         </div>
 
-        {/* Live market ticker */}
+        {/* ================================================
+            LIVE MARKET TICKER
+        ================================================ */}
 
         <div
           className="relative flex min-w-0 flex-1 items-center gap-2 pl-3"
           onMouseEnter={pauseAutoScroll}
           onMouseLeave={resumeAutoScroll}
         >
+
+          {/* Previous */}
+
           <button
             type="button"
             className="pt-securities-scroll-arrow hidden items-center justify-center sm:flex"
@@ -297,6 +358,8 @@ export function MarketsTicker() {
             <ChevronLeft size={16} />
           </button>
 
+          {/* Ticker cards */}
+
           <div
             className="flex-1 overflow-hidden py-2"
             onTouchStart={pauseAutoScroll}
@@ -306,39 +369,45 @@ export function MarketsTicker() {
               ref={trackRef}
               className="flex w-max items-center gap-4 will-change-transform"
             >
-              {[...cards, ...cards].map((card, index) => (
-                <div
-                  key={`${card.symbol}-${index}`}
-                  className="pt-market-card flex flex-shrink-0 items-center gap-2"
-                >
-                  <span className="truncate text-xs font-medium text-gray-400">
-                    {card.symbol}
-                  </span>
-
-                  <span className="text-sm font-semibold">
-                    {card.value}
-                  </span>
-
-                  <span
-                    className={`flex items-center gap-0.5 text-xs font-medium ${
-                      card.change >= 0
-                        ? "pt-market-card-positive"
-                        : "pt-market-card-negative"
-                    }`}
+              {[...cards, ...cards].map(
+                (card, index) => (
+                  <div
+                    key={`${card.symbol}-${index}`}
+                    className="pt-market-card flex flex-shrink-0 items-center gap-2"
                   >
-                    {card.change >= 0 ? (
-                      <TrendingUp size={11} />
-                    ) : (
-                      <TrendingDown size={11} />
-                    )}
 
-                    {card.change >= 0 ? "+" : ""}
-                    {card.change}%
-                  </span>
-                </div>
-              ))}
+                    <span className="truncate text-xs font-medium text-gray-400">
+                      {card.symbol}
+                    </span>
+
+                    <span className="text-sm font-semibold">
+                      {card.value}
+                    </span>
+
+                    <span
+                      className={`flex items-center gap-0.5 text-xs font-medium ${
+                        card.change >= 0
+                          ? "pt-market-card-positive"
+                          : "pt-market-card-negative"
+                      }`}
+                    >
+                      {card.change >= 0 ? (
+                        <TrendingUp size={11} />
+                      ) : (
+                        <TrendingDown size={11} />
+                      )}
+
+                      {card.change >= 0 ? "+" : ""}
+                      {card.change}%
+                    </span>
+
+                  </div>
+                )
+              )}
             </div>
           </div>
+
+          {/* Next */}
 
           <button
             type="button"
@@ -351,20 +420,24 @@ export function MarketsTicker() {
           >
             <ChevronRight size={16} />
           </button>
+
         </div>
       </div>
 
-      {/* -----------------------------------------
+      {/* ================================================
           MARKETS MEGA MENU
-          Only the four MarketsPage sections
-      ----------------------------------------- */}
+
+          Only sections available in MarketsPage.
+      ================================================ */}
 
       {showSecurities && (
         <div
           id="pt-markets-menu"
           className="pt-mega-menu absolute inset-x-0 top-full z-50"
         >
+
           <div className="pt-container">
+
             <div className="pt-mega-menu-inner">
 
               <div>
@@ -373,6 +446,7 @@ export function MarketsTicker() {
                 </h4>
 
                 <ul className="flex flex-col gap-2">
+
                   {marketTabs.map((tab) => (
                     <li key={tab.label}>
                       <Link
@@ -383,6 +457,7 @@ export function MarketsTicker() {
                       </Link>
                     </li>
                   ))}
+
                 </ul>
               </div>
 
@@ -390,6 +465,7 @@ export function MarketsTicker() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
