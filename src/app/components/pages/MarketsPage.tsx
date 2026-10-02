@@ -30,15 +30,10 @@ const megaMenuColumns = [
   {
     title: "Markets",
     links: [
-      { label: "Stocks", path: marketTab("Stocks") },
-      { label: "Indices", path: marketTab("Indices") },
-      { label: "Commodities", path: marketTab("Commodities") },
-      { label: "Forex", path: marketTab("Forex") },
-      { label: "Crypto", path: marketTab("Crypto") },
-      { label: "Mutual Funds", path: marketTab("Mutual Funds") },
-      { label: "ETFs", path: marketTab("ETFs") },
-      { label: "Government Bonds", path: marketTab("Government Bonds") },
-      { label: "Global Markets", path: marketTab("Global Markets") },
+      { label: "Overview", path: marketTab("Overview") },
+      { label: "Regional Snapshot", path: marketTab("Regional Snapshot") },
+      { label: "Market Themes", path: marketTab("Market Themes") },
+      { label: "Market Stories", path: marketTab("Market Stories") },
     ],
   },
   {
@@ -417,149 +412,169 @@ export function MarketsTicker() {
 
 /* =========================================================
    MARKETS PAGE
+   Data source: Global Corporate News Digest (Oct 2026)
+   — "Market Snapshot" + "1 Markets & Finance" section only.
 ========================================================= */
 
 type MarketTab =
   | "Overview"
-  | "Stocks"
-  | "Indices"
-  | "Crypto"
-  | "Forex"
-  | "Commodities"
-  | "Mutual Funds"
-  | "ETFs"
-  | "Government Bonds"
-  | "Global Markets";
+  | "Regional Snapshot"
+  | "Market Themes"
+  | "Market Stories";
 
 const tabs: MarketTab[] = [
   "Overview",
-  "Stocks",
-  "Indices",
-  "Crypto",
-  "Forex",
-  "Commodities",
-  "Mutual Funds",
-  "ETFs",
-  "Government Bonds",
-  "Global Markets",
+  "Regional Snapshot",
+  "Market Themes",
+  "Market Stories",
 ];
 
-interface DataTable {
-  title: string;
-  columns: string[];
-  rows: string[][];
+/* ---------- Market Snapshot (Illustrative) ---------- */
+
+interface RegionRow {
+  region: string;
+  dealValue: number; // US$ bn
+  earningsGrowth: number; // %
+  hiringOutlook: "Mixed" | "Stable";
 }
 
-// Static sample data. Real API se replace karna ho to getQuotes() se map kar sakte ho.
-const marketTables: Partial<Record<MarketTab, DataTable>> = {
-  Commodities: {
-    title: "Commodities",
-    columns: ["Commodity", "Price", "Change", "Unit"],
-    rows: [
-      ["Gold", "2,345.60", "+0.42%", "USD / oz"],
-      ["Silver", "29.84", "+0.95%", "USD / oz"],
-      ["Crude Oil (WTI)", "78.45", "-0.63%", "USD / bbl"],
-      ["Brent Crude", "82.10", "-0.48%", "USD / bbl"],
-      ["Natural Gas", "2.67", "+1.80%", "USD / MMBtu"],
-      ["Copper", "4.52", "+0.74%", "USD / lb"],
-      ["Platinum", "982.30", "-0.21%", "USD / oz"],
-      ["Wheat", "5.92", "+0.33%", "USD / bu"],
-    ],
+const regionalSnapshot: RegionRow[] = [
+  { region: "North America", dealValue: 21.4, earningsGrowth: 10.3, hiringOutlook: "Mixed" },
+  { region: "Europe", dealValue: 48.5, earningsGrowth: 13.8, hiringOutlook: "Mixed" },
+  { region: "Asia-Pacific", dealValue: 4.4, earningsGrowth: 3.6, hiringOutlook: "Stable" },
+  { region: "Latin America", dealValue: 38.5, earningsGrowth: 17.7, hiringOutlook: "Mixed" },
+  { region: "Middle East & Africa", dealValue: 15.7, earningsGrowth: 7.8, hiringOutlook: "Stable" },
+];
+
+/* ---------- Markets & Finance — Section at a glance ---------- */
+
+interface ThemeRow {
+  theme: string;
+  momentum: string;
+  outlook: "Neutral" | "Positive";
+}
+
+const marketThemes: ThemeRow[] = [
+  { theme: "Capital markets", momentum: "Building", outlook: "Neutral" },
+  { theme: "Credit conditions", momentum: "Moderate", outlook: "Neutral" },
+  { theme: "Treasury yields", momentum: "Uneven", outlook: "Neutral" },
+  { theme: "Equity valuations", momentum: "Moderate", outlook: "Positive" },
+];
+
+/* ---------- Markets & Finance — Stories ---------- */
+
+interface MarketStory {
+  id: string;
+  headline: string;
+  city: string;
+  author: string;
+  summary: string;
+  facts: {
+    company: string;
+    focus: string;
+    value: string;
+    sector: string;
+    analyst: string;
+  };
+}
+
+const marketStories: MarketStory[] = [
+  {
+    id: "altamira-retail",
+    headline: "Altamira Retail posts record quarterly earnings as industrial demand rebounds",
+    city: "London",
+    author: "Sagar Kumar",
+    summary:
+      "Altamira Retail reported the second quarter revenue of $47.1B, ahead of analyst forecasts, as demand in industrial strengthened across Asia and Europe.",
+    facts: {
+      company: "Altamira Retail",
+      focus: "London / Poland",
+      value: "US$ 14.3 billion",
+      sector: "Industrial",
+      analyst: "Halvorsen Securities: Watch closely",
+    },
   },
-  Forex: {
-    title: "Forex",
-    columns: ["Pair", "Rate", "Change", "Day Range"],
-    rows: [
-      ["USD/INR", "83.42", "+0.08%", "83.30 – 83.48"],
-      ["EUR/USD", "1.0845", "-0.12%", "1.0820 – 1.0880"],
-      ["GBP/USD", "1.2710", "+0.15%", "1.2670 – 1.2740"],
-      ["USD/JPY", "155.30", "+0.34%", "154.70 – 155.60"],
-      ["AUD/USD", "0.6650", "-0.27%", "0.6630 – 0.6690"],
-      ["USD/CAD", "1.3680", "+0.05%", "1.3650 – 1.3710"],
-      ["USD/CHF", "0.9020", "-0.09%", "0.8995 – 0.9050"],
-      ["EUR/INR", "90.48", "-0.04%", "90.20 – 90.70"],
-    ],
+  {
+    id: "ironwood-foods",
+    headline: "Ironwood Foods announces $48.4B share buyback programme",
+    city: "Mumbai",
+    author: "Sagar Kumar",
+    summary:
+      "The board of Ironwood Foods authorised a $8.3B repurchase programme to run over the next 24 months.",
+    facts: {
+      company: "Ironwood Foods",
+      focus: "Mumbai / Chile",
+      value: "US$ 36.7 billion",
+      sector: "Energy",
+      analyst: "Halvorsen Securities: Cautiously positive",
+    },
   },
-  "Mutual Funds": {
-    title: "Mutual Funds",
-    columns: ["Fund", "Category", "NAV (₹)", "Change", "1Y Return"],
-    rows: [
-      ["Parag Parikh Flexi Cap", "Flexi Cap", "78.42", "+0.38%", "+32.5%"],
-      ["SBI Bluechip Fund", "Large Cap", "92.15", "+0.45%", "+24.8%"],
-      ["HDFC Mid-Cap Opportunities", "Mid Cap", "152.60", "+0.71%", "+38.2%"],
-      ["Axis Bluechip Fund", "Large Cap", "59.30", "+0.29%", "+18.6%"],
-      ["Nippon India Small Cap", "Small Cap", "164.85", "+1.05%", "+45.1%"],
-      ["ICICI Pru Technology", "Sectoral", "198.70", "-0.32%", "+29.4%"],
-    ],
+  {
+    id: "ardent-materials",
+    headline: "Ardent Materials raises $2.9B in oversubscribed bond offering",
+    city: "London",
+    author: "Sagar Kumar",
+    summary:
+      "Ardent Materials priced a $18.6B multi-tranche bond issue that drew orders more than three times the amount offered.",
+    facts: {
+      company: "Ardent Materials",
+      focus: "London / Indonesia",
+      value: "US$ 29.1 billion",
+      sector: "Energy",
+      analyst: "Meridian Advisory: Watch closely",
+    },
   },
-  ETFs: {
-    title: "Exchange Traded Funds",
-    columns: ["Symbol", "Name", "Price", "Change", "AUM"],
-    rows: [
-      ["SPY", "SPDR S&P 500 ETF", "$528.40", "+0.62%", "$510B"],
-      ["QQQ", "Invesco QQQ Trust", "$452.18", "+0.91%", "$265B"],
-      ["VTI", "Vanguard Total Stock Market", "$262.75", "+0.58%", "$410B"],
-      ["IWM", "iShares Russell 2000", "$205.30", "+0.44%", "$62B"],
-      ["GLD", "SPDR Gold Shares", "$218.90", "+0.40%", "$60B"],
-      ["EEM", "iShares MSCI Emerging Markets", "$41.25", "-0.18%", "$18B"],
-      ["NIFTYBEES", "Nippon Nifty 50 BeES", "₹258.40", "+0.36%", "₹28,000 Cr"],
-    ],
+  {
+    id: "bluestem-technologies",
+    headline: "Bluestem Technologies shares slide as profit warning rattles investors",
+    city: "Stockholm",
+    author: "Sagar Kumar",
+    summary:
+      "Shares of Bluestem Technologies fell sharply after management warned that earnings would fall short of expectations.",
+    facts: {
+      company: "Bluestem Technologies",
+      focus: "Stockholm / Canada",
+      value: "US$ 30.4 billion",
+      sector: "Technology",
+      analyst: "Meridian Advisory: Cautiously positive",
+    },
   },
-  "Government Bonds": {
-    title: "Government Bonds",
-    columns: ["Country", "2Y Yield", "10Y Yield", "Change"],
-    rows: [
-      ["United States", "4.72%", "4.28%", "+0.03%"],
-      ["United Kingdom", "4.35%", "4.15%", "-0.02%"],
-      ["Germany", "2.85%", "2.45%", "+0.01%"],
-      ["Japan", "0.35%", "0.95%", "+0.02%"],
-      ["India", "6.85%", "7.05%", "-0.01%"],
-      ["Australia", "4.00%", "4.20%", "+0.04%"],
-      ["Canada", "4.10%", "3.60%", "-0.03%"],
-    ],
+  {
+    id: "ardent-retail",
+    headline: "Ardent Retail posts record quarterly earnings as technology demand rebounds",
+    city: "Warsaw",
+    author: "Sagar Kumar",
+    summary:
+      "Ardent Retail reported the first half revenue of $45.2B, ahead of analyst forecasts, as demand in technology strengthened across Asia and Europe.",
+    facts: {
+      company: "Ardent Retail",
+      focus: "Warsaw / Nigeria",
+      value: "US$ 38.2 billion",
+      sector: "Technology",
+      analyst: "Pemberton Analytics: Constructive",
+    },
   },
-  "Global Markets": {
-    title: "Global Markets",
-    columns: ["Index", "Region", "Value", "Change", "YTD"],
-    rows: [
-      ["Nikkei 225", "Japan", "38,420.50", "+0.74%", "+14.8%"],
-      ["Hang Seng", "Hong Kong", "17,890.30", "-0.55%", "-4.2%"],
-      ["FTSE 100", "UK", "8,210.45", "+0.28%", "+6.2%"],
-      ["Shanghai Composite", "China", "3,105.60", "+0.12%", "+4.4%"],
-      ["Nifty 50", "India", "22,650.80", "+0.41%", "+11.6%"],
-      ["Sensex", "India", "74,500.25", "+0.39%", "+10.3%"],
-      ["KOSPI", "South Korea", "2,730.15", "+0.66%", "+2.8%"],
-      ["S&P/ASX 200", "Australia", "7,780.90", "+0.19%", "+2.5%"],
-    ],
+  {
+    id: "verdant-motors",
+    headline: "Verdant Motors completes cross-border listing on São Paulo exchange",
+    city: "São Paulo",
+    author: "Sagar Kumar",
+    summary:
+      "Verdant Motors began trading on the São Paulo exchange, widening access to institutional investors in the region.",
+    facts: {
+      company: "Verdant Motors",
+      focus: "São Paulo / Japan",
+      value: "US$ 25.1 billion",
+      sector: "Technology",
+      analyst: "Calder & Voss Research: Watch closely",
+    },
   },
-};
+];
+
+const maxDealValue = Math.max(...regionalSnapshot.map((r) => r.dealValue));
 
 export function MarketsPage() {
-  interface IndexRow {
-    name: string;
-    value: string;
-    change: string;
-    ytd: string;
-  }
-
-  interface StockRow {
-    symbol: string;
-    company: string;
-    price: string;
-    change: string;
-    volume: string;
-    marketCap: string;
-  }
-
-  interface CryptoRow {
-    symbol: string;
-    name: string;
-    price: string;
-    change: string;
-    marketCap: string;
-  }
-
-  // Active tab lives in the URL (?tab=Commodities) so menu links,
+  // Active tab lives in the URL (?tab=Market Stories) so menu links,
   // the tab bar, the back button and shared links all stay in sync.
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab") as MarketTab | null;
@@ -569,121 +584,22 @@ export function MarketsPage() {
   const selectTab = (tab: MarketTab) =>
     setSearchParams(tab === "Overview" ? {} : { tab });
 
-  const [loading, setLoading] = useState(false);
+  const hiringBadge: Record<RegionRow["hiringOutlook"], string> = {
+    Mixed: "bg-amber-50 text-amber-700",
+    Stable: "bg-emerald-50 text-emerald-700",
+  };
 
-  const [indices, setIndices] = useState<IndexRow[]>([
-    { name: "S&P 500", value: "5,892.31", change: "+1.14%", ytd: "+18.4%" },
-    { name: "Nasdaq Composite", value: "19,245.78", change: "+1.56%", ytd: "+24.1%" },
-    { name: "Dow Jones Ind. Avg.", value: "42,318.45", change: "+0.82%", ytd: "+12.3%" },
-    { name: "DAX", value: "18,612.80", change: "+0.54%", ytd: "+9.8%" },
-    { name: "CAC 40", value: "7,984.20", change: "+0.31%", ytd: "+6.5%" },
-  ]);
+  const outlookBadge: Record<ThemeRow["outlook"], string> = {
+    Neutral: "bg-gray-100 text-gray-600",
+    Positive: "bg-emerald-50 text-emerald-700",
+  };
 
-  const [stocks, setStocks] = useState<StockRow[]>([
-    { symbol: "AAPL", company: "Apple Inc.", price: "$232.15", change: "+0.62%", volume: "78.4M", marketCap: "$3.52T" },
-    { symbol: "MSFT", company: "Microsoft Corp.", price: "$421.30", change: "+0.35%", volume: "21.2M", marketCap: "$3.13T" },
-    { symbol: "NVDA", company: "NVIDIA Corp.", price: "$879.50", change: "+2.34%", volume: "143.8M", marketCap: "$2.16T" },
-    { symbol: "GOOGL", company: "Alphabet Inc.", price: "$168.44", change: "-0.21%", volume: "19.6M", marketCap: "$2.08T" },
-    { symbol: "AMZN", company: "Amazon.com Inc.", price: "$186.90", change: "+1.02%", volume: "32.1M", marketCap: "$1.97T" },
-    { symbol: "META", company: "Meta Platforms", price: "$493.28", change: "+1.88%", volume: "15.9M", marketCap: "$1.25T" },
-    { symbol: "TSLA", company: "Tesla Inc.", price: "$248.44", change: "+3.21%", volume: "88.5M", marketCap: "$791B" },
-    { symbol: "BRK.B", company: "Berkshire Hathaway", price: "$362.10", change: "-0.08%", volume: "4.2M", marketCap: "$785B" },
-  ]);
-
-  const [crypto, setCrypto] = useState<CryptoRow[]>([
-    { symbol: "BTC", name: "Bitcoin", price: "$67,234", change: "+3.45%", marketCap: "$1.32T" },
-    { symbol: "ETH", name: "Ethereum", price: "$3,456", change: "+2.87%", marketCap: "$415B" },
-    { symbol: "SOL", name: "Solana", price: "$167.80", change: "+4.56%", marketCap: "$78B" },
-    { symbol: "BNB", name: "Binance Coin", price: "$612.40", change: "+1.22%", marketCap: "$89B" },
-    { symbol: "XRP", name: "XRP", price: "$0.62", change: "-0.88%", marketCap: "$34B" },
-    { symbol: "ADA", name: "Cardano", price: "$0.48", change: "+1.14%", marketCap: "$17B" },
-  ]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadMarketData = async () => {
-      setLoading(true);
-
-      try {
-        const data = await getQuotes();
-
-        if (cancelled || !data) return;
-
-        if (Array.isArray(data.usIndices) && data.usIndices.length) {
-          setIndices(
-            data.usIndices.slice(0, 5).map((item: any, index: number) => ({
-              name: item.name ?? ["S&P 500", "Nasdaq Composite", "Dow Jones Ind. Avg.", "DAX", "CAC 40"][index],
-              value: String(item.value ?? ""),
-              change: formatPercent(item.change),
-              ytd: ["+18.4%", "+24.1%", "+12.3%", "+9.8%", "+6.5%"][index],
-            }))
-          );
-        }
-
-        if (Array.isArray(data.stocks) && data.stocks.length) {
-          setStocks(
-            data.stocks.slice(0, 8).map((item: any, index: number) => ({
-              symbol: item.symbol ?? item.name ?? "",
-              company:
-                item.company ??
-                item.name ??
-                ["Apple Inc.", "Microsoft Corp.", "NVIDIA Corp.", "Alphabet Inc.", "Amazon.com Inc.", "Meta Platforms", "Tesla Inc.", "Berkshire Hathaway"][index] ??
-                "",
-              price: String(item.value ?? item.price ?? ""),
-              change: formatPercent(item.change),
-              volume: String(item.volume ?? ["78.4M", "21.2M", "143.8M", "19.6M", "32.1M", "15.9M", "88.5M", "4.2M"][index] ?? ""),
-              marketCap: String(item.marketCap ?? ["$3.52T", "$3.13T", "$2.16T", "$2.08T", "$1.97T", "$1.25T", "$791B", "$785B"][index] ?? ""),
-            }))
-          );
-        }
-
-        if (Array.isArray(data.crypto) && data.crypto.length) {
-          setCrypto(
-            data.crypto.slice(0, 6).map((item: any, index: number) => ({
-              symbol: item.symbol ?? item.name ?? "",
-              name: item.name ?? ["Bitcoin", "Ethereum", "Solana", "Binance Coin", "XRP", "Cardano"][index] ?? "",
-              price: String(item.value ?? item.price ?? ""),
-              change: formatPercent(item.change),
-              marketCap: String(item.marketCap ?? ["$1.32T", "$415B", "$78B", "$89B", "$34B", "$17B"][index] ?? ""),
-            }))
-          );
-        }
-      } catch (error) {
-        console.error("Markets data error:", error);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    loadMarketData();
-    const interval = window.setInterval(loadMarketData, 60000);
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(interval);
-    };
-  }, []);
-
-  function formatPercent(value: unknown) {
-    const parsed = Number.parseFloat(String(value ?? "").replace("%", ""));
-    if (!Number.isFinite(parsed)) return "0.00%";
-    return `${parsed >= 0 ? "+" : ""}${parsed.toFixed(2)}%`;
-  }
-
-  const isPositive = (value: string) => !value.trim().startsWith("-");
-
-  const Change = ({ value }: { value: string }) => (
-    <span
-      className={`inline-flex items-center gap-1 font-semibold ${
-        isPositive(value) ? "text-emerald-600" : "text-red-500"
-      }`}
-    >
-      {isPositive(value) ? "▲" : "▼"} {value}
-    </span>
-  );
-
-  const genericTable = marketTables[activeTab];
+  const showSnapshot =
+    activeTab === "Overview" || activeTab === "Regional Snapshot";
+  const showThemes =
+    activeTab === "Overview" || activeTab === "Market Themes";
+  const showStories =
+    activeTab === "Overview" || activeTab === "Market Stories";
 
   return (
     <main className="min-h-screen bg-white text-[#17140F]">
@@ -697,7 +613,7 @@ export function MarketsPage() {
             Markets Dashboard
           </h1>
           <p className="mt-1 text-[13px] text-[#777]">
-            Real-time market data, indices, commodities, forex, crypto and more.
+            Capital flows, earnings, rate expectations and the deals that moved global markets.
           </p>
         </header>
 
@@ -729,57 +645,70 @@ export function MarketsPage() {
 
         {/* Dashboard content */}
         <div className="pb-16 pt-5 sm:pt-6">
-          {(activeTab === "Overview" || activeTab === "Indices") && (
-            <section aria-labelledby="global-indices-heading">
-              <div className="mb-4 flex items-center justify-between">
-                <h2
-                  id="global-indices-heading"
-                  className="font-serif text-[18px] font-bold"
-                >
-                  Global Indices
-                </h2>
-                {loading && (
-                  <span className="text-[10px] uppercase tracking-[0.12em] text-[#999]">
-                    Updating
-                  </span>
-                )}
-              </div>
+          {/* ---------------- Regional Snapshot ---------------- */}
+          {showSnapshot && (
+            <section aria-labelledby="regional-snapshot-heading">
+              <h2
+                id="regional-snapshot-heading"
+                className="font-serif text-[18px] font-bold"
+              >
+                Market Snapshot
+              </h2>
+              <p className="mb-4 mt-1 text-[11px] text-[#777]">
+                Illustrative regional indicators.
+              </p>
 
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[620px] border-collapse text-left">
                   <thead>
                     <tr className="border-b border-black">
                       <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Index
+                        Region
                       </th>
                       <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Value
+                        Deal Value (US$ bn)
                       </th>
                       <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Change
+                        Earnings Growth
                       </th>
                       <th className="py-2 text-[10px] font-bold uppercase">
-                        YTD Return
+                        Hiring Outlook
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {indices.map((row) => (
+                    {regionalSnapshot.map((row) => (
                       <tr
-                        key={row.name}
+                        key={row.region}
                         className="border-b border-[#ececec] last:border-b-0"
                       >
                         <td className="py-2.5 pr-4 text-[11px] font-semibold">
-                          {row.name}
-                        </td>
-                        <td className="py-2.5 pr-4 font-mono text-[11px] text-[#555]">
-                          {row.value}
+                          {row.region}
                         </td>
                         <td className="py-2.5 pr-4 text-[11px]">
-                          <Change value={row.change} />
+                          <div className="flex items-center gap-3">
+                            <span className="w-10 font-mono font-bold text-[#555]">
+                              {row.dealValue.toFixed(1)}
+                            </span>
+                            <span className="h-1.5 w-28 overflow-hidden rounded-full bg-[#f0f0f0]">
+                              <span
+                                className="block h-full rounded-full bg-[#d71920]"
+                                style={{
+                                  width: `${(row.dealValue / maxDealValue) * 100}%`,
+                                }}
+                              />
+                            </span>
+                          </div>
                         </td>
-                        <td className="py-2.5 text-[11px] font-semibold text-emerald-600">
-                          {row.ytd}
+                        <td className="py-2.5 pr-4 text-[11px] font-semibold text-emerald-600">
+                          ▲ {row.earningsGrowth.toFixed(1)}%
+                        </td>
+                        <td className="py-2.5 text-[11px]">
+                          <span
+                            className={`inline-flex rounded-[3px] px-2 py-0.5 text-[10px] font-bold ${hiringBadge[row.hiringOutlook]}`}
+                          >
+                            {row.hiringOutlook}
+                          </span>
                         </td>
                       </tr>
                     ))}
@@ -789,65 +718,55 @@ export function MarketsPage() {
             </section>
           )}
 
-          {(activeTab === "Overview" || activeTab === "Stocks") && (
+          {/* ---------------- Market Themes ---------------- */}
+          {showThemes && (
             <section
-              aria-labelledby="top-stocks-heading"
-              className="mt-7 sm:mt-8"
+              aria-labelledby="market-themes-heading"
+              className={showSnapshot ? "mt-7 sm:mt-8" : ""}
             >
               <h2
-                id="top-stocks-heading"
-                className="mb-4 font-serif text-[18px] font-bold"
+                id="market-themes-heading"
+                className="font-serif text-[18px] font-bold"
               >
-                Top Stocks
+                Markets &amp; Finance: Section at a Glance
               </h2>
+              <p className="mb-4 mt-1 text-[11px] text-[#777]">
+                Capital flows, earnings, rate expectations and the deals that moved global markets.
+              </p>
 
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[760px] border-collapse text-left">
+                <table className="w-full min-w-[520px] border-collapse text-left">
                   <thead>
                     <tr className="border-b border-black">
-                      <th className="py-2 pr-3 text-[10px] font-bold uppercase">
-                        Symbol
+                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
+                        Theme
                       </th>
-                      <th className="py-2 pr-3 text-[10px] font-bold uppercase">
-                        Company
-                      </th>
-                      <th className="py-2 pr-3 text-[10px] font-bold uppercase">
-                        Price
-                      </th>
-                      <th className="py-2 pr-3 text-[10px] font-bold uppercase">
-                        Change
-                      </th>
-                      <th className="py-2 pr-3 text-[10px] font-bold uppercase">
-                        Volume
+                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
+                        Momentum
                       </th>
                       <th className="py-2 text-[10px] font-bold uppercase">
-                        Mkt Cap
+                        Outlook
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {stocks.map((row) => (
+                    {marketThemes.map((row) => (
                       <tr
-                        key={row.symbol}
+                        key={row.theme}
                         className="border-b border-[#ececec] last:border-b-0"
                       >
-                        <td className="py-2.5 pr-3 text-[11px] font-bold text-[#d71920]">
-                          {row.symbol}
+                        <td className="py-2.5 pr-4 text-[11px] font-semibold">
+                          {row.theme}
                         </td>
-                        <td className="py-2.5 pr-3 text-[11px] font-medium">
-                          {row.company}
+                        <td className="py-2.5 pr-4 text-[11px] text-[#555]">
+                          {row.momentum}
                         </td>
-                        <td className="py-2.5 pr-3 font-mono text-[11px] font-bold">
-                          {row.price}
-                        </td>
-                        <td className="py-2.5 pr-3 text-[11px]">
-                          <Change value={row.change} />
-                        </td>
-                        <td className="py-2.5 pr-3 text-[11px] text-[#666]">
-                          {row.volume}
-                        </td>
-                        <td className="py-2.5 text-[11px] font-bold">
-                          {row.marketCap}
+                        <td className="py-2.5 text-[11px]">
+                          <span
+                            className={`inline-flex rounded-[3px] px-2 py-0.5 text-[10px] font-bold ${outlookBadge[row.outlook]}`}
+                          >
+                            {row.outlook}
+                          </span>
                         </td>
                       </tr>
                     ))}
@@ -857,99 +776,80 @@ export function MarketsPage() {
             </section>
           )}
 
-          {(activeTab === "Overview" || activeTab === "Crypto") && (
+          {/* ---------------- Market Stories ---------------- */}
+          {showStories && (
             <section
-              aria-labelledby="crypto-heading"
-              className="mt-7 sm:mt-8"
+              aria-labelledby="market-stories-heading"
+              className={
+                showSnapshot || showThemes ? "mt-7 sm:mt-8" : ""
+              }
             >
               <h2
-                id="crypto-heading"
+                id="market-stories-heading"
                 className="mb-4 font-serif text-[18px] font-bold"
               >
-                Cryptocurrency
+                Markets &amp; Finance Stories
               </h2>
 
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {crypto.map((coin) => (
+              <div className="grid gap-4 md:grid-cols-2">
+                {marketStories.map((story) => (
                   <article
-                    key={coin.symbol}
-                    className="rounded-[7px] border border-[#dedede] bg-white p-3.5"
+                    key={story.id}
+                    className="flex flex-col rounded-[7px] border border-[#dedede] bg-white p-4"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-[13px] font-bold">{coin.symbol}</div>
-                        <div className="mt-1 text-[10px] text-[#777]">
-                          {coin.name}
-                        </div>
-                      </div>
-                      <Change value={coin.change} />
+                    <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#d71920]">
+                      {story.city} &nbsp;|&nbsp; Markets &amp; Finance
                     </div>
 
-                    <div className="mt-2.5 font-mono text-[18px] font-bold tracking-tight">
-                      {coin.price}
-                    </div>
+                    <h3 className="mt-2 font-serif text-[16px] font-bold leading-snug">
+                      {story.headline}
+                    </h3>
 
-                    <div className="mt-1 text-[10px] text-[#999]">
-                      Mkt Cap: {coin.marketCap}
-                    </div>
+                    <p className="mt-2 text-[12px] font-semibold leading-relaxed text-[#444]">
+                      {story.summary}
+                    </p>
+
+                    <p className="mt-2 text-[10px] text-[#999]">
+                      By {story.author}
+                    </p>
+
+                    <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 border-t border-[#ececec] pt-3 text-[11px]">
+                      <dt className="font-bold uppercase text-[10px] text-[#999]">
+                        Company
+                      </dt>
+                      <dd className="font-semibold">{story.facts.company}</dd>
+
+                      <dt className="font-bold uppercase text-[10px] text-[#999]">
+                        HQ / Focus
+                      </dt>
+                      <dd>{story.facts.focus}</dd>
+
+                      <dt className="font-bold uppercase text-[10px] text-[#999]">
+                        Est. Value
+                      </dt>
+                      <dd className="font-mono font-bold">
+                        {story.facts.value}
+                      </dd>
+
+                      <dt className="font-bold uppercase text-[10px] text-[#999]">
+                        Sector
+                      </dt>
+                      <dd>{story.facts.sector}</dd>
+
+                      <dt className="font-bold uppercase text-[10px] text-[#999]">
+                        Analyst View
+                      </dt>
+                      <dd>{story.facts.analyst}</dd>
+                    </dl>
                   </article>
                 ))}
               </div>
             </section>
           )}
 
-          {/* Commodities, Forex, Mutual Funds, ETFs, Government Bonds, Global Markets
-              — all rendered from the generic marketTables config above. */}
-          {genericTable && (
-            <section aria-labelledby="generic-table-heading">
-              <h2
-                id="generic-table-heading"
-                className="mb-4 font-serif text-[18px] font-bold"
-              >
-                {genericTable.title}
-              </h2>
-
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[620px] border-collapse text-left">
-                  <thead>
-                    <tr className="border-b border-black">
-                      {genericTable.columns.map((col) => (
-                        <th
-                          key={col}
-                          className="py-2 pr-4 text-[10px] font-bold uppercase"
-                        >
-                          {col}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {genericTable.rows.map((row) => (
-                      <tr
-                        key={row[0]}
-                        className="border-b border-[#ececec] last:border-b-0"
-                      >
-                        {row.map((cell, i) => (
-                          <td
-                            key={i}
-                            className={`py-2.5 pr-4 text-[11px] ${
-                              i === 0 ? "font-semibold" : "font-mono text-[#555]"
-                            }`}
-                          >
-                            {/^[+-]\d/.test(cell) ? <Change value={cell} /> : cell}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <p className="mt-3 text-[10px] text-[#999]">
-                Sample data for display purposes only.
-              </p>
-            </section>
-          )}
+          <p className="mt-6 text-[10px] text-[#999]">
+            Illustrative data for display purposes only.
+          </p>
         </div>
       </div>
       <PrideTimesAd variant="first" />
