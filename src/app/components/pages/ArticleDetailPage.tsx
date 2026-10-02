@@ -1,5 +1,6 @@
+
 import { Fragment, useEffect } from "react";
-import { Link, useParams } from "react-router";
+import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, Quote, Share2 } from "lucide-react";
 
 import {
@@ -29,6 +30,11 @@ import {
   specialArticles,
   type SpecialArticle,
 } from "../../data/specialArticleData";
+
+/* Mergers & Acquisitions article lookup */
+import {
+  getMAArticleBySlug,
+} from "../../data/mergersAcquisitionsData";
 
 type EditorialArticle = BusinessArticle | TechnologyArticle;
 
@@ -205,7 +211,6 @@ function formatBlogTitle(title: string, category: string) {
         ? category.toLowerCase()
         : "the wider market";
 
-    /* "Materials" -> "Materials'" rather than "Materials's" */
     const possessive = /s$/i.test(company)
       ? `${company}'`
       : `${company}'s`;
@@ -450,7 +455,6 @@ function BlogBody({
 
 /* =========================================================
    KEY FACTS ("AT A GLANCE")
-   Text only — no images.
 ========================================================= */
 
 function KeyFacts({
@@ -622,7 +626,6 @@ function ShareAndBack({
 
 /* =========================================================
    RELATED POSTS
-   Text-only cards: no article thumbnails.
 ========================================================= */
 
 function RelatedPosts<
@@ -966,8 +969,6 @@ function backToLabel(path: string) {
 
 /* =========================================================
    BUSINESS / TECHNOLOGY BLOGS
-   Inner article pages never render images — the `image`
-   field in the data is used by listing pages only.
 ========================================================= */
 
 function MagazineBlog({
@@ -987,7 +988,6 @@ function MagazineBlog({
         (article as TechnologyArticle).publishedAt
       );
 
-  /* Technology posts can carry a read time and key facts. */
   const readTime = isBusiness
     ? undefined
     : (article as TechnologyArticle).readTime;
@@ -1109,13 +1109,13 @@ export function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
 
   /*
-   * IMPORTANT FIX:
-   * React Router can reuse this component when a related
-   * article is clicked. The browser may otherwise retain
-   * the previous article's scroll position.
+   * SCROLL-TO-TOP FIX
    *
-   * This effect runs every time the article ID changes,
-   * ensuring that the newly opened article starts at the top.
+   * When a user clicks a related article, React Router may
+   * reuse this component instead of mounting a new instance.
+   *
+   * This effect resets the scroll position whenever the
+   * article ID changes.
    */
   useEffect(() => {
     window.scrollTo({
@@ -1125,18 +1125,42 @@ export function ArticleDetailPage() {
     });
   }, [id]);
 
+  /*
+   * MERGERS & ACQUISITIONS INTEGRATION
+   *
+   * Check whether this article ID belongs to the M&A data.
+   *
+   * If it does, redirect to the dedicated M&A article page.
+   * The dedicated page is responsible for rendering the
+   * M&A article design and content.
+   *
+   * This allows M&A articles to open correctly even when
+   * their links use the general /article/:id route.
+   */
+  if (id && getMAArticleBySlug(id)) {
+    return (
+      <Navigate
+        to={`/mergers-acquisitions/${id}`}
+        replace
+      />
+    );
+  }
+
+  /* SPECIAL ARTICLES */
   const specialArticle = getSpecialArticleById(id);
 
   if (specialArticle) {
     return <SpecialBlog article={specialArticle} />;
   }
 
+  /* HOMEPAGE ARTICLES */
   const homepageArticle = getHomepageArticleBySlug(id);
 
   if (homepageArticle) {
     return <HomepageBlog article={homepageArticle} />;
   }
 
+  /* BUSINESS ARTICLES */
   const businessArticle = getBusinessArticleById(id);
 
   if (businessArticle) {
@@ -1148,6 +1172,7 @@ export function ArticleDetailPage() {
     );
   }
 
+  /* TECHNOLOGY ARTICLES */
   const technologyArticle = getTechnologyArticleById(id);
 
   if (technologyArticle) {
@@ -1159,6 +1184,7 @@ export function ArticleDetailPage() {
     );
   }
 
+  /* ARTICLE NOT FOUND */
   return (
     <div className="mx-auto max-w-3xl px-4 py-24 text-center antialiased sm:px-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
