@@ -366,7 +366,7 @@ export function MarketsTicker() {
                     {column.title}
                   </h4>
 
-                  <ul className="flex flex-col gap-2">
+                  <ul className="pt-mega-menu-list">
                     {column.links.map((link) => (
                       <li key={link.label}>
                         <Link to={link.path} onClick={closeMenu}>
