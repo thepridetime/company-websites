@@ -1,4 +1,3 @@
-
 import { Fragment, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, Quote, Share2 } from "lucide-react";
@@ -131,6 +130,9 @@ function getSectionPath(section: string) {
     case "Energy":
       return "/energy";
 
+    case "Markets":
+      return "/markets";
+
     case "Startup Success":
       return "/startup-success";
 
@@ -170,6 +172,9 @@ function getSectionName(section: string) {
 
     case "Energy":
       return "Energy";
+
+    case "Markets":
+      return "Markets";
 
     default:
       return "CEO Spotlight";
