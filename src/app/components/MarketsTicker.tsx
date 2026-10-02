@@ -1,4 +1,3 @@
-
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import {
@@ -9,7 +8,7 @@ import {
 } from "lucide-react";
 
 import { getQuotes } from "../../services/marketApi";
-import { specialArticles } from "../../data/specialArticleData";
+import { specialArticles } from "../data/specialArticleData";
 
 // Markets articles are maintained in the shared specialArticle.ts data file.
 const marketArticles = specialArticles.filter(
@@ -802,4 +801,3 @@ export function MarketsPage() {
     </main>
   );
 }
-
