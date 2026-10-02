@@ -19,6 +19,7 @@ import {
   getTechnologyArticleById,
   getRelatedTechnologyArticles,
   type TechnologyArticle,
+  type TechnologyKeyFact,
   technologyArticlePath,
 } from "../../data/technologyNewsData";
 
@@ -204,7 +205,12 @@ function formatBlogTitle(title: string, category: string) {
         ? category.toLowerCase()
         : "the wider market";
 
-    return `What ${company}'s ${development} means for ${context}`;
+    /* "Materials" -> "Materials'" rather than "Materials's" */
+    const possessive = /s$/i.test(company)
+      ? `${company}'`
+      : `${company}'s`;
+
+    return `What ${possessive} ${development} means for ${context}`;
   }
 
   if (
@@ -439,6 +445,48 @@ function BlogBody({
         </Fragment>
       ))}
     </div>
+  );
+}
+
+/* =========================================================
+   KEY FACTS ("AT A GLANCE")
+   Text only — no images.
+========================================================= */
+
+function KeyFacts({
+  facts,
+}: {
+  facts: TechnologyKeyFact[];
+}) {
+  if (!facts?.length) return null;
+
+  return (
+    <section className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+        At a glance
+      </p>
+
+      <h2 className="mt-2 font-serif text-2xl font-bold text-slate-950">
+        The details behind the story
+      </h2>
+
+      <dl className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+        {facts.map((fact) => (
+          <div
+            key={fact.label}
+            className="min-w-0 border-t border-slate-200 pt-3"
+          >
+            <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+              {fact.label}
+            </dt>
+
+            <dd className="mt-1 break-words text-sm font-semibold text-slate-800">
+              {fact.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   );
 }
 
@@ -918,6 +966,8 @@ function backToLabel(path: string) {
 
 /* =========================================================
    BUSINESS / TECHNOLOGY BLOGS
+   Inner article pages never render images — the `image`
+   field in the data is used by listing pages only.
 ========================================================= */
 
 function MagazineBlog({
@@ -936,6 +986,15 @@ function MagazineBlog({
     : formatIsoDate(
         (article as TechnologyArticle).publishedAt
       );
+
+  /* Technology posts can carry a read time and key facts. */
+  const readTime = isBusiness
+    ? undefined
+    : (article as TechnologyArticle).readTime;
+
+  const keyFacts = isBusiness
+    ? undefined
+    : (article as TechnologyArticle).keyFacts;
 
   const related = isBusiness
     ? getRelatedBusinessArticles(
@@ -998,6 +1057,7 @@ function MagazineBlog({
           <BlogMeta
             author={article.author}
             date={dateLabel}
+            readTime={readTime}
           />
         </header>
 
@@ -1014,6 +1074,8 @@ function MagazineBlog({
                 second: "8042854193",
               }}
             />
+
+            {keyFacts && <KeyFacts facts={keyFacts} />}
 
             <ShareAndBack
               to={backTo}
