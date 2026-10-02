@@ -9,7 +9,12 @@ import {
 import { getQuotes } from "../../../services/marketApi";
 
 import { PrideTimesAd } from "../AdSenseSlots";
-import { marketArticles } from "../../data/marketArticleData";
+import { specialArticles } from "../../data/specialArticle";
+
+// Markets articles are maintained in the shared specialArticle.ts data file.
+const marketArticles = specialArticles.filter(
+  (article) => article.section === "Markets"
+);
 
 interface TickerCard {
   symbol: string;
