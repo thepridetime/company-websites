@@ -7,7 +7,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { getQuotes } from "../../services/marketApi";
+
+import { getQuotes } from "../../../services/marketApi";
 
 interface TickerCard {
   symbol: string;
@@ -15,6 +16,7 @@ interface TickerCard {
   change: number;
 }
 
+/* Parse market percentage change safely. */
 function parseChange(value: unknown): number | null {
   const parsed = Number.parseFloat(
     String(value ?? "").replace("%", "")
@@ -23,68 +25,25 @@ function parseChange(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-/* =========================================================
-   MARKETS TAB LINK HELPER
-   Builds /markets?tab=<Tab>
-========================================================= */
-
-const marketTab = (tab: string) =>
-  `/markets?tab=${encodeURIComponent(tab)}`;
-
-/* =========================================================
-   MEGA MENU COLUMNS
-   Only Markets, Industries and More sections
-========================================================= */
-
-const megaMenuColumns = [
+/* Markets page tabs */
+const marketTabs = [
   {
-    title: "Markets",
-    links: [
-      { label: "Stocks", path: marketTab("Stocks") },
-      { label: "Indices", path: marketTab("Indices") },
-      { label: "Commodities", path: marketTab("Commodities") },
-      { label: "Forex", path: marketTab("Forex") },
-      { label: "Crypto", path: marketTab("Crypto") },
-      { label: "Mutual Funds", path: marketTab("Mutual Funds") },
-      { label: "ETFs", path: marketTab("ETFs") },
-      {
-        label: "Government Bonds",
-        path: marketTab("Government Bonds"),
-      },
-      {
-        label: "Global Markets",
-        path: marketTab("Global Markets"),
-      },
-    ],
+    label: "Overview",
+    path: "/markets",
   },
   {
-    title: "Industries",
-    links: [
-      { label: "Technology", path: "/technology" },
-      { label: "Cybersecurity", path: "/cybersecurity" },
-      { label: "Energy", path: "/energy" },
-      { label: "Healthcare", path: "/healthcare" },
-      { label: "Manufacturing", path: "/manufacturing" },
-      { label: "Smart Cities", path: "/smart-cities" },
-      { label: "Supply Chain", path: "/supply-chain" },
-    ],
+    label: "Regional Snapshot",
+    path: "/markets?tab=Regional%20Snapshot",
   },
   {
-    title: "More",
-    links: [
-      { label: "Business News", path: "/business-news" },
-      { label: "CEO Spotlight", path: "/ceospotlight" },
-      { label: "Innovation", path: "/innovation" },
-      { label: "Cover Stories", path: "/cover-stories" },
-      { label: "White House Watch", path: "/white-house-watch" },
-      { label: "World & Geopolitics", path: "/world" },
-    ],
+    label: "Market Themes",
+    path: "/markets?tab=Market%20Themes",
+  },
+  {
+    label: "Market Stories",
+    path: "/markets?tab=Market%20Stories",
   },
 ];
-
-/* =========================================================
-   MARKETS TICKER
-========================================================= */
 
 export function MarketsTicker() {
   const [cards, setCards] = useState<TickerCard[]>([]);
@@ -95,9 +54,9 @@ export function MarketsTicker() {
   const isPausedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
 
-  /* =======================================================
-     LOAD MARKET DATA
-  ======================================================= */
+  /* -----------------------------------------
+     Fetch live market ticker data
+  ----------------------------------------- */
 
   useEffect(() => {
     let isMounted = true;
@@ -106,7 +65,7 @@ export function MarketsTicker() {
       try {
         const data = await getQuotes();
 
-        const tickerData: (TickerCard | null)[] = [
+        const tickerData: TickerCard[] = [
           ...(data.usIndices ?? []).map((item: any) => ({
             symbol: item.name,
             value: item.value,
@@ -138,20 +97,16 @@ export function MarketsTicker() {
           })),
         ].filter(
           (item): item is TickerCard =>
-            item !== null &&
             item.change !== null &&
-            Boolean(item.symbol) &&
-            Boolean(item.value)
+            item.symbol !== undefined &&
+            item.value !== undefined
         );
 
         if (isMounted) {
           setCards(tickerData);
         }
       } catch (error) {
-        console.error(
-          "Failed to load market ticker data:",
-          error
-        );
+        console.error("Failed to load market ticker data:", error);
       }
     };
 
@@ -165,9 +120,9 @@ export function MarketsTicker() {
     };
   }, []);
 
-  /* =======================================================
-     AUTO-CLOSE MEGA MENU
-  ======================================================= */
+  /* -----------------------------------------
+     Automatically close the menu
+  ----------------------------------------- */
 
   useEffect(() => {
     if (!showSecurities) return;
@@ -179,17 +134,17 @@ export function MarketsTicker() {
     return () => window.clearTimeout(timer);
   }, [showSecurities]);
 
-  /* =======================================================
-     MANUAL TICKER SCROLL
-  ======================================================= */
+  /* -----------------------------------------
+     Manual ticker scrolling
+  ----------------------------------------- */
 
   const scrollByAmount = (direction: "left" | "right") => {
-    const el = trackRef.current;
+    const element = trackRef.current;
 
-    if (!el) return;
+    if (!element) return;
 
     const amount = (172 + 16) * 2;
-    const halfway = el.scrollWidth / 2;
+    const halfway = element.scrollWidth / 2;
 
     if (halfway <= 0) return;
 
@@ -204,19 +159,19 @@ export function MarketsTicker() {
       offsetRef.current -= halfway;
     }
 
-    el.style.transition = "transform 0.4s ease";
-    el.style.transform = `translateX(-${offsetRef.current}px)`;
+    element.style.transition = "transform 0.4s ease";
+    element.style.transform = `translateX(-${offsetRef.current}px)`;
 
     window.setTimeout(() => {
-      if (el) {
-        el.style.transition = "none";
+      if (element) {
+        element.style.transition = "none";
       }
     }, 400);
   };
 
-  /* =======================================================
-     CONTINUOUS AUTO-SCROLL
-  ======================================================= */
+  /* -----------------------------------------
+     Continuous ticker auto-scroll
+  ----------------------------------------- */
 
   useEffect(() => {
     if (cards.length === 0) return;
@@ -224,10 +179,10 @@ export function MarketsTicker() {
     const speed = 0.5;
 
     const step = () => {
-      const el = trackRef.current;
+      const element = trackRef.current;
 
-      if (el && !isPausedRef.current) {
-        const halfway = el.scrollWidth / 2;
+      if (element && !isPausedRef.current) {
+        const halfway = element.scrollWidth / 2;
 
         if (halfway > 0) {
           offsetRef.current += speed;
@@ -236,7 +191,8 @@ export function MarketsTicker() {
             offsetRef.current -= halfway;
           }
 
-          el.style.transform = `translateX(-${offsetRef.current}px)`;
+          element.style.transform =
+            `translateX(-${offsetRef.current}px)`;
         }
       }
 
@@ -253,10 +209,6 @@ export function MarketsTicker() {
     };
   }, [cards]);
 
-  /* =======================================================
-     PAUSE / RESUME
-  ======================================================= */
-
   const pauseAutoScroll = () => {
     isPausedRef.current = true;
   };
@@ -265,15 +217,15 @@ export function MarketsTicker() {
     isPausedRef.current = false;
   };
 
-  /* =======================================================
-     RENDER
-  ======================================================= */
+  const closeMenu = () => {
+    setShowSecurities(false);
+  };
 
   return (
     <div className="pt-securities-bar relative w-full">
       <div className="pt-container flex items-stretch">
 
-        {/* MENU BUTTON */}
+        {/* Markets menu trigger */}
 
         <div className="relative flex flex-shrink-0 items-center">
           <button
@@ -281,9 +233,9 @@ export function MarketsTicker() {
             onClick={() =>
               setShowSecurities((previous) => !previous)
             }
-            aria-label="Top Securities menu"
+            aria-label="Markets navigation menu"
             aria-expanded={showSecurities}
-            aria-haspopup="true"
+            aria-controls="pt-markets-menu"
             style={{
               width: "95px",
               height: "40px",
@@ -326,15 +278,13 @@ export function MarketsTicker() {
           </button>
         </div>
 
-        {/* MARKET TICKER */}
+        {/* Live market ticker */}
 
         <div
           className="relative flex min-w-0 flex-1 items-center gap-2 pl-3"
           onMouseEnter={pauseAutoScroll}
           onMouseLeave={resumeAutoScroll}
         >
-          {/* LEFT ARROW */}
-
           <button
             type="button"
             className="pt-securities-scroll-arrow hidden items-center justify-center sm:flex"
@@ -342,12 +292,10 @@ export function MarketsTicker() {
               pauseAutoScroll();
               scrollByAmount("left");
             }}
-            aria-label="Scroll left"
+            aria-label="Scroll market ticker left"
           >
             <ChevronLeft size={16} />
           </button>
-
-          {/* TICKER TRACK */}
 
           <div
             className="flex-1 overflow-hidden py-2"
@@ -392,8 +340,6 @@ export function MarketsTicker() {
             </div>
           </div>
 
-          {/* RIGHT ARROW */}
-
           <button
             type="button"
             className="pt-securities-scroll-arrow hidden items-center justify-center sm:flex"
@@ -401,82 +347,45 @@ export function MarketsTicker() {
               pauseAutoScroll();
               scrollByAmount("right");
             }}
-            aria-label="Scroll right"
+            aria-label="Scroll market ticker right"
           >
             <ChevronRight size={16} />
           </button>
         </div>
       </div>
 
-      {/* =====================================================
-          MEGA MENU
-          Three equal-width columns with uniform spacing
-      ===================================================== */}
+      {/* -----------------------------------------
+          MARKETS MEGA MENU
+          Only the four MarketsPage sections
+      ----------------------------------------- */}
 
       {showSecurities && (
-        <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
+        <div
+          id="pt-markets-menu"
+          className="pt-mega-menu absolute inset-x-0 top-full z-50"
+        >
           <div className="pt-container">
+            <div className="pt-mega-menu-inner">
 
-            {/* THREE COLUMN LAYOUT */}
+              <div>
+                <h4 className="pt-mega-menu-heading">
+                  Markets Dashboard
+                </h4>
 
-            <div className="grid grid-cols-1 gap-8 py-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12">
-              {megaMenuColumns.map((column) => (
-                <div
-                  key={column.title}
-                  className="min-w-0"
-                >
-                  <h4 className="pt-mega-menu-heading mb-5">
-                    {column.title}
-                  </h4>
+                <ul className="flex flex-col gap-2">
+                  {marketTabs.map((tab) => (
+                    <li key={tab.label}>
+                      <Link
+                        to={tab.path}
+                        onClick={closeMenu}
+                      >
+                        {tab.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-                  <ul className="flex flex-col gap-3">
-                    {column.links.map((link) => (
-                      <li key={link.label}>
-                        <Link
-                          to={link.path}
-                          onClick={() =>
-                            setShowSecurities(false)
-                          }
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            {/* UTILITY LINKS */}
-
-            <div className="pt-mega-menu-utility flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-gray-200 py-5">
-              <Link
-                to="/signup"
-                onClick={() => setShowSecurities(false)}
-              >
-                Sign Up
-              </Link>
-
-              <Link
-                to="/magazine"
-                onClick={() => setShowSecurities(false)}
-              >
-                Digital Edition
-              </Link>
-
-              <Link
-                to="/Privacy"
-                onClick={() => setShowSecurities(false)}
-              >
-                Privacy Policy
-              </Link>
-
-              <Link
-                to="/terms"
-                onClick={() => setShowSecurities(false)}
-              >
-                Terms of Use
-              </Link>
             </div>
           </div>
         </div>
@@ -484,3 +393,4 @@ export function MarketsTicker() {
     </div>
   );
 }
+
