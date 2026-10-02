@@ -916,7 +916,7 @@ footer .pt-logo-accent {
 
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 
-  padding: 24px 0 18px;
+  padding: 32px 0 24px;
 
   /* More links were added over time (Markets, More columns), so
      the panel can now be taller than the viewport on shorter
@@ -928,33 +928,54 @@ footer .pt-logo-accent {
 
 .pt-mega-menu-inner {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 36px;
-  row-gap: 20px;
+  /* Three sections (Markets / Industries / More) -> three equal
+     columns. The old repeat(4, 1fr) left an empty fourth column and
+     squeezed the content to the left. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 64px;
+  row-gap: 32px;
+  align-items: start;
 }
 
+@media (max-width: 1024px) {
+  .pt-mega-menu-inner {
+    column-gap: 40px;
+  }
+}
+
+/* 3 columns would leave an orphan on a 2-column grid, so stack
+   them in a single column on tablets/phones. */
 @media (max-width: 768px) {
   .pt-mega-menu-inner {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    row-gap: 28px;
   }
 }
 
 .pt-mega-menu-heading {
   color: var(--pt-red);
-
   font-size: 13px;
-
   font-weight: 700;
-
   letter-spacing: 0.06em;
-
   text-transform: uppercase;
-
-  margin-bottom: 12px;
-
-  padding-bottom: 7px;
-
+  margin-bottom: 14px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #232323;
+}
+
+.pt-mega-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pt-mega-menu-list a {
+  display: block;
+  padding: 6px 0;
+  line-height: 1.4;
 }
 
 .pt-mega-menu a {
@@ -972,8 +993,8 @@ footer .pt-logo-accent {
 }
 
 .pt-mega-menu-utility {
-  margin-top: 18px;
-  padding-top: 14px;
+  margin-top: 28px;
+  padding-top: 18px;
   border-top: 1px solid #232323;
 
   display: flex;
