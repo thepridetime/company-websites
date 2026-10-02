@@ -12,6 +12,24 @@ import {
 } from "../../data/businessNewsData";
 
 /* =========================================================
+   NEW IMAGES (company-websites/src/imports)
+========================================================= */
+import businessStockDrop from "../../imports/business-stock-drop.png";
+import businessAviationJet from "../../imports/business-aviation-jet.png";
+import businessJioDigital from "../../imports/business-jio-digital.png";
+import businessGoldmanNyse from "../../imports/business-goldman-nyse.png";
+
+// Hero image
+const heroImage = businessStockDrop;
+
+// "More Stories" sidebar images (in order of the 3 stories)
+const moreStoryImages = [
+  businessAviationJet,
+  businessJioDigital,
+  businessGoldmanNyse,
+];
+
+/* =========================================================
    SECTION HEADER
 ========================================================= */
 
@@ -96,17 +114,19 @@ function MoreStories({
       </div>
 
       <div className="divide-y divide-gray-200">
-        {stories.slice(0, 3).map((story) => (
+        {stories.slice(0, 3).map((story, index) => (
           <Link
             key={story.id}
             to={`/article/${story.id}`}
             className="group block py-3"
           >
             <div className="flex gap-3">
-              <div className="flex h-[48px] w-[68px] shrink-0 items-center justify-center rounded-sm bg-gray-100">
-                <span className="text-[9px] font-bold uppercase text-gray-400">
-                  News
-                </span>
+              <div className="flex h-[48px] w-[68px] shrink-0 items-center justify-center overflow-hidden rounded-sm bg-gray-100">
+                <ImageWithFallback
+                  src={moreStoryImages[index]}
+                  alt={story.title}
+                  className="h-full w-full object-cover"
+                />
               </div>
 
               <div className="min-w-0">
@@ -227,7 +247,7 @@ export function BusinessNewsPage() {
 
             <div className="relative overflow-hidden rounded-md">
               <ImageWithFallback
-                src={hero.image}
+                src={heroImage}
                 alt={hero.title}
                 className="h-[240px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[320px] md:h-[390px] lg:h-[420px]"
               />
