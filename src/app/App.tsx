@@ -1,5 +1,7 @@
+
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
+
 import { AuthProvider } from "./context/AuthContext";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
@@ -37,7 +39,16 @@ import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
 import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
 import { AboutUsPage } from "./components/pages/AboutUsPage";
-//import AdSlot from "./components/AdSlot";
+
+// ============================================================
+// MERGERS & ACQUISITIONS
+// Separate editorial section with its own article routes.
+// ============================================================
+
+import {
+  MergersAcquisitionsPage,
+  MergersAcquisitionsArticlePage,
+} from "./components/pages/MergersAcquisitionsPage";
 
 // ============================================================
 // LEGAL / SYSTEM PAGES
@@ -59,7 +70,6 @@ import { DashboardPage } from "./components/auth/DashboardPage";
 
 // ============================================================
 // MAGAZINE LAYOUT
-// Ads are disabled throughout the website.
 // ============================================================
 
 interface MagazineLayoutProps {
@@ -68,37 +78,6 @@ interface MagazineLayoutProps {
   showRightSidebar?: boolean;
   topBanner?: boolean;
 }
-
-//function MagazineLayout({
-  //children,
-  //showLeftSidebar = false,
- //showRightSidebar = false,
-  //topBanner = false,
-//}: //MagazineLayoutProps) {
- // return (
-    //<div className="min-h-screen bg-white flex flex-col">
-
-      //{/* Website Header */}
-     // <Header />
-
-      //{/* Market ticker */}
-      //<MarketsTicker />
-
-      //{/* Main page content */}
-      //<PageLayout
-        //showLeftSidebar={showLeftSidebar}
-        //showRightSidebar={showRightSidebar}
-        //topBanner={topBanner}
-      //>
-       // {children}
-      //</PageLayout>
-
-     // {/* Website Footer */}
-      //<Footer />
-
-    //</div>
-  //);
-//}
 
 function MagazineLayout({
   children,
@@ -109,6 +88,7 @@ function MagazineLayout({
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
+
       <MarketsTicker />
 
       <PageLayout
@@ -123,6 +103,7 @@ function MagazineLayout({
     </div>
   );
 }
+
 // ============================================================
 // APPLICATION
 // ============================================================
@@ -137,20 +118,11 @@ export default function App() {
               AUTH / STANDALONE PAGES
               ================================================== */}
 
-          <Route
-            path="/login"
-            element={<LoginPage />}
-          />
+          <Route path="/login" element={<LoginPage />} />
 
-          <Route
-            path="/signup"
-            element={<SignUpPage />}
-          />
+          <Route path="/signup" element={<SignUpPage />} />
 
-          <Route
-            path="/dashboard"
-            element={<DashboardPage />}
-          />
+          <Route path="/dashboard" element={<DashboardPage />} />
 
           <Route
             path="/reset-password"
@@ -161,20 +133,11 @@ export default function App() {
               LEGAL PAGES
               ================================================== */}
 
-          <Route
-            path="/privacy"
-            element={<Privacy />}
-          />
+          <Route path="/privacy" element={<Privacy />} />
 
-          <Route
-            path="/terms"
-            element={<Terms />}
-          />
+          <Route path="/terms" element={<Terms />} />
 
-          <Route
-            path="/cookiepolicy"
-            element={<CookiePolicy />}
-          />
+          <Route path="/cookiepolicy" element={<CookiePolicy />} />
 
           <Route
             path="/accessibility"
@@ -188,11 +151,7 @@ export default function App() {
           <Route
             path="/"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <HomePage />
               </MagazineLayout>
             }
@@ -205,11 +164,7 @@ export default function App() {
           <Route
             path="/technology"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <TechnologyPage />
               </MagazineLayout>
             }
@@ -218,11 +173,7 @@ export default function App() {
           <Route
             path="/finance"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <FinancePage />
               </MagazineLayout>
             }
@@ -231,11 +182,7 @@ export default function App() {
           <Route
             path="/billionaires"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <BillionairesPage />
               </MagazineLayout>
             }
@@ -244,11 +191,7 @@ export default function App() {
           <Route
             path="/world"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <WorldPage />
               </MagazineLayout>
             }
@@ -257,11 +200,7 @@ export default function App() {
           <Route
             path="/international-news"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <InternationalNewsPage />
               </MagazineLayout>
             }
@@ -270,11 +209,7 @@ export default function App() {
           <Route
             path="/startup-success"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <StartupSuccessPage />
               </MagazineLayout>
             }
@@ -287,11 +222,7 @@ export default function App() {
           <Route
             path="/cybersecurity"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <CybersecurityPage />
               </MagazineLayout>
             }
@@ -300,11 +231,7 @@ export default function App() {
           <Route
             path="/energy"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <EnergyPage />
               </MagazineLayout>
             }
@@ -313,11 +240,7 @@ export default function App() {
           <Route
             path="/healthcare"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <HealthcarePage />
               </MagazineLayout>
             }
@@ -326,11 +249,7 @@ export default function App() {
           <Route
             path="/manufacturing"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <ManufacturingPage />
               </MagazineLayout>
             }
@@ -339,11 +258,7 @@ export default function App() {
           <Route
             path="/smart-cities"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <SmartCitiesPage />
               </MagazineLayout>
             }
@@ -352,11 +267,7 @@ export default function App() {
           <Route
             path="/supply-chain"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <SupplyChainPage />
               </MagazineLayout>
             }
@@ -365,11 +276,7 @@ export default function App() {
           <Route
             path="/magazine"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <MagazinePage />
               </MagazineLayout>
             }
@@ -382,11 +289,7 @@ export default function App() {
           <Route
             path="/featured"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <FeaturedPage />
               </MagazineLayout>
             }
@@ -395,11 +298,7 @@ export default function App() {
           <Route
             path="/breaking-news"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <BreakingNewsPage />
               </MagazineLayout>
             }
@@ -408,11 +307,7 @@ export default function App() {
           <Route
             path="/markets"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <MarketsPage />
               </MagazineLayout>
             }
@@ -421,11 +316,7 @@ export default function App() {
           <Route
             path="/cover-stories"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <CoverStoriesPage />
               </MagazineLayout>
             }
@@ -434,61 +325,72 @@ export default function App() {
           <Route
             path="/white-house-watch"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <WhiteHouseWatchPage />
               </MagazineLayout>
             }
           />
 
+          {/* ==================================================
+              BUSINESS NEWS
+              Existing Business page remains unchanged.
+              ================================================== */}
+
           <Route
             path="/business-news"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <BusinessNewsPage />
               </MagazineLayout>
             }
           />
 
           {/* ==================================================
-              ARTICLE DETAIL PAGES
-
-              Homepage article cards should navigate to:
-              /article/<article-slug>
-
-              ArticleDetailPage checks homepageArticleData first,
-              then falls back to the existing business articles.
-              This route is intentionally separate from /markets.
+              MERGERS & ACQUISITIONS
+              Independent landing page and article details.
               ================================================== */}
 
           <Route
-            path="/article/:id"
+            path="/mergers-acquisitions"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
-                <ArticleDetailPage />
+              <MagazineLayout>
+                <MergersAcquisitionsPage />
               </MagazineLayout>
             }
           />
 
           <Route
+            path="/mergers-acquisitions/:slug"
+            element={
+              <MagazineLayout>
+                <MergersAcquisitionsArticlePage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* ==================================================
+              GENERAL ARTICLE DETAIL PAGES
+              Homepage article cards navigate to:
+              /article/<article-slug>
+              ================================================== */}
+
+          <Route
+            path="/article/:id"
+            element={
+              <MagazineLayout>
+                <ArticleDetailPage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* ==================================================
+              LEADERSHIP & INNOVATION
+              ================================================== */}
+
+          <Route
             path="/leadership"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <LeadershipPage />
               </MagazineLayout>
             }
@@ -497,11 +399,7 @@ export default function App() {
           <Route
             path="/innovation"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <InnovationPage />
               </MagazineLayout>
             }
@@ -510,11 +408,7 @@ export default function App() {
           <Route
             path="/ceospotlight"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <CeoSpotlightPage />
               </MagazineLayout>
             }
@@ -523,14 +417,12 @@ export default function App() {
           {/* ==================================================
               ABOUT US
               Standalone site-shell route.
-              Does NOT use PageLayout.
               ================================================== */}
 
           <Route
             path="/about-us"
             element={
               <div className="min-h-screen bg-white flex flex-col">
-
                 <Header />
 
                 <MarketsTicker />
@@ -540,7 +432,6 @@ export default function App() {
                 </main>
 
                 <Footer />
-
               </div>
             }
           />
@@ -552,11 +443,7 @@ export default function App() {
           <Route
             path="/more"
             element={
-              <MagazineLayout
-                showLeftSidebar={false}
-                showRightSidebar={false}
-                topBanner={false}
-              >
+              <MagazineLayout>
                 <FeaturedPage />
               </MagazineLayout>
             }
