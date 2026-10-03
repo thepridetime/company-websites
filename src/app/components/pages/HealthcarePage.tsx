@@ -1,734 +1,179 @@
-import { Clock, ArrowRight } from "lucide-react";
+import { Clock, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
-import { specialArticlePath } from "../../data/specialArticleData";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+
 import { PrideTimesAd } from "../AdSenseSlots";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { TimeAgo } from "../../utils/timeAgo";
+import {
+  healthcarePharmaArticles,
+  healthcarePharmaArticlePath,
+  healthcarePharmaSectionGlance,
+} from "../../data/healthcarePharmaNewsData";
 
-import HC1Img from "../../../imports/HC1.png";
-import HC2Img from "../../../imports/HC2.png";
-import HC3Img from "../../../imports/HC3.png";
-import HC4Img from "../../../imports/HC4.png";
-
-/* =========================================================
-   TYPES
-========================================================= */
-
-type Story = {
-  id?: number;
-  category: string;
-  badge?: string;
-  title: string;
-  excerpt?: string;
-  author?: string;
-  time: string;
-  image: string;
-};
-
-/* =========================================================
-   HEALTHCARE 2026 DATA
-========================================================= */
-
-const hero: Story = {
-  category: "HEALTHCARE OUTLOOK",
-  title: "Healthcare Resilience Meets an AI-Led Transformation of Diagnostics, Supply Chains and Patient Management",
-  excerpt:
-    "Healthcare continues to show resilience as AI expands across diagnostics, real-time inventory visibility, demand forecasting, supplier-risk management and patient operations.",
-  author: "The Pride Times Editorial Desk",
-  time: "September 29, 2026",
-  image: HC1Img,
-};
-
-const majorStories: Story[] = [
-  { id: 1, category: "HEALTHCARE SUPPLY CHAIN", badge: "MARKET", title: "Healthcare Supply Chain Market Forecast to Reach $8.60 Billion by 2034", excerpt: "The supplied outlook puts the market at $3.20 billion in 2025, with software-led solutions at 58% share and cloud delivery at 56%.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC2Img },
-  { id: 2, category: "AI IN HEALTHCARE", badge: "AI", title: "AI Moves From Clinical Experiment to Everyday Healthcare Operations", excerpt: "Real-time inventory visibility, demand forecasting and supplier-risk management are emerging alongside AI-enabled diagnostics and patient management.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC3Img },
-];
-
-const supportingStories: Story[] = [
-  { id: 3, category: "HEALTHCARE INFLATION", title: "Healthcare Supply-Chain Inflation Projected at 2.78% Through June 2027", excerpt: "The supplied Vizient figure adds a defined cost-planning horizon to the sector's broader digital transformation.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC4Img },
-  { id: 4, category: "VENDOR WATCH", title: "Black Book Research 2026 Vendor Watch List Highlights Ten Companies for Hospitals and Health Systems", excerpt: "The supplied briefing points to vendor selection as an increasingly important part of healthcare technology strategy.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC1Img },
-];
-
-const latestNews: Story[] = [
-  { id: 1, category: "MEDTECH", title: "Medtronic to Acquire CathWorks for Up to $585 Million to Expand Interventional Cardiology Portfolio", excerpt: "The supplied healthcare briefing cites the transaction as a portfolio-expansion move in interventional cardiology.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC2Img },
-  { id: 2, category: "AI SUPPLY CHAIN", title: "Real-Time Inventory Visibility Becomes a Core AI Healthcare Use Case", excerpt: "AI is increasingly being applied to inventory visibility, connecting stock information with demand and supplier data.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC3Img },
-  { id: 3, category: "DEMAND FORECASTING", title: "Healthcare Demand Forecasting Moves Into the Center of Supply-Chain Planning", excerpt: "Forecasting can connect anticipated requirements with procurement, inventory and supplier planning.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC4Img },
-  { id: 4, category: "TRACEABILITY", title: "Regulatory Traceability Requirements Accelerate Digital Healthcare Adoption", excerpt: "Digital traceability is becoming a driver for modernization across healthcare supply-chain workflows.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC1Img },
-  { id: 5, category: "MEDTECH & SUSTAINABILITY", title: "Healthcare Partnerships Connect Medtech, Digital Operations and Sustainability", excerpt: "The supplied update highlights collaborations across pharma, medtech and sustainability, including Schneider Electric and EcoVadis.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC2Img },
-  { id: 6, category: "EMPLOYMENT & HEALTHCARE", title: "Healthcare Employment Growth Reinforces the Sector's Economic Resilience", excerpt: "The supplied Deloitte Insights briefing says healthcare and private education added more than 1 million jobs from January 2025 through August 2026.", author: "The Pride Times Editorial Desk", time: "September 29, 2026", image: HC3Img },
-];
-
-const moreStories: Story[] = [
-  { id: 1, category: "HEALTHCARE SCM", title: "Software-Led Healthcare Supply Chains Gain Strategic Importance", time: "September 29, 2026", image: HC2Img },
-  { id: 2, category: "HOSPITAL TECHNOLOGY", title: "Hospitals Reassess Technology Vendors as Digital Healthcare Scales", time: "September 29, 2026", image: HC3Img },
-  { id: 3, category: "HEALTHCARE AI", title: "The Next Healthcare AI Wave Is Operational, Connected and Traceable", time: "September 29, 2026", image: HC4Img },
-];
-
-const sponsoredEvents = [
-  { title: "Healthcare Supply Chain Briefing", subtitle: "Pride Times Editorial" },
-  { title: "AI in Healthcare Report", subtitle: "Pride Times Editorial" },
-  { title: "Medtech & Life Sciences", subtitle: "Pride Times Editorial" },
-  { title: "Healthcare Technology Forum", subtitle: "Pride Times Editorial" },
-];
-
-/* =========================================================
-   REAL GOOGLE ADSENSE
-========================================================= */
-
-function AdBanner({ secondary = false }: { secondary?: boolean }) {
-  return (
-    <div className="w-full overflow-hidden">
-      <div className="mb-1 text-right text-[7px] uppercase tracking-[0.14em] text-gray-400">Advertisement</div>
-      <PrideTimesAd variant={secondary ? "second" : "first"} />
-    </div>
-  );
+function sized(url: string, width: number) {
+  return url.replace(/w=\d+/, `w=${width}`);
 }
 
-/* =========================================================
-   SECTION HEADER
-========================================================= */
-
-function SectionHeader({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle?: string;
-}) {
+function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="border-t-2 border-black pt-3 mb-4">
-      <div className="flex items-end justify-between gap-3">
-        <div>
-          <h2 className="font-serif text-[17px] md:text-[20px] font-bold text-gray-950">
-            {title}
-          </h2>
-
-          {subtitle && (
-            <p className="mt-0.5 text-[8px] md:text-[9px] text-gray-500">
-              {subtitle}
-            </p>
-          )}
-        </div>
-
-        <ArrowRight
-          size={14}
-          className="shrink-0 text-gray-400"
-        />
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   STORY META
-========================================================= */
-
-function StoryMeta({
-  author,
-  time,
-}: {
-  author?: string;
-  time: string;
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-2.5 text-[8px] md:text-[9px] text-gray-400">
-      {author && <span>By {author}</span>}
-
-      {author && <span>·</span>}
-
-      <span className="flex items-center gap-1">
-        <Clock size={9} strokeWidth={2} />
-        {time}
+    <div className="flex items-center justify-between border-b-2 border-[#17140F] pb-2.5 mb-5">
+      <h2 className="font-serif text-[21px] md:text-[24px] font-bold text-[#17140F]">
+        {title}
+      </h2>
+      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+        Healthcare desk <ChevronRight size={12} />
       </span>
     </div>
   );
 }
 
-/* =========================================================
-   HERO STORY
-========================================================= */
-
-function HeroStory() {
-  return (
-    <Link to={specialArticlePath("healthcare-ai-resilient-sector")} className="block">
-    <article className="group min-w-0">
-      <div className="relative overflow-hidden rounded-md h-[250px] sm:h-[330px] md:h-[390px] lg:h-[400px]">
-        <ImageWithFallback
-          src={hero.image}
-          alt={hero.title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-        />
-
-        <div className="absolute left-3 bottom-3 bg-black/75 px-2 py-1">
-          <span className="text-[7px] md:text-[8px] font-bold tracking-[0.14em] uppercase text-white">
-            Lead Story
-          </span>
-        </div>
-      </div>
-
-      <div className="pt-2.5 md:pt-3">
-        <p className="text-[8px] md:text-[9px] font-bold tracking-[0.14em] uppercase text-[#e31b23]">
-          {hero.category}
-        </p>
-
-        <h2 className="mt-1 font-serif text-[23px] sm:text-[27px] md:text-[31px] lg:text-[34px] font-bold leading-[1.08] text-gray-950 group-hover:text-[#e31b23] transition-colors">
-          {hero.title}
-        </h2>
-
-        <p className="mt-2 text-[10px] md:text-[12px] lg:text-[13px] leading-[1.55] text-gray-500 max-w-5xl">
-          {hero.excerpt}
-        </p>
-
-        <div className="mt-2.5 pt-2 border-t border-gray-200">
-          <StoryMeta
-            author={hero.author}
-            time={hero.time}
-          />
-        </div>
-      </div>
-    </article>
-    </Link>
-  );
-}
-
-/* =========================================================
-   MAJOR STORY
-========================================================= */
-
-function MajorStory({ story }: { story: Story }) {
-  return (
-    <article className="group border-b border-gray-200 pb-3">
-      <div className="relative h-[125px] sm:h-[145px] md:h-[150px] overflow-hidden rounded-sm">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-
-        {story.badge && (
-          <span className="absolute top-2 left-2 bg-[#e31b23] text-white text-[6px] font-bold px-1.5 py-1 uppercase">
-            {story.badge}
-          </span>
-        )}
-      </div>
-
-      <div className="pt-2">
-        <p className="text-[7px] md:text-[8px] font-bold tracking-[0.1em] uppercase text-[#e31b23]">
-          {story.category}
-        </p>
-
-        <h3 className="mt-1 font-serif text-[14px] md:text-[16px] font-bold leading-[1.18] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-          {story.title}
-        </h3>
-
-        {story.excerpt && (
-          <p className="mt-1.5 text-[8px] md:text-[9px] leading-[1.45] text-gray-500 line-clamp-3">
-            {story.excerpt}
-          </p>
-        )}
-
-        <div className="mt-2">
-          <StoryMeta
-            author={story.author}
-            time={story.time}
-          />
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   SUPPORTING STORY
-========================================================= */
-
-function SupportingStory({ story }: { story: Story }) {
-  return (
-    <article className="group flex gap-3 py-3 border-b border-gray-200 last:border-b-0">
-      <div className="w-[95px] h-[68px] md:w-[115px] md:h-[78px] shrink-0 overflow-hidden rounded-sm">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
-
-      <div className="min-w-0">
-        <p className="text-[7px] md:text-[8px] font-bold tracking-[0.08em] uppercase text-[#e31b23]">
-          {story.category}
-        </p>
-
-        <h3 className="mt-0.5 font-serif text-[12px] md:text-[14px] font-bold leading-[1.2] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="mt-1 text-[8px] md:text-[9px] leading-[1.4] text-gray-500 line-clamp-2">
-          {story.excerpt}
-        </p>
-
-        <div className="mt-1.5">
-          <StoryMeta
-            author={story.author}
-            time={story.time}
-          />
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   SPONSORED CONTENT
-========================================================= */
-
-function SponsoredContent() {
-  return (
-    <div className="border border-gray-200 rounded-md overflow-hidden bg-white">
-      <div className="px-2.5 py-1.5 flex items-center justify-between bg-[#faf9f4]">
-        <span className="text-[7px] font-bold tracking-[0.14em] text-gray-400 uppercase">Advertisement</span>
-        <span className="text-[7px] text-gray-400">Google AdSense</span>
-      </div>
-      <div className="p-2.5">
-        <PrideTimesAd variant="third" />
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   MORE STORIES
-========================================================= */
-
-function MoreStories() {
-  return (
-    <div className="mt-5">
-      <div className="border-b-2 border-black pb-2 mb-1">
-        <h3 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.08em] text-gray-900">
-          More Stories
-        </h3>
-      </div>
-
-      <div>
-        {moreStories.map((story) => (
-          <article
-            key={story.id}
-            className="group flex gap-2.5 py-2.5 border-b border-gray-200 last:border-b-0"
-          >
-            <div className="w-[58px] h-[45px] md:w-[65px] md:h-[50px] shrink-0 overflow-hidden rounded-sm">
-              <ImageWithFallback
-                src={story.image}
-                alt={story.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-[7px] font-bold text-[#e31b23] uppercase">
-                {story.category}
-              </p>
-
-              <h4 className="mt-0.5 font-serif text-[9px] md:text-[10px] font-bold leading-[1.25] text-gray-800 group-hover:text-[#e31b23] transition-colors">
-                {story.title}
-              </h4>
-
-              <span className="mt-1 block text-[7px] text-gray-400">
-                {story.time}
-              </span>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   NEWSROOM STREAM
-========================================================= */
-
-function NewsroomStream() {
-  return (
-    <aside className="lg:border-l lg:border-gray-200 lg:pl-4">
-      <div className="border-t-2 border-black pt-3">
-        <div className="flex items-center justify-between">
-          <h3 className="font-serif text-[16px] md:text-[18px] font-bold text-gray-950">
-            Newsroom
-          </h3>
-
-          <span className="text-[7px] font-bold uppercase tracking-[0.1em] text-gray-400">
-            Latest
-          </span>
-        </div>
-      </div>
-
-      <div className="mt-2">
-        {latestNews.map((story) => (
-          <article
-            key={`stream-${story.id}`}
-            className="group py-2.5 border-b border-gray-200"
-          >
-            <div className="flex items-start gap-2">
-              <div className="shrink-0 pt-0.5">
-                <Clock size={9} className="text-[#e31b23]" />
-              </div>
-
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-[6px] font-bold uppercase tracking-[0.08em] text-[#e31b23]">
-                    {story.category}
-                  </span>
-
-                  {story.badge && (
-                    <span className="bg-[#e31b23] text-white text-[5px] font-bold px-1 py-0.5 rounded-sm">
-                      {story.badge}
-                    </span>
-                  )}
-                </div>
-
-                <h4 className="mt-1 font-serif text-[10px] md:text-[11px] font-bold leading-[1.25] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-                  {story.title}
-                </h4>
-
-                <p className="mt-1 text-[7px] text-gray-400">
-                  {story.time}
-                </p>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </aside>
-  );
-}
-
-/* =========================================================
-   COVERAGE CARD
-========================================================= */
-
-function CoverageCard({ story }: { story: Story }) {
-  return (
-    <article className="group grid grid-cols-[100px_minmax(0,1fr)] md:grid-cols-[145px_minmax(0,1fr)] gap-3 border-b border-gray-200 pb-3">
-      <div className="h-[72px] md:h-[92px] overflow-hidden rounded-sm">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
-
-      <div>
-        <p className="text-[7px] md:text-[8px] font-bold tracking-[0.08em] uppercase text-[#e31b23]">
-          {story.category}
-        </p>
-
-        <h3 className="mt-0.5 font-serif text-[12px] md:text-[14px] font-bold leading-[1.2] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="mt-1 text-[8px] md:text-[9px] leading-[1.4] text-gray-500 line-clamp-2">
-          {story.excerpt}
-        </p>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   NEWS CARD
-========================================================= */
-
-function NewsCard({ story }: { story: Story }) {
-  return (
-    <article className="group border border-gray-200 rounded-md overflow-hidden bg-white hover:shadow-md transition-shadow duration-300">
-      <div className="relative h-[140px] sm:h-[150px] md:h-[155px] overflow-hidden bg-gray-100">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-
-        {story.badge && (
-          <span className="absolute top-2 left-2 bg-[#e31b23] text-white text-[6px] font-bold px-1.5 py-1 uppercase">
-            {story.badge}
-          </span>
-        )}
-      </div>
-
-      <div className="p-2.5 md:p-3">
-        <p className="text-[7px] md:text-[8px] font-bold uppercase tracking-[0.08em] text-[#e31b23]">
-          {story.category}
-        </p>
-
-        <h3 className="mt-1 font-serif text-[13px] md:text-[14px] font-bold leading-[1.22] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="mt-1.5 text-[8px] md:text-[9px] leading-[1.45] text-gray-500 line-clamp-3">
-          {story.excerpt}
-        </p>
-
-        <div className="mt-2 pt-2 border-t border-gray-100">
-          <StoryMeta
-            author={story.author}
-            time={story.time}
-          />
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   SPONSORSHIP
-========================================================= */
-
-function SponsorshipSection() {
-  return (
-    <section className="mt-6 md:mt-8 rounded-md bg-[#f7f7f7] border border-gray-100 p-3 md:p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="rounded-sm border border-gray-300 px-1.5 py-1 text-[7px] font-bold tracking-[0.1em] text-gray-400 uppercase">
-          Sponsorship
-        </span>
-
-        <span className="text-[8px] text-gray-400">
-          Presented by our partners
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-        {sponsoredEvents.map((event) => (
-          <div
-            key={event.title}
-            className="flex min-h-[74px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-2 text-center"
-          >
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-red-50">
-              <span className="text-[10px] text-[#e31b23]">
-                ✦
-              </span>
-            </div>
-
-            <h4 className="mt-2 text-[9px] font-bold text-gray-800">
-              {event.title}
-            </h4>
-
-            <span className="mt-0.5 text-[7px] text-gray-400">
-              {event.subtitle}
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   NEWSLETTER
-========================================================= */
-
-function Newsletter() {
-  return (
-    <section className="mt-6 md:mt-8 mb-10">
-      <div className="rounded-md bg-[#071a2d] px-5 py-7 md:py-8 text-center">
-        <h2 className="font-serif text-[18px] md:text-[20px] font-bold text-white">
-          Stay Ahead with The Pride Times
-        </h2>
-
-        <p className="mt-1 text-[9px] md:text-[10px] text-gray-300">
-          Daily briefings on Healthcare delivered to your inbox.
-        </p>
-
-        <div className="mt-4 flex flex-col sm:flex-row justify-center gap-2 mx-auto max-w-[420px]">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            aria-label="Email address"
-            className="h-8 flex-1 rounded border border-[#42566b] bg-[#1c344b] px-3 text-[9px] text-white placeholder:text-[#8796a6] outline-none focus:border-[#e31b23]"
-          />
-
-          <button
-            type="button"
-            className="h-8 px-4 rounded bg-[#e31b23] text-white text-[9px] font-bold hover:bg-[#c9151c] transition-colors"
-          >
-            Subscribe Free
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   MAIN PAGE
-========================================================= */
+const [leadStory, ...otherStories] = healthcarePharmaArticles;
+const sidebarStories = otherStories.slice(0, 2);
+const latestStories = otherStories.slice(2);
 
 export function HealthcarePage() {
   return (
     <main className="w-full bg-white text-[#17140F] antialiased">
-      <div className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* =================================================
-            PAGE HEADER
-        ================================================= */}
-
-        <section className="pt-5 md:pt-7">
-          <div className="border-t-[3px] border-[#e31b23] pt-4 md:pt-5">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-1">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
+        <header className="pt-5 md:pt-7 pb-4">
+          <div className="border-t-[3px] border-red-600 pt-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] font-bold leading-tight text-gray-950">
-                  Healthcare
+                <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                  Section 06 · Global Corporate News Digest
+                </span>
+                <h1 className="mt-1 font-serif text-[32px] sm:text-[38px] md:text-[46px] lg:text-[52px] font-bold leading-none tracking-tight">
+                  Healthcare &amp; Pharma
                 </h1>
-
-                <p className="mt-1 text-[10px] md:text-[12px] text-gray-500">
-                  Medicine, biotechnology, pharmaceuticals, and the future of healthcare.
-                </p>
               </div>
+              <p className="max-w-[470px] text-[12px] md:text-[13px] leading-[1.65] text-[#77736D]">
+                Clinical milestones, drug pricing, medical devices and the business
+                of health.
+              </p>
+            </div>
+          </div>
+        </header>
 
-              <span className="text-[7px] md:text-[8px] uppercase tracking-[0.14em] font-bold text-gray-400">
-                Healthcare & Life Sciences
+        <div className="my-4 md:my-5">
+          <PrideTimesAd variant="first" />
+        </div>
+
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-px border border-gray-300 bg-gray-300 mb-9">
+          {healthcarePharmaSectionGlance.map((item) => (
+            <div key={item.theme} className="bg-[#f5f3ef] px-4 py-4 md:px-5">
+              <span className="block text-[8px] font-bold uppercase tracking-[0.14em] text-gray-500">
+                {item.theme}
+              </span>
+              <strong className="mt-2 block font-serif text-[20px] font-normal text-[#17140F]">
+                {item.momentum}
+              </strong>
+              <span className="mt-1 block text-[9px] font-bold uppercase tracking-wider text-red-600">
+                Outlook: {item.outlook}
               </span>
             </div>
-          </div>
+          ))}
         </section>
 
-        {/* =================================================
-            TOP ADVERTISEMENT
-        ================================================= */}
-
-        <section className="mt-4 md:mt-5">
-          <AdBanner />
-        </section>
-
-        {/* =================================================
-            LEAD STORY + MAJOR STORIES + SPONSOR
-        ================================================= */}
-
-        <section className="mt-4 md:mt-5 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_235px] gap-5 md:gap-6">
-
-          {/* LEAD */}
-          <div className="min-w-0">
-            <HeroStory />
-          </div>
-
-          {/* EDITORIAL RAIL */}
-          <aside className="lg:border-l lg:border-gray-200 lg:pl-4">
-            <div className="border-t-2 border-black pt-3">
-              <h2 className="font-serif text-[16px] md:text-[18px] font-bold text-gray-950">
-                Major Healthcare Stories
+        <section className="grid grid-cols-1 xl:grid-cols-[minmax(0,3.25fr)_minmax(280px,1fr)] gap-5 lg:gap-7 mt-4 md:mt-6">
+          <Link to={healthcarePharmaArticlePath(leadStory.id)} className="group block">
+            <div className="overflow-hidden rounded-lg bg-gray-100">
+              <ImageWithFallback
+                src={sized(leadStory.image, 1400)}
+                alt={leadStory.title}
+                className="w-full h-[260px] sm:h-[350px] md:h-[440px] lg:h-[500px] xl:h-[520px] object-cover transition-transform duration-700 group-hover:scale-[1.025]"
+              />
+            </div>
+            <div className="pt-3">
+              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                {leadStory.category}
+              </span>
+              <h2 className="mt-1.5 font-serif text-[25px] sm:text-[29px] md:text-[33px] lg:text-[36px] xl:text-[38px] font-bold leading-[1.08] tracking-tight text-[#17140F] group-hover:text-red-600 transition-colors">
+                {leadStory.title}
               </h2>
+              <p className="mt-2.5 text-[12px] md:text-[13px] lg:text-[14px] leading-[1.6] text-[#66625D] max-w-[1100px]">
+                {leadStory.excerpt}
+              </p>
+              <div className="flex flex-wrap items-center gap-3 mt-3 text-[10px] text-gray-400">
+                <span className="font-medium text-gray-500">By {leadStory.author}</span>
+                <span className="h-3 w-px bg-gray-300" />
+                <span className="flex items-center gap-1.5"><Clock size={9} /><TimeAgo iso={leadStory.publishedAt} /></span>
+                <span className="h-3 w-px bg-gray-300" />
+                <span>{leadStory.location}</span>
+                <span className="h-3 w-px bg-gray-300" />
+                <span>{leadStory.readTime}</span>
+              </div>
             </div>
+          </Link>
 
-            <div className="mt-3 space-y-4">
-              {majorStories.map((story) => (
-                <Link key={story.id} to={specialArticlePath(`healthcare-major-${story.id}`)} className="block"><MajorStory story={story} /></Link>
+          <aside className="xl:border-l xl:border-gray-300 xl:pl-6">
+            <div className="mb-5"><PrideTimesAd variant="second" /></div>
+            <div className="border-b-2 border-[#17140F] pb-2 mb-1">
+              <h3 className="font-bold text-[14px] uppercase tracking-wide">More Healthcare Stories</h3>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {sidebarStories.map((story) => (
+                <Link key={story.id} to={healthcarePharmaArticlePath(story.id)} className="block py-3 group">
+                  <span className="inline-block text-[7px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-red-600 text-white">
+                    {story.category}
+                  </span>
+                  <h4 className="mt-1.5 text-[11px] md:text-[12px] font-bold leading-[1.35] text-gray-900 group-hover:text-red-600 transition-colors">
+                    {story.title}
+                  </h4>
+                  <span className="flex items-center gap-1 mt-1 text-[8px] text-gray-400"><Clock size={8} /><TimeAgo iso={story.publishedAt} /></span>
+                </Link>
               ))}
-            </div>
-
-            <div className="mt-4">
-              <SponsoredContent />
             </div>
           </aside>
         </section>
 
-        {/* =================================================
-            HEALTHCARE COVERAGE
-        ================================================= */}
-
-        <section className="mt-7 md:mt-9">
-          <SectionHeader
-            title="Healthcare Coverage"
-            subtitle="Research, medicine, technology and pharmaceutical developments"
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6">
-            {supportingStories.map((story) => (
-              <Link key={story.id} to={specialArticlePath(`healthcare-coverage-${story.id}`)} className="block"><CoverageCard story={story} /></Link>
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================
-            LATEST NEWS + NEWSROOM
-        ================================================= */}
-
-        <section className="mt-7 md:mt-9">
-          <SectionHeader
-            title="Latest Healthcare News"
-            subtitle="A rolling view of the latest healthcare developments"
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_225px] gap-5 md:gap-6">
-
-            {/* NEWS GRID */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-              {latestNews.map((story) => (
-                <Link key={story.id} to={specialArticlePath(`healthcare-latest-${story.id}`)} className="block"><NewsCard story={story} /></Link>
-              ))}
-            </div>
-
-            {/* NEWSROOM */}
-            <NewsroomStream />
-          </div>
-        </section>
-
-        {/* =================================================
-            SECOND ADVERTISEMENT
-        ================================================= */}
-
-        <section className="mt-6 md:mt-7">
-          <AdBanner secondary />
-        </section>
-
-        {/* =================================================
-            MORE FROM HEALTHCARE
-        ================================================= */}
-
-        <section className="mt-6 md:mt-8">
-          <SectionHeader title="More From Healthcare" />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-            {moreStories.map((story) => (
-              <Link
-                key={`more-${story.id}`}
-                to={specialArticlePath(`healthcare-more-${story.id}`)}
-                className="group flex gap-3 border-b border-gray-200 pb-3 md:border md:rounded-md md:p-2.5"
-              >
-                <div className="w-[80px] h-[58px] md:w-[90px] md:h-[64px] shrink-0 overflow-hidden rounded-sm">
+        <section className="mt-12 md:mt-14">
+          <SectionHeader title="Latest Healthcare & Pharma News" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 lg:gap-x-7 gap-y-8">
+            {latestStories.map((story) => (
+              <Link key={story.id} to={healthcarePharmaArticlePath(story.id)} className="group block">
+                <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
-                    src={story.image}
+                    src={sized(story.image, 700)}
                     alt={story.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-[180px] sm:h-[190px] md:h-[205px] lg:h-[215px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 </div>
-
-                <div className="min-w-0">
-                  <p className="text-[7px] font-bold uppercase text-[#e31b23]">
-                    {story.category}
-                  </p>
-
-                  <h3 className="mt-0.5 font-serif text-[10px] md:text-[11px] font-bold leading-[1.25] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-                    {story.title}
-                  </h3>
-
-                  <p className="mt-1 text-[7px] text-gray-400">
-                    {story.time}
-                  </p>
+                <div className="pt-2.5">
+                  <span className="text-[8px] font-bold uppercase tracking-[0.13em] text-red-600">{story.category}</span>
+                  <h3 className="mt-1.5 font-serif text-[17px] md:text-[18px] font-bold leading-[1.18] text-[#17140F] group-hover:text-red-600 transition-colors">{story.title}</h3>
+                  <p className="mt-1.5 text-[12px] leading-[1.55] text-[#66625D] line-clamp-3">{story.excerpt}</p>
+                  <div className="flex flex-wrap items-center gap-1.5 mt-2 text-[9px] text-gray-400"><Clock size={8} /><TimeAgo iso={story.publishedAt} /><span>·</span><span>{story.location}</span><span>·</span><span>{story.readTime}</span></div>
                 </div>
               </Link>
             ))}
           </div>
         </section>
 
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================= */}
+        <section className="mt-12 border-t border-gray-300 pt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="font-serif text-[28px] font-bold">What to watch</h2>
+              <p className="mt-2 max-w-xl text-[13px] leading-[1.7] text-[#66625D]">
+                This week&apos;s healthcare stories point to a sector balancing clinical
+                progress and commercial discipline. Trial results, licensing economics,
+                pricing controls and regulatory access will determine which ambitions
+                become durable businesses.
+              </p>
+            </div>
+            <div className="border-l-4 border-red-600 bg-[#f5f3ef] px-5 py-4">
+              <p className="font-serif text-[21px] leading-[1.35]">
+                Clinical progress creates opportunity; execution creates access.
+              </p>
+              <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.12em] text-gray-500">
+                Healthcare &amp; Pharma desk · The Pride Times
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <SponsorshipSection />
-
-        {/* =================================================
-            NEWSLETTER
-        ================================================= */}
-
-        <Newsletter />
-
+        <p className="mt-10 border-t border-gray-900 pt-3 text-[10px] leading-[1.5] text-gray-500">
+          Sample publication — all companies, people, quotations and figures are fictional and for layout and demonstration purposes only. Content adapted from the Healthcare &amp; Pharma section of Global Corporate News Digest, September 2026 edition.
+        </p>
       </div>
     </main>
   );
