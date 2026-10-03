@@ -17,6 +17,14 @@ import Smartc4Img from "../../imports/Smartc4.png";
 import SC1Img from "../../imports/SC1.png";
 import SC2Img from "../../imports/SC2.png";
 import SC3Img from "../../imports/SC3.png";
+import {
+  healthcarePharmaArticles,
+  type HealthcarePharmaArticle,
+} from "./healthcarePharmaNewsData";
+import {
+  consumerRetailArticles,
+  type ConsumerRetailArticle,
+} from "./consumerRetailNewsData";
 
 export const specialArticleImages = {
   hc1: HC1Img,
@@ -2011,8 +2019,44 @@ const marketArticles: SpecialArticle[] = [
 const whiteHouseWatchArticles: SpecialArticle[] = [];
 const worldWatchArticles: SpecialArticle[] = [];
 
+function refreshedSectionArticleToSpecial(
+  article: HealthcarePharmaArticle | ConsumerRetailArticle
+): SpecialArticle {
+  const isHealthcare = article.id.startsWith("healthcare-");
+
+  return {
+    id: article.id,
+    section: isHealthcare ? "Healthcare" : "Consumer & Retail",
+    category: article.category,
+    title: article.title,
+    dek: article.excerpt,
+    image: article.image,
+    author: article.author,
+    publishedAt: article.publishedAt,
+    readTime: article.readTime,
+    highlights: article.highlights,
+    sections: [
+      {
+        heading: "The development",
+        body: article.excerpt,
+      },
+      ...article.highlights.slice(0, 3).map((highlight, index) => ({
+        heading: ["Why it matters", "The operating context", "What to watch next"][index],
+        body: highlight,
+      })),
+    ],
+    keyFacts: article.keyFacts,
+  };
+}
+
+const refreshedHealthcareAndConsumerArticles: SpecialArticle[] = [
+  ...healthcarePharmaArticles.map(refreshedSectionArticleToSpecial),
+  ...consumerRetailArticles.map(refreshedSectionArticleToSpecial),
+];
+
 export const specialArticles: SpecialArticle[] = [
   ...healthcareArticles,
+  ...refreshedHealthcareAndConsumerArticles,
   ...manufacturingArticles,
   ceoFeatured,
   ...ceoLeaders,
