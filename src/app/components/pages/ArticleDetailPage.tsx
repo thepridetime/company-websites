@@ -149,6 +149,9 @@ function getSectionPath(section: string) {
     case "Leadership & Governance":
       return "/leadership-governance";
 
+    case "Sustainability & ESG":
+      return "/sustainability-esg";
+
     default:
       return "/ceospotlight";
   }
@@ -185,6 +188,9 @@ function getSectionName(section: string) {
 
     case "Leadership & Governance":
       return "Leadership & Governance";
+
+    case "Sustainability & ESG":
+      return "Sustainability & ESG";
 
     case "Markets":
       return "Markets";
