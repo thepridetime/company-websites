@@ -61,6 +61,7 @@ const megaMenuColumns = [
       { label: "International Business", path: "/international-news" },
       { label: "Startup Success", path: "/startup-success" },
       { label: "CEO Spotlight", path: "/ceospotlight" },
+      { label: "Leadership & Governance", path: "/leadership-governance" },
       { label: "Magazines", path: "/magazine" },
       { label: "Innovation", path: "/innovation" },
       { label: "White House Watch", path: "/white-house-watch" },
