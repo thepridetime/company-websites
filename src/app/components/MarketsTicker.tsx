@@ -51,6 +51,7 @@ const megaMenuColumns = [
       { label: "Manufacturing", path: "/manufacturing" },
       { label: "Smart Cities", path: "/smart-cities" },
       { label: "Supply Chain", path: "/supply-chain" },
+      { label: "Consumer & Retail", path: "/consumer-retail" },
     ],
   },
   {
