@@ -146,6 +146,9 @@ function getSectionPath(section: string) {
     case "Technology":
       return "/technology";
 
+    case "Leadership & Governance":
+      return "/leadership-governance";
+
     default:
       return "/ceospotlight";
   }
@@ -179,6 +182,9 @@ function getSectionName(section: string) {
 
     case "Energy":
       return "Energy";
+
+    case "Leadership & Governance":
+      return "Leadership & Governance";
 
     case "Markets":
       return "Markets";
