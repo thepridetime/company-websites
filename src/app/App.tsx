@@ -36,6 +36,7 @@ import { WhiteHouseWatchPage } from "./components/pages/WhiteHouseWatchPage";
 import { BusinessNewsPage } from "./components/pages/BusinessNewsPage";
 import { ArticleDetailPage } from "./components/pages/ArticleDetailPage";
 import { LeadershipPage } from "./components/pages/LeadershipPage";
+import { LeadershipGovernancePage } from "./components/pages/LeadershipGovernancePage";
 import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
 import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
@@ -402,6 +403,15 @@ export default function App() {
             element={
               <MagazineLayout>
                 <LeadershipPage />
+              </MagazineLayout>
+            }
+          />
+
+          <Route
+            path="/leadership-governance"
+            element={
+              <MagazineLayout>
+                <LeadershipGovernancePage />
               </MagazineLayout>
             }
           />
