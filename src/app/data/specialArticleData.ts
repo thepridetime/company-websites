@@ -33,6 +33,10 @@ import {
   leadershipGovernanceArticles,
   type LeadershipGovernanceArticle,
 } from "./leadershipGovernanceNewsData";
+import {
+  sustainabilityEsgArticles,
+  type SustainabilityEsgArticle,
+} from "./sustainabilityEsgNewsData";
 
 export const specialArticleImages = {
   hc1: HC1Img,
@@ -2033,10 +2037,12 @@ function refreshedSectionArticleToSpecial(
     | ConsumerRetailArticle
     | IndustrySupplyChainArticle
     | LeadershipGovernanceArticle
+    | SustainabilityEsgArticle
 ): SpecialArticle {
   const isHealthcare = article.id.startsWith("healthcare-");
   const isIndustry = article.id.startsWith("industry-");
   const isLeadership = article.id.startsWith("leadership-");
+  const isSustainability = article.id.startsWith("sustainability-");
 
   return {
     id: article.id,
@@ -2045,8 +2051,10 @@ function refreshedSectionArticleToSpecial(
       : isIndustry
         ? "Industry & Supply Chain"
         : isLeadership
-          ? "Leadership & Governance"
-          : "Consumer & Retail",
+        ? "Leadership & Governance"
+          : isSustainability
+            ? "Sustainability & ESG"
+            : "Consumer & Retail",
     category: article.category,
     title: article.title,
     dek: article.excerpt,
@@ -2074,6 +2082,7 @@ const refreshedDigestArticles: SpecialArticle[] = [
   ...consumerRetailArticles.map(refreshedSectionArticleToSpecial),
   ...industrySupplyChainArticles.map(refreshedSectionArticleToSpecial),
   ...leadershipGovernanceArticles.map(refreshedSectionArticleToSpecial),
+  ...sustainabilityEsgArticles.map(refreshedSectionArticleToSpecial),
 ];
 
 export const specialArticles: SpecialArticle[] = [
