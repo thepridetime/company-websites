@@ -25,6 +25,14 @@ import {
   consumerRetailArticles,
   type ConsumerRetailArticle,
 } from "./consumerRetailNewsData";
+import {
+  industrySupplyChainArticles,
+  type IndustrySupplyChainArticle,
+} from "./industrySupplyChainNewsData";
+import {
+  leadershipGovernanceArticles,
+  type LeadershipGovernanceArticle,
+} from "./leadershipGovernanceNewsData";
 
 export const specialArticleImages = {
   hc1: HC1Img,
@@ -2020,13 +2028,25 @@ const whiteHouseWatchArticles: SpecialArticle[] = [];
 const worldWatchArticles: SpecialArticle[] = [];
 
 function refreshedSectionArticleToSpecial(
-  article: HealthcarePharmaArticle | ConsumerRetailArticle
+  article:
+    | HealthcarePharmaArticle
+    | ConsumerRetailArticle
+    | IndustrySupplyChainArticle
+    | LeadershipGovernanceArticle
 ): SpecialArticle {
   const isHealthcare = article.id.startsWith("healthcare-");
+  const isIndustry = article.id.startsWith("industry-");
+  const isLeadership = article.id.startsWith("leadership-");
 
   return {
     id: article.id,
-    section: isHealthcare ? "Healthcare" : "Consumer & Retail",
+    section: isHealthcare
+      ? "Healthcare"
+      : isIndustry
+        ? "Industry & Supply Chain"
+        : isLeadership
+          ? "Leadership & Governance"
+          : "Consumer & Retail",
     category: article.category,
     title: article.title,
     dek: article.excerpt,
@@ -2049,14 +2069,16 @@ function refreshedSectionArticleToSpecial(
   };
 }
 
-const refreshedHealthcareAndConsumerArticles: SpecialArticle[] = [
+const refreshedDigestArticles: SpecialArticle[] = [
   ...healthcarePharmaArticles.map(refreshedSectionArticleToSpecial),
   ...consumerRetailArticles.map(refreshedSectionArticleToSpecial),
+  ...industrySupplyChainArticles.map(refreshedSectionArticleToSpecial),
+  ...leadershipGovernanceArticles.map(refreshedSectionArticleToSpecial),
 ];
 
 export const specialArticles: SpecialArticle[] = [
   ...healthcareArticles,
-  ...refreshedHealthcareAndConsumerArticles,
+  ...refreshedDigestArticles,
   ...manufacturingArticles,
   ceoFeatured,
   ...ceoLeaders,
