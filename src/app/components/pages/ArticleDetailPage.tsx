@@ -2,8 +2,6 @@ import { Fragment, useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, MapPin, Quote, Share2 } from "lucide-react";
 
-import { ImageWithFallback } from "../figma/ImageWithFallback";
-
 import {
   getHomepageArticleBySlug,
   homepageArticles,
@@ -1027,14 +1025,6 @@ function DigestBlog({
             readTime={article.readTime}
           />
         </header>
-
-        <div className="mx-auto mt-10 max-w-4xl overflow-hidden rounded-xl bg-slate-100">
-          <ImageWithFallback
-            src={article.image}
-            alt={article.title}
-            className="h-[240px] w-full object-cover sm:h-[360px] md:h-[440px]"
-          />
-        </div>
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
           <main className="min-w-0">
