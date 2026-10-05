@@ -633,8 +633,6 @@ export function HomePage() {
             </div>
           </section>
 
-          <PrideTimesAd />
-
           {/* =================================================
               GLOBAL CORPORATE NEWS DIGEST — EDITION 1: M&A
               (new; added alongside the existing news)
@@ -1048,8 +1046,6 @@ export function HomePage() {
               only.
             </p>
           </section>
-
-          <PrideTimesAd />
 
           {/* =================================================
               PRIDE TIMES 30
