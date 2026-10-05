@@ -1771,6 +1771,108 @@ const marketArticles: SpecialArticle[] = [
 
   /* ------------------------------------------------------- */
   {
+    id: "market-india-hurun-unicorn-2026",
+    section: "Markets",
+    category: "INDIA · UNICORNS",
+    title: "India Holds Fourth Place in the Hurun Global Unicorn Index 2026 With 61 Unicorns",
+    dek: "India has kept its fourth position with 61 privately held companies valued at $1 billion or more, just nine behind the United Kingdom. Here is what the ranking shows and what it leaves out.",
+    author: marketAuthor,
+    publishedAt: "October 5, 2026",
+    readTime: "6 MIN READ",
+    highlights: [
+      "India stays fourth in the Hurun Global Unicorn Index 2026 with 61 unicorns.",
+      "The United States leads with 806, followed by China with 381 and the United Kingdom with 70.",
+      "Six Indian unicorns graduated to public markets during the year.",
+      "Founders are increasingly expected to show profits and sustainable growth, not expansion alone.",
+    ],
+    sections: [
+      {
+        heading: "The quick version",
+        body: "India has kept its fourth position in the Hurun Global Unicorn Index 2026, with 61 unicorn startups, according to the report covered on July 1, 2026. The index counts privately held companies valued at $1 billion or more, which makes it one of the most widely watched yardsticks of how far a country's startup ecosystem has come.",
+      },
+      {
+        heading: "How the top four compare",
+        body: "The United States leads by a wide margin with 806 unicorns. China follows with 381, and the United Kingdom is third with 70. India's 61 puts it fourth, well behind the two giants but in the same range as the UK. For India, the more useful comparison is therefore with the third-placed country rather than with the leaders.",
+      },
+      {
+        heading: "Why third and fourth place are so closely contested",
+        body: "India sits behind the UK by only nine companies. A gap that small can close or widen quickly, since a handful of new valuations, or a handful of exits, is enough to change the order. That is why the third and fourth places are described as contested, and why every new funding round or listing in either country is now read as a small move in this race.",
+      },
+      {
+        heading: "Six unicorns graduate to public markets",
+        body: "The report also notes that six Indian unicorns graduated to public markets during the year. This is a significant sign for the ecosystem. Exits through initial public offerings return capital to early investors, who can then back new companies, and they show younger founders that a path to a public listing exists. A unicorn that lists also leaves the index of privately held firms, so these graduations are a mark of maturity rather than a loss.",
+      },
+      {
+        heading: "Profits and sustainable growth now matter",
+        body: "Indian startups are increasingly expected to show profits and sustainable growth rather than rapid expansion alone. That shift has shaped fundraising since the funding slowdown of previous years, when investors became more selective and began asking harder questions about unit economics. Founders pitching today are more likely to be judged on a credible route to profitability than on user growth alone.",
+      },
+      {
+        heading: "What the ranking leaves out",
+        body: "For policymakers and founders, the ranking is a useful benchmark but not the whole story. A unicorn count measures valuations at a point in time, not jobs created, profits earned or the strength of the underlying businesses. Readers should treat the number as one signal among many, and watch next year's edition to see whether India holds fourth place, narrows the gap with the UK, or sees more of its unicorns move into public markets.",
+      },
+    ],
+    keyFacts: [
+      { label: "Index", value: "Hurun Global Unicorn Index 2026" },
+      { label: "India Rank", value: "4th" },
+      { label: "India Unicorns", value: "61" },
+      { label: "Gap to UK", value: "9 companies" },
+      { label: "Sector", value: "Startups & Venture Capital" },
+    ],
+  },
+
+  /* ------------------------------------------------------- */
+  {
+    id: "market-zerodha-unicorn",
+    section: "Markets",
+    category: "INDIA · BROKING",
+    title: "Zerodha Is India's Most Valuable Unicorn at $9 Billion, and It Never Raised Outside Capital",
+    dek: "The discount stockbroker tops India's unicorn list in the Hurun Global Unicorn Index 2026 on the strength of its own profits. Here is how the model works and where the risks sit.",
+    author: marketAuthor,
+    publishedAt: "October 5, 2026",
+    readTime: "6 MIN READ",
+    highlights: [
+      "Zerodha is valued at $9 billion, the highest among Indian unicorns in the Hurun 2026 index.",
+      "It has not raised external capital and has grown on its own profits.",
+      "It has served more than 16 million active clients, according to one 2026 startup roundup.",
+      "Its revenue is tied to trading volumes and to regulatory rules on derivatives.",
+    ],
+    sections: [
+      {
+        heading: "The quick version",
+        body: "Zerodha is India's most valuable unicorn at $9 billion in the Hurun Global Unicorn Index 2026. Founded by brothers Nithin and Nikhil Kamath, the stockbroker is known for pioneering low-cost discount broking in India. It sits at the top of a national list that also includes Zepto at $7 billion and Razorpay at $6 billion.",
+      },
+      {
+        heading: "Low-cost broking at scale",
+        body: "Zerodha built its name by offering investors a cheaper way to trade than traditional brokerages. That approach opened the stock market to a much wider group of people. According to one 2026 startup roundup, the company has served more than 16 million active clients, a base that gives it scale few rivals can match.",
+      },
+      {
+        heading: "A company that never took outside money",
+        body: "The distinguishing feature of Zerodha's story is that it has not raised external capital. The company has grown on its own profits and is frequently cited as one of the most profitable startups in the country and a large taxpayer. In a market where most unicorns are defined by the funding rounds they have raised, a $9 billion valuation without any outside investors stands out.",
+      },
+      {
+        heading: "The risk: a business tied to market activity",
+        body: "Zerodha's business moves with the market. Trading volumes drive its revenue, so a quiet period in equities can mean a quiet period for the company. Regulatory rules on derivatives also matter, because changes in how those products can be traded affect how much customers trade and, in turn, what the broker earns.",
+      },
+      {
+        heading: "What it means for the wider startup scene",
+        body: "Even with those risks, the bootstrapped model offers a contrast to venture-funded rivals and is often held up as proof that Indian startups can grow without heavy outside funding. As investors place more weight on profits and sustainable growth, Zerodha's record gives founders a reference point for what a self-funded path can achieve.",
+      },
+      {
+        heading: "What to watch next",
+        body: "Readers should keep an eye on two things: how trading activity holds up through the coming market cycles, and how derivatives regulation develops. Both will shape Zerodha's earnings, and with them the standing of India's most valuable unicorn in next year's index.",
+      },
+    ],
+    keyFacts: [
+      { label: "Company", value: "Zerodha" },
+      { label: "Founders", value: "Nithin and Nikhil Kamath" },
+      { label: "Est. Value", value: "US$ 9 billion" },
+      { label: "Sector", value: "Stock broking" },
+      { label: "Active Clients", value: "16 million+ (2026 startup roundup)" },
+    ],
+  },
+
+  /* ------------------------------------------------------- */
+  {
     id: "market-altamira-retail",
     section: "Markets",
     category: "LONDON · EARNINGS",
