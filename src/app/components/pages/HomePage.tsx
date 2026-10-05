@@ -19,6 +19,14 @@ import {
   regionalSnapshot,
   type DigestArticle,
 } from "../../data/digestArticleData";
+import {
+  maEdition1Articles,
+  maEdition1Meta,
+  maEdition1DealTable,
+  maEdition1Sources,
+  maEdition1ArticlePath,
+  type EditionArticle,
+} from "../../data/maEdition1Data";
 
 /* =========================================================
    TYPES
@@ -137,6 +145,37 @@ const interleavedArticles: DigestArticle[] = (() => {
 })();
 
 const PAGE_SIZE = 8;
+
+/* =========================================================
+   EDITION 1 — MERGERS & ACQUISITIONS (additive)
+   Shown in its own homepage block and in the "Mergers &
+   Acquisitions" Latest News tab. The September digest above
+   is not modified.
+========================================================= */
+
+const editionBy = (prefix: string): EditionArticle | undefined =>
+  maEdition1Articles.find((article) => article.title.startsWith(prefix));
+
+const editionLead = maEdition1Articles[0];
+
+const editionPicks = [
+  "Paramount",
+  "SpaceX",
+  "NextEra",
+  "Equity Residential",
+  "Boston Scientific",
+  "McCormick",
+]
+  .map(editionBy)
+  .filter((article): article is EditionArticle => Boolean(article));
+
+function editionDealChip(article: EditionArticle) {
+  return article.keyFacts.find((fact) =>
+    ["Enterprise value", "Combined enterprise value", "Value"].includes(
+      fact.label
+    )
+  );
+}
 
 /* =========================================================
    MAGAZINE
@@ -279,7 +318,9 @@ export function HomePage() {
     () =>
       activeNewsTab === "All"
         ? interleavedArticles
-        : digestArticles.filter((article) => article.section === activeNewsTab),
+        : [...maEdition1Articles, ...digestArticles].filter(
+            (article) => article.section === activeNewsTab
+          ),
     [activeNewsTab]
   );
 
@@ -554,6 +595,149 @@ export function HomePage() {
           </section>
 
           <PrideTimesAd />
+
+          {/* =================================================
+              GLOBAL CORPORATE NEWS DIGEST — EDITION 1: M&A
+              (new; added alongside the existing news)
+          ================================================= */}
+
+          <section
+            aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
+            className="mb-12 border-b border-gray-300 pb-10"
+          >
+            <SectionHeader
+              title={`Global Corporate News Digest · ${maEdition1Meta.edition} · ${maEdition1Meta.title}`}
+              link="/mergers-acquisitions"
+              linkText="M&A Hub"
+            />
+
+            <p className="-mt-2 mb-5 text-[11px] leading-[1.5] text-gray-500">
+              {maEdition1Meta.subtitle}{" "}
+              <span className="text-gray-400">
+                {maEdition1Meta.prepared}. {maEdition1Meta.note}
+              </span>
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6">
+
+              {/* EDITION LEAD */}
+
+              <Link
+                to={maEdition1ArticlePath(editionLead)}
+                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[340px] bg-black"
+              >
+                <ImageWithFallback
+                  src={editionLead.image}
+                  alt={editionLead.title}
+                  className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                  <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-500">
+                    {editionLead.section} · {maEdition1Meta.edition}
+                  </span>
+
+                  <h3 className="mt-2 font-serif text-2xl sm:text-3xl font-bold leading-[1.15] text-white group-hover:underline">
+                    {editionLead.title}
+                  </h3>
+
+                  <p className="mt-2 text-[12px] leading-[1.5] text-gray-300 line-clamp-3">
+                    {editionLead.lede}
+                  </p>
+
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white">
+                    Read the snapshot
+                    <ArrowRight size={10} />
+                  </span>
+                </div>
+              </Link>
+
+              {/* EDITION PICKS */}
+
+              <div>
+                <div className="divide-y divide-gray-200 border-y border-gray-200">
+                  {editionPicks.map((story) => {
+                    const chip = editionDealChip(story);
+
+                    return (
+                      <Link
+                        key={story.id}
+                        to={maEdition1ArticlePath(story)}
+                        className="group block py-3"
+                      >
+                        <div className="flex items-center gap-2">
+                          {chip && (
+                            <span className="rounded-sm bg-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white">
+                              {chip.value}
+                            </span>
+                          )}
+
+                          <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
+                            {story.keyFacts[0]?.value}
+                          </span>
+                        </div>
+
+                        <h3 className="mt-1 font-serif text-[15px] font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600">
+                          {story.title}
+                        </h3>
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => openSectionFeed("Mergers & Acquisitions")}
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+                >
+                  All {maEdition1Articles.length} Edition 1 stories
+                  <ArrowRight size={10} />
+                </button>
+              </div>
+            </div>
+
+            {/* DEAL STATUS TRACKER */}
+
+            <details className="mt-6 rounded-md border border-gray-200">
+              <summary className="cursor-pointer select-none px-4 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800">
+                Deal status table (as of the early August 2026 tracker update)
+              </summary>
+
+              <div className="overflow-x-auto border-t border-gray-200">
+                <table className="w-full min-w-[560px] text-left text-[11px]">
+                  <thead className="bg-gray-50 text-[9px] uppercase tracking-wide text-gray-500">
+                    <tr>
+                      <th className="px-4 py-2 font-semibold">Deal</th>
+                      <th className="px-4 py-2 font-semibold">Value</th>
+                      <th className="px-4 py-2 font-semibold">Announced</th>
+                      <th className="px-4 py-2 font-semibold">Status</th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-gray-100">
+                    {maEdition1DealTable.map((row) => (
+                      <tr key={row.deal}>
+                        <td className="px-4 py-2 font-medium text-gray-900">
+                          {row.deal}
+                        </td>
+                        <td className="px-4 py-2 text-gray-700">{row.value}</td>
+                        <td className="px-4 py-2 text-gray-700">
+                          {row.announced}
+                        </td>
+                        <td className="px-4 py-2 text-gray-700">{row.status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="border-t border-gray-200 px-4 py-3 text-[10px] leading-[1.5] text-gray-400">
+                {maEdition1Sources}
+              </p>
+            </details>
+          </section>
 
           {/* =================================================
               LATEST NEWS (all 60 digest stories) + MAGAZINE
