@@ -686,22 +686,23 @@ export function HomePage() {
               </div>
             </Link>
 
-            {/* HEADLINES BY INDUSTRY (every industry, each opens its article) */}
+            {/* HEADLINES BY INDUSTRY — every story = one image + one headline
+                (Bloomberg-style cards). Each card opens its article page. */}
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-8">
+            <div className="mt-8 space-y-10">
               {editionIndustries.map((group) => (
                 <div key={group.name}>
-                  <div className="mb-1 flex items-center justify-between border-b-2 border-black pb-2">
-                    <h3 className="text-[10px] font-bold uppercase leading-[1.3] tracking-[0.12em] text-gray-900">
+                  <div className="mb-4 flex items-center justify-between border-b border-gray-300 pb-2">
+                    <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-900">
                       {group.name}
                     </h3>
 
-                    <span className="ml-2 shrink-0 text-[9px] font-semibold text-red-600">
-                      {group.stories.length}
+                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400">
+                      {group.stories.length} stories
                     </span>
                   </div>
 
-                  <div className="divide-y divide-gray-200">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-5">
                     {group.stories.map((story) => {
                       const chip = editionDealChip(story);
 
@@ -709,15 +710,23 @@ export function HomePage() {
                         <Link
                           key={story.id}
                           to={maEdition1ArticlePath(story)}
-                          className="group block py-3"
+                          className="group block"
                         >
+                          <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
+                            <ImageWithFallback
+                              src={story.image}
+                              alt={story.title}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+
                           {chip && (
-                            <span className="inline-block rounded-sm bg-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white">
+                            <span className="mt-2 block text-[9px] font-bold uppercase tracking-[0.12em] text-red-600">
                               {chip.value}
                             </span>
                           )}
 
-                          <h4 className="mt-1 font-serif text-[14px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600">
+                          <h4 className="mt-1 font-serif text-[15px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600">
                             {story.title}
                           </h4>
                         </Link>
