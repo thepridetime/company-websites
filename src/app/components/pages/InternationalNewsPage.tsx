@@ -251,7 +251,7 @@ export function InternationalNewsPage() {
         );
 
   const featuredArticle = articles[0];
-  const secondaryArticles = articles.slice(1, 7);
+  const secondaryArticles = articles.slice(2, 8);
 
   return (
     <main className="min-h-screen bg-white text-[#071a2d]">
@@ -315,10 +315,18 @@ export function InternationalNewsPage() {
           <div>
             {featuredArticle ? (
               <>
-                <ArticleCard
-                  article={featuredArticle}
-                  featured
-                />
+                {/* =================================================
+                    TWO MAIN INTERNATIONAL HEADLINES
+                   ================================================= */}
+                <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
+                  {articles.slice(0, 2).map((article) => (
+                    <ArticleCard
+                      key={article.id}
+                      article={article}
+                      featured
+                    />
+                  ))}
+                </div>
 
                 {/* In-article ad */}
                 <div className="my-8">
