@@ -177,6 +177,37 @@ const editionIndustries = maEdition1IndustryOrder.map((name) => ({
   stories: maEdition1Articles.filter((article) => article.industry === name),
 })).filter((group) => group.stories.length > 0);
 
+/* One headline per department (digest section). Mergers &
+   Acquisitions leads with the newest Edition 1 deal story; every
+   other department leads with its first digest story. */
+const allSectionStories: DigestArticle[] = [
+  ...maEdition1Articles,
+  ...digestArticles,
+];
+
+const sectionHeadlines = new Map<number, DigestArticle>(
+  digestSections
+    .map((section) => {
+      const story =
+        section.number === 4
+          ? editionBy("Paramount") ??
+            allSectionStories.find((a) => a.sectionNumber === 4)
+          : allSectionStories.find((a) => a.sectionNumber === section.number);
+
+      return story ? ([section.number, story] as const) : null;
+    })
+    .filter((entry): entry is readonly [number, DigestArticle] =>
+      Boolean(entry)
+    )
+);
+
+const sectionStoryCounts = new Map<number, number>(
+  digestSections.map((section) => [
+    section.number,
+    allSectionStories.filter((a) => a.sectionNumber === section.number).length,
+  ])
+);
+
 function editionDealChip(article: EditionArticle) {
   return article.keyFacts.find((fact) =>
     ["Enterprise value", "Combined enterprise value", "Value"].includes(
