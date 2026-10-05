@@ -11,27 +11,29 @@
 ========================================================= */
 
 import type { DigestArticle } from "./digestArticleData";
-
-import img_Energy1 from "../../imports/Energy1.png";
-import img_Energy2 from "../../imports/Energy2.png";
-import img_Energy3 from "../../imports/Energy3.png";
-import img_FIN3 from "../../imports/FIN3.png";
-import img_FIN4 from "../../imports/FIN4.png";
-import img_FIN5 from "../../imports/FIN5.png";
-import img_HC1 from "../../imports/HC1.png";
-import img_HC2 from "../../imports/HC2.png";
-import img_HC3 from "../../imports/HC3.png";
-import img_HC4 from "../../imports/HC4.png";
-import img_Insightimage from "../../imports/Insightimage.png";
-import img_Manu1 from "../../imports/Manu1.png";
-import img_Manu2 from "../../imports/Manu2.png";
-import img_Manu3 from "../../imports/Manu3.png";
+import img_LN4image from "../../imports/LN4image.png";
 import img_Smartc1 from "../../imports/Smartc1.png";
 import img_Smartc2 from "../../imports/Smartc2.png";
 import img_Smartc3 from "../../imports/Smartc3.png";
 import img_Smartc4 from "../../imports/Smartc4.png";
-import img_data_centre from "../../imports/data-centre.png";
+import img_cyber_ops from "../../imports/cyber-ops.png";
+import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
+import img_supply_chain_map from "../../imports/supply-chain-map.png";
+import img_Energy1 from "../../imports/Energy1.png";
+import img_Energy2 from "../../imports/Energy2.png";
 import img_energy_tanks from "../../imports/energy-tanks.png";
+import img_FIN3 from "../../imports/FIN3.png";
+import img_FIN4 from "../../imports/FIN4.png";
+import img_FIN5 from "../../imports/FIN5.png";
+import img_Insightimage from "../../imports/Insightimage.png";
+import img_HC1 from "../../imports/HC1.png";
+import img_HC2 from "../../imports/HC2.png";
+import img_HC3 from "../../imports/HC3.png";
+import img_HC4 from "../../imports/HC4.png";
+import img_Manu1 from "../../imports/Manu1.png";
+import img_Manu2 from "../../imports/Manu2.png";
+import img_Manu3 from "../../imports/Manu3.png";
+
 
 export type EditionArticle = DigestArticle & {
   editorNote?: string;
@@ -82,7 +84,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Dealmaking in 2026 has run at a record pace. According to a deal tracker maintained by DealRoom, global M&A reached about $2.8 trillion in the first half of the year, up 48% on the same period of 2025 and the strongest opening six months since records began in 1980.",
     location: "Global",
     readTime: "1 min read",
-    image: img_Insightimage,
+    image: img_LN4image,
     body: [
       "Dealmaking in 2026 has run at a record pace. According to a deal tracker maintained by DealRoom, global M&A reached about $2.8 trillion in the first half of the year, up 48% on the same period of 2025 and the strongest opening six months since records began in 1980. Full-year 2025 had already totalled roughly $4.6 trillion, the highest annual figure since 2021.",
       "Scale and stock currency. Several of the largest deals are all-stock combinations or mergers of equals, in utilities, real estate and oil and gas, where no conventional purchase price exists.",
@@ -101,7 +103,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Paramount has agreed to buy all of Warner Bros. Discovery for $31.00 per share in cash.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Smartc1,
+    image: img_Smartc4,
     body: [
       "Paramount has agreed to buy all of Warner Bros. Discovery for $31.00 per share in cash. That values the equity at about $81 billion and the enterprise at about $110 billion, and represents a premium of roughly 147% to WBD's unaffected share price of $12.54. Financing combines $47 billion of new equity from the Ellison family and RedBird with $54 billion of debt. Netflix, the rival bidder, withdrew on 26 February rather than raise its offer.",
       "The deal has passed most hurdles. WBD shareholders approved it on 23 April, the US Justice Department cleared it on 12 June without requiring divestitures, and the UK Competition and Markets Authority followed on 6 August. The remaining obstacle is litigation: twelve state attorneys general and the Writers Guild are suing to block it, with a 12-day antitrust trial scheduled to begin on 2 March 2027.",
@@ -118,7 +120,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "SpaceX announced on 2 February that it had acquired Elon Musk's AI company xAI. Neither company disclosed a price or structure.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Smartc2,
+    image: img_Smartc3,
     body: [
       "SpaceX announced on 2 February that it had acquired Elon Musk's AI company xAI. Neither company disclosed a price or structure. The figures widely quoted, about $250 billion for xAI and about $1.25 trillion for the combined entity, come from unnamed sources cited by CNBC and Reuters and should be treated as press-reported. SpaceX listed publicly on 12 June.",
       "Four days after the listing, SpaceX agreed to acquire AI coding platform Cursor (Anysphere) in an all-stock deal reported at about $60 billion, with completion guided for the third quarter of 2026. Cursor had previously been raising money at a valuation of roughly $50 billion. The $60 billion figure has been reported from a regulatory filing rather than a company release.",
@@ -134,7 +136,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Fox Corporation will pay $160.00 per Roku share, made up of $96.00 in cash and 0.9693 of a Fox Class A share.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Smartc3,
+    image: img_Smartc1,
     body: [
       "Fox Corporation will pay $160.00 per Roku share, made up of $96.00 in cash and 0.9693 of a Fox Class A share. Fox holders would own about 73% of the combined business. The premium is only around 11% to the prior close, thin for a deal of this size, and Roku shares have traded roughly 16% below the offer price, a sign that investors see real completion risk. Shareholders of both companies must approve.",
     ],
@@ -149,7 +151,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Uber is offering EUR 41.50 per share in cash for the Berlin-based delivery group.",
     location: "Berlin",
     readTime: "1 min read",
-    image: img_Smartc4,
+    image: img_warehouse_robotics,
     body: [
       "Uber is offering EUR 41.50 per share in cash for the Berlin-based delivery group. Uber already holds 24.77% directly, and with other instruments and shareholder commitments its economic interest would reach about 53%, against a minimum acceptance threshold of 50% plus one share. To pre-empt antitrust concerns it has agreed to sell operations in 14 overlapping markets to SSW Partners for around EUR 1.4 billion.",
       "The political concessions are explicit: Delivery Hero's Berlin headquarters and workforce are protected until at least 2029, and Uber has promised EUR 2 billion of German investment through 2031. The 34% premium to the three-month average price before announcement is the fairer measure; a larger 127% figure is measured against a pre-leak price.",
@@ -165,7 +167,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Google completed its $32 billion all-cash purchase of cybersecurity firm Wiz on 11 March, after the US Justice Department closed its probe early and the European Commission cleared it unconditionally in February.",
     location: "Global",
     readTime: "1 min read",
-    image: img_data_centre,
+    image: img_cyber_ops,
     body: [
       "Google completed its $32 billion all-cash purchase of cybersecurity firm Wiz on 11 March, after the US Justice Department closed its probe early and the European Commission cleared it unconditionally in February. Salesforce agreed to buy AI customer-service platform Fin for about $3.6 billion (announced 15 June, expected to close in its fourth fiscal quarter of 2027), and Autodesk agreed to acquire maintenance software company MaintainX for roughly the same amount in cash. Lattice Semiconductor closed its $1.65 billion purchase of AMI on 27 July, its largest acquisition. Qualcomm completed its purchase of Modular on 29 July; no price was disclosed, and a figure of about $3.9 billion in circulation is press-reported only.",
     ],
@@ -180,7 +182,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "NextEra Energy will acquire Dominion Energy in an all-stock deal. Dominion shareholders receive 0.8138 NextEra shares each plus a one-time aggregate cash payment of $360 million, leaving NextEra holders with about 74.5% of the combined company.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Energy1,
+    image: img_Manu1,
     body: [
       "NextEra Energy will acquire Dominion Energy in an all-stock deal. Dominion shareholders receive 0.8138 NextEra shares each plus a one-time aggregate cash payment of $360 million, leaving NextEra holders with about 74.5% of the combined company. Neither company has disclosed a transaction value; figures near $67 billion in trade press are derived calculations.",
       "Approvals will take time: FERC, the NRC, utility regulators in Virginia, North Carolina and South Carolina, antitrust clearance and both shareholder votes. Virginia is the likeliest pressure point because of the data-centre demand growing in Dominion's territory.",
@@ -196,7 +198,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "The all-stock combination gave Coterra holders 0.70 Devon shares each and Devon holders about 54% of the result.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Energy2,
+    image: img_energy_tanks,
     body: [
       "The all-stock combination gave Coterra holders 0.70 Devon shares each and Devon holders about 54% of the result. The company keeps the Devon name and DVN ticker and targets $1 billion in annual pre-tax synergies. The $58 billion figure is the combined enterprise value, not a price paid; the consideration itself is around $25 billion.",
     ],
@@ -211,7 +213,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Engie bought Britain's largest electricity distributor from CK Infrastructure for GBP 10.5 billion in equity, or GBP 15.8 billion including debt (about $21.4 billion).",
     location: "United Kingdom",
     readTime: "1 min read",
-    image: img_Energy3,
+    image: img_Energy1,
     body: [
       "Engie bought Britain's largest electricity distributor from CK Infrastructure for GBP 10.5 billion in equity, or GBP 15.8 billion including debt (about $21.4 billion). It is funding the deal with roughly EUR 5 billion of debt and hybrid securities, EUR 4 billion of disposals through 2028 and up to EUR 3 billion of new equity. Completion came ahead of guidance, with the binding condition being independent shareholder approval at the Hong Kong-listed CK parent companies rather than any UK regulatory hurdle.",
     ],
@@ -226,7 +228,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "A consortium led by BlackRock's Global Infrastructure Partners and EQT, with CalPERS and the Qatar Investment Authority, will pay $15.00 per share in cash, a 40.3% premium to the 30-day average price before 8 July 2025.",
     location: "United States",
     readTime: "1 min read",
-    image: img_energy_tanks,
+    image: img_Energy2,
     body: [
       "A consortium led by BlackRock's Global Infrastructure Partners and EQT, with CalPERS and the Qatar Investment Authority, will pay $15.00 per share in cash, a 40.3% premium to the 30-day average price before 8 July 2025. Enterprise value is $33.4 billion but equity value is only $10.7 billion, the difference being AES's debt. Stockholders have approved the deal.",
     ],
@@ -241,7 +243,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "The Surface Transportation Board paused its review of the proposed $85 billion railroad merger on 28 May 2026 pending supplemental filings, and no decision timetable has been set.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Energy1,
+    image: img_supply_chain_map,
     body: [
       "The Surface Transportation Board paused its review of the proposed $85 billion railroad merger on 28 May 2026 pending supplemental filings, and no decision timetable has been set.",
     ],
@@ -256,7 +258,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "This all-stock merger of equals would create one of the largest US apartment owners, with more than 180,000 units and a pro forma equity market value near $52 billion.",
     location: "United States",
     readTime: "1 min read",
-    image: img_FIN3,
+    image: img_FIN4,
     body: [
       "This all-stock merger of equals would create one of the largest US apartment owners, with more than 180,000 units and a pro forma equity market value near $52 billion. AvalonBay holders receive 2.793 Equity Residential shares each and would own about 51.2% of the combined company. Because it is a merger of equals, no purchase price exists, and the $69 billion is combined enterprise value. Both shareholder groups still need to vote.",
     ],
@@ -271,7 +273,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "TIAA's investment arm is paying 590p per share in cash, plus permitted dividends of up to 22p, a 29% premium to Schroders' 456p close on 11 February.",
     location: "United Kingdom",
     readTime: "1 min read",
-    image: img_FIN4,
+    image: img_FIN5,
     body: [
       "TIAA's investment arm is paying 590p per share in cash, plus permitted dividends of up to 22p, a 29% premium to Schroders' 456p close on 11 February. The combined platform would manage around $2.5 trillion. Shareholder risk has largely gone: irrevocable commitments cover about 42% of the shares, including the Schroder family trustees, and the 16 April meetings passed with 99.92% support. Court sanction and FCA change-of-control approval remain.",
     ],
@@ -286,7 +288,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Santander is paying $75.59 per Webster share, $48.75 in cash plus 2.0548 Santander ADSs, as part of its push into US commercial banking and a stated goal of an 18% US return on tangible equity by 2028.",
     location: "United States",
     readTime: "1 min read",
-    image: img_FIN5,
+    image: img_FIN3,
     body: [
       "Santander is paying $75.59 per Webster share, $48.75 in cash plus 2.0548 Santander ADSs, as part of its push into US commercial banking and a stated goal of an 18% US return on tangible equity by 2028. The OCC approved on 12 June, the ECB on 21 July and the Federal Reserve on 4 August. The two companies quote slightly different values ($12.2 billion and $12.3 billion). Readers should confirm completion, as the tracker used here predates the expected closing date.",
     ],
@@ -301,7 +303,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Fertitta Entertainment agreed on 28 May to take casino operator Caesars private in a $17.6 billion deal, needing approval from gaming regulators in every state where Caesars is licensed.",
     location: "United States",
     readTime: "1 min read",
-    image: img_FIN3,
+    image: img_Insightimage,
     body: [
       "Fertitta Entertainment agreed on 28 May to take casino operator Caesars private in a $17.6 billion deal, needing approval from gaming regulators in every state where Caesars is licensed. Intercontinental Exchange will buy MarketAxess for $167 per share in cash, about $6 billion, at a 33% premium (announced 30 July, expected H1 2027). Capital One completed its $5.15 billion purchase of fintech Brex on 7 April.",
     ],
@@ -316,7 +318,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "The largest medical-device deal of 2026 takes Boston Scientific into stroke and peripheral interventional care.",
     location: "United States",
     readTime: "1 min read",
-    image: img_HC1,
+    image: img_HC3,
     body: [
       "Pharmaceutical and medical-device groups are using acquisitions to refill pipelines ahead of patent expiries. The tracker cites Evaluate's estimate that more than $300 billion of prescription drug revenue will lose exclusivity between 2025 and 2030, and notes buyers are typically paying premiums of 25% to 50%.",
       "The largest medical-device deal of 2026 takes Boston Scientific into stroke and peripheral interventional care. Penumbra holders can elect $374.00 in cash or 3.8721 Boston Scientific shares, with the mix landing at about 73% cash. Penumbra stockholders have approved, leaving antitrust clearance as the main condition.",
@@ -332,7 +334,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "India's Sun Pharma will pay $14.00 per share in cash for the Merck spin-off, building a global women's health and biosimilars business in the largest deal in its history.",
     location: "India",
     readTime: "1 min read",
-    image: img_HC2,
+    image: img_HC4,
     body: [
       "India's Sun Pharma will pay $14.00 per share in cash for the Merck spin-off, building a global women's health and biosimilars business in the largest deal in its history. Be careful with the premium: Organon's own materials cite 103%, measured to a close seventeen days before the announcement, while the premium to the last close before announcement is about 24%.",
     ],
@@ -347,7 +349,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Germany's Merck KGaA will acquire life-science tools group Bio-Techne for $73.00 per share in cash, about $11.3 billion enterprise value (EUR 9.9 billion), announced 25 June; the disclosed 36% premium is measured to the one-month average price.",
     location: "Germany",
     readTime: "1 min read",
-    image: img_HC3,
+    image: img_HC2,
     body: [
       "Germany's Merck KGaA will acquire life-science tools group Bio-Techne for $73.00 per share in cash, about $11.3 billion enterprise value (EUR 9.9 billion), announced 25 June; the disclosed 36% premium is measured to the one-month average price. AbbVie agreed on 22 June to buy Apogee Therapeutics for $135.11 per share in cash, about $10.9 billion at a 49% premium. GSK completed its roughly $10.6 billion purchase of Nuvalent on 15 July.",
     ],
@@ -362,7 +364,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Lilly closed its Centessa Pharmaceuticals acquisition on 24 June ($38.00 per share in cash plus a contingent value right of up to $9.00, about $6.3 billion headline).",
     location: "United States",
     readTime: "1 min read",
-    image: img_HC4,
+    image: img_HC1,
     body: [
       "Lilly closed its Centessa Pharmaceuticals acquisition on 24 June ($38.00 per share in cash plus a contingent value right of up to $9.00, about $6.3 billion headline). It also agreed to buy Kelonia Therapeutics (about $3.25 billion upfront, up to $7 billion with milestones), Orna Therapeutics (up to $2.4 billion) and Ajax Therapeutics (up to $2.3 billion). Gilead completed its Tubulis purchase on 21 May (about $3.15 billion upfront plus up to $1.85 billion in milestones), and Angelini Pharma closed its $4.1 billion deal for Catalyst Pharmaceuticals on 16 July.",
     ],
@@ -377,7 +379,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "McCormick is combining with Unilever's foods arm at 13.8 times FY2025 EBITDA. Unilever receives $15.7 billion in cash plus stock equal to 65% of the combined company, worth roughly $29.1 billion, so McCormick's own shareholders end up in the minority.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Manu1,
+    image: img_Manu2,
     body: [
       "McCormick is combining with Unilever's foods arm at 13.8 times FY2025 EBITDA. Unilever receives $15.7 billion in cash plus stock equal to 65% of the combined company, worth roughly $29.1 billion, so McCormick's own shareholders end up in the minority.",
     ],
@@ -392,7 +394,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "France's three other mobile operators have entered exclusive talks to divide Altice France's SFR, which would cut the market from four national operators to three.",
     location: "France",
     readTime: "1 min read",
-    image: img_Manu2,
+    image: img_Smartc2,
     body: [
       "France's three other mobile operators have entered exclusive talks to divide Altice France's SFR, which would cut the market from four national operators to three. Competition authorities have historically resisted this structure, so expect a prolonged review.",
     ],
