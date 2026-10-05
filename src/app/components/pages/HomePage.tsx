@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import {
@@ -6,36 +6,23 @@ import {
   ArrowRight,
   TrendingUp,
   TrendingDown,
-  Play,
+  MapPin,
 } from "lucide-react";
 
-import EnergyImg from "../../../imports/energy-tanks.png";
-import DataCentreImg from "../../../imports/data-centre.png";
-import RoboticsImg from "../../../imports/warehouse-robotics.png";
-import SupplyChainImg from "../../../imports/supply-chain-map.png";
-import HealthcareImg from "../../../imports/ai-healthcare.png";
-import CyberImg from "../../../imports/cyber-ops.png";
-import MagazineImg from "../../../imports/pt30image.png"; // original magazine image (unchanged)
+import MagazineImg from "../../../imports/pt30image.png";
 
 import { getQuotes } from "../../../services/marketApi";
-import { articlePath } from "../../data/homepageArticleData";
+import {
+  digestArticles,
+  digestArticlePath,
+  digestSections,
+  regionalSnapshot,
+  type DigestArticle,
+} from "../../data/digestArticleData";
 
 /* =========================================================
    TYPES
 ========================================================= */
-
-type NewsItem = {
-  id: number;
-  hot: boolean;
-  category: string;
-  tabs: string[];
-  title: string;
-  excerpt: string;
-  publishedAt: string;
-  image: string;
-  link: string;
-  inSidebar?: boolean; // true = shown in sidebar stream only (not in main list)
-};
 
 type MarketItem = {
   symbol: string;
@@ -88,165 +75,68 @@ function PrideTimesAd() {
 }
 
 /* =========================================================
-   TOP STORIES (HERO, CENTRE, VIDEO)
+   TOP STORIES
+   Every story below comes from the Global Corporate News
+   Digest (src/app/data/digestArticleData.ts). Each one links to
+   its full inner article at /article/:slug.
 ========================================================= */
 
-const heroStory = {
-  category: "ENERGY | GLOBAL MARKETS",
-  title: "Middle East Supply Disruptions Put Global Energy Markets Under Pressure",
-  excerpt:
-    "Oil supply interruptions, tanker-route risks and volatile freight costs are reshaping the global energy outlook. The Pride Times report tracks the demand forecast, inventory drawdowns and peak Gulf production losses behind the disruption.",
-  image: EnergyImg,
-  link: "/markets",
-};
+const byTitle = (prefix: string): DigestArticle =>
+  digestArticles.find((article) => article.title.startsWith(prefix)) ??
+  digestArticles[0];
 
-const centerStories = [
-  {
-    id: 1,
-    tag: "TECHNOLOGY | ENERGY",
-    title: "AI Data-Centre Expansion Is Turning Secure Electricity Into a Strategic Constraint",
-    excerpt:
-      "Data-centre electricity demand is projected to approach 1,000 TWh by 2030, making secure power access and grid readiness central to the next phase of AI infrastructure.",
-    publishedAt: "September 2026",
-    image: DataCentreImg,
-    link: "/technology",
-  },
-  {
-    id: 2,
-    tag: "SUPPLY CHAIN",
-    title: "Global Supply Chains Reconfigure as Nearshoring and Geopolitical Risk Rise",
-    excerpt:
-      "Companies are balancing resilience against cost as tariffs, commodity prices and regional sourcing strategies reshape trade networks.",
-    publishedAt: "September 2026",
-    image: SupplyChainImg,
-    link: "/supply-chain",
-  },
+const leadStory = byTitle("Altamira Capital commits $34.1B");
+
+const majorStories = [
+  byTitle("Navarro Partners agrees $13.9B takeover"),
+  byTitle("Aurelia Foods reports positive"),
 ];
 
-const videoFeature = {
-  title: "Autonomous Systems Move Into Mobility, Warehousing and Industrial Operations",
-  image: RoboticsImg,
-  link: "/innovation",
-};
+const editorsPick = byTitle("Tidewater Aerospace reports first green-hydrogen");
+
+const featuredIds = new Set(
+  [leadStory, ...majorStories, editorsPick].map((article) => article.id)
+);
+
+/* Sidebar stream: the first non-featured story from each of the
+   first six sections. */
+const sidebarStories = digestSections
+  .map((section) =>
+    digestArticles.find(
+      (article) =>
+        article.sectionNumber === section.number &&
+        !featuredIds.has(article.id)
+    )
+  )
+  .filter((article): article is DigestArticle => Boolean(article))
+  .slice(0, 6);
 
 /* =========================================================
    LATEST NEWS
-   One story = one entry. A story is shown EITHER in the main
-   list OR in the sidebar stream (inSidebar: true), never both.
-   Stories already featured above are intentionally NOT repeated.
+   "All" interleaves the ten sections so the feed stays varied;
+   a section tab shows every story from that section.
 ========================================================= */
 
-const latestNewsTabs = [
-  "All",
-  "Markets",
-  "Technology",
-  "Cybersecurity",
-  "Energy",
-  "Industries",
-  "World",
-];
+const sectionNames = digestSections.map((section) => section.name);
+const latestNewsTabs = ["All", ...sectionNames];
 
-const latestNews: NewsItem[] = [
-  {
-    id: 1,
-    hot: true,
-    category: "CYBERSECURITY",
-    tabs: ["Cybersecurity"],
-    title: "Cybersecurity Teams Face a Shorter Window to Patch Critical Vulnerabilities",
-    excerpt:
-      "AI is accelerating the speed of cyber exploitation, putting critical infrastructure and industrial operators under pressure to shorten remediation cycles.",
-    publishedAt: "September 2026",
-    image: CyberImg,
-    link: "/cybersecurity",
-  },
-  {
-    id: 2,
-    hot: true,
-    category: "HEALTHCARE",
-    tabs: ["Industries"],
-    title: "Healthcare Supply Chains Turn to AI for Forecasting and Resilience",
-    excerpt:
-      "Software-led systems and AI tools are improving inventory visibility, demand forecasting and supplier-risk management across healthcare.",
-    publishedAt: "September 2026",
-    image: HealthcareImg,
-    link: "/healthcare",
-  },
-  {
-    id: 3,
-    hot: false,
-    category: "MANUFACTURING",
-    tabs: ["Industries"],
-    title: "Manufacturers Accelerate Robotics and AI as Tariffs and Labour Costs Bite",
-    excerpt:
-      "Robotics, digital twins and domestic supplier partnerships are becoming part of the manufacturing response to labour, tariff and energy pressures.",
-    publishedAt: "September 2026",
-    image: RoboticsImg,
-    link: "/manufacturing",
-  },
-  {
-    id: 4,
-    hot: false,
-    category: "MARKETS",
-    tabs: ["Markets", "World"],
-    title: "Central Banks Reassess Reserve Exposure as Gold Gains Strategic Attention",
-    excerpt:
-      "Reserve managers are weighing currency exposure against gold holdings as geopolitical risk shapes allocation decisions.",
-    publishedAt: "September 2026",
-    image: EnergyImg,
-    link: "/markets",
-    inSidebar: true,
-  },
-  {
-    id: 5,
-    hot: false,
-    category: "WORLD",
-    tabs: ["Markets", "World"],
-    title: "Global Growth Outlook Faces Pressure From Energy Disruption and Fragmentation",
-    excerpt:
-      "Energy disruption and trade fragmentation are weighing on growth forecasts across major economies.",
-    publishedAt: "September 2026",
-    image: SupplyChainImg,
-    link: "/world",
-  },
-  {
-    id: 6,
-    hot: false,
-    category: "TECHNOLOGY",
-    tabs: ["Technology"],
-    title: "AI Moves From Assistive Tools to Autonomous Enterprise Workflows",
-    excerpt:
-      "Enterprises are shifting from AI assistants to agents that run multi-step business processes with limited human input.",
-    publishedAt: "September 2026",
-    image: RoboticsImg,
-    link: "/technology",
-    inSidebar: true,
-  },
-  {
-    id: 7,
-    hot: false,
-    category: "TECHNOLOGY | WORLD",
-    tabs: ["Technology", "World"],
-    title: "U.S.–China AI Competition Expands From Models to Global Infrastructure",
-    excerpt:
-      "The AI race is moving beyond model quality to chips, data centres and the networks that connect them.",
-    publishedAt: "September 2026",
-    image: CyberImg,
-    link: "/world",
-    inSidebar: true,
-  },
-  {
-    id: 8,
-    hot: false,
-    category: "ENERGY | CITIES",
-    tabs: ["Energy", "Technology", "Industries"],
-    title: "Smart-City Investment Converges Around AI, Grid Modernisation and Mobility",
-    excerpt:
-      "City planners are combining AI, grid upgrades and mobility projects into integrated infrastructure programmes.",
-    publishedAt: "September 2026",
-    image: DataCentreImg,
-    link: "/smart-cities",
-  },
-];
+const interleavedArticles: DigestArticle[] = (() => {
+  const bySection = digestSections.map((section) =>
+    digestArticles.filter((article) => article.sectionNumber === section.number)
+  );
+  const rounds = Math.max(...bySection.map((list) => list.length));
+  const result: DigestArticle[] = [];
+
+  for (let round = 0; round < rounds; round += 1) {
+    bySection.forEach((list) => {
+      if (list[round]) result.push(list[round]);
+    });
+  }
+
+  return result;
+})();
+
+const PAGE_SIZE = 8;
 
 /* =========================================================
    MAGAZINE
@@ -338,6 +228,9 @@ export function HomePage() {
     useState<"Indices" | "Crypto">("Indices");
 
   const [activeNewsTab, setActiveNewsTab] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const newsListRef = useRef<HTMLDivElement | null>(null);
 
   const [marketSnapshotData, setMarketSnapshotData] = useState<
     Record<string, MarketItem[]>
@@ -379,17 +272,40 @@ export function HomePage() {
   }, []);
 
   /* =======================================================
-     NEWS SPLIT: SIDEBAR STREAM vs MAIN LIST (no overlap)
+     LATEST NEWS FILTERING
   ======================================================= */
 
-  const sidebarNews = latestNews.filter((story) => story.inSidebar);
-
-  const mainNews = latestNews.filter((story) => !story.inSidebar);
+  const filteredStories = useMemo(
+    () =>
+      activeNewsTab === "All"
+        ? interleavedArticles
+        : digestArticles.filter((article) => article.section === activeNewsTab),
+    [activeNewsTab]
+  );
 
   const latestStories =
     activeNewsTab === "All"
-      ? mainNews
-      : mainNews.filter((story) => story.tabs.includes(activeNewsTab));
+      ? filteredStories.slice(0, visibleCount)
+      : filteredStories;
+
+  const hasMore =
+    activeNewsTab === "All" && visibleCount < filteredStories.length;
+
+  const selectTab = (tab: string) => {
+    setActiveNewsTab(tab);
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  const openSectionFeed = (sectionName: string) => {
+    selectTab(sectionName);
+
+    window.requestAnimationFrame(() => {
+      newsListRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
@@ -406,28 +322,28 @@ export function HomePage() {
               {/* LEAD STORY */}
 
               <Link
-                to={articlePath(heroStory.title)}
+                to={digestArticlePath(leadStory)}
                 className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
               >
                 <ImageWithFallback
-                  src={heroStory.image}
-                  alt={heroStory.title}
+                  src={leadStory.image}
+                  alt={leadStory.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                 <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                  {heroStory.category}
+                  {leadStory.section} | {leadStory.location}
                 </span>
 
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                   <h1 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
-                    {heroStory.title}
+                    {leadStory.title}
                   </h1>
 
                   <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
-                    {heroStory.excerpt}
+                    {leadStory.lede}
                   </p>
 
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
@@ -442,27 +358,27 @@ export function HomePage() {
               <div className="min-w-0">
                 <div className="mb-4">
                   <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.15em] mb-2">
-                    {centerStories[0].tag}
+                    {majorStories[0].section} | {majorStories[0].location}
                   </span>
 
                   <Link
-                    to={articlePath(centerStories[0].title)}
+                    to={digestArticlePath(majorStories[0])}
                     className="group block"
                   >
                     <div className="overflow-hidden rounded-lg">
                       <ImageWithFallback
-                        src={centerStories[0].image}
-                        alt={centerStories[0].title}
+                        src={majorStories[0].image}
+                        alt={majorStories[0].title}
                         className="w-full h-[220px] md:h-[250px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                     </div>
 
                     <h2 className="font-serif text-xl md:text-2xl font-bold leading-[1.15] mt-3 text-gray-950 group-hover:text-red-600 transition-colors">
-                      {centerStories[0].title}
+                      {majorStories[0].title}
                     </h2>
 
                     <p className="text-[12px] text-gray-600 mt-2 leading-[1.6] line-clamp-3">
-                      {centerStories[0].excerpt}
+                      {majorStories[0].lede}
                     </p>
                   </Link>
                 </div>
@@ -470,29 +386,29 @@ export function HomePage() {
                 {/* SECOND MAJOR STORY */}
 
                 <Link
-                  to={articlePath(centerStories[1].title)}
+                  to={digestArticlePath(majorStories[1])}
                   className="group flex gap-3 pt-4 border-t border-gray-200"
                 >
                   <div className="shrink-0 w-[105px] h-[75px] overflow-hidden rounded-md">
                     <ImageWithFallback
-                      src={centerStories[1].image}
-                      alt={centerStories[1].title}
+                      src={majorStories[1].image}
+                      alt={majorStories[1].title}
                       className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <span className="text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                      {centerStories[1].tag}
+                      {majorStories[1].section}
                     </span>
 
                     <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
-                      {centerStories[1].title}
+                      {majorStories[1].title}
                     </h3>
 
                     <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
                       <Clock size={9} />
-                      {centerStories[1].publishedAt}
+                      {majorStories[1].publishedAt}
                     </span>
                   </div>
                 </Link>
@@ -562,46 +478,40 @@ export function HomePage() {
               {/* RIGHT NEWSROOM COLUMN */}
 
               <aside className="min-w-0">
-                {/* VIDEO */}
+                {/* EDITOR'S PICK */}
 
                 <div className="pb-5 border-b border-gray-200">
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-serif text-lg font-bold">
-                      Today's Videos
+                      Editor's Pick
                     </h2>
 
-                    <button
-                      type="button"
+                    <Link
+                      to={editorsPick.sectionPath}
                       className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium hover:border-gray-500 transition-colors"
                     >
                       Explore More
-                    </button>
+                    </Link>
                   </div>
 
                   <Link
-                    to={articlePath(videoFeature.title)}
+                    to={digestArticlePath(editorsPick)}
                     className="group block"
                   >
                     <div className="relative overflow-hidden rounded-lg">
                       <ImageWithFallback
-                        src={videoFeature.image}
-                        alt={videoFeature.title}
+                        src={editorsPick.image}
+                        alt={editorsPick.title}
                         className="w-full h-[175px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
                       />
-
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/25 transition-colors">
-                        <div className="w-11 h-11 rounded-full bg-white/95 flex items-center justify-center shadow-md">
-                          <Play
-                            size={16}
-                            fill="black"
-                            className="text-black ml-0.5"
-                          />
-                        </div>
-                      </div>
                     </div>
 
-                    <h3 className="text-[13px] font-semibold leading-[1.4] mt-2.5 text-gray-900 group-hover:text-red-600 transition-colors">
-                      {videoFeature.title}
+                    <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.14em] mt-2.5">
+                      {editorsPick.section}
+                    </span>
+
+                    <h3 className="text-[13px] font-semibold leading-[1.4] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                      {editorsPick.title}
                     </h3>
                   </Link>
                 </div>
@@ -620,15 +530,15 @@ export function HomePage() {
                   </div>
 
                   <div className="divide-y divide-gray-100">
-                    {sidebarNews.map((item) => (
+                    {sidebarStories.map((item) => (
                       <Link
                         key={item.id}
-                        to={articlePath(item.title)}
+                        to={digestArticlePath(item)}
                         className="group block py-3"
                       >
                         <div className="flex gap-3">
-                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[45px]">
-                            {item.publishedAt}
+                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
+                            {item.location}
                           </span>
 
                           <span className="text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
@@ -646,14 +556,14 @@ export function HomePage() {
           <PrideTimesAd />
 
           {/* =================================================
-              LATEST NEWS (main list) + MAGAZINE
+              LATEST NEWS (all 60 digest stories) + MAGAZINE
           ================================================= */}
 
           <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
 
             {/* LATEST NEWS */}
 
-            <div>
+            <div ref={newsListRef} className="scroll-mt-24">
               <SectionHeader
                 title="Latest News"
                 link="/business-news"
@@ -666,7 +576,7 @@ export function HomePage() {
                   <button
                     key={tab}
                     type="button"
-                    onClick={() => setActiveNewsTab(tab)}
+                    onClick={() => selectTab(tab)}
                     className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
                       activeNewsTab === tab
                         ? "text-red-600"
@@ -690,7 +600,7 @@ export function HomePage() {
                 {latestStories.map((story) => (
                   <Link
                     key={story.id}
-                    to={articlePath(story.title)}
+                    to={digestArticlePath(story)}
                     className="group grid grid-cols-[120px_1fr] sm:grid-cols-[155px_1fr] gap-4 py-4"
                   >
                     <div className="w-full h-[80px] sm:h-[100px] overflow-hidden rounded-md">
@@ -702,19 +612,16 @@ export function HomePage() {
                     </div>
 
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`text-[8px] font-bold uppercase tracking-[0.14em] ${
-                            story.hot ? "text-red-600" : "text-gray-400"
-                          }`}
-                        >
-                          {story.hot ? "Breaking" : "Latest"}
+                      <div className="flex flex-wrap items-center gap-x-2">
+                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                          {story.section}
                         </span>
 
                         <span className="text-[8px] text-gray-300">•</span>
 
-                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {story.category}
+                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                          <MapPin size={8} />
+                          {story.location}
                         </span>
                       </div>
 
@@ -723,17 +630,37 @@ export function HomePage() {
                       </h3>
 
                       <p className="hidden sm:block text-[10px] text-gray-500 leading-[1.5] mt-1 line-clamp-2">
-                        {story.excerpt}
+                        {story.lede}
                       </p>
 
                       <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
                         <Clock size={8} />
-                        {story.publishedAt}
+                        {story.publishedAt} · {story.readTime}
                       </span>
                     </div>
                   </Link>
                 ))}
               </div>
+
+              {hasMore && (
+                <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setVisibleCount((count) =>
+                        Math.min(count + PAGE_SIZE, filteredStories.length)
+                      )
+                    }
+                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+                  >
+                    Show more stories
+                  </button>
+
+                  <span className="text-[9px] text-gray-400">
+                    Showing {latestStories.length} of {filteredStories.length}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* MAGAZINE */}
@@ -773,6 +700,111 @@ export function HomePage() {
                 </div>
               </Link>
             </div>
+          </section>
+
+          {/* =================================================
+              SECTION BRIEFINGS (one card per digest section)
+          ================================================= */}
+
+          <section className="mb-12">
+            <SectionHeader title="Global Corporate News Digest · Sections" />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              {digestSections.map((section) => (
+                <div
+                  key={section.slug}
+                  className="flex flex-col rounded-md border border-gray-200 p-4 transition-colors hover:border-gray-300"
+                >
+                  <span className="font-serif text-2xl font-bold tabular-nums text-gray-200">
+                    {String(section.number).padStart(2, "0")}
+                  </span>
+
+                  <h3 className="mt-1 text-[13px] font-bold leading-[1.3] text-gray-900">
+                    {section.name}
+                  </h3>
+
+                  <p className="mt-1.5 text-[10px] leading-[1.5] text-gray-500 line-clamp-3">
+                    {section.tagline}
+                  </p>
+
+                  <ul className="mt-3 space-y-1 border-t border-gray-100 pt-3">
+                    {section.glance.map((item) => (
+                      <li
+                        key={item.theme}
+                        className="flex items-center justify-between gap-2 text-[9px]"
+                      >
+                        <span className="truncate text-gray-600">{item.theme}</span>
+                        <span className="shrink-0 font-semibold text-red-600">
+                          {item.momentum}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-auto flex items-center justify-between pt-4">
+                    <button
+                      type="button"
+                      onClick={() => openSectionFeed(section.name)}
+                      className="text-[9px] font-bold uppercase tracking-wide text-gray-800 hover:text-red-600"
+                    >
+                      6 stories
+                    </button>
+
+                    <Link
+                      to={section.path}
+                      className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-red-600"
+                    >
+                      Section
+                      <ArrowRight size={9} />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================
+              REGIONAL SNAPSHOT (illustrative)
+          ================================================= */}
+
+          <section className="mb-12">
+            <SectionHeader title="Regional Snapshot (Illustrative)" />
+
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[520px] text-left text-[11px]">
+                <thead>
+                  <tr className="border-b border-gray-300 text-[9px] uppercase tracking-[0.14em] text-gray-500">
+                    <th className="py-2 pr-4 font-bold">Region</th>
+                    <th className="py-2 pr-4 font-bold">Deal value (US$ bn)</th>
+                    <th className="py-2 pr-4 font-bold">Earnings growth</th>
+                    <th className="py-2 font-bold">Hiring outlook</th>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-gray-100">
+                  {regionalSnapshot.map((row) => (
+                    <tr key={row.region}>
+                      <td className="py-2.5 pr-4 font-semibold text-gray-900">
+                        {row.region}
+                      </td>
+                      <td className="py-2.5 pr-4 tabular-nums text-gray-700">
+                        {row.dealValue}
+                      </td>
+                      <td className="py-2.5 pr-4 tabular-nums text-gray-700">
+                        {row.earningsGrowth}
+                      </td>
+                      <td className="py-2.5 text-gray-700">{row.hiring}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="mt-3 text-[9px] leading-[1.5] text-gray-400">
+              Sample publication — all companies, people, quotations and
+              figures are fictional and for layout and demonstration purposes
+              only.
+            </p>
           </section>
 
           <PrideTimesAd />
