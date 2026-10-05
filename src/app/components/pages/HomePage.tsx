@@ -25,6 +25,7 @@ import {
   maEdition1DealTable,
   maEdition1Sources,
   maEdition1ArticlePath,
+  maEdition1IndustryOrder,
   type EditionArticle,
 } from "../../data/maEdition1Data";
 
@@ -129,9 +130,21 @@ const sectionNames = digestSections.map((section) => section.name);
 const latestNewsTabs = ["All", ...sectionNames];
 
 const interleavedArticles: DigestArticle[] = (() => {
-  const bySection = digestSections.map((section) =>
-    digestArticles.filter((article) => article.sectionNumber === section.number)
-  );
+  const bySection = [
+    ...digestSections.map((section) =>
+      digestArticles.filter(
+        (article) => article.sectionNumber === section.number
+      )
+    ),
+    /* Edition 1 stories, one bucket per industry. */
+    ...maEdition1IndustryOrder.map((name) =>
+      maEdition1Articles.filter((article) => article.industry === name)
+    ),
+    /* The Edition 1 market overview (not tied to one industry). */
+    maEdition1Articles.filter(
+      (article) => !maEdition1IndustryOrder.includes(article.industry)
+    ),
+  ];
   const rounds = Math.max(...bySection.map((list) => list.length));
   const result: DigestArticle[] = [];
 
@@ -158,47 +171,11 @@ const editionBy = (prefix: string): EditionArticle | undefined =>
 
 const editionLead = maEdition1Articles[0];
 
-const editionPicks = [
-  "Paramount",
-  "SpaceX",
-  "NextEra",
-  "Equity Residential",
-  "Boston Scientific",
-  "McCormick",
-]
-  .map(editionBy)
-  .filter((article): article is EditionArticle => Boolean(article));
-
-/* One headline per department (digest section). Mergers &
-   Acquisitions leads with the newest Edition 1 deal story; every
-   other department leads with its first digest story. */
-const allSectionStories: DigestArticle[] = [
-  ...maEdition1Articles,
-  ...digestArticles,
-];
-
-const sectionHeadlines = new Map<number, DigestArticle>(
-  digestSections
-    .map((section) => {
-      const story =
-        section.number === 4
-          ? editionBy("Paramount") ??
-            allSectionStories.find((a) => a.sectionNumber === 4)
-          : allSectionStories.find((a) => a.sectionNumber === section.number);
-
-      return story ? ([section.number, story] as const) : null;
-    })
-    .filter((entry): entry is readonly [number, DigestArticle] =>
-      Boolean(entry)
-    )
-);
-
-const sectionStoryCounts = new Map<number, number>(
-  digestSections.map((section) => [
-    section.number,
-    allSectionStories.filter((a) => a.sectionNumber === section.number).length,
-  ])
-);
+/* Every Edition 1 story grouped by industry, in digest order. */
+const editionIndustries = maEdition1IndustryOrder.map((name) => ({
+  name,
+  stories: maEdition1Articles.filter((article) => article.industry === name),
+})).filter((group) => group.stories.length > 0);
 
 function editionDealChip(article: EditionArticle) {
   return article.keyFacts.find((fact) =>
@@ -637,7 +614,7 @@ export function HomePage() {
             className="mb-12 border-b border-gray-300 pb-10"
           >
             <SectionHeader
-              title={`Global Corporate News Digest · ${maEdition1Meta.edition} · ${maEdition1Meta.title}`}
+              title={`Global Corporate News Digest · ${maEdition1Meta.edition} · Headlines by Industry`}
               link="/mergers-acquisitions"
               linkText="M&A Hub"
             />
@@ -649,84 +626,75 @@ export function HomePage() {
               </span>
             </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6">
+            {/* EDITION LEAD */}
 
-              {/* EDITION LEAD */}
+            <Link
+              to={maEdition1ArticlePath(editionLead)}
+              className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[260px] bg-black"
+            >
+              <ImageWithFallback
+                src={editionLead.image}
+                alt={editionLead.title}
+                className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-[1.03]"
+              />
 
-              <Link
-                to={maEdition1ArticlePath(editionLead)}
-                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[340px] bg-black"
-              >
-                <ImageWithFallback
-                  src={editionLead.image}
-                  alt={editionLead.title}
-                  className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-[1.03]"
-                />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-500">
+                  {editionLead.section} · {maEdition1Meta.edition}
+                </span>
 
-                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                  <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-500">
-                    {editionLead.section} · {maEdition1Meta.edition}
-                  </span>
+                <h3 className="mt-2 max-w-3xl font-serif text-2xl sm:text-3xl font-bold leading-[1.15] text-white group-hover:underline">
+                  {editionLead.title}
+                </h3>
 
-                  <h3 className="mt-2 font-serif text-2xl sm:text-3xl font-bold leading-[1.15] text-white group-hover:underline">
-                    {editionLead.title}
-                  </h3>
+                <p className="mt-2 max-w-3xl text-[12px] leading-[1.5] text-gray-300 line-clamp-2">
+                  {editionLead.lede}
+                </p>
+              </div>
+            </Link>
 
-                  <p className="mt-2 text-[12px] leading-[1.5] text-gray-300 line-clamp-3">
-                    {editionLead.lede}
-                  </p>
+            {/* HEADLINES BY INDUSTRY (every industry, each opens its article) */}
 
-                  <span className="mt-3 inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white">
-                    Read the snapshot
-                    <ArrowRight size={10} />
-                  </span>
-                </div>
-              </Link>
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-8">
+              {editionIndustries.map((group) => (
+                <div key={group.name}>
+                  <div className="mb-1 flex items-center justify-between border-b-2 border-black pb-2">
+                    <h3 className="text-[10px] font-bold uppercase leading-[1.3] tracking-[0.12em] text-gray-900">
+                      {group.name}
+                    </h3>
 
-              {/* EDITION PICKS */}
+                    <span className="ml-2 shrink-0 text-[9px] font-semibold text-red-600">
+                      {group.stories.length}
+                    </span>
+                  </div>
 
-              <div>
-                <div className="divide-y divide-gray-200 border-y border-gray-200">
-                  {editionPicks.map((story) => {
-                    const chip = editionDealChip(story);
+                  <div className="divide-y divide-gray-200">
+                    {group.stories.map((story) => {
+                      const chip = editionDealChip(story);
 
-                    return (
-                      <Link
-                        key={story.id}
-                        to={maEdition1ArticlePath(story)}
-                        className="group block py-3"
-                      >
-                        <div className="flex items-center gap-2">
+                      return (
+                        <Link
+                          key={story.id}
+                          to={maEdition1ArticlePath(story)}
+                          className="group block py-3"
+                        >
                           {chip && (
-                            <span className="rounded-sm bg-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white">
+                            <span className="inline-block rounded-sm bg-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white">
                               {chip.value}
                             </span>
                           )}
 
-                          <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
-                            {story.keyFacts[0]?.value}
-                          </span>
-                        </div>
-
-                        <h3 className="mt-1 font-serif text-[15px] font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600">
-                          {story.title}
-                        </h3>
-                      </Link>
-                    );
-                  })}
+                          <h4 className="mt-1 font-serif text-[14px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600">
+                            {story.title}
+                          </h4>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => openSectionFeed("Mergers & Acquisitions")}
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
-                >
-                  All {maEdition1Articles.length} Edition 1 stories
-                  <ArrowRight size={10} />
-                </button>
-              </div>
+              ))}
             </div>
 
             {/* DEAL STATUS TRACKER */}
@@ -829,7 +797,9 @@ export function HomePage() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-x-2">
                         <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {story.section}
+                          {"industry" in story
+                            ? (story as EditionArticle).industry
+                            : story.section}
                         </span>
 
                         <span className="text-[8px] text-gray-300">•</span>
