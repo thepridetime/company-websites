@@ -33,7 +33,20 @@ import img_Smartc4 from "../../imports/Smartc4.png";
 import img_data_centre from "../../imports/data-centre.png";
 import img_energy_tanks from "../../imports/energy-tanks.png";
 
-export type EditionArticle = DigestArticle & { editorNote?: string };
+export type EditionArticle = DigestArticle & {
+  editorNote?: string;
+  /* The industry the story belongs to (shown as a headline group on the homepage). */
+  industry: string;
+};
+
+/* Industry groups in the order they appear in the digest. */
+export const maEdition1IndustryOrder = [
+  "Media, Technology & AI",
+  "Energy & Utilities",
+  "Financial Services & Real Estate",
+  "Healthcare & Life Sciences",
+  "Industrials, Consumer & Telecoms",
+];
 
 export const maEdition1Meta = {
   edition: "Edition 1",
@@ -64,6 +77,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "global-ma-record-pace-2026",
+    industry: "Market Overview",
     title: "Global M&A hits a record pace in 2026 as dealmaking tops $2.8 trillion in six months",
     lede: "Dealmaking in 2026 has run at a record pace. According to a deal tracker maintained by DealRoom, global M&A reached about $2.8 trillion in the first half of the year, up 48% on the same period of 2025 and the strongest opening six months since records began in 1980.",
     location: "Global",
@@ -82,6 +96,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "paramount-skydance-and-warner-bros-discovery-a-110-billion-deal-stuck-in-court",
+    industry: "Media, Technology & AI",
     title: "Paramount Skydance and Warner Bros. Discovery: a $110 billion deal stuck in court",
     lede: "Paramount has agreed to buy all of Warner Bros. Discovery for $31.00 per share in cash.",
     location: "United States",
@@ -98,6 +113,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "spacex-folds-in-xai-then-buys-cursor",
+    industry: "Media, Technology & AI",
     title: "SpaceX folds in xAI, then buys Cursor",
     lede: "SpaceX announced on 2 February that it had acquired Elon Musk's AI company xAI. Neither company disclosed a price or structure.",
     location: "United States",
@@ -113,6 +129,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "fox-to-buy-roku-for-about-22-billion",
+    industry: "Media, Technology & AI",
     title: "Fox to buy Roku for about $22 billion",
     lede: "Fox Corporation will pay $160.00 per Roku share, made up of $96.00 in cash and 0.9693 of a Fox Class A share.",
     location: "United States",
@@ -127,6 +144,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "uber-makes-a-eur-41-50-a-share-offer-for-delivery-hero",
+    industry: "Media, Technology & AI",
     title: "Uber makes a EUR 41.50-a-share offer for Delivery Hero",
     lede: "Uber is offering EUR 41.50 per share in cash for the Berlin-based delivery group.",
     location: "Berlin",
@@ -142,6 +160,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "smaller-technology-deals-google-completes-wiz-as-salesforce-autodesk-lattice-and-qualcomm-buy",
+    industry: "Media, Technology & AI",
     title: "Smaller technology deals: Google completes Wiz as Salesforce, Autodesk, Lattice and Qualcomm buy",
     lede: "Google completed its $32 billion all-cash purchase of cybersecurity firm Wiz on 11 March, after the US Justice Department closed its probe early and the European Commission cleared it unconditionally in February.",
     location: "Global",
@@ -156,6 +175,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "nextera-and-dominion-plan-the-largest-regulated-utility-combination",
+    industry: "Energy & Utilities",
     title: "NextEra and Dominion plan the largest regulated utility combination",
     lede: "NextEra Energy will acquire Dominion Energy in an all-stock deal. Dominion shareholders receive 0.8138 NextEra shares each plus a one-time aggregate cash payment of $360 million, leaving NextEra holders with about 74.5% of the combined company.",
     location: "United States",
@@ -171,6 +191,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "devon-and-coterra-complete-their-shale-merger",
+    industry: "Energy & Utilities",
     title: "Devon and Coterra complete their shale merger",
     lede: "The all-stock combination gave Coterra holders 0.70 Devon shares each and Devon holders about 54% of the result.",
     location: "United States",
@@ -185,6 +206,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "engie-closes-uk-power-networks-purchase-early",
+    industry: "Energy & Utilities",
     title: "Engie closes UK Power Networks purchase early",
     lede: "Engie bought Britain's largest electricity distributor from CK Infrastructure for GBP 10.5 billion in equity, or GBP 15.8 billion including debt (about $21.4 billion).",
     location: "United Kingdom",
@@ -199,6 +221,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "gip-and-eqt-take-aes-private",
+    industry: "Energy & Utilities",
     title: "GIP and EQT take AES private",
     lede: "A consortium led by BlackRock's Global Infrastructure Partners and EQT, with CalPERS and the Qatar Investment Authority, will pay $15.00 per share in cash, a 40.3% premium to the 30-day average price before 8 July 2025.",
     location: "United States",
@@ -213,6 +236,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "union-pacific-and-norfolk-southern-rail-merger-on-hold",
+    industry: "Energy & Utilities",
     title: "Union Pacific and Norfolk Southern: rail merger on hold",
     lede: "The Surface Transportation Board paused its review of the proposed $85 billion railroad merger on 28 May 2026 pending supplemental filings, and no decision timetable has been set.",
     location: "United States",
@@ -227,6 +251,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "equity-residential-and-avalonbay-form-a-69-billion-apartment-landlord",
+    industry: "Financial Services & Real Estate",
     title: "Equity Residential and AvalonBay form a $69 billion apartment landlord",
     lede: "This all-stock merger of equals would create one of the largest US apartment owners, with more than 180,000 units and a pro forma equity market value near $52 billion.",
     location: "United States",
@@ -241,6 +266,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "nuveen-to-buy-schroders-for-gbp-9-9-billion",
+    industry: "Financial Services & Real Estate",
     title: "Nuveen to buy Schroders for GBP 9.9 billion",
     lede: "TIAA's investment arm is paying 590p per share in cash, plus permitted dividends of up to 22p, a 29% premium to Schroders' 456p close on 11 February.",
     location: "United Kingdom",
@@ -255,6 +281,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "santander-nears-completion-of-webster-financial-deal",
+    industry: "Financial Services & Real Estate",
     title: "Santander nears completion of Webster Financial deal",
     lede: "Santander is paying $75.59 per Webster share, $48.75 in cash plus 2.0548 Santander ADSs, as part of its push into US commercial banking and a stated goal of an 18% US return on tangible equity by 2028.",
     location: "United States",
@@ -269,6 +296,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "other-financial-deals-caesars-goes-private-as-ice-buys-marketaxess-and-capital-one-closes-brex",
+    industry: "Financial Services & Real Estate",
     title: "Other financial deals: Caesars goes private as ICE buys MarketAxess and Capital One closes Brex",
     lede: "Fertitta Entertainment agreed on 28 May to take casino operator Caesars private in a $17.6 billion deal, needing approval from gaming regulators in every state where Caesars is licensed.",
     location: "United States",
@@ -283,6 +311,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "boston-scientific-to-buy-penumbra-for-14-5-billion",
+    industry: "Healthcare & Life Sciences",
     title: "Boston Scientific to buy Penumbra for $14.5 billion",
     lede: "The largest medical-device deal of 2026 takes Boston Scientific into stroke and peripheral interventional care.",
     location: "United States",
@@ -298,6 +327,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "sun-pharma-buys-organon",
+    industry: "Healthcare & Life Sciences",
     title: "Sun Pharma buys Organon",
     lede: "India's Sun Pharma will pay $14.00 per share in cash for the Merck spin-off, building a global women's health and biosimilars business in the largest deal in its history.",
     location: "India",
@@ -312,6 +342,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "merck-kgaa-buys-bio-techne-as-abbvie-and-gsk-strike-biotech-deals",
+    industry: "Healthcare & Life Sciences",
     title: "Merck KGaA buys Bio-Techne as AbbVie and GSK strike biotech deals",
     lede: "Germany's Merck KGaA will acquire life-science tools group Bio-Techne for $73.00 per share in cash, about $11.3 billion enterprise value (EUR 9.9 billion), announced 25 June; the disclosed 36% premium is measured to the one-month average price.",
     location: "Germany",
@@ -326,6 +357,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "eli-lillys-run-of-biotech-purchases-extends-from-centessa-to-kelonia-orna-and-ajax",
+    industry: "Healthcare & Life Sciences",
     title: "Eli Lilly's run of biotech purchases extends from Centessa to Kelonia, Orna and Ajax",
     lede: "Lilly closed its Centessa Pharmaceuticals acquisition on 24 June ($38.00 per share in cash plus a contingent value right of up to $9.00, about $6.3 billion headline).",
     location: "United States",
@@ -340,6 +372,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "mccormick-and-unilevers-foods-business-combine",
+    industry: "Industrials, Consumer & Telecoms",
     title: "McCormick and Unilever's foods business combine",
     lede: "McCormick is combining with Unilever's foods arm at 13.8 times FY2025 EBITDA. Unilever receives $15.7 billion in cash plus stock equal to 65% of the combined company, worth roughly $29.1 billion, so McCormick's own shareholders end up in the minority.",
     location: "United States",
@@ -354,6 +387,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "bouygues-iliad-and-orange-to-split-sfr",
+    industry: "Industrials, Consumer & Telecoms",
     title: "Bouygues, Iliad and Orange to split SFR",
     lede: "France's three other mobile operators have entered exclusive talks to divide Altice France's SFR, which would cut the market from four national operators to three.",
     location: "France",
@@ -368,6 +402,7 @@ export const maEdition1Articles: EditionArticle[] = [
   {
     ...base,
     id: "martin-marietta-buys-lhoist-north-america",
+    industry: "Industrials, Consumer & Telecoms",
     title: "Martin Marietta buys Lhoist North America",
     lede: "Martin Marietta is paying $7.0 billion in cash and $6.5 billion in stock, about 15 times trailing adjusted EBITDA including run-rate cost savings, to expand its specialties business.",
     location: "United States",
