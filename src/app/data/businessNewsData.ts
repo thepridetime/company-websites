@@ -96,6 +96,91 @@ export const hero: BusinessArticle = {
     "The AI investment cycle is no longer confined to technology departments. This story looks at the capital commitments, infrastructure requirements and business-model questions that determine whether spending becomes durable economic value.",
 };
 
+export const headlineNews: BusinessArticle[] = [
+  {
+    id: "biz-unicorns-2026",
+    category: "STARTUPS",
+    title: "India Ranks Fourth in Global Unicorn Index 2026 With 61 Unicorns",
+    dek:
+      "India has retained fourth place in the Hurun Global Unicorn Index 2026 with 61 unicorn startups, while six Indian unicorns graduated to public markets during the year.",
+    excerpt:
+      "India has retained fourth place in the Hurun Global Unicorn Index 2026 with 61 unicorn startups, while six Indian unicorns graduated to public markets during the year.",
+    author: "Sagar Kumar",
+    publishedAt: "July 1, 2026",
+    time: "July 1, 2026",
+    readTime: "5 min read",
+    image:
+      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=80",
+    highlights: [
+      "India has 61 unicorn startups in the 2026 Hurun index.",
+      "India remains fourth globally behind the United States, China and the United Kingdom.",
+      "Six Indian unicorns graduated to public markets during the year.",
+      "The ecosystem is increasingly focused on profits and sustainable growth.",
+    ],
+    sections: [
+      {
+        heading: "India holds its position",
+        body:
+          "India remains fourth in the Hurun Global Unicorn Index 2026 with 61 privately held companies valued at $1 billion or more.",
+      },
+      {
+        heading: "Public-market exits gather pace",
+        body:
+          "Six Indian unicorns graduated to public markets during the year, providing exits for investors and potentially encouraging fresh funding for younger companies.",
+      },
+      {
+        heading: "The focus shifts to sustainable growth",
+        body:
+          "Indian startups are increasingly expected to demonstrate profits and sustainable growth rather than relying on rapid expansion alone.",
+      },
+    ],
+    tags: ["Startups", "Unicorns", "India", "Business"],
+    editorNote:
+      "Based on the India Business Report 2026 source material covering the Hurun Global Unicorn Index 2026.",
+  },
+  {
+    id: "biz-zerodha-2026",
+    category: "STARTUPS",
+    title: "Zerodha Leads India’s Unicorns at $9 Billion Valuation",
+    dek:
+      "Zerodha is India's highest-valued unicorn in the Hurun Global Unicorn Index 2026, with a $9 billion valuation and a business built without external capital.",
+    excerpt:
+      "Zerodha is India's highest-valued unicorn in the Hurun Global Unicorn Index 2026, with a $9 billion valuation and a business built without external capital.",
+    author: "Sagar Kumar",
+    publishedAt: "July 1, 2026",
+    time: "July 1, 2026",
+    readTime: "5 min read",
+    image:
+      "https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1400&q=80",
+    highlights: [
+      "Zerodha is valued at $9 billion in the Hurun 2026 index.",
+      "It ranks as India's highest-valued unicorn.",
+      "The company has grown without raising external capital.",
+      "Its model contrasts with heavily venture-funded startup rivals.",
+    ],
+    sections: [
+      {
+        heading: "India's highest-valued unicorn",
+        body:
+          "Zerodha is India's most valuable unicorn at $9 billion in the Hurun Global Unicorn Index 2026.",
+      },
+      {
+        heading: "A bootstrapped model",
+        body:
+          "The stockbroker has grown from its own profits rather than external capital, making its business model a notable contrast with venture-funded competitors.",
+      },
+      {
+        heading: "Market activity remains central",
+        body:
+          "Zerodha's revenue is tied to market activity, while trading volumes and regulatory rules on derivatives remain important factors for the business.",
+      },
+    ],
+    tags: ["Startups", "Zerodha", "Fintech", "India", "Business"],
+    editorNote:
+      "Based on the India Business Report 2026 source material covering Zerodha's position in the Hurun Global Unicorn Index 2026.",
+  },
+];
+
 export const maDeals = [
   { id: 1, acquirer: "Amazon", target: "NuScale Power", value: "$12B", sector: "Nuclear Energy", status: "Announced" },
   { id: 2, acquirer: "Microsoft", target: "IonQ", value: "$8.7B", sector: "Quantum Computing", status: "Pending" },
@@ -206,6 +291,7 @@ export const startupNews: BusinessArticle[] = [
 
 export const businessArticles: BusinessArticle[] = [
   hero,
+  ...headlineNews,
   ...corporateNews,
   ...startupNews,
 ];
