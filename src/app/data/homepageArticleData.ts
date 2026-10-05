@@ -13,6 +13,7 @@ import {
   type DigestArticle,
   type DigestKeyFact,
 } from "./digestArticleData";
+import { maEdition1Articles, type EditionArticle } from "./maEdition1Data";
 
 export { articleSlug };
 
@@ -48,7 +49,7 @@ export function articlePath(title: string) {
   return `/article/${articleSlug(title)}`;
 }
 
-function toHomepageArticle(article: DigestArticle): HomepageArticle {
+function toHomepageArticle(article: DigestArticle | EditionArticle): HomepageArticle {
   return {
     slug: article.id,
     title: article.title,
@@ -61,6 +62,7 @@ function toHomepageArticle(article: DigestArticle): HomepageArticle {
     highlights: article.highlights,
     tags: [article.section, "Global Corporate News Digest", "The Pride Times"],
     editorNote:
+      ("editorNote" in article && article.editorNote) ||
       "Sample publication — all companies, people, quotations and figures are fictional and for layout and demonstration purposes only.",
     sections: article.body.map((body, index) => ({
       heading: `Paragraph ${index + 1}`,
@@ -79,7 +81,11 @@ function toHomepageArticle(article: DigestArticle): HomepageArticle {
   };
 }
 
-export const homepageArticles: HomepageArticle[] = digestArticles.map(toHomepageArticle);
+/* Existing September digest first (unchanged), then Edition 1 (M&A). */
+export const homepageArticles: HomepageArticle[] = [
+  ...digestArticles,
+  ...maEdition1Articles,
+].map(toHomepageArticle);
 
 export function getHomepageArticleBySlug(slug?: string) {
   return homepageArticles.find((article) => article.slug === slug);
