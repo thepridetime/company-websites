@@ -167,6 +167,28 @@ const makeArticle = (
 });
 
 export const corporateNews: BusinessArticle[] = [
+  {
+    ...makeArticle(
+      "biz-corp-7",
+      "TELECOM",
+      "Jio Platforms Plans October 21 IPO — India’s Biggest Listing Could Raise $3.8 Billion",
+      "Today",
+      "Jio Platforms plans to launch its IPO on October 21, seeking to raise about $3.8 billion"
+    ),
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    ...makeArticle(
+      "biz-corp-8",
+      "BANKING",
+      "HDFC Bank Names Anup Bagchi CEO as Investors Assess Leadership Transition",
+      "Today",
+      "HDFC Bank has appointed Anup Bagchi as its new CEO, marking the first outsider appointment to lead the private-sector lender"
+    ),
+    image:
+      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80",
+  },
   makeArticle("biz-corp-1", "LUXURY", "LVMH Posts €21B Revenue — Luxury Demand Defies Global Economic Uncertainty", "1 hr ago", "LVMH has reported €21 billion in revenue"),
   makeArticle("biz-corp-2", "RETAIL", "Walmart Launches AI-Powered Supply Chain Platform — 50,000 Suppliers Enrolled", "2 hrs ago", "Walmart has launched an AI-powered supply-chain platform"),
   makeArticle("biz-corp-3", "ENERGY", "Saudi Aramco Overtakes Apple as World's Most Profitable Company in Q1 2026", "3 hrs ago", "Saudi Aramco has reported profit levels that put it ahead of Apple"),
