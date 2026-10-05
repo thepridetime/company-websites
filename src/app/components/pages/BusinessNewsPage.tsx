@@ -226,15 +226,6 @@ export function BusinessNewsPage() {
 
 
         {/* =================================================
-            TOP ADVERTISEMENT
-        ================================================= */}
-
-        <div className="mb-7 md:mb-9">
-          <AdSpace />
-        </div>
-
-
-        {/* =================================================
             HERO + SIDEBAR
         ================================================= */}
 
@@ -255,7 +246,7 @@ export function BusinessNewsPage() {
                   <ImageWithFallback
                     src={news.image}
                     alt={news.title}
-                    className="h-[240px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[300px] md:h-[340px] lg:h-[390px]"
+                    className="h-[280px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[340px] md:h-[400px] lg:h-[460px]"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-90" />
@@ -305,6 +296,16 @@ export function BusinessNewsPage() {
           </aside>
 
         </section>
+
+
+        {/* =================================================
+            TOP ADVERTISEMENT
+            Kept unchanged; displayed after the two lead stories.
+        ================================================= */}
+
+        <div className="mt-7 mb-7 md:mt-9 md:mb-9">
+          <AdSpace />
+        </div>
 
 
         {/* =================================================
