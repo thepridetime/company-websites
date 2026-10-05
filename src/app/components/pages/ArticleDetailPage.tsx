@@ -1,7 +1,8 @@
-
 import { Fragment, useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router";
-import { ArrowLeft, ArrowRight, Clock, Quote, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, MapPin, Quote, Share2 } from "lucide-react";
+
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 import {
   getHomepageArticleBySlug,
@@ -652,9 +653,12 @@ function RelatedPosts<
 >({
   items,
   getHref,
+  plainTitles = false,
 }: {
   items: T[];
   getHref: (item: T) => string;
+  /* Show the original headline instead of the rewritten blog title. */
+  plainTitles?: boolean;
 }) {
   if (!items.length) return null;
 
@@ -680,10 +684,12 @@ function RelatedPosts<
             </p>
 
             <h3 className="mt-3 break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
-              {formatBlogTitle(
-                item.title,
-                item.category ?? "Business"
-              )}
+              {plainTitles
+                ? item.title
+                : formatBlogTitle(
+                    item.title,
+                    item.category ?? "Business"
+                  )}
             </h3>
 
             <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-500">
@@ -950,6 +956,166 @@ function HomepageBlog({
 }
 
 /* =========================================================
+   GLOBAL CORPORATE NEWS DIGEST ARTICLE
+   Full inner article for every homepage story.
+========================================================= */
+
+function DigestBlog({
+  article,
+}: {
+  article: HomepageArticleType;
+}) {
+  const digest = article.digest;
+
+  if (!digest) return null;
+
+  const related = relatedHomepageArticles(article, 3);
+
+  return (
+    <article className="min-h-screen bg-white text-slate-900 antialiased">
+      <div className="border-b border-slate-200 bg-slate-50/70">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+          <Link
+            to="/"
+            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
+          >
+            <ArrowLeft
+              size={14}
+              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+            />
+            Back to Home
+          </Link>
+
+          <Link
+            to={digest.sectionPath}
+            className={`rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
+          >
+            More in {digest.sectionName}
+          </Link>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+        <header className="mx-auto max-w-4xl">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+            <span>Global Corporate News Digest</span>
+            <span className="text-slate-300">/</span>
+            <Link
+              to={digest.sectionPath}
+              className="hover:underline"
+            >
+              {digest.sectionName}
+            </Link>
+          </div>
+
+          <h1 className="mt-5 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+            {article.title}
+          </h1>
+
+          <p className="mt-6 max-w-3xl break-words text-lg font-medium leading-8 text-slate-700 sm:text-xl sm:leading-9">
+            {digest.lede}
+          </p>
+
+          <p className="mt-5 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+            <MapPin size={12} className="text-red-600" />
+            {digest.location}
+          </p>
+
+          <BlogMeta
+            author={article.author}
+            date={article.publishedAt}
+            readTime={article.readTime}
+          />
+        </header>
+
+        <div className="mx-auto mt-10 max-w-4xl overflow-hidden rounded-xl bg-slate-100">
+          <ImageWithFallback
+            src={article.image}
+            alt={article.title}
+            className="h-[240px] w-full object-cover sm:h-[360px] md:h-[440px]"
+          />
+        </div>
+
+        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+          <main className="min-w-0">
+            <BlogHighlights points={article.highlights} />
+
+            <HomepageArticleAd />
+
+            <div className="blog-prose mt-4">
+              {digest.body.map((paragraph, index) => (
+                <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
+                  {index === digest.quoteAfter && (
+                    <blockquote className="my-10 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-6 not-italic shadow-sm sm:px-7">
+                      <Quote size={18} className="mb-3 text-red-600" />
+                      <p className="font-serif text-xl font-semibold leading-8 text-slate-900 sm:text-2xl sm:leading-9">
+                        &ldquo;{digest.quote.text}&rdquo;
+                      </p>
+                      <footer className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                        {digest.quote.by}
+                      </footer>
+                    </blockquote>
+                  )}
+
+                  <p className="mb-6 break-words text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
+                    {paragraph}
+                  </p>
+
+                  {index === 1 && (
+                    <AdSenseUnit slot="5373718974" />
+                  )}
+
+                  {index === 4 && (
+                    <AdSenseUnit slot="8042854193" inArticle />
+                  )}
+                </Fragment>
+              ))}
+
+              {digest.quoteAfter >= digest.body.length && (
+                <blockquote className="my-10 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-6 not-italic shadow-sm sm:px-7">
+                  <Quote size={18} className="mb-3 text-red-600" />
+                  <p className="font-serif text-xl font-semibold leading-8 text-slate-900 sm:text-2xl sm:leading-9">
+                    &ldquo;{digest.quote.text}&rdquo;
+                  </p>
+                  <footer className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                    {digest.quote.by}
+                  </footer>
+                </blockquote>
+              )}
+            </div>
+
+            <KeyFacts facts={digest.keyFacts} />
+
+            <p className="mt-8 border-t border-slate-200 pt-4 text-[11px] leading-5 text-slate-400">
+              {article.editorNote}
+            </p>
+
+            <ShareAndBack
+              to="/"
+              label="Home"
+              title={article.title}
+              description={digest.lede}
+            />
+
+            <RelatedPosts
+              items={related}
+              plainTitles
+              getHref={(item) => `/article/${item.slug}`}
+            />
+          </main>
+
+          <BlogSidebar
+            highlights={article.highlights}
+            category={article.category}
+            section={article.category}
+          />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
    DATE / SECTION HELPERS
 ========================================================= */
 
@@ -1169,7 +1335,11 @@ export function ArticleDetailPage() {
   const homepageArticle = getHomepageArticleBySlug(id);
 
   if (homepageArticle) {
-    return <HomepageBlog article={homepageArticle} />;
+    return homepageArticle.digest ? (
+      <DigestBlog article={homepageArticle} />
+    ) : (
+      <HomepageBlog article={homepageArticle} />
+    );
   }
 
   /* BUSINESS ARTICLES */
