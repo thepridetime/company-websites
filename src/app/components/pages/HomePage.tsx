@@ -693,7 +693,7 @@ export function HomePage() {
               {editionIndustries.map((group) => (
                 <div key={group.name}>
                   <div className="mb-4 flex items-center justify-between border-b border-gray-300 pb-2">
-                    <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-900">
+                    <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-gray-900">
                       {group.name}
                     </h3>
 
@@ -702,7 +702,7 @@ export function HomePage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-5">
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
                     {group.stories.map((story) => {
                       const chip = editionDealChip(story);
 
@@ -712,7 +712,7 @@ export function HomePage() {
                           to={maEdition1ArticlePath(story)}
                           className="group block"
                         >
-                          <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
+                          <div className="aspect-[16/10] w-full overflow-hidden rounded-md bg-gray-100">
                             <ImageWithFallback
                               src={story.image}
                               alt={story.title}
@@ -721,12 +721,12 @@ export function HomePage() {
                           </div>
 
                           {chip && (
-                            <span className="mt-2 block text-[9px] font-bold uppercase tracking-[0.12em] text-red-600">
+                            <span className="mt-3 block text-[11px] font-bold uppercase tracking-[0.12em] text-red-600">
                               {chip.value}
                             </span>
                           )}
 
-                          <h4 className="mt-1 font-serif text-[15px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600">
+                          <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600 md:text-[22px]">
                             {story.title}
                           </h4>
                         </Link>
@@ -824,9 +824,9 @@ export function HomePage() {
                   <Link
                     key={story.id}
                     to={digestArticlePath(story)}
-                    className="group grid grid-cols-[120px_1fr] sm:grid-cols-[155px_1fr] gap-4 py-4"
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
                   >
-                    <div className="w-full h-[80px] sm:h-[100px] overflow-hidden rounded-md">
+                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
                       <ImageWithFallback
                         src={story.image}
                         alt={story.title}
@@ -850,11 +850,11 @@ export function HomePage() {
                         </span>
                       </div>
 
-                      <h3 className="font-serif text-base md:text-lg font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
                         {story.title}
                       </h3>
 
-                      <p className="hidden sm:block text-[10px] text-gray-500 leading-[1.5] mt-1 line-clamp-2">
+                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
                         {story.lede}
                       </p>
 
