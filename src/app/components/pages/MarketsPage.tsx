@@ -11,9 +11,23 @@ import { getQuotes } from "../../../services/marketApi";
 import { PrideTimesAd } from "../AdSenseSlots";
 import { specialArticles } from "../../data/specialArticleData";
 
-// Markets articles are maintained in the shared specialArticle.ts data file.
+// Markets articles are maintained in the shared specialArticleData.ts file.
 const marketArticles = specialArticles.filter(
   (article) => article.section === "Markets"
+);
+
+// The two lead stories shown as the page headlines (order = display order).
+const HEADLINE_IDS = [
+  "market-india-hurun-unicorn-2026",
+  "market-zerodha-unicorn",
+];
+
+const headlineArticles = HEADLINE_IDS.map((id) =>
+  marketArticles.find((article) => article.id === id)
+).filter((article): article is (typeof marketArticles)[number] => Boolean(article));
+
+const otherMarketArticles = marketArticles.filter(
+  (article) => !HEADLINE_IDS.includes(article.id)
 );
 
 interface TickerCard {
@@ -468,8 +482,8 @@ const marketThemes: ThemeRow[] = [
 ];
 
 /* ---------- Markets & Finance — Stories ----------
-   Cards come from src/app/data/marketArticleData.ts and open the
-   full blog post at /article/:id. */
+   Cards come from src/app/data/specialArticleData.ts (section "Markets")
+   and open the full post at /article/:id. */
 
 const maxDealValue = Math.max(...regionalSnapshot.map((r) => r.dealValue));
 
@@ -500,6 +514,9 @@ export function MarketsPage() {
     activeTab === "Overview" || activeTab === "Market Themes";
   const showStories =
     activeTab === "Overview" || activeTab === "Market Stories";
+  const showHeadlines =
+    headlineArticles.length > 0 &&
+    (activeTab === "Overview" || activeTab === "Market Stories");
 
   return (
     <main className="min-h-screen bg-white text-[#17140F]">
@@ -545,6 +562,65 @@ export function MarketsPage() {
 
         {/* Dashboard content */}
         <div className="pb-16 pt-5 sm:pt-6">
+          {/* ---------------- Top Headlines ---------------- */}
+          {showHeadlines && (
+            <section
+              aria-labelledby="market-headlines-heading"
+              className="mb-7 sm:mb-8"
+            >
+              <h2
+                id="market-headlines-heading"
+                className="mb-4 font-serif text-[18px] font-bold"
+              >
+                Top Headlines
+              </h2>
+
+              <div className="grid gap-5 md:grid-cols-2">
+                {headlineArticles.map((story, index) => (
+                  <Link
+                    key={story.id}
+                    to={`/article/${story.id}`}
+                    className="group flex flex-col border-t-[3px] border-[#d71920] bg-[#faf9f7] p-5 transition-shadow duration-200 hover:shadow-md"
+                  >
+                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#d71920]">
+                      <span>{index === 0 ? "Lead Story" : "Top Story"}</span>
+                      <span aria-hidden="true" className="text-[#bbb]">|</span>
+                      <span>{story.category}</span>
+                    </div>
+
+                    <h3 className="mt-3 font-serif text-[22px] font-bold leading-snug transition-colors duration-200 group-hover:text-[#d71920] sm:text-[24px]">
+                      {story.title}
+                    </h3>
+
+                    <p className="mt-3 text-[13px] leading-relaxed text-[#444]">
+                      {story.dek}
+                    </p>
+
+                    <ul className="mt-4 list-disc space-y-1.5 pl-4 text-[12px] leading-relaxed text-[#555]">
+                      {story.highlights.slice(0, 3).map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+
+                    <p className="mt-4 text-[10px] text-[#999]">
+                      By {story.author} &nbsp;·&nbsp; {story.publishedAt} &nbsp;·&nbsp; {story.readTime}
+                    </p>
+
+                    <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#d71920]">
+                      Read the full story
+                      <span
+                        aria-hidden="true"
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* ---------------- Regional Snapshot ---------------- */}
           {showSnapshot && (
             <section aria-labelledby="regional-snapshot-heading">
@@ -688,11 +764,11 @@ export function MarketsPage() {
                 id="market-stories-heading"
                 className="mb-4 font-serif text-[18px] font-bold"
               >
-                Markets &amp; Finance Stories
+                More Markets &amp; Finance Stories
               </h2>
 
               <div className="grid gap-4 md:grid-cols-2">
-                {marketArticles.map((story) => (
+                {otherMarketArticles.map((story) => (
                   <Link
                     key={story.id}
                     to={`/article/${story.id}`}
@@ -751,7 +827,7 @@ export function MarketsPage() {
           )}
 
           <p className="mt-6 text-[10px] text-[#999]">
-            Illustrative data for display purposes only.
+            Regional snapshot and theme tables are illustrative data for display purposes only.
           </p>
         </div>
       </div>
