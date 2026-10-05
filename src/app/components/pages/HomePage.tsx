@@ -169,6 +169,37 @@ const editionPicks = [
   .map(editionBy)
   .filter((article): article is EditionArticle => Boolean(article));
 
+/* One headline per department (digest section). Mergers &
+   Acquisitions leads with the newest Edition 1 deal story; every
+   other department leads with its first digest story. */
+const allSectionStories: DigestArticle[] = [
+  ...maEdition1Articles,
+  ...digestArticles,
+];
+
+const sectionHeadlines = new Map<number, DigestArticle>(
+  digestSections
+    .map((section) => {
+      const story =
+        section.number === 4
+          ? editionBy("Paramount") ??
+            allSectionStories.find((a) => a.sectionNumber === 4)
+          : allSectionStories.find((a) => a.sectionNumber === section.number);
+
+      return story ? ([section.number, story] as const) : null;
+    })
+    .filter((entry): entry is readonly [number, DigestArticle] =>
+      Boolean(entry)
+    )
+);
+
+const sectionStoryCounts = new Map<number, number>(
+  digestSections.map((section) => [
+    section.number,
+    allSectionStories.filter((a) => a.sectionNumber === section.number).length,
+  ])
+);
+
 function editionDealChip(article: EditionArticle) {
   return article.keyFacts.find((fact) =>
     ["Enterprise value", "Combined enterprise value", "Value"].includes(
@@ -911,6 +942,23 @@ export function HomePage() {
                     {section.tagline}
                   </p>
 
+                  {sectionHeadlines.get(section.number) && (
+                    <Link
+                      to={digestArticlePath(
+                        sectionHeadlines.get(section.number)!
+                      )}
+                      className="group mt-3 block border-t border-gray-100 pt-3"
+                    >
+                      <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
+                        Top headline
+                      </span>
+
+                      <span className="mt-1 block font-serif text-[13px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600 line-clamp-4">
+                        {sectionHeadlines.get(section.number)!.title}
+                      </span>
+                    </Link>
+                  )}
+
                   <ul className="mt-3 space-y-1 border-t border-gray-100 pt-3">
                     {section.glance.map((item) => (
                       <li
@@ -931,7 +979,7 @@ export function HomePage() {
                       onClick={() => openSectionFeed(section.name)}
                       className="text-[9px] font-bold uppercase tracking-wide text-gray-800 hover:text-red-600"
                     >
-                      6 stories
+                      {sectionStoryCounts.get(section.number) ?? 0} stories
                     </button>
 
                     <Link
