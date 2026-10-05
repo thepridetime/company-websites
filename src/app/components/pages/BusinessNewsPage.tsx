@@ -515,21 +515,50 @@ export function BusinessNewsPage() {
                     {n.category}
                   </span>
 
-                  <h3
-                    className="
-                      mt-1.5
-                      text-sm
-                      font-semibold
-                      leading-[1.5]
-                      text-gray-900
-                      transition-colors
-                      duration-200
-                      group-hover:text-red-600
-                      md:text-[15px]
-                    "
-                  >
-                    {n.title}
-                  </h3>
+                  <div className="mt-2 flex gap-3">
+                    {n.image && (
+                      <div className="h-20 w-28 shrink-0 overflow-hidden rounded-sm bg-gray-100">
+                        <ImageWithFallback
+                          src={n.image}
+                          alt={n.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </div>
+                    )}
+
+                    <div className="min-w-0">
+                      <h3
+                        className="
+                          text-sm
+                          font-semibold
+                          leading-[1.5]
+                          text-gray-900
+                          transition-colors
+                          duration-200
+                          group-hover:text-red-600
+                          md:text-[15px]
+                        "
+                      >
+                        {n.title}
+                      </h3>
+
+                      <span
+                        className="
+                          mt-2
+                          flex
+                          items-center
+                          gap-1.5
+                          text-[11px]
+                          uppercase
+                          tracking-wide
+                          text-gray-400
+                        "
+                      >
+                        <Clock size={10} strokeWidth={2.25} />
+                        {n.time}
+                      </span>
+                    </div>
+                  </div>
 
                   <span
                     className="
