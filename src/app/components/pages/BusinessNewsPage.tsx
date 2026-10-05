@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import {
   hero,
+  headlineNews,
   maDeals,
   earningsNews,
   corporateNews,
@@ -240,52 +241,55 @@ export function BusinessNewsPage() {
         <section className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_245px] lg:gap-6">
 
           {/* =================================================
-              HERO STORY
+              TWO BIG BUSINESS HEADLINES
           ================================================= */}
 
-          <Link to={`/article/${hero.id}`} className="group block">
+          <div className="grid grid-cols-1 gap-7 md:grid-cols-2">
+            {headlineNews.slice(0, 2).map((news) => (
+              <Link
+                key={news.id}
+                to={`/article/${news.id}`}
+                className="group block"
+              >
+                <div className="relative overflow-hidden rounded-md">
+                  <ImageWithFallback
+                    src={news.image}
+                    alt={news.title}
+                    className="h-[240px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[300px] md:h-[340px] lg:h-[390px]"
+                  />
 
-            <div className="relative overflow-hidden rounded-md">
-              <ImageWithFallback
-                src={heroImage}
-                alt={hero.title}
-                className="h-[240px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[320px] md:h-[390px] lg:h-[420px]"
-              />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-90" />
+                </div>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-90" />
-            </div>
+                <div className="mt-5">
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                    {news.category}
+                  </span>
 
-            <div className="mt-5">
+                  <h2 className="mt-2 font-serif text-2xl font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600 sm:text-3xl lg:text-[34px]">
+                    {news.title}
+                  </h2>
 
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-                {hero.category}
-              </span>
+                  <p className="mt-4 text-sm leading-[1.7] text-gray-600">
+                    {news.excerpt}
+                  </p>
 
-              <h2 className="mt-2 max-w-5xl font-serif text-2xl font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600 sm:text-3xl md:text-4xl lg:text-[40px]">
-                {hero.title}
-              </h2>
+                  <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-200 pt-4 text-xs text-gray-400">
+                    <span className="font-semibold text-gray-600">
+                      By {news.author}
+                    </span>
 
-              <p className="mt-4 max-w-4xl text-sm leading-[1.7] text-gray-600 md:text-base">
-                {hero.excerpt}
-              </p>
+                    <span className="h-1 w-1 rounded-full bg-gray-300" />
 
-              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-200 pt-4 text-xs text-gray-400">
-
-                <span className="font-semibold text-gray-600">
-                  By {hero.author}
-                </span>
-
-                <span className="h-1 w-1 rounded-full bg-gray-300" />
-
-                <span className="flex items-center gap-1.5">
-                  <Clock size={11} strokeWidth={2.25} />
-                  {hero.time}
-                </span>
-
-              </div>
-
-            </div>
-          </Link>
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={11} strokeWidth={2.25} />
+                      {news.time}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
 
 
           {/* =================================================
