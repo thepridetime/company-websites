@@ -19,7 +19,6 @@ import {
   getTechnologyArticleById,
   getRelatedTechnologyArticles,
   type TechnologyArticle,
-  type TechnologyKeyFact,
   technologyArticlePath,
 } from "../../data/technologyNewsData";
 
@@ -57,6 +56,7 @@ const focusRing =
 function AdSenseUnit({
   slot,
   inArticle = false,
+  side = false,
 }: {
   slot:
     | "5373718974"
@@ -65,6 +65,8 @@ function AdSenseUnit({
     | "5608262547"
     | "6810700989";
   inArticle?: boolean;
+  /** Compact variant used inside the article sidebar. */
+  side?: boolean;
 }) {
   useEffect(() => {
     try {
@@ -76,6 +78,25 @@ function AdSenseUnit({
       console.warn("AdSense could not initialize:", error);
     }
   }, []);
+
+  if (side) {
+    return (
+      <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-3">
+        <p className="mb-2 select-none text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+          Advertisement
+        </p>
+
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block", minHeight: "250px" }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot={slot}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="clear-both my-12 w-full overflow-hidden border-y border-slate-200 bg-white py-5">
@@ -102,10 +123,6 @@ function AdSenseUnit({
       </div>
     </div>
   );
-}
-
-function HomepageArticleAd() {
-  return <AdSenseUnit slot="6033028012" />;
 }
 
 /* =========================================================
@@ -362,43 +379,6 @@ function BlogMeta({
    BLOG HIGHLIGHTS
 ========================================================= */
 
-function BlogHighlights({
-  points,
-}: {
-  points: string[];
-}) {
-  if (!points?.length) return null;
-
-  return (
-    <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-7">
-      <div className="flex items-center gap-2">
-        <span className="h-2 w-2 shrink-0 rounded-full bg-red-600" />
-
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-          Key takeaways
-        </p>
-      </div>
-
-      <ul className="mt-5 grid gap-4 sm:grid-cols-2">
-        {points.map((point, index) => (
-          <li
-            key={`${index}-${point}`}
-            className="flex items-start gap-3 text-sm leading-6 text-slate-700"
-          >
-            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-bold tabular-nums text-red-600 ring-1 ring-slate-200">
-              {index + 1}
-            </span>
-
-            <span className="min-w-0 break-words text-pretty">
-              {point}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
 /* =========================================================
    BLOG BODY
 ========================================================= */
@@ -407,58 +387,34 @@ function BlogBody({
   sections,
   category,
   intro,
-  adSlots,
 }: {
   sections: BlogSection[];
   category: string;
   intro?: string;
-  adSlots?: {
-    first: "5373718974" | "5608262547";
-    second: "8042854193" | "6810700989";
-  };
 }) {
+  /* Reading column only: no ads, pull-quotes or extras between
+     sections. Those live in the sidebar. */
   return (
-    <div className="blog-prose mt-10">
+    <div className="blog-prose mt-2">
       {intro && (
-        <p className="mb-10 border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
+        <p className="mb-8 border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
           {intro}
         </p>
       )}
 
       {sections.map((section, index) => (
-        <Fragment key={`${section.heading}-${index}`}>
-          <section className="mb-11 scroll-mt-24">
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-              Section {String(index + 1).padStart(2, "0")}
-            </p>
+        <section
+          key={`${section.heading}-${index}`}
+          className="mb-8 scroll-mt-24"
+        >
+          <h2 className="max-w-3xl break-words font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
+            {formatSectionHeading(section.heading, category)}
+          </h2>
 
-            <h2 className="max-w-3xl break-words font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
-              {formatSectionHeading(section.heading, category)}
-            </h2>
-
-            <p className="mt-5 break-words text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
-              {section.body}
-            </p>
-
-            {index === 0 && intro && (
-              <blockquote className="my-8 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 text-lg font-medium not-italic leading-8 text-slate-800 shadow-sm sm:px-7">
-                <Quote size={18} className="mb-2 text-red-600" />
-                {intro}
-              </blockquote>
-            )}
-          </section>
-
-          {index === 0 && adSlots && (
-            <AdSenseUnit slot={adSlots.first} />
-          )}
-
-          {index === 1 && adSlots && (
-            <AdSenseUnit
-              slot={adSlots.second}
-              inArticle
-            />
-          )}
-        </Fragment>
+          <p className="mt-4 break-words text-[16px] leading-[1.85] text-slate-700 sm:text-[17px]">
+            {section.body}
+          </p>
+        </section>
       ))}
     </div>
   );
@@ -468,58 +424,39 @@ function BlogBody({
    KEY FACTS ("AT A GLANCE")
 ========================================================= */
 
-function KeyFacts({
-  facts,
-}: {
-  facts: TechnologyKeyFact[];
-}) {
-  if (!facts?.length) return null;
-
-  return (
-    <section className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-        At a glance
-      </p>
-
-      <h2 className="mt-2 font-serif text-2xl font-bold text-slate-950">
-        The details behind the story
-      </h2>
-
-      <dl className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
-        {facts.map((fact) => (
-          <div
-            key={fact.label}
-            className="min-w-0 border-t border-slate-200 pt-3"
-          >
-            <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
-              {fact.label}
-            </dt>
-
-            <dd className="mt-1 break-words text-sm font-semibold text-slate-800">
-              {fact.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </section>
-  );
-}
-
 /* =========================================================
    BLOG SIDEBAR
 ========================================================= */
+
+type SideAdSlots = {
+  top: "5373718974" | "5608262547" | "6033028012";
+  bottom: "8042854193" | "6810700989";
+};
+
+const defaultSideAdSlots: SideAdSlots = {
+  top: "5373718974",
+  bottom: "8042854193",
+};
 
 function BlogSidebar({
   highlights,
   category,
   section,
+  facts,
+  quote,
+  adSlots = defaultSideAdSlots,
 }: {
   highlights: string[];
   category: string;
   section: string;
+  facts?: { label: string; value: string }[];
+  quote?: { text: string; by: string };
+  adSlots?: SideAdSlots;
 }) {
   return (
-    <aside className="space-y-5 lg:sticky lg:top-8 lg:self-start">
+    <aside className="space-y-5">
+      <AdSenseUnit slot={adSlots.top} side />
+
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.04)] transition-shadow duration-300 hover:shadow-[0_12px_36px_rgba(15,23,42,0.08)]">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
           In this post
@@ -539,13 +476,47 @@ function BlogSidebar({
                 {String(index + 1).padStart(2, "0")}
               </span>
 
-              <span className="min-w-0 break-words">
-                {point}
-              </span>
+              <span className="min-w-0 break-words">{point}</span>
             </li>
           ))}
         </ol>
       </section>
+
+      {quote && (
+        <blockquote className="rounded-2xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 not-italic">
+          <Quote size={16} className="mb-2 text-red-600" />
+
+          <p className="font-serif text-lg font-semibold leading-7 text-slate-900">
+            &ldquo;{quote.text}&rdquo;
+          </p>
+
+          <footer className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+            {quote.by}
+          </footer>
+        </blockquote>
+      )}
+
+      {facts && facts.length > 0 && (
+        <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+            At a glance
+          </p>
+
+          <dl className="mt-3 divide-y divide-slate-200">
+            {facts.map((fact) => (
+              <div key={fact.label} className="min-w-0 py-2.5">
+                <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                  {fact.label}
+                </dt>
+
+                <dd className="mt-0.5 break-words text-sm font-semibold text-slate-800">
+                  {fact.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
 
       <section className="overflow-hidden rounded-2xl bg-[#101827] p-5 text-white shadow-[0_8px_30px_rgba(15,23,42,0.12)]">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
@@ -574,6 +545,10 @@ function BlogSidebar({
           </div>
         </div>
       </section>
+
+      <div className="lg:sticky lg:top-6">
+        <AdSenseUnit slot={adSlots.bottom} side />
+      </div>
     </aside>
   );
 }
@@ -778,42 +753,11 @@ function SpecialBlog({
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
           <main className="min-w-0">
-            <BlogHighlights points={article.highlights} />
-
             <BlogBody
               sections={article.sections}
               category={article.category}
               intro={article.dek}
             />
-
-            {article.keyFacts?.length > 0 && (
-              <section className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-                  At a glance
-                </p>
-
-                <h2 className="mt-2 font-serif text-2xl font-bold text-slate-950">
-                  The details behind the story
-                </h2>
-
-                <dl className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
-                  {article.keyFacts.map((fact) => (
-                    <div
-                      key={fact.label}
-                      className="min-w-0 border-t border-slate-200 pt-3"
-                    >
-                      <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
-                        {fact.label}
-                      </dt>
-
-                      <dd className="mt-1 break-words text-sm font-semibold text-slate-800">
-                        {fact.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            )}
 
             <ShareAndBack
               to={sectionPath}
@@ -834,6 +778,7 @@ function SpecialBlog({
             highlights={article.highlights}
             category={article.category}
             section={article.section}
+            facts={article.keyFacts}
           />
         </div>
       </div>
@@ -908,23 +853,10 @@ function HomepageBlog({
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
           <main className="min-w-0">
-            <BlogHighlights points={article.highlights} />
-
-            <HomepageArticleAd />
-
             <BlogBody
               sections={article.sections}
               category={article.category}
               intro={article.dek}
-              adSlots={{
-                first: isExpandedAdCategory
-                  ? "5608262547"
-                  : "5373718974",
-
-                second: isExpandedAdCategory
-                  ? "6810700989"
-                  : "8042854193",
-              }}
             />
 
             <ShareAndBack
@@ -946,6 +878,10 @@ function HomepageBlog({
             highlights={article.highlights}
             category={article.category}
             section={article.category}
+            adSlots={{
+              top: isExpandedAdCategory ? "5608262547" : "5373718974",
+              bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
+            }}
           />
         </div>
       </div>
@@ -1028,53 +964,16 @@ function DigestBlog({
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
           <main className="min-w-0">
-            <BlogHighlights points={article.highlights} />
-
-            <HomepageArticleAd />
-
             <div className="blog-prose mt-4">
               {digest.body.map((paragraph, index) => (
                 <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
-                  {index === digest.quoteAfter && (
-                    <blockquote className="my-10 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-6 not-italic shadow-sm sm:px-7">
-                      <Quote size={18} className="mb-3 text-red-600" />
-                      <p className="font-serif text-xl font-semibold leading-8 text-slate-900 sm:text-2xl sm:leading-9">
-                        &ldquo;{digest.quote.text}&rdquo;
-                      </p>
-                      <footer className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                        {digest.quote.by}
-                      </footer>
-                    </blockquote>
-                  )}
-
                   <p className="mb-6 break-words text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
                     {paragraph}
                   </p>
-
-                  {index === 1 && (
-                    <AdSenseUnit slot="5373718974" />
-                  )}
-
-                  {index === 4 && (
-                    <AdSenseUnit slot="8042854193" inArticle />
-                  )}
                 </Fragment>
               ))}
 
-              {digest.quoteAfter >= digest.body.length && (
-                <blockquote className="my-10 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-6 not-italic shadow-sm sm:px-7">
-                  <Quote size={18} className="mb-3 text-red-600" />
-                  <p className="font-serif text-xl font-semibold leading-8 text-slate-900 sm:text-2xl sm:leading-9">
-                    &ldquo;{digest.quote.text}&rdquo;
-                  </p>
-                  <footer className="mt-3 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                    {digest.quote.by}
-                  </footer>
-                </blockquote>
-              )}
             </div>
-
-            <KeyFacts facts={digest.keyFacts} />
 
             <p className="mt-8 border-t border-slate-200 pt-4 text-[11px] leading-5 text-slate-400">
               {article.editorNote}
@@ -1098,6 +997,8 @@ function DigestBlog({
             highlights={article.highlights}
             category={article.category}
             section={article.category}
+            facts={digest.keyFacts}
+            quote={digest.quote}
           />
         </div>
       </div>
@@ -1231,19 +1132,11 @@ function MagazineBlog({
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
           <main className="min-w-0">
-            <BlogHighlights points={article.highlights} />
-
             <BlogBody
               sections={article.sections}
               category={article.category}
               intro={dek}
-              adSlots={{
-                first: "5373718974",
-                second: "8042854193",
-              }}
             />
-
-            {keyFacts && <KeyFacts facts={keyFacts} />}
 
             <ShareAndBack
               to={backTo}
@@ -1262,6 +1155,7 @@ function MagazineBlog({
             highlights={article.highlights}
             category={article.category}
             section={sectionLabel}
+            facts={keyFacts}
           />
         </div>
       </div>
