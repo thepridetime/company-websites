@@ -6,10 +6,14 @@
    Report block. Figures are quoted from the report.
 ========================================================= */
 
+import img_dataCentre from "../../imports/data-centre.png";
+
 export const globalSectorAnchorId = "global-sector-report";
 
 export const globalSectorReport = {
   kicker: "Global Sector News Report 2026",
+  image: img_dataCentre,
+  location: "Global",
   headline:
     "Seven Industries at the Edge of the Next Operating Cycle: AI, Finance, Healthcare, Energy, Automotive, Agriculture and Entertainment",
   subheadline:
