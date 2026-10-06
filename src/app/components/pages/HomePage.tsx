@@ -32,7 +32,7 @@ import {
 import {
   globalSectorReport,
   globalSectorItems,
-  globalSectorAnchorId,
+  globalSectorArticleId,
 } from "../../data/globalSectorReportData";
 
 /* =========================================================
@@ -409,8 +409,8 @@ export function HomePage() {
 
               {/* LEAD STORY */}
 
-              <a
-                href={`#${globalSectorAnchorId}`}
+              <Link
+                to={`/article/${globalSectorArticleId}`}
                 className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
               >
                 <ImageWithFallback
@@ -443,7 +443,7 @@ export function HomePage() {
                     <ArrowRight size={12} />
                   </span>
                 </div>
-              </a>
+              </Link>
 
               {/* MAJOR COVERAGE */}
 
@@ -656,45 +656,6 @@ export function HomePage() {
                   </div>
                 </div>
               </aside>
-            </div>
-          </section>
-
-          {/* =================================================
-              GLOBAL SECTOR NEWS REPORT 2026 (new; additive)
-              Destination of the main headline above.
-          ================================================= */}
-
-          <section
-            id={globalSectorAnchorId}
-            aria-label="Global Sector News Report 2026"
-            className="mb-12 scroll-mt-24 border-b border-gray-300 pb-10"
-          >
-            <SectionHeader title={globalSectorReport.kicker} />
-
-            <p className="-mt-2 mb-4 text-[11px] leading-[1.5] text-gray-500">
-              {globalSectorReport.subheadline}
-            </p>
-
-            <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-              {globalSectorItems.map((item) => (
-                <div key={item.sector}>
-                  <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
-                    {item.sector}
-                  </span>
-
-                  <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 md:text-[22px]">
-                    {item.headline}
-                  </h4>
-
-                  <p className="mt-1.5 text-[12px] font-medium leading-[1.5] text-gray-700">
-                    {item.verdict}.
-                  </p>
-
-                  <p className="mt-1 text-[11px] leading-[1.55] text-gray-500">
-                    {item.signal}. Bottleneck: {item.bottleneck}.
-                  </p>
-                </div>
-              ))}
             </div>
           </section>
 
@@ -1072,6 +1033,43 @@ export function HomePage() {
                     </Link>
                   </div>
                 </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================
+              SECTOR HEADLINES — Global Sector News Report 2026
+          ================================================= */}
+
+          <section
+            aria-label="Global Sector News Report 2026 headlines"
+            className="mb-12"
+          >
+            <SectionHeader
+              title="Sector Headlines · Global Sector News Report 2026"
+              link={`/article/${globalSectorArticleId}`}
+              linkText="Read Report"
+            />
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {globalSectorItems.map((item) => (
+                <Link
+                  key={item.sector}
+                  to={`/article/${globalSectorArticleId}`}
+                  className="group block rounded-md border border-gray-200 p-4 transition-colors hover:border-gray-300"
+                >
+                  <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+                    {item.sector}
+                  </span>
+
+                  <h3 className="mt-1.5 font-serif text-[15px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600">
+                    {item.headline}
+                  </h3>
+
+                  <p className="mt-1.5 text-[11px] font-medium leading-[1.5] text-gray-700">
+                    {item.verdict}.
+                  </p>
+                </Link>
               ))}
             </div>
           </section>
