@@ -102,9 +102,11 @@ const byTitle = (prefix: string): DigestArticle =>
 
 const leadStory = byTitle("Altamira Capital commits $34.1B");
 
+/* The previous lead story now follows the new Global Sector Report
+   headline as the first major story. */
 const majorStories = [
+  leadStory,
   byTitle("Navarro Partners agrees $13.9B takeover"),
-  byTitle("Aurelia Foods reports positive"),
 ];
 
 const editorsPick = byTitle("Tidewater Aerospace reports first green-hydrogen");
@@ -405,76 +407,48 @@ export function HomePage() {
           <section className="pb-5 mb-5 border-b border-gray-300">
             <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
 
-              {/* MAIN HEADLINE — GLOBAL SECTOR NEWS REPORT 2026 */}
+              {/* LEAD STORY */}
 
               <a
                 href={`#${globalSectorAnchorId}`}
-                className="group relative flex h-full min-h-[430px] flex-col justify-end overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-gray-950 via-gray-900 to-red-950 p-5 md:p-6"
+                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
               >
+                <ImageWithFallback
+                  src={globalSectorReport.image}
+                  alt={globalSectorReport.headline}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+
                 <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                  {globalSectorReport.kicker}
+                  {globalSectorReport.kicker} | {globalSectorReport.location}
                 </span>
 
-                <h1 className="font-serif text-2xl md:text-[30px] lg:text-[32px] font-bold leading-[1.1] text-white">
-                  {globalSectorReport.headline}
-                </h1>
+                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                  <h1 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
+                    {globalSectorReport.headline}
+                  </h1>
 
-                <p className="mt-3 text-[14px] md:text-[15px] font-medium leading-[1.45] text-red-200">
-                  {globalSectorReport.subheadline}
-                </p>
+                  <p className="text-[13px] md:text-[14px] font-semibold text-red-200 leading-[1.5] mt-3">
+                    {globalSectorReport.subheadline}
+                  </p>
 
-                <p className="mt-2 text-[12px] leading-[1.6] text-gray-300 line-clamp-3">
-                  {globalSectorReport.pattern}
-                </p>
+                  <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-2 line-clamp-3">
+                    {globalSectorReport.pattern}
+                  </p>
 
-                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-white/20 pt-4">
-                  {globalSectorReport.stats.map((stat) => (
-                    <div key={stat.value}>
-                      <div className="font-serif text-xl font-bold leading-none text-white">
-                        {stat.value}
-                      </div>
-                      <div className="mt-1 text-[10px] leading-[1.35] text-gray-400">
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
+                    Read Full Story
+                    <ArrowRight size={12} />
+                  </span>
                 </div>
-
-                <span className="mt-4 inline-flex w-fit items-center gap-1.5 border-b border-white/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                  Read the Seven-Sector Report
-                  <ArrowRight size={12} />
-                </span>
               </a>
 
               {/* MAJOR COVERAGE */}
 
               <div className="min-w-0">
-                {/* PREVIOUS LEAD STORY (kept, now second-level) */}
-
-                <Link
-                  to={digestArticlePath(leadStory)}
-                  className="group mb-4 flex gap-3 border-b border-gray-200 pb-4"
-                >
-                  <div className="shrink-0 w-[105px] h-[75px] overflow-hidden rounded-md">
-                    <ImageWithFallback
-                      src={leadStory.image}
-                      alt={leadStory.title}
-                      className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                      {leadStory.section} | {leadStory.location}
-                    </span>
-
-                    <h2 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-3">
-                      {leadStory.title}
-                    </h2>
-                  </div>
-                </Link>
-
-                <div className="mb-3">
+                <div className="mb-4">
                   <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.15em] mb-2">
                     {majorStories[0].section} | {majorStories[0].location}
                   </span>
@@ -673,6 +647,7 @@ export function HomePage() {
 
           {/* =================================================
               GLOBAL SECTOR NEWS REPORT 2026 (new; additive)
+              Destination of the main headline above.
           ================================================= */}
 
           <section
@@ -682,35 +657,25 @@ export function HomePage() {
           >
             <SectionHeader title={globalSectorReport.kicker} />
 
-            <p className="-mt-2 mb-4 text-[12px] leading-[1.5] text-gray-600">
+            <p className="-mt-2 mb-4 text-[11px] leading-[1.5] text-gray-500">
               {globalSectorReport.subheadline}
             </p>
 
-            <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
               {globalSectorItems.map((item) => (
-                <article
-                  key={item.sector}
-                  className="border-t-2 border-black pt-2.5"
-                >
-                  <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+                <div key={item.sector}>
+                  <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                     {item.sector}
                   </span>
 
-                  <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-900">
+                  <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 md:text-[22px]">
                     {item.headline}
-                  </h3>
+                  </h4>
 
-                  <p className="mt-1.5 text-[11px] leading-[1.5] text-gray-600">
-                    <span className="font-semibold text-gray-800">Signal:</span>{" "}
-                    {item.signal}. {" "}
-                    <span className="font-semibold text-gray-800">Bottleneck:</span>{" "}
-                    {item.bottleneck}.
+                  <p className="mt-1.5 text-[12px] leading-[1.6] text-gray-600">
+                    {item.signal}. Bottleneck: {item.bottleneck}.
                   </p>
-
-                  <p className="mt-1 text-[11px] italic leading-[1.5] text-gray-500">
-                    Editor's verdict: {item.verdict}
-                  </p>
-                </article>
+                </div>
               ))}
             </div>
           </section>
