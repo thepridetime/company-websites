@@ -498,6 +498,10 @@ export function HomePage() {
                       {majorStories[1].title}
                     </h3>
 
+                    <p className="mt-1 text-[11px] leading-[1.45] text-gray-500 line-clamp-2">
+                      {majorStories[1].lede}
+                    </p>
+
                     <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
                       <Clock size={9} />
                       {majorStories[1].publishedAt}
@@ -605,6 +609,10 @@ export function HomePage() {
                     <h3 className="text-[13px] font-semibold leading-[1.4] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
                       {editorsPick.title}
                     </h3>
+
+                    <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-3">
+                      {editorsPick.lede}
+                    </p>
                   </Link>
                 </div>
 
@@ -633,9 +641,15 @@ export function HomePage() {
                             {item.location}
                           </span>
 
-                          <span className="text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
-                            {item.title}
-                          </span>
+                          <div className="min-w-0">
+                            <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
+                              {item.title}
+                            </span>
+
+                            <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
+                              {item.lede}
+                            </span>
+                          </div>
                         </div>
                       </Link>
                     ))}
@@ -672,7 +686,11 @@ export function HomePage() {
                     {item.headline}
                   </h4>
 
-                  <p className="mt-1.5 text-[12px] leading-[1.6] text-gray-600">
+                  <p className="mt-1.5 text-[12px] font-medium leading-[1.5] text-gray-700">
+                    {item.verdict}.
+                  </p>
+
+                  <p className="mt-1 text-[11px] leading-[1.55] text-gray-500">
                     {item.signal}. Bottleneck: {item.bottleneck}.
                   </p>
                 </div>
@@ -774,6 +792,10 @@ export function HomePage() {
                           <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600 md:text-[22px]">
                             {story.title}
                           </h4>
+
+                          <p className="mt-1.5 text-[12px] leading-[1.55] text-gray-500 line-clamp-2">
+                            {story.lede}
+                          </p>
                         </Link>
                       );
                     })}
@@ -1010,6 +1032,10 @@ export function HomePage() {
 
                       <span className="mt-1 block font-serif text-[13px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600 line-clamp-4">
                         {sectionHeadlines.get(section.number)!.title}
+                      </span>
+
+                      <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
+                        {sectionHeadlines.get(section.number)!.lede}
                       </span>
                     </Link>
                   )}
