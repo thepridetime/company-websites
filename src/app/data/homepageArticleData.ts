@@ -14,6 +14,11 @@ import {
   type DigestKeyFact,
 } from "./digestArticleData";
 import { maEdition1Articles, type EditionArticle } from "./maEdition1Data";
+import {
+  globalSectorReport,
+  globalSectorItems,
+  globalSectorArticleId,
+} from "./globalSectorReportData";
 
 export { articleSlug };
 
@@ -81,11 +86,57 @@ function toHomepageArticle(article: DigestArticle | EditionArticle): HomepageArt
   };
 }
 
-/* Existing September digest first (unchanged), then Edition 1 (M&A). */
+/* Global Sector News Report 2026 — inner article opened by the
+   homepage lead story. Built from globalSectorReportData.ts. */
+const globalSectorBody: string[] = [
+  globalSectorReport.pattern,
+  ...globalSectorItems.map(
+    (item) =>
+      `${item.sector}: ${item.headline}. ${item.signal}. ${item.verdict}. Bottleneck: ${item.bottleneck}.`
+  ),
+];
+
+const globalSectorArticle: HomepageArticle = {
+  slug: globalSectorArticleId,
+  title: globalSectorReport.headline,
+  category: globalSectorReport.kicker,
+  dek: globalSectorReport.subheadline,
+  image: globalSectorReport.image,
+  author: "The Pride Times",
+  publishedAt: "2026",
+  readTime: "4 min read",
+  highlights: globalSectorItems.map((item) => `${item.sector}: ${item.verdict}`),
+  tags: [globalSectorReport.kicker, "The Pride Times"],
+  editorNote:
+    "Source: Global Sector News Report 2026. Figures are quoted from the report.",
+  sections: globalSectorBody.map((body, index) => ({
+    heading: `Paragraph ${index + 1}`,
+    body,
+  })),
+  digest: {
+    sectionName: globalSectorReport.kicker,
+    sectionPath: "/business-news",
+    location: globalSectorReport.location,
+    lede: globalSectorReport.subheadline,
+    body: globalSectorBody,
+    quote: {
+      text: globalSectorReport.subheadline,
+      by: globalSectorReport.kicker,
+    },
+    quoteAfter: 0,
+    keyFacts: globalSectorReport.stats.map((stat) => ({
+      label: stat.label,
+      value: stat.value,
+    })),
+  },
+};
+
+/* Existing September digest first (unchanged), then Edition 1 (M&A),
+   then the Global Sector News Report 2026 article. */
 export const homepageArticles: HomepageArticle[] = [
-  ...digestArticles,
-  ...maEdition1Articles,
-].map(toHomepageArticle);
+  ...[...digestArticles, ...maEdition1Articles].map(toHomepageArticle),
+  globalSectorArticle,
+];
 
 export function getHomepageArticleBySlug(slug?: string) {
   return homepageArticles.find((article) => article.slug === slug);
