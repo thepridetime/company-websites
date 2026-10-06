@@ -10,6 +10,9 @@ import img_dataCentre from "../../imports/data-centre.png";
 
 export const globalSectorAnchorId = "global-sector-report";
 
+/* Slug of the inner article page: /article/global-sector-news-report-2026 */
+export const globalSectorArticleId = "global-sector-news-report-2026";
+
 export const globalSectorReport = {
   kicker: "Global Sector News Report 2026",
   image: img_dataCentre,
