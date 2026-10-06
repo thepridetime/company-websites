@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import type { ReactNode } from "react";
-import { Clock, Briefcase } from "lucide-react";
+import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import {
@@ -10,55 +10,80 @@ import {
   earningsNews,
   corporateNews,
   startupNews,
+  type BusinessArticle,
 } from "../../data/businessNewsData";
 
 /* =========================================================
-   NEW IMAGES (company-websites/src/imports)
+   LOCAL IMAGES (company-websites/src/imports)
+   Stories without their own image get a matching one by
+   category so every headline has a picture.
 ========================================================= */
 import businessStockDrop from "../../../imports/business-stock-drop.png";
 import businessAviationJet from "../../../imports/business-aviation-jet.png";
 import businessJioDigital from "../../../imports/business-jio-digital.png";
 import businessGoldmanNyse from "../../../imports/business-goldman-nyse.png";
+import energyTanks from "../../../imports/energy-tanks.png";
+import warehouseRobotics from "../../../imports/warehouse-robotics.png";
+import dataCentre from "../../../imports/data-centre.png";
+import supplyChainMap from "../../../imports/supply-chain-map.png";
 
-// Hero image
-const heroImage = businessStockDrop;
+const categoryImages: Record<string, string> = {
+  TELECOM: businessJioDigital,
+  BANKING: businessGoldmanNyse,
+  AEROSPACE: businessAviationJet,
+  ENERGY: energyTanks,
+  RETAIL: warehouseRobotics,
+  LUXURY: businessStockDrop,
+};
 
-// "More Stories" sidebar images (in order of the 3 stories)
-const moreStoryImages = [
-  businessAviationJet,
-  businessJioDigital,
-  businessGoldmanNyse,
-];
+const fallbackPool = [dataCentre, supplyChainMap, businessStockDrop, warehouseRobotics];
+
+function storyImage(story: BusinessArticle, index = 0): string {
+  return (
+    story.image ??
+    categoryImages[story.category.toUpperCase()] ??
+    fallbackPool[index % fallbackPool.length]
+  );
+}
+
+/* =========================================================
+   PAGE DATA
+   Top block  : hero + 2 headline stories + 6 latest (right)
+   More block : every remaining story as a compact headline row
+   Nothing is repeated, nothing is dropped.
+========================================================= */
+
+const latestStories = corporateNews.slice(0, 6);
+const moreCorporate = corporateNews.slice(6);
 
 /* =========================================================
    SECTION HEADER
 ========================================================= */
 
-function SectionHeader({ title }: { title: string }) {
+function SectionHeader({ title, meta }: { title: string; meta?: string }) {
   return (
-    <div className="flex items-center gap-2.5 border-b-2 border-black pb-2.5 mb-5">
-      <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
+    <div className="mb-3 flex items-center gap-2.5 border-b-2 border-black pb-2">
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-600" />
 
-      <h2 className="text-[13px] md:text-sm font-bold uppercase tracking-[0.16em] text-gray-900">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-900">
         {title}
       </h2>
+
+      {meta && (
+        <span className="ml-auto text-[9px] font-semibold uppercase tracking-wide text-gray-400">
+          {meta}
+        </span>
+      )}
     </div>
   );
 }
 
 /* =========================================================
-   REAL GOOGLE ADSENSE
-   Existing Pride Times publisher + slots are preserved.
+   GOOGLE ADSENSE (existing Pride Times publisher + slots)
 ========================================================= */
 type AdSenseWindow = Window & { adsbygoogle?: unknown[] };
 
-function AdSpace({
-  slot = "5373718974",
-  inArticle = false,
-}: {
-  slot?: "5373718974" | "8042854193";
-  inArticle?: boolean;
-}) {
+function AdSpace({ slot = "5373718974" }: { slot?: "5373718974" | "8042854193" }) {
   useEffect(() => {
     try {
       const adsWindow = window as AdSenseWindow;
@@ -70,83 +95,94 @@ function AdSpace({
   }, []);
 
   return (
-    <div className="w-full overflow-hidden border-y border-gray-200 bg-white py-4">
-      <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+    <div className="w-full overflow-hidden border-y border-gray-200 bg-white py-3">
+      <p className="mb-1.5 text-center text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-400">
         Advertisement
       </p>
 
       <ins
         className="adsbygoogle"
-        style={{ display: "block", minHeight: inArticle ? "120px" : "90px" }}
+        style={{ display: "block", minHeight: "90px" }}
         data-ad-client="ca-pub-2331501617441941"
         data-ad-slot={slot}
-        {...(inArticle
-          ? { "data-ad-layout": "in-article", "data-ad-format": "fluid" }
-          : { "data-ad-format": "auto", "data-full-width-responsive": "true" })}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
       />
     </div>
   );
 }
 
-function SidebarAd() {
-  return <AdSpace slot="5373718974" />;
+/* =========================================================
+   HEADLINE ROW — compact: thumbnail + category + headline
+   Opens the inner article at /article/:id
+========================================================= */
+
+function HeadlineRow({ story, index = 0 }: { story: BusinessArticle; index?: number }) {
+  return (
+    <Link
+      to={`/article/${story.id}`}
+      className="group flex gap-3 py-3"
+    >
+      <div className="h-[62px] w-[92px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+        <ImageWithFallback
+          src={storyImage(story, index)}
+          alt={story.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+          {story.category}
+        </span>
+
+        <h3 className="mt-0.5 line-clamp-2 text-[13px] font-bold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
+          {story.title}
+        </h3>
+
+        <span className="mt-1 flex items-center gap-1 text-[10px] text-gray-400">
+          <Clock size={9} />
+          {story.time}
+        </span>
+      </div>
+    </Link>
+  );
 }
 
 /* =========================================================
-   MORE STORIES SIDEBAR
+   LATEST STREAM — text-only headlines (right column)
 ========================================================= */
 
-function MoreStories({
-  stories,
-}: {
-  stories: {
-    id: string;
-    title: string;
-    time: string;
-    category?: string;
-  }[];
-}) {
+function LatestStream({ stories }: { stories: BusinessArticle[] }) {
   return (
-    <div className="mt-5">
-      <div className="border-b-2 border-black pb-2">
-        <h3 className="text-[12px] font-bold uppercase tracking-[0.08em]">
-          More Stories
-        </h3>
+    <div className="pt-4">
+      <div className="mb-1 flex items-center justify-between border-b border-gray-200 pb-2">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
+          Latest News
+        </h2>
+
+        <span className="text-[8px] uppercase tracking-wide text-gray-400">
+          Newsroom
+        </span>
       </div>
 
-      <div className="divide-y divide-gray-200">
-        {stories.slice(0, 3).map((story, index) => (
+      <div className="divide-y divide-gray-100">
+        {stories.map((story) => (
           <Link
             key={story.id}
             to={`/article/${story.id}`}
-            className="group block py-3"
+            className="group block py-2.5"
           >
-            <div className="flex gap-3">
-              <div className="flex h-[48px] w-[68px] shrink-0 items-center justify-center overflow-hidden rounded-sm bg-gray-100">
-                <ImageWithFallback
-                  src={moreStoryImages[index]}
-                  alt={story.title}
-                  className="h-full w-full object-cover"
-                />
-              </div>
+            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-red-600">
+              {story.category}
+              <span className="ml-2 font-medium normal-case tracking-normal text-gray-400">
+                {story.time}
+              </span>
+            </span>
 
-              <div className="min-w-0">
-                {story.category && (
-                  <span className="text-[8px] font-bold uppercase tracking-[0.1em] text-red-600">
-                    {story.category}
-                  </span>
-                )}
-
-                <h4 className="mt-1 text-[11px] sm:text-xs font-semibold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
-                  {story.title}
-                </h4>
-
-                <span className="mt-1 flex items-center gap-1 text-[9px] text-gray-400">
-                  <Clock size={9} />
-                  {story.time}
-                </span>
-              </div>
-            </div>
+            <span className="mt-0.5 block text-[12px] font-semibold leading-[1.4] text-gray-800 transition-colors group-hover:text-red-600">
+              {story.title}
+            </span>
           </Link>
         ))}
       </div>
@@ -155,7 +191,7 @@ function MoreStories({
 }
 
 /* =========================================================
-   STATUS BADGES
+   STATUS BADGES + TABLE HEADER
 ========================================================= */
 
 const earningsBadge: Record<string, string> = {
@@ -169,10 +205,6 @@ const dealBadge: Record<string, string> = {
   Pending: "bg-amber-500 text-white",
 };
 
-/* =========================================================
-   TABLE HEADER
-========================================================= */
-
 const TH = ({
   children,
   align = "left",
@@ -183,7 +215,7 @@ const TH = ({
   className?: string;
 }) => (
   <th
-    className={`py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 ${
+    className={`px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 ${
       align === "right" ? "text-right" : "text-left"
     } ${className}`}
   >
@@ -198,552 +230,255 @@ const TH = ({
 export function BusinessNewsPage() {
   return (
     <div className="w-full bg-white text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-9 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 md:py-6 lg:px-8">
 
-        {/* =================================================
-            PAGE HEADER
-        ================================================= */}
+        {/* PAGE HEADER */}
 
-        <header className="border-b-4 border-black pb-5 mb-7 md:mb-8">
-          <div className="flex items-center gap-3.5">
+        <header className="mb-5 flex items-end justify-between border-b-4 border-black pb-3">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-600">
+              Business Briefing
+            </p>
 
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-white">
-              <Briefcase size={19} strokeWidth={1.75} />
-            </div>
-
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-600">
-                Business Briefing
-              </p>
-
-              <h1 className="mt-1 font-serif text-3xl font-bold leading-tight tracking-tight md:text-[42px]">
-                Business News
-              </h1>
-            </div>
-
+            <h1 className="mt-0.5 font-serif text-3xl font-bold leading-tight tracking-tight md:text-4xl">
+              Business News
+            </h1>
           </div>
+
+          <span className="pb-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+            {1 + headlineNews.length + corporateNews.length + startupNews.length} stories
+          </span>
         </header>
 
 
         {/* =================================================
-            HERO + SIDEBAR
+            TOP STORIES — same newsroom lead as the homepage
         ================================================= */}
 
-        <section className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_245px] lg:gap-6">
+        <section className="grid grid-cols-1 gap-5 border-b border-gray-300 pb-6 lg:grid-cols-[1.15fr_1fr_0.85fr] lg:gap-6">
 
-          {/* =================================================
-              TWO BIG BUSINESS HEADLINES
-          ================================================= */}
+          {/* LEAD STORY */}
 
-          <div className="grid grid-cols-1 gap-7 md:grid-cols-2">
-            {headlineNews.slice(0, 2).map((news) => (
-              <Link
-                key={news.id}
-                to={`/article/${news.id}`}
-                className="group block"
-              >
-                <div className="relative overflow-hidden rounded-md">
-                  <ImageWithFallback
-                    src={news.image}
-                    alt={news.title}
-                    className="h-[280px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-[340px] md:h-[400px] lg:h-[460px]"
-                  />
+          <Link
+            to={`/article/${hero.id}`}
+            className="group relative block min-h-[360px] overflow-hidden rounded-lg border border-gray-200 bg-black lg:min-h-[420px]"
+          >
+            <ImageWithFallback
+              src={storyImage(hero)}
+              alt={hero.title}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-90" />
-                </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
-                <div className="mt-5">
-                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-                    {news.category}
-                  </span>
+            <span className="absolute left-4 top-4 rounded-[2px] bg-red-600 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white">
+              {hero.category}
+            </span>
 
-                  <h2 className="mt-2 font-serif text-2xl font-bold leading-[1.08] tracking-tight text-gray-950 transition-colors duration-200 group-hover:text-red-600 sm:text-3xl lg:text-[34px]">
-                    {news.title}
-                  </h2>
+            <div className="absolute inset-x-0 bottom-0 p-5">
+              <h2 className="font-serif text-2xl font-bold leading-[1.1] text-white lg:text-[26px]">
+                {hero.title}
+              </h2>
 
-                  <p className="mt-4 text-sm leading-[1.7] text-gray-600">
-                    {news.excerpt}
-                  </p>
+              <p className="mt-2 line-clamp-2 text-[12px] leading-[1.55] text-gray-200">
+                {hero.dek}
+              </p>
 
-                  <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-200 pt-4 text-xs text-gray-400">
-                    <span className="font-semibold text-gray-600">
-                      By {news.author}
-                    </span>
+              <span className="mt-3 inline-flex items-center gap-1.5 border-b border-white/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                Read Full Story
+                <ArrowRight size={12} />
+              </span>
+            </div>
+          </Link>
 
-                    <span className="h-1 w-1 rounded-full bg-gray-300" />
+          {/* MAJOR COVERAGE */}
 
-                    <span className="flex items-center gap-1.5">
-                      <Clock size={11} strokeWidth={2.25} />
-                      {news.time}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+          <div className="min-w-0">
+            <Link to={`/article/${headlineNews[0].id}`} className="group block">
+              <span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.15em] text-red-600">
+                {headlineNews[0].category}
+              </span>
+
+              <div className="overflow-hidden rounded-lg">
+                <ImageWithFallback
+                  src={storyImage(headlineNews[0])}
+                  alt={headlineNews[0].title}
+                  className="h-[200px] w-full rounded-lg object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              </div>
+
+              <h2 className="mt-2.5 font-serif text-xl font-bold leading-[1.15] text-gray-950 transition-colors group-hover:text-red-600">
+                {headlineNews[0].title}
+              </h2>
+
+              <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.55] text-gray-600">
+                {headlineNews[0].excerpt}
+              </p>
+            </Link>
+
+            <div className="mt-3 border-t border-gray-200">
+              <HeadlineRow story={headlineNews[1]} index={1} />
+            </div>
           </div>
 
+          {/* RIGHT COLUMN */}
 
-          {/* =================================================
-              RIGHT SIDEBAR
-          ================================================= */}
-
-          <aside className="lg:pt-0">
-
-            <SidebarAd />
-
-            <MoreStories stories={corporateNews.slice(3, 6)} />
-
+          <aside className="min-w-0">
+            <AdSpace />
+            <LatestStream stories={latestStories} />
           </aside>
 
         </section>
 
 
         {/* =================================================
-            TOP ADVERTISEMENT
-            Kept unchanged; displayed after the two lead stories.
+            MORE HEADLINES — every remaining story, compact
         ================================================= */}
 
-        <div className="mt-7 mb-7 md:mt-9 md:mb-9">
-          <AdSpace />
+        <section className="grid grid-cols-1 gap-x-10 gap-y-6 py-6 md:grid-cols-2">
+
+          <div>
+            <SectionHeader
+              title="Corporate Strategy"
+              meta={`${moreCorporate.length} more`}
+            />
+
+            <div className="divide-y divide-gray-100">
+              {moreCorporate.map((story, i) => (
+                <HeadlineRow key={story.id} story={story} index={i} />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <SectionHeader
+              title="The Startup Economy"
+              meta={`${startupNews.length} stories`}
+            />
+
+            <div className="divide-y divide-gray-100">
+              {startupNews.map((story, i) => (
+                <HeadlineRow key={story.id} story={story} index={i} />
+              ))}
+            </div>
+          </div>
+
+        </section>
+
+
+        {/* =================================================
+            NUMBERS — collapsed so the page stays short
+        ================================================= */}
+
+        <section className="space-y-3 border-t-2 border-black pt-5">
+
+          <details className="rounded-md border border-gray-200">
+            <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-800">
+              Corporate Earnings · The Numbers Behind the Headlines
+            </summary>
+
+            <div className="overflow-x-auto border-t border-gray-200">
+              <table className="w-full min-w-[560px] border-collapse text-[12px]">
+                <thead>
+                  <tr className="border-b border-gray-300 bg-gray-50">
+                    <TH>Company</TH>
+                    <TH align="right">EPS</TH>
+                    <TH align="right">vs Est.</TH>
+                    <TH align="right">Revenue</TH>
+                    <TH align="right">Result</TH>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-gray-100">
+                  {earningsNews.map((e) => (
+                    <tr key={e.ticker} className="hover:bg-gray-50">
+                      <td className="px-3 py-2">
+                        <span className="font-semibold text-gray-900">{e.company}</span>
+                        <span className="ml-1.5 text-[11px] text-gray-400">({e.ticker})</span>
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-gray-700">{e.eps}</td>
+                      <td
+                        className={`px-3 py-2 text-right font-bold tabular-nums ${
+                          e.status === "BEAT" ? "text-green-700" : "text-red-700"
+                        }`}
+                      >
+                        {e.beat}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-gray-600">{e.revenue}</td>
+                      <td className="px-3 py-2 text-right">
+                        <span
+                          className={`inline-flex rounded-[2px] px-2 py-0.5 text-[10px] font-bold tracking-wide ${earningsBadge[e.status]}`}
+                        >
+                          {e.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details className="rounded-md border border-gray-200">
+            <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-800">
+              Deals &amp; Capital · Where Money Is Moving
+            </summary>
+
+            <div className="overflow-x-auto border-t border-gray-200">
+              <table className="w-full min-w-[600px] border-collapse text-[12px]">
+                <thead>
+                  <tr className="border-b border-gray-300 bg-gray-50">
+                    <TH>Acquirer</TH>
+                    <TH>Target</TH>
+                    <TH align="right">Value</TH>
+                    <TH className="hidden md:table-cell">Sector</TH>
+                    <TH align="right">Status</TH>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-gray-100">
+                  {maDeals.map((d) => (
+                    <tr key={d.id} className="hover:bg-gray-50">
+                      <td className="px-3 py-2 font-semibold text-gray-900">{d.acquirer}</td>
+                      <td className="px-3 py-2 text-gray-600">{d.target}</td>
+                      <td className="px-3 py-2 text-right font-bold tabular-nums text-gray-900">{d.value}</td>
+                      <td className="hidden px-3 py-2 text-[11px] text-gray-500 md:table-cell">{d.sector}</td>
+                      <td className="px-3 py-2 text-right">
+                        <span
+                          className={`inline-flex rounded-[2px] px-2 py-0.5 text-[10px] font-bold tracking-wide ${dealBadge[d.status]}`}
+                        >
+                          {d.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+        </section>
+
+
+        {/* SECOND ADVERTISEMENT */}
+
+        <div className="my-6">
+          <AdSpace slot="8042854193" />
         </div>
 
 
-        {/* =================================================
-            EARNINGS
-        ================================================= */}
+        {/* NEWSLETTER */}
 
-        <section className="mt-12 mb-12 md:mt-14">
-
-          <SectionHeader title="Corporate Earnings: The Numbers Behind the Headlines" />
-
-          <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
-            A closer look at quarterly results, revenue trends and the financial signals emerging from major companies.
-          </p>
-
-          <div className="overflow-x-auto">
-
-            <table className="w-full min-w-[650px] border-collapse text-sm">
-
-              <thead>
-                <tr className="border-b-2 border-gray-900">
-                  <TH>Company</TH>
-                  <TH align="right">EPS</TH>
-                  <TH align="right">vs Est.</TH>
-                  <TH align="right">Revenue</TH>
-                  <TH align="right">Result</TH>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-gray-100">
-
-                {earningsNews.map((e) => (
-                  <tr
-                    key={e.ticker}
-                    className="transition-colors hover:bg-gray-50"
-                  >
-
-                    <td className="py-3.5 pr-4">
-                      <span className="font-semibold text-gray-900">
-                        {e.company}
-                      </span>
-
-                      <span className="ml-1.5 text-xs text-gray-400">
-                        ({e.ticker})
-                      </span>
-                    </td>
-
-                    <td className="px-3 py-3.5 text-right font-medium tabular-nums text-gray-700">
-                      {e.eps}
-                    </td>
-
-                    <td
-                      className={`px-3 py-3.5 text-right font-bold tabular-nums ${
-                        e.status === "BEAT"
-                          ? "text-green-700"
-                          : "text-red-700"
-                      }`}
-                    >
-                      {e.beat}
-                    </td>
-
-                    <td className="px-3 py-3.5 text-right tabular-nums text-gray-600">
-                      {e.revenue}
-                    </td>
-
-                    <td className="py-3.5 pl-3 text-right">
-
-                      <span
-                        className={`inline-flex rounded-[2px] px-2.5 py-1 text-[10px] font-bold tracking-wide ${earningsBadge[e.status]}`}
-                      >
-                        {e.status}
-                      </span>
-
-                    </td>
-
-                  </tr>
-                ))}
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </section>
-
-
-        {/* =================================================
-            M&A TRACKER
-        ================================================= */}
-
-        <section className="mb-12 md:mb-14">
-
-          <SectionHeader title="Deals &amp; Capital: Where Money Is Moving" />
-
-          <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
-            Acquisitions, strategic investments and infrastructure deals reshaping industries and corporate balance sheets.
-          </p>
-
-          <div className="overflow-x-auto">
-
-            <table className="w-full min-w-[700px] border-collapse text-sm">
-
-              <thead>
-                <tr className="border-b-2 border-gray-900">
-
-                  <TH>Acquirer</TH>
-
-                  <TH>Target</TH>
-
-                  <TH align="right">
-                    Value
-                  </TH>
-
-                  <TH className="hidden md:table-cell">
-                    Sector
-                  </TH>
-
-                  <TH align="right">
-                    Status
-                  </TH>
-
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-gray-100">
-
-                {maDeals.map((d) => (
-                  <tr
-                    key={d.id}
-                    className="transition-colors hover:bg-gray-50"
-                  >
-
-                    <td className="py-3.5 pr-4 font-semibold text-gray-900">
-                      {d.acquirer}
-                    </td>
-
-                    <td className="px-3 py-3.5 text-gray-600">
-                      {d.target}
-                    </td>
-
-                    <td className="px-3 py-3.5 text-right font-bold tabular-nums text-gray-900">
-                      {d.value}
-                    </td>
-
-                    <td className="hidden px-3 py-3.5 text-xs text-gray-500 md:table-cell">
-                      {d.sector}
-                    </td>
-
-                    <td className="py-3.5 pl-3 text-right">
-
-                      <span
-                        className={`inline-flex rounded-[2px] px-2.5 py-1 text-[10px] font-bold tracking-wide ${dealBadge[d.status]}`}
-                      >
-                        {d.status}
-                      </span>
-
-                    </td>
-
-                  </tr>
-                ))}
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </section>
-
-
-        {/* =================================================
-            CORPORATE + STARTUPS
-        ================================================= */}
-
-        <section className="grid grid-cols-1 gap-10 border-t-2 border-black pt-10 md:grid-cols-2">
-
-          {/* =================================================
-              CORPORATE NEWS
-          ================================================= */}
-
-          <div>
-
-            <SectionHeader title="Inside Corporate Strategy" />
-
-            <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
-              The decisions behind expansion, technology adoption, leadership changes and competitive strategy at major companies.
-            </p>
-
-            <div className="space-y-3">
-
-              {corporateNews.slice(0, 3).map((n) => (
-
-                <Link
-                  key={n.id}
-                  to={`/article/${n.id}`}
-                  className="
-                    group
-                    block
-                    rounded-md
-                    border
-                    border-gray-200
-                    bg-white
-                    p-4
-                    transition-all
-                    duration-200
-                    hover:border-gray-300
-                    hover:bg-gray-50
-                  "
-                >
-
-                  <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-red-600">
-                    {n.category}
-                  </span>
-
-                  <div className="mt-2 flex gap-3">
-                    {n.image && (
-                      <div className="h-20 w-28 shrink-0 overflow-hidden rounded-sm bg-gray-100">
-                        <ImageWithFallback
-                          src={n.image}
-                          alt={n.title}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    )}
-
-                    <div className="min-w-0">
-                      <h3
-                        className="
-                          text-sm
-                          font-semibold
-                          leading-[1.5]
-                          text-gray-900
-                          transition-colors
-                          duration-200
-                          group-hover:text-red-600
-                          md:text-[15px]
-                        "
-                      >
-                        {n.title}
-                      </h3>
-
-                      <span
-                        className="
-                          mt-2
-                          flex
-                          items-center
-                          gap-1.5
-                          text-[11px]
-                          uppercase
-                          tracking-wide
-                          text-gray-400
-                        "
-                      >
-                        <Clock size={10} strokeWidth={2.25} />
-                        {n.time}
-                      </span>
-                    </div>
-                  </div>
-
-                  <span
-                    className="
-                      mt-2
-                      flex
-                      items-center
-                      gap-1.5
-                      text-[11px]
-                      uppercase
-                      tracking-wide
-                      text-gray-400
-                    "
-                  >
-                    <Clock size={10} strokeWidth={2.25} />
-                    {n.time}
-                  </span>
-
-                </Link>
-
-              ))}
-
-            </div>
-
-          </div>
-
-
-          {/* =================================================
-              STARTUPS & VENTURE
-          ================================================= */}
-
-          <div>
-
-            <SectionHeader title="The Startup Economy" />
-
-            <p className="mb-5 max-w-3xl text-sm leading-6 text-gray-500">
-              Funding rounds, valuations, acquisitions and the founders building the next generation of companies.
-            </p>
-
-            <div className="space-y-3">
-
-              {startupNews.map((n) => (
-
-                <Link
-                  key={n.id}
-                  to={`/article/${n.id}`}
-                  className="
-                    group
-                    block
-                    rounded-md
-                    border
-                    border-gray-200
-                    bg-white
-                    p-4
-                    transition-all
-                    duration-200
-                    hover:border-gray-300
-                    hover:bg-gray-50
-                  "
-                >
-
-                  <h3
-                    className="
-                      text-sm
-                      font-semibold
-                      leading-[1.5]
-                      text-gray-900
-                      transition-colors
-                      duration-200
-                      group-hover:text-red-600
-                      md:text-[15px]
-                    "
-                  >
-                    {n.title}
-                  </h3>
-
-                  <span
-                    className="
-                      mt-2
-                      flex
-                      items-center
-                      gap-1.5
-                      text-[11px]
-                      uppercase
-                      tracking-wide
-                      text-gray-400
-                    "
-                  >
-                    <Clock size={10} strokeWidth={2.25} />
-                    {n.time}
-                  </span>
-
-                </Link>
-
-              ))}
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        {/* =================================================
-            SECOND ADVERTISEMENT
-        ================================================= */}
-
-        <div className="my-12 md:my-14">
-          <AdSpace slot="8042854193" inArticle />
-        </div>
-
-
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================= */}
-
-        <section className="rounded-md border border-gray-100 bg-gray-50 p-4 sm:p-5">
-
-          <div className="mb-4 flex items-center gap-2">
-
-            <span className="rounded-sm border border-gray-200 bg-white px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
-              Industry Events &amp; Executive Briefings
-            </span>
-
-            <span className="text-[9px] text-gray-400">
-              Presented by our partners
-            </span>
-
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-
-            {[
-              "Global Finance Summit 2026",
-              "Tech Leaders Forum",
-              "Energy Transition Conference",
-              "AI & Business World",
-            ].map((item) => (
-
-              <div
-                key={item}
-                className="flex min-h-[90px] flex-col items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-4 text-center"
-              >
-
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
-                  <Briefcase size={13} />
-                </div>
-
-                <p className="mt-2 text-[10px] font-bold text-gray-900">
-                  {item}
-                </p>
-
-                <p className="mt-1 text-[8px] text-gray-400">
-                  Sponsored Event
-                </p>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </section>
-
-
-        {/* =================================================
-            NEWSLETTER
-        ================================================= */}
-
-        <section className="mt-6 rounded-md bg-[#071a2d] px-5 py-8 text-center sm:px-8 md:py-10">
-
-          <h2 className="font-serif text-xl font-bold text-white md:text-2xl">
+        <section className="rounded-md bg-[#071a2d] px-5 py-6 text-center sm:px-8">
+          <h2 className="font-serif text-lg font-bold text-white md:text-xl">
             Stay Ahead with The Pride Times
           </h2>
 
-          <p className="mt-2 text-xs text-gray-300 md:text-sm">
+          <p className="mt-1.5 text-xs text-gray-300">
             A concise briefing on companies, markets, capital and the business decisions shaping tomorrow's economy.
           </p>
 
-          <div className="mx-auto mt-5 flex max-w-lg flex-col gap-2 sm:flex-row">
-
+          <div className="mx-auto mt-4 flex max-w-lg flex-col gap-2 sm:flex-row">
             <input
               type="email"
               placeholder="Enter your email"
@@ -756,9 +491,7 @@ export function BusinessNewsPage() {
             >
               Subscribe Free
             </button>
-
           </div>
-
         </section>
 
       </div>
