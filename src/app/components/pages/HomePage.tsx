@@ -34,6 +34,7 @@ import {
   globalSectorItems,
   globalSectorArticleId,
 } from "../../data/globalSectorReportData";
+import { globalSectorMoreNews } from "../../data/globalSectorMoreNewsData";
 
 /* =========================================================
    TYPES
@@ -1070,6 +1071,45 @@ export function HomePage() {
                     {item.verdict}.
                   </p>
                 </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================
+              MORE SECTOR NEWS — Global Sector News Report 2026
+              (new headlines; the sector headlines above are unchanged)
+          ================================================= */}
+
+          <section
+            aria-label="More sector news from the Global Sector News Report 2026"
+            className="mb-12"
+          >
+            <SectionHeader
+              title="More Sector News · Global Sector News Report 2026"
+              link={`/article/${globalSectorArticleId}`}
+              linkText="Read Report"
+            />
+
+            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+              {globalSectorMoreNews.map((group) => (
+                <div key={group.sector}>
+                  <span className="block border-b border-gray-200 pb-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+                    {group.sector}
+                  </span>
+
+                  <ul className="mt-2 divide-y divide-gray-100">
+                    {group.headlines.map((headline) => (
+                      <li key={headline}>
+                        <Link
+                          to={`/article/${globalSectorArticleId}`}
+                          className="block py-2 font-serif text-[13px] font-bold leading-[1.35] text-gray-900 transition-colors hover:text-red-600"
+                        >
+                          {headline}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
           </section>
