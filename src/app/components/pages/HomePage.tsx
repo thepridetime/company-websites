@@ -69,7 +69,7 @@ function PrideTimesAd() {
   return (
     <section
       aria-label="Advertisement"
-      className="my-4 overflow-hidden border-y border-gray-100 bg-white py-3"
+      className="my-8 overflow-hidden border-y border-gray-100 bg-white py-4"
     >
       <div className="mb-2 text-center text-[8px] font-medium uppercase tracking-[0.2em] text-gray-400">
         Advertisement
@@ -404,7 +404,7 @@ export function HomePage() {
               TOP STORIES / NEWSROOM LEAD
           ================================================= */}
 
-          <section className="pb-5 mb-5 border-b border-gray-300">
+          <section className="pb-8 mb-8 border-b border-gray-300">
             <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
 
               {/* LEAD STORY */}
@@ -667,7 +667,7 @@ export function HomePage() {
           <section
             id={globalSectorAnchorId}
             aria-label="Global Sector News Report 2026"
-            className="mb-6 scroll-mt-24 border-b border-gray-300 pb-6"
+            className="mb-12 scroll-mt-24 border-b border-gray-300 pb-10"
           >
             <SectionHeader title={globalSectorReport.kicker} />
 
@@ -705,7 +705,7 @@ export function HomePage() {
 
           <section
             aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
-            className="mb-6 border-b border-gray-300 pb-6"
+            className="mb-12 border-b border-gray-300 pb-10"
           >
             <SectionHeader
               title={`Global Corporate News Digest · ${maEdition1Meta.edition} · Headlines by Industry`}
@@ -752,7 +752,7 @@ export function HomePage() {
             {/* HEADLINES BY INDUSTRY — every story = one image + one headline
                 (Bloomberg-style cards). Each card opens its article page. */}
 
-            <div className="mt-5 space-y-6">
+            <div className="mt-8 space-y-10">
               {editionIndustries.map((group) => (
                 <div key={group.name}>
                   <div className="mb-4 flex items-center justify-between border-b border-gray-300 pb-2">
@@ -849,7 +849,7 @@ export function HomePage() {
               LATEST NEWS (all 60 digest stories) + MAGAZINE
           ================================================= */}
 
-          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-6 mb-6">
+          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
 
             {/* LATEST NEWS */}
 
@@ -998,7 +998,7 @@ export function HomePage() {
               SECTION BRIEFINGS (one card per digest section)
           ================================================= */}
 
-          <section className="mb-6">
+          <section className="mb-12">
             <SectionHeader title="Global Corporate News Digest · Sections" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
@@ -1080,7 +1080,7 @@ export function HomePage() {
               REGIONAL SNAPSHOT (illustrative)
           ================================================= */}
 
-          <section className="mb-6">
+          <section className="mb-12">
             <SectionHeader title="Regional Snapshot (Illustrative)" />
 
             <div className="overflow-x-auto">
