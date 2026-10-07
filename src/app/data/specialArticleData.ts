@@ -2259,8 +2259,55 @@ const marketArticles: SpecialArticle[] = [
   },
 ];
 
-const whiteHouseWatchArticles: SpecialArticle[] = [];
-const worldWatchArticles: SpecialArticle[] = [];
+const whiteHouseWatchSeeds = [
+  { id: "whitehouse-president-signs-ai-accountability-act", category: "WHITE HOUSE WATCH", title: "President Signs Historic AI Accountability Act into Law", dek: "The new federal framework introduces transparency requirements, safety reviews and liability rules for high-risk artificial intelligence systems.", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1400&q=85" },
+  { id: "whitehouse-500b-ai-infrastructure", category: "WHITE HOUSE WATCH", title: "White House Announces $500B Infrastructure Investment in AI", dek: "The proposed investment package focuses on computing capacity, energy infrastructure, research facilities and the supporting systems needed for large-scale AI deployment.", image: "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-federal-technology-reviews", category: "WHITE HOUSE WATCH", title: "Administration Begins New Round of Federal Technology Reviews", dek: "Federal agencies are beginning a broad review of technology programs, procurement priorities and the systems supporting public services.", image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-congress-ai-framework", category: "WHITE HOUSE WATCH", title: "Congress Debates New Framework for Artificial Intelligence", dek: "Lawmakers are examining a federal approach to AI oversight covering transparency, safety testing, accountability and sector-specific obligations.", image: "https://images.unsplash.com/photo-1580130379624-3a069adbffc5?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-nvidia-humanoid-robot-push", category: "TECHNOLOGY", title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push", dek: "Nvidia is expanding its role in the robotics ecosystem as manufacturers look to combine advanced AI models with increasingly capable machines.", image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-alphabet-ai-data-center", category: "TECHNOLOGY", title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion", dek: "The proposed financing comes as hyperscalers increase spending on data centers, power capacity and the infrastructure required for AI workloads.", image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-quantum-1000-qubit", category: "TECHNOLOGY", title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved", dek: "A reported 1,000-qubit milestone highlights the rapid development of quantum hardware and the continuing challenge of making systems commercially useful.", image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-apple-ai-translation", category: "TECHNOLOGY", title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages", dek: "Apple's latest software strategy puts real-time translation and on-device intelligence closer to everyday consumer workflows.", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-meta-llama4-enterprise", category: "TECHNOLOGY", title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests", dek: "The latest enterprise model comparisons put renewed attention on open and proprietary AI systems and how benchmarks translate into business use.", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=85" },
+  { id: "whitehouse-starlink-gen3-global", category: "TECHNOLOGY", title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally", dek: "The latest satellite expansion is aimed at increasing high-speed connectivity across regions where conventional broadband remains difficult to deploy.", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=900&q=85" },
+];
+
+const worldWatchSeeds = [
+  { id: "world-saudi-crown-prince-paris", category: "WORLD & GEOPOLITICS", title: "Saudi Crown Prince to Meet French Premier in Paris on Monday", dek: "The talks are expected to cover energy cooperation, defense contracts and investment links connected to Saudi Arabia's Vision 2030 agenda.", image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1400&auto=format&fit=crop&q=85" },
+  { id: "world-nato-eastern-flank", category: "WORLD & GEOPOLITICS", title: "NATO Deploys 50,000 Additional Troops Along Eastern Flank", dek: "The reported deployment reflects continuing changes in European security planning and the alliance's approach to its eastern members.", image: "https://images.unsplash.com/photo-1521292270410-a8c4d716d518?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-south-china-sea-patrols", category: "WORLD & GEOPOLITICS", title: "South China Sea: Philippines and US Begin Joint Naval Patrols", dek: "The patrols add another layer to the security relationship between Manila and Washington amid continuing maritime tensions in the region.", image: "https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-un-ai-governance-resolution", category: "WORLD & GEOPOLITICS", title: "UN Security Council Passes Historic AI Governance Resolution", dek: "The resolution places artificial intelligence governance within a wider international discussion about security, accountability and responsible technology development.", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-iran-nuclear-talks-vienna", category: "WORLD & GEOPOLITICS", title: "Iran Nuclear Talks Resume in Vienna: Deal Framework Emerging", dek: "Diplomatic discussions in Vienna are focused on the parameters of a possible framework and the verification mechanisms that could support it.", image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-nvidia-humanoid-robots", category: "TECHNOLOGY", title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push", dek: "Nvidia is expanding its role in the robotics ecosystem as manufacturers look to combine advanced AI models with increasingly capable machines.", image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-alphabet-ai-data-centers", category: "TECHNOLOGY", title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion", dek: "The proposed financing comes as hyperscalers increase spending on data centers, power capacity and the infrastructure required for AI workloads.", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-quantum-1000-qubit", category: "TECHNOLOGY", title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved", dek: "A reported 1,000-qubit milestone highlights the rapid development of quantum hardware and the continuing challenge of making systems commercially useful.", image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-apple-ai-translation", category: "TECHNOLOGY", title: "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages", dek: "Apple's latest software strategy puts real-time translation and on-device intelligence closer to everyday consumer workflows.", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-meta-llama4-enterprise", category: "TECHNOLOGY", title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests", dek: "The latest enterprise model comparisons put renewed attention on open and proprietary AI systems and how benchmarks translate into business use.", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-starlink-gen3-global", category: "TECHNOLOGY", title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally", dek: "The latest satellite expansion is aimed at increasing high-speed connectivity across regions where conventional broadband remains difficult to deploy.", image: "https://images.unsplash.com/photo-1517976547714-720226b864c1?w=900&auto=format&fit=crop&q=85" },
+];
+
+const buildStandaloneArticle = (seed: typeof whiteHouseWatchSeeds[number], section: string): SpecialArticle => ({
+  id: seed.id, section, category: seed.category, title: seed.title, dek: seed.dek, image: seed.image,
+  author: "Sagar Kumar", publishedAt: "September 26, 2026", readTime: "7 MIN READ",
+  highlights: [
+    seed.dek,
+    "The development has implications beyond the immediate announcement and is being watched for its wider institutional, economic and strategic effects.",
+    "The response from governments, companies, investors and other stakeholders will shape the next phase of the story.",
+    "The key question is how the announced development moves from policy, diplomacy or investment plans into measurable outcomes."
+  ],
+  sections: [
+    { heading: "What happened", body: `${seed.dek} The immediate development provides the basis for a broader examination of the institutions involved, the decisions behind the move and the practical steps that follow. This report places the headline in its wider context rather than treating the announcement as an isolated event.` },
+    { heading: "Why it matters", body: `The significance of ${seed.title.toLowerCase()} extends beyond the headline. It can affect policy choices, business planning, international relationships, technology adoption, security calculations or investment priorities depending on how the situation develops. Stakeholders will therefore be watching both the immediate response and the longer-term consequences.` },
+    { heading: "Wider context", body: "Developments of this scale are shaped by existing institutions, economic conditions, regulation, diplomatic relationships, technology trends and the interests of multiple stakeholders. Understanding those factors helps explain why the announcement matters and why its eventual impact may differ from its initial presentation." },
+    { heading: "What to watch next", body: "The next milestones will provide the clearest evidence of how the story develops. Readers should watch for official decisions, implementation timelines, follow-up negotiations, financial or operational commitments, measurable results and responses from other governments, companies or institutions involved in the issue." }
+  ],
+  keyFacts: [
+    { label: "Section", value: section }, { label: "Category", value: seed.category }, { label: "Coverage", value: "Detailed editorial report" }, { label: "Author", value: "Sagar Kumar" }
+  ]
+});
+
+const whiteHouseWatchArticles = whiteHouseWatchSeeds.map((seed) => buildStandaloneArticle(seed, "White House Watch"));
+const worldWatchArticles = worldWatchSeeds.map((seed) => buildStandaloneArticle(seed, "World & Geopolitics"));
 
 function refreshedSectionArticleToSpecial(
   article:
