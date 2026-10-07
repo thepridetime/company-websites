@@ -108,31 +108,15 @@ function PrideTimesAd() {
    behind the "More articles" toggle.
 ========================================================= */
 
-const pickStory = (industry: string): OctEditionArticle =>
-  octEditionArticles.find((article) => article.industry === industry) ??
-  octEditionArticles[0];
+/* Bloomberg-style newsroom grid: every story of the newest edition is
+   one card (image on top, bold headline, short lede, and an "also in
+   this edition" link box). All cards are the same width, so every
+   image is exactly the same size. */
+const newsroomStories: OctEditionArticle[] = octEditionArticles;
 
-const leadStory = pickStory("Global Economy & Finance");
-
-const majorStories = [
-  pickStory("AI & Cloud Infrastructure"),
-  pickStory("Energy"),
-];
-
-const editorsPick = pickStory("Cybersecurity");
-
-/* Sidebar stream: the remaining headlines of the edition. */
-const sidebarStories = [
-  pickStory("Semiconductors"),
-  pickStory("Deep Technology"),
-  pickStory("Healthcare & Pharma"),
-  pickStory("Automotive & Mobility"),
-  pickStory("Aerospace"),
-  pickStory("Corporate"),
-];
-
-/* Every card image on the homepage uses this one ratio so all
-   images are the same shape (the full-bleed lead hero excepted). */
+/* Every image on the homepage uses this one 16:10 frame. On desktop the
+   newsroom cards, the Latest News thumbnails and the Magazine image are
+   all 365px wide, so they are the same size. */
 const IMG_FRAME = "aspect-[16/10] w-full overflow-hidden";
 
 /* =========================================================
@@ -284,6 +268,59 @@ function ChangeChip({ change, up }: { change: string; up: boolean }) {
 }
 
 /* =========================================================
+   NEWSROOM CARD (Bloomberg-style)
+========================================================= */
+
+function NewsroomCard({
+  story,
+  also,
+}: {
+  story: OctEditionArticle;
+  also?: OctEditionArticle;
+}) {
+  return (
+    <article className="flex h-full flex-col bg-white p-5">
+      <Link to={digestArticlePath(story)} className="group block flex-1">
+        <div className={`${IMG_FRAME} rounded-sm bg-gray-100`}>
+          <ImageWithFallback
+            src={story.image}
+            alt={story.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </div>
+
+        <span className="mt-3 block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+          {story.industry} · {story.location}
+        </span>
+
+        <h2 className="mt-1.5 font-sans text-[22px] font-extrabold leading-[1.15] tracking-tight text-gray-950 transition-colors group-hover:text-red-600">
+          {story.title}
+        </h2>
+
+        <p className="mt-2 text-[12.5px] leading-[1.5] text-gray-600 line-clamp-3">
+          {story.lede}
+        </p>
+      </Link>
+
+      {also && (
+        <Link
+          to={digestArticlePath(also)}
+          className="group mt-4 block rounded-lg border border-[#4a4a4a] px-3 py-2.5 transition-colors hover:border-red-600"
+        >
+          <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-gray-500">
+            Also in this edition
+          </span>
+
+          <span className="mt-0.5 block text-[13px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600 line-clamp-2">
+            {also.title}
+          </span>
+        </Link>
+      )}
+    </article>
+  );
+}
+
+/* =========================================================
    SECTION HEADER
 ========================================================= */
 
@@ -416,292 +453,110 @@ export function HomePage() {
         <main className="pt-4 md:pt-6 pb-16">
 
           {/* =================================================
-              TOP STORIES / NEWSROOM LEAD
-          ================================================= */}
-
-          <section className="pb-8 mb-8 border-b border-[#4a4a4a]">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
-
-              {/* LEAD STORY */}
-
-              <Link
-                to={digestArticlePath(leadStory)}
-                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
-              >
-                <ImageWithFallback
-                  src={leadStory.image}
-                  alt={leadStory.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-
-                <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                  {leadStory.industry} | {leadStory.location}
-                </span>
-
-                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                  <h1 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
-                    {leadStory.title}
-                  </h1>
-
-                  <p className="text-[13px] md:text-[14px] font-semibold text-red-200 leading-[1.5] mt-3">
-                    {leadStory.lede}
-                  </p>
-
-                  <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-2 line-clamp-3">
-                    {leadStory.body[0]}
-                  </p>
-
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
-                    Read Full Story
-                    <ArrowRight size={12} />
-                  </span>
-                </div>
-              </Link>
-
-              {/* MAJOR COVERAGE */}
-
-              <div className="min-w-0">
-                <div className="mb-4">
-                  <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.15em] mb-2">
-                    {majorStories[0].industry} | {majorStories[0].location}
-                  </span>
-
-                  <Link
-                    to={digestArticlePath(majorStories[0])}
-                    className="group block"
-                  >
-                    <div className={`${IMG_FRAME} rounded-lg`}>
-                      <ImageWithFallback
-                        src={majorStories[0].image}
-                        alt={majorStories[0].title}
-                        className="h-full w-full object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
-                      />
-                    </div>
-
-                    <h2 className="font-serif text-xl md:text-2xl font-bold leading-[1.15] mt-3 text-gray-950 group-hover:text-red-600 transition-colors">
-                      {majorStories[0].title}
-                    </h2>
-
-                    <p className="text-[12px] text-gray-600 mt-2 leading-[1.6] line-clamp-3">
-                      {majorStories[0].lede}
-                    </p>
-                  </Link>
-                </div>
-
-                {/* SECOND MAJOR STORY */}
-
-                <Link
-                  to={digestArticlePath(majorStories[1])}
-                  className="group flex gap-3 pt-4 border-t border-[#4a4a4a]"
-                >
-                  <div className="shrink-0 self-start w-[112px] aspect-[16/10] overflow-hidden rounded-md">
-                    <ImageWithFallback
-                      src={majorStories[1].image}
-                      alt={majorStories[1].title}
-                      className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                      {majorStories[1].industry}
-                    </span>
-
-                    <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
-                      {majorStories[1].title}
-                    </h3>
-
-                    <p className="mt-1 text-[11px] leading-[1.45] text-gray-500 line-clamp-2">
-                      {majorStories[1].lede}
-                    </p>
-
-                    <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
-                      <Clock size={9} />
-                      {majorStories[1].publishedAt}
-                    </span>
-                  </div>
-                </Link>
-
-                {/* MARKET CONTEXT */}
-
-                <div className="mt-5 border-t border-[#4a4a4a] pt-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
-                      Market Snapshot
-                    </h3>
-
-                    <div className="flex gap-3">
-                      {(["Indices", "Crypto"] as const).map((tab) => (
-                        <button
-                          key={tab}
-                          type="button"
-                          onClick={() => setActiveMarketTab(tab)}
-                          className={`text-[9px] font-semibold uppercase tracking-wide ${
-                            activeMarketTab === tab
-                              ? "text-red-600"
-                              : "text-gray-400 hover:text-gray-700"
-                          }`}
-                        >
-                          {tab}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="divide-y divide-gray-100">
-                    {(marketSnapshotData[activeMarketTab] || [])
-                      .slice(0, 4)
-                      .map((market) => (
-                        <div
-                          key={market.symbol}
-                          className="py-2 flex items-center justify-between"
-                        >
-                          <span className="text-[10px] font-semibold text-gray-800">
-                            {market.symbol}
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            <span className="text-[10px] text-gray-500 tabular-nums">
-                              {market.value}
-                            </span>
-
-                            <ChangeChip
-                              change={market.change}
-                              up={market.up}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-
-                  <Link
-                    to="/markets"
-                    className="mt-2 text-[9px] font-bold text-red-600 flex items-center gap-1 uppercase tracking-wide w-fit"
-                  >
-                    View All Markets
-                    <ArrowRight size={9} />
-                  </Link>
-                </div>
-              </div>
-
-              {/* RIGHT NEWSROOM COLUMN */}
-
-              <aside className="min-w-0">
-                {/* EDITOR'S PICK */}
-
-                <div className="pb-5 border-b border-[#4a4a4a]">
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-serif text-lg font-bold">
-                      Editor's Pick
-                    </h2>
-
-                    <Link
-                      to={editorsPick.sectionPath}
-                      className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium hover:border-gray-500 transition-colors"
-                    >
-                      Explore More
-                    </Link>
-                  </div>
-
-                  <Link
-                    to={digestArticlePath(editorsPick)}
-                    className="group block"
-                  >
-                    <div className={`relative ${IMG_FRAME} rounded-lg`}>
-                      <ImageWithFallback
-                        src={editorsPick.image}
-                        alt={editorsPick.title}
-                        className="h-full w-full object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
-                      />
-                    </div>
-
-                    <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.14em] mt-2.5">
-                      {editorsPick.industry}
-                    </span>
-
-                    <h3 className="text-[13px] font-semibold leading-[1.4] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                      {editorsPick.title}
-                    </h3>
-
-                    <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-3">
-                      {editorsPick.lede}
-                    </p>
-                  </Link>
-                </div>
-
-                {/* LATEST NEWS STREAM (sidebar headlines) */}
-
-                <div className="pt-5">
-                  <div className="flex items-center justify-between border-b border-[#4a4a4a] pb-2 mb-1">
-                    <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-                      Latest News
-                    </h2>
-
-                    <span className="text-[8px] uppercase tracking-wide text-gray-400">
-                      Newsroom
-                    </span>
-                  </div>
-
-                  <div className="divide-y divide-[#4a4a4a]">
-                    {sidebarStories.map((item) => (
-                      <Link
-                        key={item.id}
-                        to={digestArticlePath(item)}
-                        className="group block py-3"
-                      >
-                        <div className="flex gap-3">
-                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[72px] truncate">
-                            {item.location}
-                          </span>
-
-                          <div className="min-w-0">
-                            <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
-                              {item.title}
-                            </span>
-
-                            <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
-                              {item.lede}
-                            </span>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </section>
-
-          {/* =================================================
-              NUMBERS AT A GLANCE — newest edition
+              NEWSROOM — Bloomberg-style boxed grid.
+              The Pride Times News, Global Industry Edition.
+              Thin light-black lines separate every story.
           ================================================= */}
 
           <section
-            aria-label="Numbers at a glance"
-            className="mb-12 border-b border-[#4a4a4a] pb-10"
+            aria-label="Top stories"
+            className="mb-12 border border-[#4a4a4a] bg-[#4a4a4a]"
           >
-            <SectionHeader
-              title={`Numbers at a Glance · ${octEditionMeta.edition} · ${octEditionMeta.date}`}
-            />
+            <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-3">
+              {newsroomStories.map((story, index) => (
+                <NewsroomCard
+                  key={story.id}
+                  story={story}
+                  also={newsroomStories[(index + 1) % newsroomStories.length]}
+                />
+              ))}
 
-            <div className="grid grid-cols-1 gap-px border border-[#4a4a4a] bg-[#4a4a4a] sm:grid-cols-2 lg:grid-cols-4">
-              {octEditionGlance.map((item) => (
-                <div key={item.indicator} className="bg-white p-4">
-                  <span className="block text-[9px] font-bold uppercase tracking-[0.12em] text-gray-500">
-                    {item.indicator}
-                  </span>
+              {/* MARKET SNAPSHOT */}
 
-                  <span className="mt-1.5 block font-serif text-xl font-bold leading-[1.2] text-gray-900">
-                    {item.figure}
-                  </span>
+              <div className="bg-white p-5">
+                <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-3">
+                  <h3 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                    Market Snapshot
+                  </h3>
 
-                  <span className="mt-1 block text-[10px] text-gray-400">
-                    {item.source}
+                  <div className="flex gap-3">
+                    {(["Indices", "Crypto"] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        type="button"
+                        onClick={() => setActiveMarketTab(tab)}
+                        className={`text-[9px] font-semibold uppercase tracking-wide ${
+                          activeMarketTab === tab
+                            ? "text-red-600"
+                            : "text-gray-400 hover:text-gray-700"
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="divide-y divide-[#4a4a4a]">
+                  {(marketSnapshotData[activeMarketTab] || [])
+                    .slice(0, 6)
+                    .map((market) => (
+                      <div
+                        key={market.symbol}
+                        className="py-2.5 flex items-center justify-between"
+                      >
+                        <span className="text-[11px] font-semibold text-gray-800">
+                          {market.symbol}
+                        </span>
+
+                        <div className="flex items-center gap-3">
+                          <span className="text-[11px] text-gray-500 tabular-nums">
+                            {market.value}
+                          </span>
+
+                          <ChangeChip change={market.change} up={market.up} />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+
+                <Link
+                  to="/markets"
+                  className="mt-3 text-[9px] font-bold text-red-600 flex items-center gap-1 uppercase tracking-wide w-fit"
+                >
+                  View All Markets
+                  <ArrowRight size={9} />
+                </Link>
+              </div>
+
+              {/* NUMBERS AT A GLANCE */}
+
+              <div className="bg-white p-5">
+                <div className="border-b-2 border-black pb-2.5 mb-3">
+                  <h3 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                    Numbers at a Glance
+                  </h3>
+                  <span className="text-[9px] text-gray-400">
+                    {octEditionMeta.edition} · {octEditionMeta.date}
                   </span>
                 </div>
-              ))}
+
+                <ul className="divide-y divide-[#4a4a4a]">
+                  {octEditionGlance.map((item) => (
+                    <li key={item.indicator} className="py-2">
+                      <span className="block text-[9px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                        {item.indicator}
+                      </span>
+                      <span className="block text-[14px] font-extrabold text-gray-900">
+                        {item.figure}
+                        <span className="ml-2 text-[9px] font-normal text-gray-400">
+                          {item.source}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </section>
 
@@ -709,7 +564,7 @@ export function HomePage() {
               LATEST NEWS (all 60 digest stories) + MAGAZINE
           ================================================= */}
 
-          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
+          <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_365px] gap-7 mb-12">
 
             {/* LATEST NEWS */}
 
@@ -751,7 +606,7 @@ export function HomePage() {
                   <Link
                     key={story.id}
                     to={digestArticlePath(story)}
-                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[365px_1fr] gap-4 sm:gap-6 py-6"
                   >
                     <div className={`${IMG_FRAME} self-start rounded-md`}>
                       <ImageWithFallback
@@ -777,7 +632,7 @@ export function HomePage() {
                         </span>
                       </div>
 
-                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                      <h3 className="font-sans text-base sm:text-xl font-extrabold tracking-tight leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
                         {story.title}
                       </h3>
 
