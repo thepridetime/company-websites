@@ -312,3 +312,16 @@ export const octEditionGlance: { indicator: string; figure: string; source: stri
 export function octEditionArticlePath(article: Pick<OctEditionArticle, "id">) {
   return `/article/${article.id}`;
 }
+
+/* Business-related stories of the edition. Deep Technology and Cybersecurity
+   stay on the homepage and their own sections; they are not business news. */
+const NON_BUSINESS_INDUSTRIES = ["Deep Technology", "Cybersecurity"];
+
+export const octBusinessArticles: OctEditionArticle[] =
+  octEditionArticles.filter(
+    (article) => !NON_BUSINESS_INDUSTRIES.includes(article.industry)
+  );
+
+export function isOctBusinessArticle(id?: string) {
+  return octBusinessArticles.some((article) => article.id === id);
+}
