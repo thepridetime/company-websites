@@ -30,16 +30,10 @@ import {
 } from "../../data/maEdition1Data";
 
 import {
+  globalSectorReport,
   globalSectorItems,
-  globalSectorArticleId,
+  globalSectorAnchorId,
 } from "../../data/globalSectorReportData";
-import { globalSectorMoreNews } from "../../data/globalSectorMoreNewsData";
-import {
-  octEditionArticles,
-  octEditionMeta,
-  octEditionGlance,
-  type OctEditionArticle,
-} from "../../data/octEditionData";
 
 /* =========================================================
    TYPES
@@ -75,7 +69,7 @@ function PrideTimesAd() {
   return (
     <section
       aria-label="Advertisement"
-      className="my-8 overflow-hidden bg-white py-4"
+      className="my-8 overflow-hidden border-y border-gray-100 bg-white py-4"
     >
       <div className="mb-2 text-center text-[8px] font-medium uppercase tracking-[0.2em] text-gray-400">
         Advertisement
@@ -97,35 +91,42 @@ function PrideTimesAd() {
 
 /* =========================================================
    TOP STORIES
-   Every headline in the newsroom lead comes from the newest
-   edition: The Pride Times News, Global Industry Edition
-   (7 October 2026, src/app/data/octEditionData.ts). Each story
-   links to its full inner article at /article/:slug.
-
-   The older stories (September digest, Edition 1 M&A, Global
-   Sector Report) are NOT removed: they follow in the Latest
-   News feed under "Read more articles" and in the older blocks
-   behind the "More articles" toggle.
+   Every story below comes from the Global Corporate News
+   Digest (src/app/data/digestArticleData.ts). Each one links to
+   its full inner article at /article/:slug.
 ========================================================= */
 
-/* Bloomberg-style newsroom grid: every story of the newest edition is
-   one card (image on top, bold headline, short lede, and an "also in
-   this edition" link box). All cards are the same width, so every
-   image is exactly the same size. */
-const newsroomStories: OctEditionArticle[] = octEditionArticles;
+const byTitle = (prefix: string): DigestArticle =>
+  digestArticles.find((article) => article.title.startsWith(prefix)) ??
+  digestArticles[0];
 
-/* Newsroom lead layout (pasted format). Every headline below is the
-   unchanged headline from the October edition. */
-const leadStory = newsroomStories[0];
-const majorStory = newsroomStories[1];
-const secondStory = newsroomStories[2];
-const editorsPick = newsroomStories[3];
-const sidebarStories = newsroomStories.slice(4, 10);
+const leadStory = byTitle("Altamira Capital commits $34.1B");
 
-/* Every image on the homepage uses this one 16:10 frame. On desktop the
-   newsroom cards, the Latest News thumbnails and the Magazine image are
-   all 365px wide, so they are the same size. */
-const IMG_FRAME = "h-[190px] w-full overflow-hidden";
+/* The previous lead story now follows the new Global Sector Report
+   headline as the first major story. */
+const majorStories = [
+  leadStory,
+  byTitle("Navarro Partners agrees $13.9B takeover"),
+];
+
+const editorsPick = byTitle("Tidewater Aerospace reports first green-hydrogen");
+
+const featuredIds = new Set(
+  [leadStory, ...majorStories, editorsPick].map((article) => article.id)
+);
+
+/* Sidebar stream: the first non-featured story from each of the
+   first six sections. */
+const sidebarStories = digestSections
+  .map((section) =>
+    digestArticles.find(
+      (article) =>
+        article.sectionNumber === section.number &&
+        !featuredIds.has(article.id)
+    )
+  )
+  .filter((article): article is DigestArticle => Boolean(article))
+  .slice(0, 6);
 
 /* =========================================================
    LATEST NEWS
@@ -153,8 +154,7 @@ const interleavedArticles: DigestArticle[] = (() => {
     ),
   ];
   const rounds = Math.max(...bySection.map((list) => list.length));
-  /* The newest edition always comes first; the older stories follow. */
-  const result: DigestArticle[] = [...octEditionArticles];
+  const result: DigestArticle[] = [];
 
   for (let round = 0; round < rounds; round += 1) {
     bySection.forEach((list) => {
@@ -165,9 +165,7 @@ const interleavedArticles: DigestArticle[] = (() => {
   return result;
 })();
 
-/* First view = the whole new edition; "Read more articles" then
-   reveals the older stories. */
-const PAGE_SIZE = octEditionArticles.length;
+const PAGE_SIZE = 8;
 
 /* =========================================================
    EDITION 1 — MERGERS & ACQUISITIONS (additive)
@@ -289,7 +287,7 @@ function SectionHeader({
   linkText?: string;
 }) {
   return (
-    <div className="flex items-center justify-between pb-2.5 mb-5">
+    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
         {title}
       </h2>
@@ -317,7 +315,6 @@ export function HomePage() {
 
   const [activeNewsTab, setActiveNewsTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [showOlder, setShowOlder] = useState(false);
 
   const newsListRef = useRef<HTMLDivElement | null>(null);
 
@@ -368,11 +365,7 @@ export function HomePage() {
     () =>
       activeNewsTab === "All"
         ? interleavedArticles
-        : [
-            ...octEditionArticles,
-            ...maEdition1Articles,
-            ...digestArticles,
-          ].filter(
+        : [...maEdition1Articles, ...digestArticles].filter(
             (article) => article.section === activeNewsTab
           ),
     [activeNewsTab]
@@ -409,64 +402,75 @@ export function HomePage() {
 
           {/* =================================================
               TOP STORIES / NEWSROOM LEAD
-              The Pride Times News, Global Industry Edition.
           ================================================= */}
 
-          <section className="pb-8 mb-8">
+          <section className="pb-8 mb-8 border-b border-gray-300">
             <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
 
               {/* LEAD STORY */}
 
-              <Link to={digestArticlePath(leadStory)} className="group block min-w-0">
-                <div className="h-[285px] w-full overflow-hidden relative rounded-lg bg-gray-100">
-                  <ImageWithFallback
-                    src={leadStory.image}
-                    alt={leadStory.title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
+              <a
+                href={`#${globalSectorAnchorId}`}
+                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
+              >
+                <ImageWithFallback
+                  src={globalSectorReport.image}
+                  alt={globalSectorReport.headline}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
 
-                  <span className="absolute top-3 left-3 bg-red-600 text-white px-2.5 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                    {leadStory.industry} | {leadStory.location}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+
+                <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
+                  {globalSectorReport.kicker} | {globalSectorReport.location}
+                </span>
+
+                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                  <h1 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
+                    {globalSectorReport.headline}
+                  </h1>
+
+                  <p className="text-[13px] md:text-[14px] font-semibold text-red-200 leading-[1.5] mt-3">
+                    {globalSectorReport.subheadline}
+                  </p>
+
+                  <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-2 line-clamp-3">
+                    {globalSectorReport.pattern}
+                  </p>
+
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
+                    Read Full Story
+                    <ArrowRight size={12} />
                   </span>
                 </div>
-
-                <h1 className="mt-2 font-serif text-2xl md:text-[28px] font-bold leading-[1.12] text-gray-950 group-hover:text-red-600 transition-colors">
-                  {leadStory.title}
-                </h1>
-
-                <p className="text-[12px] text-gray-600 leading-[1.5] mt-1.5 line-clamp-4">
-                  {leadStory.lede}
-                </p>
-
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-red-600 uppercase tracking-wide mt-2">
-                  Read Full Story
-                  <ArrowRight size={12} />
-                </span>
-              </Link>
+              </a>
 
               {/* MAJOR COVERAGE */}
 
               <div className="min-w-0">
                 <div className="mb-4">
                   <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.15em] mb-2">
-                    {majorStory.industry} | {majorStory.location}
+                    {majorStories[0].section} | {majorStories[0].location}
                   </span>
 
-                  <Link to={digestArticlePath(majorStory)} className="group block">
-                    <div className={`${IMG_FRAME} rounded-lg`}>
+                  <Link
+                    to={digestArticlePath(majorStories[0])}
+                    className="group block"
+                  >
+                    <div className="overflow-hidden rounded-lg">
                       <ImageWithFallback
-                        src={majorStory.image}
-                        alt={majorStory.title}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        src={majorStories[0].image}
+                        alt={majorStories[0].title}
+                        className="w-full h-[220px] md:h-[250px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                     </div>
 
                     <h2 className="font-serif text-xl md:text-2xl font-bold leading-[1.15] mt-3 text-gray-950 group-hover:text-red-600 transition-colors">
-                      {majorStory.title}
+                      {majorStories[0].title}
                     </h2>
 
                     <p className="text-[12px] text-gray-600 mt-2 leading-[1.6] line-clamp-3">
-                      {majorStory.lede}
+                      {majorStories[0].lede}
                     </p>
                   </Link>
                 </div>
@@ -474,40 +478,40 @@ export function HomePage() {
                 {/* SECOND MAJOR STORY */}
 
                 <Link
-                  to={digestArticlePath(secondStory)}
-                  className="group flex gap-3 pt-4"
+                  to={digestArticlePath(majorStories[1])}
+                  className="group flex gap-3 pt-4 border-t border-gray-200"
                 >
                   <div className="shrink-0 w-[105px] h-[75px] overflow-hidden rounded-md">
                     <ImageWithFallback
-                      src={secondStory.image}
-                      alt={secondStory.title}
+                      src={majorStories[1].image}
+                      alt={majorStories[1].title}
                       className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <span className="text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                      {secondStory.industry}
+                      {majorStories[1].section}
                     </span>
 
-                    <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                      {secondStory.title}
+                    <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                      {majorStories[1].title}
                     </h3>
 
                     <p className="mt-1 text-[11px] leading-[1.45] text-gray-500 line-clamp-2">
-                      {secondStory.lede}
+                      {majorStories[1].lede}
                     </p>
 
                     <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
                       <Clock size={9} />
-                      {secondStory.publishedAt}
+                      {majorStories[1].publishedAt}
                     </span>
                   </div>
                 </Link>
 
-                {/* MARKET SNAPSHOT */}
+                {/* MARKET CONTEXT */}
 
-                <div className="mt-5 pt-4">
+                <div className="mt-5 border-t border-gray-200 pt-4">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
                       Market Snapshot
@@ -531,7 +535,7 @@ export function HomePage() {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="divide-y divide-gray-100">
                     {(marketSnapshotData[activeMarketTab] || [])
                       .slice(0, 4)
                       .map((market) => (
@@ -548,7 +552,10 @@ export function HomePage() {
                               {market.value}
                             </span>
 
-                            <ChangeChip change={market.change} up={market.up} />
+                            <ChangeChip
+                              change={market.change}
+                              up={market.up}
+                            />
                           </div>
                         </div>
                       ))}
@@ -562,33 +569,6 @@ export function HomePage() {
                     <ArrowRight size={9} />
                   </Link>
                 </div>
-
-                {/* NUMBERS AT A GLANCE */}
-
-                <div className="mt-5 pt-4">
-                  <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
-                    Numbers at a Glance
-                  </h3>
-                  <span className="text-[9px] text-gray-400">
-                    {octEditionMeta.edition} · {octEditionMeta.date}
-                  </span>
-
-                  <ul className="mt-1">
-                    {octEditionGlance.map((item) => (
-                      <li key={item.indicator} className="py-1.5">
-                        <span className="block text-[9px] font-bold uppercase tracking-[0.1em] text-gray-500">
-                          {item.indicator}
-                        </span>
-                        <span className="block text-[13px] font-extrabold text-gray-900">
-                          {item.figure}
-                          <span className="ml-2 text-[9px] font-normal text-gray-400">
-                            {item.source}
-                          </span>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
 
               {/* RIGHT NEWSROOM COLUMN */}
@@ -596,9 +576,11 @@ export function HomePage() {
               <aside className="min-w-0">
                 {/* EDITOR'S PICK */}
 
-                <div className="pb-5">
+                <div className="pb-5 border-b border-gray-200">
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-serif text-lg font-bold">Editor's Pick</h2>
+                    <h2 className="font-serif text-lg font-bold">
+                      Editor's Pick
+                    </h2>
 
                     <Link
                       to={editorsPick.sectionPath}
@@ -608,17 +590,20 @@ export function HomePage() {
                     </Link>
                   </div>
 
-                  <Link to={digestArticlePath(editorsPick)} className="group block">
-                    <div className={`${IMG_FRAME} relative rounded-lg`}>
+                  <Link
+                    to={digestArticlePath(editorsPick)}
+                    className="group block"
+                  >
+                    <div className="relative overflow-hidden rounded-lg">
                       <ImageWithFallback
                         src={editorsPick.image}
                         alt={editorsPick.title}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        className="w-full h-[175px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                     </div>
 
                     <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.14em] mt-2.5">
-                      {editorsPick.industry}
+                      {editorsPick.section}
                     </span>
 
                     <h3 className="text-[13px] font-semibold leading-[1.4] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
@@ -631,10 +616,10 @@ export function HomePage() {
                   </Link>
                 </div>
 
-                {/* LATEST NEWS STREAM (sidebar headlines, with small images) */}
+                {/* LATEST NEWS STREAM (sidebar headlines) */}
 
                 <div className="pt-5">
-                  <div className="flex items-center justify-between pb-2 mb-1">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
                     <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
                       Latest News
                     </h2>
@@ -644,7 +629,7 @@ export function HomePage() {
                     </span>
                   </div>
 
-                  <div>
+                  <div className="divide-y divide-gray-100">
                     {sidebarStories.map((item) => (
                       <Link
                         key={item.id}
@@ -652,19 +637,11 @@ export function HomePage() {
                         className="group block py-3"
                       >
                         <div className="flex gap-3">
-                          <div className="shrink-0 w-[96px] h-[68px] overflow-hidden rounded-md bg-gray-100">
-                            <ImageWithFallback
-                              src={item.image}
-                              alt={item.title}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          </div>
+                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
+                            {item.location}
+                          </span>
 
                           <div className="min-w-0">
-                            <span className="block text-[9px] font-semibold text-red-600">
-                              {item.location}
-                            </span>
-
                             <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
                               {item.title}
                             </span>
@@ -683,178 +660,44 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              LATEST NEWS (all 60 digest stories) + MAGAZINE
-          ================================================= */}
-
-          <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_365px] gap-7 mb-12">
-
-            {/* LATEST NEWS */}
-
-            <div ref={newsListRef} className="scroll-mt-24">
-              <SectionHeader
-                title="Latest News"
-                link="/business-news"
-              />
-
-              {/* FILTER TABS */}
-
-              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar pb-3 mb-1">
-                {latestNewsTabs.map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => selectTab(tab)}
-                    className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
-                      activeNewsTab === tab
-                        ? "text-red-600"
-                        : "text-gray-400 hover:text-gray-700"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {/* STORY LIST */}
-
-              <div>
-                {latestStories.length === 0 && (
-                  <p className="py-6 text-[11px] text-gray-400">
-                    No stories in this category yet.
-                  </p>
-                )}
-
-                {latestStories.map((story) => (
-                  <Link
-                    key={story.id}
-                    to={digestArticlePath(story)}
-                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[300px_1fr] gap-4 sm:gap-6 py-6"
-                  >
-                    <div className={`${IMG_FRAME} self-start rounded-md`}>
-                      <ImageWithFallback
-                        src={story.image}
-                        alt={story.title}
-                        className="h-full w-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2">
-                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {"industry" in story
-                            ? (story as EditionArticle).industry
-                            : story.section}
-                        </span>
-
-                        <span className="text-[8px] text-gray-300">•</span>
-
-                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
-                          <MapPin size={8} />
-                          {story.location}
-                        </span>
-                      </div>
-
-                      <h3 className="font-sans text-base sm:text-xl font-extrabold tracking-tight leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {story.title}
-                      </h3>
-
-                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
-                        {story.lede}
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
-                        <Clock size={8} />
-                        {story.publishedAt} · {story.readTime}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              {hasMore && (
-                <div className="mt-5 flex flex-col items-center gap-2 pt-5">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVisibleCount((count) =>
-                        Math.min(count + PAGE_SIZE, filteredStories.length)
-                      )
-                    }
-                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
-                  >
-                    Read more articles
-                  </button>
-
-                  <span className="text-[9px] text-gray-400">
-                    Showing {latestStories.length} of {filteredStories.length}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* MAGAZINE */}
-
-            <div>
-              <SectionHeader title="Magazine" link="/magazine" />
-
-              <Link
-                to="/magazine"
-                className="group block overflow-hidden rounded-md bg-black"
-              >
-                <div className={IMG_FRAME}>
-                  <ImageWithFallback
-                    src={magazinePreview.image}
-                    alt={magazinePreview.title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                </div>
-
-                <div className="p-4">
-                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
-                    Pride Times Magazine
-                  </span>
-
-                  <h3 className="font-serif text-xl font-bold text-white mt-1">
-                    {magazinePreview.title}
-                  </h3>
-
-                  <p className="text-[11px] text-gray-400 leading-[1.5] mt-1.5">
-                    {magazinePreview.subtitle}
-                  </p>
-
-                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white pb-1 mt-4">
-                    Read Digital Edition
-                    <ArrowRight size={10} />
-                  </span>
-                </div>
-              </Link>
-            </div>
-          </section>
-
-          {/* =================================================
-              OLDER ARTICLES — nothing is removed; it opens on demand
+              GLOBAL SECTOR NEWS REPORT 2026 (new; additive)
+              Destination of the main headline above.
           ================================================= */}
 
           <section
-            aria-label="Older articles"
-            className="mb-12 py-6 text-center"
+            id={globalSectorAnchorId}
+            aria-label="Global Sector News Report 2026"
+            className="mb-12 scroll-mt-24 border-b border-gray-300 pb-10"
           >
-            <button
-              type="button"
-              onClick={() => setShowOlder((open) => !open)}
-              aria-expanded={showOlder}
-              className="rounded-full border border-[#4a4a4a] px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
-            >
-              {showOlder ? "Hide older articles" : "More articles"}
-            </button>
+            <SectionHeader title={globalSectorReport.kicker} />
 
-            <p className="mt-2 text-[10px] text-gray-400">
-              September digest, M&amp;A Edition 1 and Global Sector News Report 2026
+            <p className="-mt-2 mb-4 text-[11px] leading-[1.5] text-gray-500">
+              {globalSectorReport.subheadline}
             </p>
+
+            <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+              {globalSectorItems.map((item) => (
+                <div key={item.sector}>
+                  <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+                    {item.sector}
+                  </span>
+
+                  <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 md:text-[22px]">
+                    {item.headline}
+                  </h4>
+
+                  <p className="mt-1.5 text-[12px] font-medium leading-[1.5] text-gray-700">
+                    {item.verdict}.
+                  </p>
+
+                  <p className="mt-1 text-[11px] leading-[1.55] text-gray-500">
+                    {item.signal}. Bottleneck: {item.bottleneck}.
+                  </p>
+                </div>
+              ))}
+            </div>
           </section>
 
-          {showOlder && (
-            <>
           {/* =================================================
               GLOBAL CORPORATE NEWS DIGEST — EDITION 1: M&A
               (new; added alongside the existing news)
@@ -862,7 +705,7 @@ export function HomePage() {
 
           <section
             aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
-            className="mb-12 pb-10"
+            className="mb-12 border-b border-gray-300 pb-10"
           >
             <SectionHeader
               title={`Global Corporate News Digest · ${maEdition1Meta.edition} · Headlines by Industry`}
@@ -881,27 +724,29 @@ export function HomePage() {
 
             <Link
               to={maEdition1ArticlePath(editionLead)}
-              className="group block max-w-md"
+              className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[260px] bg-black"
             >
-              <div className="h-[190px] w-full overflow-hidden rounded-lg bg-gray-100">
-                <ImageWithFallback
-                  src={editionLead.image}
-                  alt={editionLead.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
+              <ImageWithFallback
+                src={editionLead.image}
+                alt={editionLead.title}
+                className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-500">
+                  {editionLead.section} · {maEdition1Meta.edition}
+                </span>
+
+                <h3 className="mt-2 max-w-3xl font-serif text-2xl sm:text-3xl font-bold leading-[1.15] text-white group-hover:underline">
+                  {editionLead.title}
+                </h3>
+
+                <p className="mt-2 max-w-3xl text-[12px] leading-[1.5] text-gray-300 line-clamp-2">
+                  {editionLead.lede}
+                </p>
               </div>
-
-              <span className="mt-3 block text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
-                {editionLead.section} · {maEdition1Meta.edition}
-              </span>
-
-              <h3 className="mt-1.5 font-serif text-2xl font-bold leading-[1.15] text-gray-950 group-hover:text-red-600 transition-colors">
-                {editionLead.title}
-              </h3>
-
-              <p className="mt-2 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
-                {editionLead.lede}
-              </p>
             </Link>
 
             {/* HEADLINES BY INDUSTRY — every story = one image + one headline
@@ -910,7 +755,7 @@ export function HomePage() {
             <div className="mt-8 space-y-10">
               {editionIndustries.map((group) => (
                 <div key={group.name}>
-                  <div className="mb-4 flex items-center justify-between pb-2">
+                  <div className="mb-4 flex items-center justify-between border-b border-gray-300 pb-2">
                     <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-gray-900">
                       {group.name}
                     </h3>
@@ -930,7 +775,7 @@ export function HomePage() {
                           to={maEdition1ArticlePath(story)}
                           className="group block"
                         >
-                          <div className="h-[190px] w-full overflow-hidden rounded-md bg-gray-100">
+                          <div className="aspect-[16/10] w-full overflow-hidden rounded-md bg-gray-100">
                             <ImageWithFallback
                               src={story.image}
                               alt={story.title}
@@ -966,7 +811,7 @@ export function HomePage() {
                 Deal status table (as of the early August 2026 tracker update)
               </summary>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto border-t border-gray-200">
                 <table className="w-full min-w-[560px] text-left text-[11px]">
                   <thead className="bg-gray-50 text-[9px] uppercase tracking-wide text-gray-500">
                     <tr>
@@ -977,7 +822,7 @@ export function HomePage() {
                     </tr>
                   </thead>
 
-                  <tbody>
+                  <tbody className="divide-y divide-gray-100">
                     {maEdition1DealTable.map((row) => (
                       <tr key={row.deal}>
                         <td className="px-4 py-2 font-medium text-gray-900">
@@ -994,10 +839,159 @@ export function HomePage() {
                 </table>
               </div>
 
-              <p className="px-4 py-3 text-[10px] leading-[1.5] text-gray-400">
+              <p className="border-t border-gray-200 px-4 py-3 text-[10px] leading-[1.5] text-gray-400">
                 {maEdition1Sources}
               </p>
             </details>
+          </section>
+
+          {/* =================================================
+              LATEST NEWS (all 60 digest stories) + MAGAZINE
+          ================================================= */}
+
+          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
+
+            {/* LATEST NEWS */}
+
+            <div ref={newsListRef} className="scroll-mt-24">
+              <SectionHeader
+                title="Latest News"
+                link="/business-news"
+              />
+
+              {/* FILTER TABS */}
+
+              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar border-b border-gray-200 pb-3 mb-1">
+                {latestNewsTabs.map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => selectTab(tab)}
+                    className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
+                      activeNewsTab === tab
+                        ? "text-red-600"
+                        : "text-gray-400 hover:text-gray-700"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* STORY LIST */}
+
+              <div className="divide-y divide-gray-200">
+                {latestStories.length === 0 && (
+                  <p className="py-6 text-[11px] text-gray-400">
+                    No stories in this category yet.
+                  </p>
+                )}
+
+                {latestStories.map((story) => (
+                  <Link
+                    key={story.id}
+                    to={digestArticlePath(story)}
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
+                  >
+                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
+                      <ImageWithFallback
+                        src={story.image}
+                        alt={story.title}
+                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2">
+                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                          {"industry" in story
+                            ? (story as EditionArticle).industry
+                            : story.section}
+                        </span>
+
+                        <span className="text-[8px] text-gray-300">•</span>
+
+                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                          <MapPin size={8} />
+                          {story.location}
+                        </span>
+                      </div>
+
+                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {story.title}
+                      </h3>
+
+                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
+                        {story.lede}
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
+                        <Clock size={8} />
+                        {story.publishedAt} · {story.readTime}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {hasMore && (
+                <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setVisibleCount((count) =>
+                        Math.min(count + PAGE_SIZE, filteredStories.length)
+                      )
+                    }
+                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+                  >
+                    Show more stories
+                  </button>
+
+                  <span className="text-[9px] text-gray-400">
+                    Showing {latestStories.length} of {filteredStories.length}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* MAGAZINE */}
+
+            <div>
+              <SectionHeader title="Magazine" link="/magazine" />
+
+              <Link
+                to="/magazine"
+                className="group block overflow-hidden rounded-md bg-black"
+              >
+                <div className="overflow-hidden">
+                  <ImageWithFallback
+                    src={magazinePreview.image}
+                    alt={magazinePreview.title}
+                    className="w-full h-[210px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                </div>
+
+                <div className="p-4">
+                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
+                    Pride Times Magazine
+                  </span>
+
+                  <h3 className="font-serif text-xl font-bold text-white mt-1">
+                    {magazinePreview.title}
+                  </h3>
+
+                  <p className="text-[11px] text-gray-400 leading-[1.5] mt-1.5">
+                    {magazinePreview.subtitle}
+                  </p>
+
+                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white border-b border-white/50 pb-1 mt-4">
+                    Read Digital Edition
+                    <ArrowRight size={10} />
+                  </span>
+                </div>
+              </Link>
+            </div>
           </section>
 
           {/* =================================================
@@ -1030,7 +1024,7 @@ export function HomePage() {
                       to={digestArticlePath(
                         sectionHeadlines.get(section.number)!
                       )}
-                      className="group mt-3 block pt-3"
+                      className="group mt-3 block border-t border-gray-100 pt-3"
                     >
                       <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
                         Top headline
@@ -1046,7 +1040,7 @@ export function HomePage() {
                     </Link>
                   )}
 
-                  <ul className="mt-3 space-y-1 pt-3">
+                  <ul className="mt-3 space-y-1 border-t border-gray-100 pt-3">
                     {section.glance.map((item) => (
                       <li
                         key={item.theme}
@@ -1083,85 +1077,6 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              SECTOR HEADLINES — Global Sector News Report 2026
-          ================================================= */}
-
-          <section
-            aria-label="Global Sector News Report 2026 headlines"
-            className="mb-12"
-          >
-            <SectionHeader
-              title="Sector Headlines · Global Sector News Report 2026"
-              link={`/article/${globalSectorArticleId}`}
-              linkText="Read Report"
-            />
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {globalSectorItems.map((item) => (
-                <Link
-                  key={item.sector}
-                  to={`/article/${globalSectorArticleId}`}
-                  className="group block rounded-md border border-gray-200 p-4 transition-colors hover:border-gray-300"
-                >
-                  <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
-                    {item.sector}
-                  </span>
-
-                  <h3 className="mt-1.5 font-serif text-[15px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600">
-                    {item.headline}
-                  </h3>
-
-                  <p className="mt-1.5 text-[11px] font-medium leading-[1.5] text-gray-700">
-                    {item.verdict}.
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
-
-          {/* =================================================
-              MORE SECTOR NEWS — Global Sector News Report 2026
-              (new headlines; the sector headlines above are unchanged)
-          ================================================= */}
-
-          <section
-            aria-label="More sector news from the Global Sector News Report 2026"
-            className="mb-12"
-          >
-            <SectionHeader
-              title="More Sector News · Global Sector News Report 2026"
-              link={`/article/${globalSectorArticleId}`}
-              linkText="Read Report"
-            />
-
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-              {globalSectorMoreNews.map((group) => (
-                <div key={group.sector}>
-                  <span className="block pb-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
-                    {group.sector}
-                  </span>
-
-                  <ul className="mt-2">
-                    {group.headlines.map((headline) => (
-                      <li key={headline}>
-                        <Link
-                          to={`/article/${globalSectorArticleId}`}
-                          className="block py-2 font-serif text-[13px] font-bold leading-[1.35] text-gray-900 transition-colors hover:text-red-600"
-                        >
-                          {headline}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </section>
-
-            </>
-          )}
-
-          {/* =================================================
               REGIONAL SNAPSHOT (illustrative)
           ================================================= */}
 
@@ -1171,7 +1086,7 @@ export function HomePage() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[520px] text-left text-[11px]">
                 <thead>
-                  <tr className="text-[9px] uppercase tracking-[0.14em] text-gray-500">
+                  <tr className="border-b border-gray-300 text-[9px] uppercase tracking-[0.14em] text-gray-500">
                     <th className="py-2 pr-4 font-bold">Region</th>
                     <th className="py-2 pr-4 font-bold">Deal value (US$ bn)</th>
                     <th className="py-2 pr-4 font-bold">Earnings growth</th>
@@ -1179,7 +1094,7 @@ export function HomePage() {
                   </tr>
                 </thead>
 
-                <tbody>
+                <tbody className="divide-y divide-gray-100">
                   {regionalSnapshot.map((row) => (
                     <tr key={row.region}>
                       <td className="py-2.5 pr-4 font-semibold text-gray-900">
