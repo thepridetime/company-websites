@@ -114,9 +114,21 @@ function PrideTimesAd() {
    image is exactly the same size. */
 const newsroomStories: OctEditionArticle[] = octEditionArticles;
 
+/* Bloomberg-style rhythm: two stories side by side, then one wide story
+   with an image on the left, and so on. No rules between rows; spacing
+   does the separating. */
+const newsroomRows: { type: "pair" | "wide"; stories: OctEditionArticle[] }[] = [
+  { type: "pair", stories: newsroomStories.slice(0, 2) },
+  { type: "wide", stories: newsroomStories.slice(2, 3) },
+  { type: "pair", stories: newsroomStories.slice(3, 5) },
+  { type: "wide", stories: newsroomStories.slice(5, 6) },
+  { type: "pair", stories: newsroomStories.slice(6, 8) },
+  { type: "pair", stories: newsroomStories.slice(8, 10) },
+];
+
 /* Every image on the homepage uses this one 16:10 frame. On desktop the
    newsroom cards, the Latest News thumbnails and the Magazine image are
-   all 365px wide, so they are the same size. */
+   all 380px wide, so they are the same size. */
 const IMG_FRAME = "aspect-[16/10] w-full overflow-hidden";
 
 /* =========================================================
@@ -145,8 +157,9 @@ const interleavedArticles: DigestArticle[] = (() => {
     ),
   ];
   const rounds = Math.max(...bySection.map((list) => list.length));
-  /* The newest edition always comes first; the older stories follow. */
-  const result: DigestArticle[] = [...octEditionArticles];
+  /* The newest edition is shown in the newsroom above; this feed holds the
+     earlier stories (nothing is removed). */
+  const result: DigestArticle[] = [];
 
   for (let round = 0; round < rounds; round += 1) {
     bySection.forEach((list) => {
@@ -157,9 +170,8 @@ const interleavedArticles: DigestArticle[] = (() => {
   return result;
 })();
 
-/* First view = the whole new edition; "Read more articles" then
-   reveals the older stories. */
-const PAGE_SIZE = octEditionArticles.length;
+/* The feed starts with 8 earlier stories; "Read more articles" shows more. */
+const PAGE_SIZE = 8;
 
 /* =========================================================
    EDITION 1 — MERGERS & ACQUISITIONS (additive)
@@ -271,16 +283,10 @@ function ChangeChip({ change, up }: { change: string; up: boolean }) {
    NEWSROOM CARD (Bloomberg-style)
 ========================================================= */
 
-function NewsroomCard({
-  story,
-  also,
-}: {
-  story: OctEditionArticle;
-  also?: OctEditionArticle;
-}) {
+function NewsroomCard({ story }: { story: OctEditionArticle }) {
   return (
-    <article className="flex h-full flex-col bg-white p-7">
-      <Link to={digestArticlePath(story)} className="group block flex-1">
+    <article className="pb-12">
+      <Link to={digestArticlePath(story)} className="group block">
         <div className={`${IMG_FRAME} rounded-sm bg-gray-100`}>
           <ImageWithFallback
             src={story.image}
@@ -289,33 +295,68 @@ function NewsroomCard({
           />
         </div>
 
-        <span className="mt-5 block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+        <span className="mt-4 block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
           {story.industry} · {story.location}
         </span>
 
-        <h2 className="mt-2.5 font-sans text-[22px] font-extrabold leading-[1.15] tracking-tight text-gray-950 transition-colors group-hover:text-red-600">
+        <h2 className="mt-2 font-sans text-[24px] font-extrabold leading-[1.15] tracking-tight text-gray-950 transition-colors group-hover:text-red-600">
           {story.title}
         </h2>
 
-        <p className="mt-4 text-[12.5px] leading-[1.6] text-gray-600 line-clamp-3">
+        <p className="mt-3 text-[13px] leading-[1.6] text-gray-600 line-clamp-2">
           {story.lede}
         </p>
       </Link>
+    </article>
+  );
+}
 
-      {also && (
-        <Link
-          to={digestArticlePath(also)}
-          className="group mt-6 block rounded-lg border border-[#4a4a4a] px-4 py-3.5 transition-colors hover:border-red-600"
-        >
-          <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-gray-500">
-            Also in this edition
+function NewsroomWide({
+  story,
+  related,
+}: {
+  story: OctEditionArticle;
+  related: OctEditionArticle[];
+}) {
+  return (
+    <article className="grid grid-cols-1 gap-x-8 gap-y-4 pb-12 md:grid-cols-[380px_minmax(0,1fr)]">
+      <Link to={digestArticlePath(story)} className="group block">
+        <div className={`${IMG_FRAME} rounded-sm bg-gray-100`}>
+          <ImageWithFallback
+            src={story.image}
+            alt={story.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </div>
+      </Link>
+
+      <div className="min-w-0">
+        <Link to={digestArticlePath(story)} className="group block">
+          <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+            {story.industry} · {story.location}
           </span>
 
-          <span className="mt-0.5 block text-[13px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600 line-clamp-2">
-            {also.title}
-          </span>
+          <h2 className="mt-2 font-sans text-[30px] font-extrabold leading-[1.1] tracking-tight text-gray-950 transition-colors group-hover:text-red-600">
+            {story.title}
+          </h2>
+
+          <p className="mt-3 text-[13.5px] leading-[1.6] text-gray-600 line-clamp-3">
+            {story.lede}
+          </p>
         </Link>
-      )}
+
+        <div className="mt-5 space-y-2.5">
+          {related.map((item) => (
+            <Link
+              key={item.id}
+              to={digestArticlePath(item)}
+              className="block text-[13px] font-bold leading-[1.3] text-gray-900 transition-colors hover:text-red-600"
+            >
+              {item.title}
+            </Link>
+          ))}
+        </div>
+      </div>
     </article>
   );
 }
@@ -334,7 +375,7 @@ function SectionHeader({
   linkText?: string;
 }) {
   return (
-    <div className="flex items-center justify-between border-b-2 border-black pb-3 mb-8">
+    <div className="flex items-center justify-between mb-6">
       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
         {title}
       </h2>
@@ -450,113 +491,133 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <main className="pt-6 md:pt-10 pb-24">
+        <main className="pt-4 md:pt-6 pb-16">
 
           {/* =================================================
-              NEWSROOM — Bloomberg-style boxed grid.
-              The Pride Times News, Global Industry Edition.
-              Thin light-black lines separate every story.
+              NEWSROOM — The Pride Times News, Global Industry Edition.
+              Bloomberg-style layout: story rows on the left, a soft
+              side panel on the right. No lines; spacing separates.
           ================================================= */}
 
-          <section
-            aria-label="Top stories"
-            className="mb-20 border border-transparent bg-white"
-          >
-            <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-3">
-              {newsroomStories.map((story, index) => (
-                <NewsroomCard
-                  key={story.id}
-                  story={story}
-                  also={newsroomStories[(index + 1) % newsroomStories.length]}
-                />
-              ))}
+          <section aria-label="Top stories" className="mb-16">
+            <SectionHeader
+              title={`${octEditionMeta.title} · ${octEditionMeta.edition} · ${octEditionMeta.date}`}
+            />
 
-              {/* MARKET SNAPSHOT */}
+            <div className="grid grid-cols-1 gap-x-12 lg:grid-cols-[minmax(0,1fr)_368px]">
+              <div>
+                {newsroomRows.map((row, rowIndex) =>
+                  row.type === "pair" ? (
+                    <div
+                      key={rowIndex}
+                      className="grid grid-cols-1 gap-x-10 sm:grid-cols-2"
+                    >
+                      {row.stories.map((story) => (
+                        <NewsroomCard key={story.id} story={story} />
+                      ))}
+                    </div>
+                  ) : (
+                    <NewsroomWide
+                      key={rowIndex}
+                      story={row.stories[0]}
+                      related={[
+                        newsroomStories[
+                          (newsroomStories.indexOf(row.stories[0]) + 5) %
+                            newsroomStories.length
+                        ],
+                        newsroomStories[
+                          (newsroomStories.indexOf(row.stories[0]) + 6) %
+                            newsroomStories.length
+                        ],
+                      ]}
+                    />
+                  )
+                )}
+              </div>
 
-              <div className="bg-white p-7">
-                <div className="flex items-center justify-between border-b-2 border-black pb-3 mb-5">
-                  <h3 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                    Market Snapshot
-                  </h3>
+              {/* SIDE PANEL */}
 
-                  <div className="flex gap-3">
-                    {(["Indices", "Crypto"] as const).map((tab) => (
-                      <button
-                        key={tab}
-                        type="button"
-                        onClick={() => setActiveMarketTab(tab)}
-                        className={`text-[9px] font-semibold uppercase tracking-wide ${
-                          activeMarketTab === tab
-                            ? "text-red-600"
-                            : "text-gray-400 hover:text-gray-700"
-                        }`}
-                      >
-                        {tab}
-                      </button>
-                    ))}
+              <aside className="min-w-0 space-y-10 self-start rounded-lg bg-gray-50 p-6 lg:sticky lg:top-6">
+                <div>
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                      Market Snapshot
+                    </h3>
+
+                    <div className="flex gap-3">
+                      {(["Indices", "Crypto"] as const).map((tab) => (
+                        <button
+                          key={tab}
+                          type="button"
+                          onClick={() => setActiveMarketTab(tab)}
+                          className={`text-[9px] font-semibold uppercase tracking-wide ${
+                            activeMarketTab === tab
+                              ? "text-red-600"
+                              : "text-gray-400 hover:text-gray-700"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="divide-y divide-[#4a4a4a]">
-                  {(marketSnapshotData[activeMarketTab] || [])
-                    .slice(0, 6)
-                    .map((market) => (
-                      <div
-                        key={market.symbol}
-                        className="py-4 flex items-center justify-between"
-                      >
-                        <span className="text-[11px] font-semibold text-gray-800">
-                          {market.symbol}
-                        </span>
-
-                        <div className="flex items-center gap-3">
-                          <span className="text-[11px] text-gray-500 tabular-nums">
-                            {market.value}
+                  <div>
+                    {(marketSnapshotData[activeMarketTab] || [])
+                      .slice(0, 6)
+                      .map((market) => (
+                        <div
+                          key={market.symbol}
+                          className="flex items-center justify-between py-2.5"
+                        >
+                          <span className="text-[12px] font-semibold text-gray-800">
+                            {market.symbol}
                           </span>
 
-                          <ChangeChip change={market.change} up={market.up} />
+                          <div className="flex items-center gap-3">
+                            <span className="text-[12px] text-gray-500 tabular-nums">
+                              {market.value}
+                            </span>
+
+                            <ChangeChip change={market.change} up={market.up} />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                  </div>
+
+                  <Link
+                    to="/markets"
+                    className="mt-3 flex w-fit items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-red-600"
+                  >
+                    View All Markets
+                    <ArrowRight size={9} />
+                  </Link>
                 </div>
 
-                <Link
-                  to="/markets"
-                  className="mt-5 text-[9px] font-bold text-red-600 flex items-center gap-1 uppercase tracking-wide w-fit"
-                >
-                  View All Markets
-                  <ArrowRight size={9} />
-                </Link>
-              </div>
-
-              {/* NUMBERS AT A GLANCE */}
-
-              <div className="bg-white p-7">
-                <div className="border-b-2 border-black pb-3 mb-5">
-                  <h3 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                <div>
+                  <h3 className="mb-3 text-[12px] font-bold uppercase tracking-[0.16em]">
                     Numbers at a Glance
                   </h3>
-                  <span className="text-[9px] text-gray-400">
-                    {octEditionMeta.edition} · {octEditionMeta.date}
-                  </span>
-                </div>
 
-                <ul className="divide-y divide-[#4a4a4a]">
-                  {octEditionGlance.map((item) => (
-                    <li key={item.indicator} className="py-3.5">
-                      <span className="block text-[9px] font-bold uppercase tracking-[0.1em] text-gray-500">
-                        {item.indicator}
-                      </span>
-                      <span className="block text-[14px] font-extrabold text-gray-900">
-                        {item.figure}
-                        <span className="ml-2 text-[9px] font-normal text-gray-400">
+                  <ul className="space-y-4">
+                    {octEditionGlance.map((item) => (
+                      <li key={item.indicator}>
+                        <span className="block text-[10px] font-semibold uppercase tracking-[0.08em] text-gray-500">
+                          {item.indicator}
+                        </span>
+
+                        <span className="mt-0.5 block font-sans text-[17px] font-extrabold text-gray-900">
+                          {item.figure}
+                        </span>
+
+                        <span className="block text-[10px] text-gray-400">
                           {item.source}
                         </span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </aside>
             </div>
           </section>
 
@@ -564,19 +625,19 @@ export function HomePage() {
               LATEST NEWS (all 60 digest stories) + MAGAZINE
           ================================================= */}
 
-          <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_365px] gap-12 mb-20">
+          <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-7 mb-12">
 
             {/* LATEST NEWS */}
 
             <div ref={newsListRef} className="scroll-mt-24">
               <SectionHeader
-                title="Latest News"
+                title="More Stories"
                 link="/business-news"
               />
 
               {/* FILTER TABS */}
 
-              <div className="flex items-center gap-7 overflow-x-auto no-scrollbar border-b border-transparent pb-4 mb-2">
+              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar pb-3 mb-1">
                 {latestNewsTabs.map((tab) => (
                   <button
                     key={tab}
@@ -595,7 +656,7 @@ export function HomePage() {
 
               {/* STORY LIST */}
 
-              <div>
+              <div className="">
                 {latestStories.length === 0 && (
                   <p className="py-6 text-[11px] text-gray-400">
                     No stories in this category yet.
@@ -606,7 +667,7 @@ export function HomePage() {
                   <Link
                     key={story.id}
                     to={digestArticlePath(story)}
-                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[365px_1fr] gap-5 sm:gap-8 py-9"
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[380px_1fr] gap-4 sm:gap-6 py-6"
                   >
                     <div className={`${IMG_FRAME} self-start rounded-md`}>
                       <ImageWithFallback
@@ -632,15 +693,15 @@ export function HomePage() {
                         </span>
                       </div>
 
-                      <h3 className="font-sans text-base sm:text-xl font-extrabold tracking-tight leading-[1.2] mt-2 text-gray-900 group-hover:text-red-600 transition-colors">
+                      <h3 className="font-sans text-base sm:text-xl font-extrabold tracking-tight leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
                         {story.title}
                       </h3>
 
-                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.6] mt-3 line-clamp-3">
+                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
                         {story.lede}
                       </p>
 
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-3">
+                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
                         <Clock size={8} />
                         {story.publishedAt} · {story.readTime}
                       </span>
@@ -650,7 +711,7 @@ export function HomePage() {
               </div>
 
               {hasMore && (
-                <div className="mt-8 flex flex-col items-center gap-3 border-t border-transparent pt-8">
+                <div className="mt-5 flex flex-col items-center gap-2 pt-5">
                   <button
                     type="button"
                     onClick={() =>
@@ -658,7 +719,7 @@ export function HomePage() {
                         Math.min(count + PAGE_SIZE, filteredStories.length)
                       )
                     }
-                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:bg-red-50 hover:text-red-600"
                   >
                     Read more articles
                   </button>
@@ -687,7 +748,7 @@ export function HomePage() {
                   />
                 </div>
 
-                <div className="p-6">
+                <div className="p-4">
                   <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
                     Pride Times Magazine
                   </span>
@@ -715,13 +776,13 @@ export function HomePage() {
 
           <section
             aria-label="Older articles"
-            className="mb-20 border-y border-transparent py-10 text-center"
+            className="mb-12 py-6 text-center"
           >
             <button
               type="button"
               onClick={() => setShowOlder((open) => !open)}
               aria-expanded={showOlder}
-              className="rounded-full border border-[#4a4a4a] px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+              className="rounded-full bg-gray-100 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:bg-red-50 hover:text-red-600"
             >
               {showOlder ? "Hide older articles" : "More articles"}
             </button>
@@ -740,7 +801,7 @@ export function HomePage() {
 
           <section
             aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
-            className="mb-20 border-b border-transparent pb-14"
+            className="mb-12 pb-10"
           >
             <SectionHeader
               title={`Global Corporate News Digest · ${maEdition1Meta.edition} · Headlines by Industry`}
@@ -787,10 +848,10 @@ export function HomePage() {
             {/* HEADLINES BY INDUSTRY — every story = one image + one headline
                 (Bloomberg-style cards). Each card opens its article page. */}
 
-            <div className="mt-12 space-y-16">
+            <div className="mt-8 space-y-10">
               {editionIndustries.map((group) => (
                 <div key={group.name}>
-                  <div className="mb-6 flex items-center justify-between border-b border-[#4a4a4a] pb-3">
+                  <div className="mb-4 flex items-center justify-between pb-2">
                     <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-gray-900">
                       {group.name}
                     </h3>
@@ -800,7 +861,7 @@ export function HomePage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
                     {group.stories.map((story) => {
                       const chip = editionDealChip(story);
 
@@ -841,7 +902,7 @@ export function HomePage() {
 
             {/* DEAL STATUS TRACKER */}
 
-            <details className="mt-10 rounded-md border border-gray-200">
+            <details className="mt-6 rounded-md border border-gray-200">
               <summary className="cursor-pointer select-none px-4 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800">
                 Deal status table (as of the early August 2026 tracker update)
               </summary>
@@ -884,14 +945,14 @@ export function HomePage() {
               SECTION BRIEFINGS (one card per digest section)
           ================================================= */}
 
-          <section className="mb-20">
+          <section className="mb-12">
             <SectionHeader title="Global Corporate News Digest · Sections" />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               {digestSections.map((section) => (
                 <div
                   key={section.slug}
-                  className="flex flex-col rounded-md border border-transparent p-6 transition-colors"
+                  className="flex flex-col rounded-md border border-gray-200 p-4 transition-colors hover:border-gray-300"
                 >
                   <span className="font-serif text-2xl font-bold tabular-nums text-gray-200">
                     {String(section.number).padStart(2, "0")}
@@ -910,7 +971,7 @@ export function HomePage() {
                       to={digestArticlePath(
                         sectionHeadlines.get(section.number)!
                       )}
-                      className="group mt-3 block border-t border-transparent pt-3"
+                      className="group mt-3 block border-t border-gray-100 pt-3"
                     >
                       <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
                         Top headline
@@ -926,7 +987,7 @@ export function HomePage() {
                     </Link>
                   )}
 
-                  <ul className="mt-3 space-y-1 border-t border-transparent pt-3">
+                  <ul className="mt-3 space-y-1 border-t border-gray-100 pt-3">
                     {section.glance.map((item) => (
                       <li
                         key={item.theme}
@@ -968,7 +1029,7 @@ export function HomePage() {
 
           <section
             aria-label="Global Sector News Report 2026 headlines"
-            className="mb-20"
+            className="mb-12"
           >
             <SectionHeader
               title="Sector Headlines · Global Sector News Report 2026"
@@ -976,12 +1037,12 @@ export function HomePage() {
               linkText="Read Report"
             />
 
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {globalSectorItems.map((item) => (
                 <Link
                   key={item.sector}
                   to={`/article/${globalSectorArticleId}`}
-                  className="group block rounded-md border border-transparent p-6 transition-colors"
+                  className="group block rounded-md border border-gray-200 p-4 transition-colors hover:border-gray-300"
                 >
                   <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                     {item.sector}
@@ -1006,7 +1067,7 @@ export function HomePage() {
 
           <section
             aria-label="More sector news from the Global Sector News Report 2026"
-            className="mb-20"
+            className="mb-12"
           >
             <SectionHeader
               title="More Sector News · Global Sector News Report 2026"
@@ -1014,19 +1075,19 @@ export function HomePage() {
               linkText="Read Report"
             />
 
-            <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {globalSectorMoreNews.map((group) => (
                 <div key={group.sector}>
-                  <span className="block border-b border-[#4a4a4a] pb-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+                  <span className="block pb-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                     {group.sector}
                   </span>
 
-                  <ul className="mt-3">
+                  <ul className="mt-2">
                     {group.headlines.map((headline) => (
                       <li key={headline}>
                         <Link
                           to={`/article/${globalSectorArticleId}`}
-                          className="block py-3.5 font-serif text-[13px] font-bold leading-[1.35] text-gray-900 transition-colors hover:text-red-600"
+                          className="block py-2 font-serif text-[13px] font-bold leading-[1.35] text-gray-900 transition-colors hover:text-red-600"
                         >
                           {headline}
                         </Link>
@@ -1045,7 +1106,7 @@ export function HomePage() {
               REGIONAL SNAPSHOT (illustrative)
           ================================================= */}
 
-          <section className="mb-20">
+          <section className="mb-12">
             <SectionHeader title="Regional Snapshot (Illustrative)" />
 
             <div className="overflow-x-auto">
@@ -1062,16 +1123,16 @@ export function HomePage() {
                 <tbody className="divide-y divide-gray-100">
                   {regionalSnapshot.map((row) => (
                     <tr key={row.region}>
-                      <td className="py-4 pr-4 font-semibold text-gray-900">
+                      <td className="py-2.5 pr-4 font-semibold text-gray-900">
                         {row.region}
                       </td>
-                      <td className="py-4 pr-4 tabular-nums text-gray-700">
+                      <td className="py-2.5 pr-4 tabular-nums text-gray-700">
                         {row.dealValue}
                       </td>
-                      <td className="py-4 pr-4 tabular-nums text-gray-700">
+                      <td className="py-2.5 pr-4 tabular-nums text-gray-700">
                         {row.earningsGrowth}
                       </td>
-                      <td className="py-4 text-gray-700">{row.hiring}</td>
+                      <td className="py-2.5 text-gray-700">{row.hiring}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1096,11 +1157,11 @@ export function HomePage() {
               linkText="Full List"
             />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {prideTimes30.map((leader) => (
                 <div
                   key={leader.rank}
-                  className="flex items-start gap-5 p-6 border border-transparent rounded-md transition-colors"
+                  className="flex items-start gap-4 p-4 border border-gray-200 rounded-md hover:border-gray-300 transition-colors"
                 >
                   <span className="font-serif text-2xl font-bold text-gray-200 tabular-nums shrink-0 w-8">
                     {String(leader.rank).padStart(2, "0")}
