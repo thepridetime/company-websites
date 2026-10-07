@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
@@ -12,6 +12,13 @@ import {
   startupNews,
   type BusinessArticle,
 } from "../../data/businessNewsData";
+import {
+  octEditionArticles,
+  octEditionMeta,
+  octEditionGlance,
+  octEditionArticlePath,
+  type OctEditionArticle,
+} from "../../data/octEditionData";
 
 /* =========================================================
    LOCAL IMAGES (company-websites/src/imports)
@@ -48,29 +55,42 @@ function storyImage(story: BusinessArticle, index = 0): string {
 
 /* =========================================================
    PAGE DATA
-   Top block  : hero + 2 headline stories + 6 latest (right)
-   More block : every remaining story as a compact headline row
-   Nothing is repeated, nothing is dropped.
+   Top block  : every headline of the newest edition
+                (The Pride Times News, Global Industry Edition,
+                7 October 2026 - src/app/data/octEditionData.ts)
+   Hidden     : ALL earlier business stories, behind the
+                "More articles" toggle. Nothing is removed.
 ========================================================= */
 
-const latestStories = corporateNews.slice(0, 6);
-const moreCorporate = corporateNews.slice(6);
+const newStories: OctEditionArticle[] = octEditionArticles;
+
+const earlierHeadlines: BusinessArticle[] = [hero, ...headlineNews];
+
+const earlierCount =
+  earlierHeadlines.length + corporateNews.length + startupNews.length;
+
+/* Every image uses the homepage 16:10 frame. */
+const IMG_FRAME = "aspect-[16/10] w-full overflow-hidden";
 
 /* =========================================================
-   SECTION HEADER
+   SECTION HEADER (same as homepage)
 ========================================================= */
 
-function SectionHeader({ title, meta }: { title: string; meta?: string }) {
+function SectionHeader({
+  title,
+  meta,
+}: {
+  title: string;
+  meta?: string;
+}) {
   return (
-    <div className="mb-3 flex items-center gap-2.5 border-b-2 border-black pb-2">
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-600" />
-
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-900">
+    <div className="mb-8 flex items-center justify-between border-b-2 border-black pb-3">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
         {title}
       </h2>
 
       {meta && (
-        <span className="ml-auto text-[9px] font-semibold uppercase tracking-wide text-gray-400">
+        <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400">
           {meta}
         </span>
       )}
@@ -113,84 +133,6 @@ function AdSpace({ slot = "5373718974" }: { slot?: "5373718974" | "8042854193" }
 }
 
 /* =========================================================
-   HEADLINE ROW — compact: thumbnail + category + headline
-   Opens the inner article at /article/:id
-========================================================= */
-
-function HeadlineRow({ story, index = 0 }: { story: BusinessArticle; index?: number }) {
-  return (
-    <Link
-      to={`/article/${story.id}`}
-      className="group flex gap-3 py-3"
-    >
-      <div className="h-[62px] w-[92px] shrink-0 overflow-hidden rounded-md bg-gray-100">
-        <ImageWithFallback
-          src={storyImage(story, index)}
-          alt={story.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
-
-      <div className="min-w-0 flex-1">
-        <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
-          {story.category}
-        </span>
-
-        <h3 className="mt-0.5 line-clamp-2 text-[13px] font-bold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
-          {story.title}
-        </h3>
-
-        <span className="mt-1 flex items-center gap-1 text-[10px] text-gray-400">
-          <Clock size={9} />
-          {story.time}
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-/* =========================================================
-   LATEST STREAM — text-only headlines (right column)
-========================================================= */
-
-function LatestStream({ stories }: { stories: BusinessArticle[] }) {
-  return (
-    <div className="pt-4">
-      <div className="mb-1 flex items-center justify-between border-b border-gray-200 pb-2">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-          Latest News
-        </h2>
-
-        <span className="text-[8px] uppercase tracking-wide text-gray-400">
-          Newsroom
-        </span>
-      </div>
-
-      <div className="divide-y divide-gray-100">
-        {stories.map((story) => (
-          <Link
-            key={story.id}
-            to={`/article/${story.id}`}
-            className="group block py-2.5"
-          >
-            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-red-600">
-              {story.category}
-              <span className="ml-2 font-medium normal-case tracking-normal text-gray-400">
-                {story.time}
-              </span>
-            </span>
-
-            <span className="mt-0.5 block text-[12px] font-semibold leading-[1.4] text-gray-800 transition-colors group-hover:text-red-600">
-              {story.title}
-            </span>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
    STATUS BADGES + TABLE HEADER
 ========================================================= */
 
@@ -224,17 +166,113 @@ const TH = ({
 );
 
 /* =========================================================
+   NEWSROOM CARD (same card as the homepage)
+========================================================= */
+
+function NewsroomCard({
+  story,
+  also,
+}: {
+  story: OctEditionArticle;
+  also?: OctEditionArticle;
+}) {
+  return (
+    <article className="flex h-full flex-col bg-white p-7">
+      <Link to={octEditionArticlePath(story)} className="group block flex-1">
+        <div className={`${IMG_FRAME} rounded-sm bg-gray-100`}>
+          <ImageWithFallback
+            src={story.image}
+            alt={story.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </div>
+
+        <span className="mt-5 block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+          {story.industry} · {story.location}
+        </span>
+
+        <h2 className="mt-2.5 font-sans text-[22px] font-extrabold leading-[1.15] tracking-tight text-gray-950 transition-colors group-hover:text-red-600">
+          {story.title}
+        </h2>
+
+        <p className="mt-4 line-clamp-3 text-[12.5px] leading-[1.6] text-gray-600">
+          {story.lede}
+        </p>
+      </Link>
+
+      {also && (
+        <Link
+          to={octEditionArticlePath(also)}
+          className="group mt-6 block rounded-lg border border-[#4a4a4a] px-4 py-3.5 transition-colors hover:border-red-600"
+        >
+          <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-gray-500">
+            Also in this edition
+          </span>
+
+          <span className="mt-0.5 block line-clamp-2 text-[13px] font-bold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600">
+            {also.title}
+          </span>
+        </Link>
+      )}
+    </article>
+  );
+}
+
+/* =========================================================
+   FEED ROW (same row as the homepage Latest News feed)
+   Used for the earlier stories. Opens /article/:id
+========================================================= */
+
+function FeedRow({ story, index = 0 }: { story: BusinessArticle; index?: number }) {
+  return (
+    <Link
+      to={`/article/${story.id}`}
+      className="group grid grid-cols-[130px_1fr] gap-5 py-9 sm:grid-cols-[365px_1fr] sm:gap-8"
+    >
+      <div className={`${IMG_FRAME} self-start rounded-md`}>
+        <ImageWithFallback
+          src={storyImage(story, index)}
+          alt={story.title}
+          className="h-full w-full rounded-md object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+
+      <div className="min-w-0">
+        <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
+          {story.category}
+        </span>
+
+        <h3 className="mt-2 font-sans text-base font-extrabold leading-[1.2] tracking-tight text-gray-900 transition-colors group-hover:text-red-600 sm:text-xl">
+          {story.title}
+        </h3>
+
+        <p className="mt-3 hidden line-clamp-3 text-[13px] leading-[1.6] text-gray-500 sm:block">
+          {story.excerpt ?? story.dek}
+        </p>
+
+        <span className="mt-3 flex items-center gap-1 text-[9px] text-gray-400">
+          <Clock size={8} />
+          {story.time} · {story.readTime}
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+/* =========================================================
    MAIN PAGE
 ========================================================= */
 
 export function BusinessNewsPage() {
+  const [showOlder, setShowOlder] = useState(false);
+
   return (
     <div className="w-full bg-white text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 md:py-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:py-10 lg:px-8">
 
         {/* PAGE HEADER */}
 
-        <header className="mb-5 flex items-end justify-between border-b-4 border-black pb-3">
+        <header className="mb-10 flex items-end justify-between border-b-4 border-black pb-3">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-600">
               Business Briefing
@@ -246,131 +284,136 @@ export function BusinessNewsPage() {
           </div>
 
           <span className="pb-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
-            {1 + headlineNews.length + corporateNews.length + startupNews.length} stories
+            {newStories.length + earlierCount} stories
           </span>
         </header>
 
 
         {/* =================================================
-            TOP STORIES — same newsroom lead as the homepage
+            TOP STORIES - every headline is from the newest edition.
+            Same boxed newsroom grid as the homepage.
         ================================================= */}
 
-        <section className="grid grid-cols-1 gap-5 border-b border-gray-300 pb-6 lg:grid-cols-[1.15fr_1fr_0.85fr] lg:gap-6">
+        <section
+          aria-label="Top business stories"
+          className="mb-20 border border-[#4a4a4a] bg-[#4a4a4a]"
+        >
+          <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-3">
+            {newStories.map((story, index) => (
+              <NewsroomCard
+                key={story.id}
+                story={story}
+                also={newStories[(index + 1) % newStories.length]}
+              />
+            ))}
 
-          {/* LEAD STORY */}
+            {/* NUMBERS AT A GLANCE */}
 
-          <Link
-            to={`/article/${hero.id}`}
-            className="group relative block min-h-[360px] overflow-hidden rounded-lg border border-gray-200 bg-black lg:min-h-[420px]"
-          >
-            <ImageWithFallback
-              src={storyImage(hero)}
-              alt={hero.title}
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-
-            <span className="absolute left-4 top-4 rounded-[2px] bg-red-600 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white">
-              {hero.category}
-            </span>
-
-            <div className="absolute inset-x-0 bottom-0 p-5">
-              <h2 className="font-serif text-2xl font-bold leading-[1.1] text-white lg:text-[26px]">
-                {hero.title}
-              </h2>
-
-              <p className="mt-2 line-clamp-2 text-[12px] leading-[1.55] text-gray-200">
-                {hero.dek}
-              </p>
-
-              <span className="mt-3 inline-flex items-center gap-1.5 border-b border-white/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                Read Full Story
-                <ArrowRight size={12} />
-              </span>
-            </div>
-          </Link>
-
-          {/* MAJOR COVERAGE */}
-
-          <div className="min-w-0">
-            <Link to={`/article/${headlineNews[0].id}`} className="group block">
-              <span className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.15em] text-red-600">
-                {headlineNews[0].category}
-              </span>
-
-              <div className="overflow-hidden rounded-lg">
-                <ImageWithFallback
-                  src={storyImage(headlineNews[0])}
-                  alt={headlineNews[0].title}
-                  className="h-[200px] w-full rounded-lg object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
+            <div className="bg-white p-7">
+              <div className="mb-5 border-b-2 border-black pb-3">
+                <h3 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                  Numbers at a Glance
+                </h3>
+                <span className="text-[9px] text-gray-400">
+                  {octEditionMeta.edition} · {octEditionMeta.date}
+                </span>
               </div>
 
-              <h2 className="mt-2.5 font-serif text-xl font-bold leading-[1.15] text-gray-950 transition-colors group-hover:text-red-600">
-                {headlineNews[0].title}
-              </h2>
+              <ul className="divide-y divide-[#4a4a4a]">
+                {octEditionGlance.map((item) => (
+                  <li key={item.indicator} className="py-3.5">
+                    <span className="block text-[9px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                      {item.indicator}
+                    </span>
+                    <span className="block text-[14px] font-extrabold text-gray-900">
+                      {item.figure}
+                      <span className="ml-2 text-[9px] font-normal text-gray-400">
+                        {item.source}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-              <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.55] text-gray-600">
-                {headlineNews[0].excerpt}
-              </p>
-            </Link>
+            {/* ADVERTISEMENT */}
 
-            <div className="mt-3 border-t border-gray-200">
-              <HeadlineRow story={headlineNews[1]} index={1} />
+            <div className="flex items-center bg-white p-7">
+              <div className="w-full">
+                <AdSpace />
+              </div>
             </div>
           </div>
-
-          {/* RIGHT COLUMN */}
-
-          <aside className="min-w-0">
-            <AdSpace />
-            <LatestStream stories={latestStories} />
-          </aside>
-
         </section>
 
 
         {/* =================================================
-            MORE HEADLINES — every remaining story, compact
+            EARLIER BUSINESS NEWS - nothing is removed; it opens on demand
         ================================================= */}
 
-        <section className="grid grid-cols-1 gap-x-10 gap-y-6 py-6 md:grid-cols-2">
+        <section
+          aria-label="Earlier business articles"
+          className="mb-20 border-y border-[#4a4a4a] py-10 text-center"
+        >
+          <button
+            type="button"
+            onClick={() => setShowOlder((open) => !open)}
+            aria-expanded={showOlder}
+            className="rounded-full border border-[#4a4a4a] px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+          >
+            {showOlder ? "Hide older articles" : "More articles"}
+          </button>
 
-          <div>
-            <SectionHeader
-              title="Corporate Strategy"
-              meta={`${moreCorporate.length} more`}
-            />
-
-            <div className="divide-y divide-gray-100">
-              {moreCorporate.map((story, i) => (
-                <HeadlineRow key={story.id} story={story} index={i} />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <SectionHeader
-              title="The Startup Economy"
-              meta={`${startupNews.length} stories`}
-            />
-
-            <div className="divide-y divide-gray-100">
-              {startupNews.map((story, i) => (
-                <HeadlineRow key={story.id} story={story} index={i} />
-              ))}
-            </div>
-          </div>
-
+          <p className="mt-2 text-[10px] text-gray-400">
+            {earlierCount} earlier business stories: headlines, corporate
+            strategy, the startup economy, earnings and deals
+          </p>
         </section>
 
+        {showOlder && (
+          <>
+            <section className="mb-20">
+              <SectionHeader
+                title="Earlier Headlines"
+                meta={`${earlierHeadlines.length} stories`}
+              />
 
-        {/* =================================================
-            NUMBERS — collapsed so the page stays short
-        ================================================= */}
+              <div className="divide-y divide-[#4a4a4a]">
+                {earlierHeadlines.map((story, i) => (
+                  <FeedRow key={story.id} story={story} index={i} />
+                ))}
+              </div>
+            </section>
 
-        <section className="space-y-3 border-t-2 border-black pt-5">
+            <section className="mb-20">
+              <SectionHeader
+                title="Corporate Strategy"
+                meta={`${corporateNews.length} stories`}
+              />
+
+              <div className="divide-y divide-[#4a4a4a]">
+                {corporateNews.map((story, i) => (
+                  <FeedRow key={story.id} story={story} index={i} />
+                ))}
+              </div>
+            </section>
+
+            <section className="mb-20">
+              <SectionHeader
+                title="The Startup Economy"
+                meta={`${startupNews.length} stories`}
+              />
+
+              <div className="divide-y divide-[#4a4a4a]">
+                {startupNews.map((story, i) => (
+                  <FeedRow key={story.id} story={story} index={i} />
+                ))}
+              </div>
+            </section>
+
+            {/* EARNINGS + DEALS TABLES */}
+
+            <section className="mb-20 space-y-5 border-t-2 border-black pt-10">
 
           <details className="rounded-md border border-gray-200">
             <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-800">
@@ -457,42 +500,17 @@ export function BusinessNewsPage() {
             </div>
           </details>
 
-        </section>
+            </section>
+          </>
+        )}
 
 
         {/* SECOND ADVERTISEMENT */}
 
-        <div className="my-6">
+        <div className="my-10">
           <AdSpace slot="8042854193" />
         </div>
 
-
-        {/* NEWSLETTER */}
-
-        <section className="rounded-md bg-[#071a2d] px-5 py-6 text-center sm:px-8">
-          <h2 className="font-serif text-lg font-bold text-white md:text-xl">
-            Stay Ahead with The Pride Times
-          </h2>
-
-          <p className="mt-1.5 text-xs text-gray-300">
-            A concise briefing on companies, markets, capital and the business decisions shaping tomorrow's economy.
-          </p>
-
-          <div className="mx-auto mt-4 flex max-w-lg flex-col gap-2 sm:flex-row">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="h-10 flex-1 rounded-sm border border-gray-500 bg-white/10 px-3 text-xs text-white outline-none placeholder:text-gray-400 focus:border-red-500"
-            />
-
-            <button
-              type="button"
-              className="h-10 rounded-sm bg-red-600 px-5 text-xs font-bold text-white transition-colors hover:bg-red-700"
-            >
-              Subscribe Free
-            </button>
-          </div>
-        </section>
 
       </div>
     </div>
