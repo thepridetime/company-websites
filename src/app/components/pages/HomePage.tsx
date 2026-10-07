@@ -36,8 +36,6 @@ import {
 } from "../../data/globalSectorReportData";
 import {
   octEditionArticles,
-  octEditionArticlePath,
-  octEditionMeta,
   type OctEditionArticle,
 } from "../../data/octEditionData";
 
@@ -106,16 +104,17 @@ const byTitle = (prefix: string): DigestArticle =>
   digestArticles.find((article) => article.title.startsWith(prefix)) ??
   digestArticles[0];
 
-const leadStory = byTitle("Altamira Capital commits $34.1B");
+const octoberStories: OctEditionArticle[] = octEditionArticles;
+const leadStory = octoberStories[0];
 
 /* The previous lead story now follows the new Global Sector Report
    headline as the first major story. */
 const majorStories = [
-  leadStory,
-  byTitle("Navarro Partners agrees $13.9B takeover"),
+  octoberStories[1],
+  octoberStories[2],
 ];
 
-const editorsPick = byTitle("Tidewater Aerospace reports first green-hydrogen");
+const editorsPick = octoberStories[3];
 
 const featuredIds = new Set(
   [leadStory, ...majorStories, editorsPick].map((article) => article.id)
@@ -123,25 +122,9 @@ const featuredIds = new Set(
 
 /* Sidebar stream: the first non-featured story from each of the
    first six sections. */
-const sidebarStories = digestSections
-  .map((section) =>
-    digestArticles.find(
-      (article) =>
-        article.sectionNumber === section.number &&
-        !featuredIds.has(article.id)
-    )
-  )
-  .filter((article): article is DigestArticle => Boolean(article))
+const sidebarStories = octoberStories
+  .filter((article) => !featuredIds.has(article.id))
   .slice(0, 6);
-
-/* =========================================================
-   OCTOBER 7, 2026 — NEW HOMEPAGE HEADLINES
-   The October edition leads the homepage. The previous homepage
-   coverage remains available below in the More News section.
-========================================================= */
-
-const octoberLeadStory = octEditionArticles[0];
-const octoberRelatedStories: OctEditionArticle[] = octEditionArticles.slice(1);
 
 /* =========================================================
    LATEST NEWS
@@ -149,36 +132,12 @@ const octoberRelatedStories: OctEditionArticle[] = octEditionArticles.slice(1);
    a section tab shows every story from that section.
 ========================================================= */
 
-const sectionNames = digestSections.map((section) => section.name);
+const sectionNames = Array.from(
+  new Set(octoberStories.map((article) => article.section))
+);
 const latestNewsTabs = ["All", ...sectionNames];
 
-const interleavedArticles: DigestArticle[] = (() => {
-  const bySection = [
-    ...digestSections.map((section) =>
-      digestArticles.filter(
-        (article) => article.sectionNumber === section.number
-      )
-    ),
-    /* Edition 1 stories, one bucket per industry. */
-    ...maEdition1IndustryOrder.map((name) =>
-      maEdition1Articles.filter((article) => article.industry === name)
-    ),
-    /* The Edition 1 market overview (not tied to one industry). */
-    maEdition1Articles.filter(
-      (article) => !maEdition1IndustryOrder.includes(article.industry)
-    ),
-  ];
-  const rounds = Math.max(...bySection.map((list) => list.length));
-  const result: DigestArticle[] = [];
-
-  for (let round = 0; round < rounds; round += 1) {
-    bySection.forEach((list) => {
-      if (list[round]) result.push(list[round]);
-    });
-  }
-
-  return result;
-})();
+const interleavedArticles: DigestArticle[] = octoberStories;
 
 const PAGE_SIZE = 8;
 
@@ -380,9 +339,7 @@ export function HomePage() {
     () =>
       activeNewsTab === "All"
         ? interleavedArticles
-        : [...maEdition1Articles, ...digestArticles].filter(
-            (article) => article.section === activeNewsTab
-          ),
+        : octoberStories.filter((article) => article.section === activeNewsTab),
     [activeNewsTab]
   );
 
@@ -415,12 +372,6 @@ export function HomePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
 
-          <details className="mb-12 rounded-md border border-gray-200" open>
-            <summary className="cursor-pointer select-none px-4 py-4 text-[11px] font-bold uppercase tracking-[0.16em] text-gray-900">
-              More News · Previous Homepage Coverage
-            </summary>
-            <div className="border-t border-gray-200 px-4 pt-5 sm:px-6">
-
           {/* =================================================
               TOP STORIES / NEWSROOM LEAD
           ================================================= */}
@@ -432,7 +383,7 @@ export function HomePage() {
 
               <a
                 href={`#${globalSectorAnchorId}`}
-                    className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[250px] lg:min-h-[250px] bg-black"
+                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
               >
                 <ImageWithFallback
                   src={globalSectorReport.image}
@@ -679,6 +630,12 @@ export function HomePage() {
               </aside>
             </div>
           </section>
+
+          <details className="mb-12 rounded-md border border-gray-200">
+            <summary className="cursor-pointer select-none px-4 py-4 text-[11px] font-bold uppercase tracking-[0.16em] text-gray-900">
+              More News · Previous Coverage and Related News
+            </summary>
+            <div className="border-t border-gray-200 px-4 pt-5 sm:px-6">
 
           {/* =================================================
               GLOBAL SECTOR NEWS REPORT 2026 (new; additive)
@@ -1181,86 +1138,6 @@ export function HomePage() {
           </section>
             </div>
           </details>
-
-          {/* =================================================
-              OCTOBER 7, 2026 — CURRENT HEADLINES
-          ================================================= */}
-
-          <section className="mb-12 border-b border-gray-300 pb-10">
-            <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b-2 border-black pb-2.5">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-                  {octEditionMeta.edition} · {octEditionMeta.date}
-                </p>
-                <h1 className="mt-1 font-serif text-2xl font-bold leading-tight text-gray-950 md:text-3xl">
-                  {octEditionMeta.title}
-                </h1>
-              </div>
-              <Link
-                to="/business-news"
-                className="text-[9px] font-semibold uppercase tracking-wide text-red-600"
-              >
-                Full Edition <ArrowRight size={9} className="ml-1 inline" />
-              </Link>
-            </div>
-
-            <p className="mb-6 max-w-3xl text-[12px] leading-[1.6] text-gray-500">
-              {octEditionMeta.subtitle}
-            </p>
-
-            <Link
-              to={octEditionArticlePath(octoberLeadStory)}
-              className="group relative block overflow-hidden rounded-lg border border-gray-200 bg-black"
-            >
-              <div className="h-[250px] overflow-hidden md:h-[270px]">
-                <ImageWithFallback
-                  src={octoberLeadStory.image}
-                  alt={octoberLeadStory.title}
-                  className="h-full w-full object-cover opacity-75 transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-400">
-                  {octoberLeadStory.industry} · {octoberLeadStory.location}
-                </span>
-                <h2 className="mt-2 max-w-4xl font-serif text-2xl font-bold leading-[1.1] text-white md:text-3xl">
-                  {octoberLeadStory.title}
-                </h2>
-                <p className="mt-2 max-w-3xl text-[12px] leading-[1.5] text-gray-300 line-clamp-2">
-                  {octoberLeadStory.lede}
-                </p>
-              </div>
-            </Link>
-
-            <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-              {octoberRelatedStories.map((story) => (
-                <Link
-                  key={story.id}
-                  to={octEditionArticlePath(story)}
-                  className="group block"
-                >
-                  <div className="aspect-[16/10] w-full overflow-hidden rounded-md bg-gray-100">
-                    <ImageWithFallback
-                      src={story.image}
-                      alt={story.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="mt-3 block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
-                    {story.industry} · {story.location}
-                  </span>
-                  <h3 className="mt-1.5 font-serif text-xl font-bold leading-[1.2] text-gray-900 transition-colors group-hover:text-red-600">
-                    {story.title}
-                  </h3>
-                  <p className="mt-1.5 text-[12px] leading-[1.55] text-gray-500 line-clamp-2">
-                    {story.lede}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
-
         </main>
       </div>
 
