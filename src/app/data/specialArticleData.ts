@@ -1437,6 +1437,134 @@ const smartCitiesArticles: SpecialArticle[] = [
       { label: "Desk", value: "Urban Futures" },
     ],
   }),
+  makeArticle({
+    id: "smart-cities-ai-platforms-public-safety",
+    section: "Smart Cities",
+    category: "AI & URBAN INTELLIGENCE",
+    title: "AI Platforms Expand Into Smart-City Functions From Retail to Public Safety",
+    dek: "Smart-city development is accelerating as AI, IoT, grid modernization, autonomous mobility and connected logistics converge around the needs of modern urban infrastructure.",
+    image: Smartc2Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["Camera-agnostic AI and connected data platforms are moving into retail analytics, healthcare monitoring and public safety.", "Operators want shared platforms rather than a separate system for each department.", "Mixed-vendor environments make flexibility a practical requirement.", "Governance, privacy and oversight will shape how widely these tools are accepted."],
+    sections: [
+      { heading: "From single-purpose tools to shared platforms", body: "Camera-agnostic AI and connected data platforms are expanding into retail analytics, healthcare monitoring, public safety and wider urban operations. Instead of buying a separate system for each purpose, operators are looking for platforms that can support several uses on the same infrastructure." },
+      { heading: "Why flexibility matters", body: "Cities and large operators usually run a mix of cameras, sensors and software from many suppliers. Systems designed to work across that mix can reduce replacement costs and speed up deployment, but they also raise questions about data retention, access controls and independent oversight." },
+      { heading: "What to watch next", body: "Procurement rules, privacy safeguards and measurable outcomes will determine whether these platforms become standard urban infrastructure. Clear public rules on how footage and analytics are used will matter as much as the technology itself." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "AI & urban intelligence" }, { label: "Key issue", value: "Governance and privacy" }, { label: "Format", value: "Industry report" }],
+  }),
+  makeArticle({
+    id: "smart-cities-grid-modernization-ev-data-centers",
+    section: "Smart Cities",
+    category: "ENERGY & INFRASTRUCTURE",
+    title: "Grid Modernization Becomes Critical as EVs, Data Centers and Clean Energy Expand",
+    dek: "Urban power networks are under growing pressure to support EV charging, data centers and increasingly variable clean-energy generation.",
+    image: Smartc3Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["EV charging, data centers and clean energy are adding new demands to urban grids.", "Variable generation requires better monitoring and balancing of supply and demand.", "Grid upgrades involve physical equipment as well as software.", "Planning across utilities and city authorities becomes more important."],
+    sections: [
+      { heading: "New loads on old networks", body: "Urban power networks are under growing pressure to support EV charging, data centers and increasingly variable clean-energy generation. Many local networks were designed for steadier, one-directional power flows." },
+      { heading: "Smarter monitoring, physical upgrades", body: "Sensors and analytics can show operators where demand is building and where capacity is tight. Those tools do not replace investment in cables, transformers, storage and substations, which remain central to reliability." },
+      { heading: "What to watch next", body: "Coordination between utilities, planners and developers will be a key signal, particularly where new charging hubs or large computing facilities are connected to city networks." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "Grid modernization" }, { label: "Pressure points", value: "EVs, data centers, clean energy" }, { label: "Format", value: "Industry report" }],
+  }),
+  makeArticle({
+    id: "smart-cities-robotaxis-delivery-drones-mobility",
+    section: "Smart Cities",
+    category: "URBAN MOBILITY",
+    title: "Robotaxis and Delivery Drones Reshape Urban Mobility and Logistics Planning",
+    dek: "Autonomous transport is changing how cities plan roads, curb space, delivery networks and the movement of people and goods.",
+    image: Smartc4Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["Autonomous vehicles and drones affect road, curb and airspace planning.", "Delivery patterns are changing how goods move through dense areas.", "City authorities need clear rules for testing and operation.", "Safety and public acceptance remain central questions."],
+    sections: [
+      { heading: "A new layer of urban movement", body: "Autonomous transport is changing how cities plan roads, curb space, delivery networks and the movement of people and goods. Robotaxis and delivery drones add new kinds of traffic that existing street designs were not built to handle." },
+      { heading: "Planning for curbs and airspace", body: "Pick-up and drop-off zones, charging locations and low-altitude delivery routes all need space and rules. Planners are beginning to treat curb access and airspace as managed resources rather than informal ones." },
+      { heading: "What to watch next", body: "Regulation, safety records and public acceptance will shape how quickly these services scale. Cities will be watching whether they reduce congestion or simply add new demand to busy streets." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "Urban mobility" }, { label: "Technologies", value: "Robotaxis and drones" }, { label: "Format", value: "Industry report" }],
+  }),
+  makeArticle({
+    id: "smart-cities-dp-world-southeast-asia-logistics",
+    section: "Smart Cities",
+    category: "LOGISTICS & CONNECTIVITY",
+    title: "DP World Expands Southeast Asia Logistics Network With New Cross-Border Storage Capacity",
+    dek: "New logistics capacity near Singapore highlights the growing connection between smart-city infrastructure, regional trade and cross-border supply chains.",
+    image: Smartc1Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["New storage capacity near Singapore supports cross-border trade flows.", "Logistics hubs depend on connected data and transport infrastructure.", "Regional supply chains link port cities with their wider economies.", "Operating results will show how much of the new capacity is used."],
+    sections: [
+      { heading: "Capacity near a trade hub", body: "New logistics capacity near Singapore highlights the growing connection between smart-city infrastructure, regional trade and cross-border supply chains. Storage close to major ports and transport links helps goods move between markets more predictably." },
+      { heading: "Why logistics belongs in the smart-city story", body: "Warehousing, port operations and last-mile delivery rely on the same digital and physical networks that cities invest in: connectivity, data platforms, road and rail access, and reliable power." },
+      { heading: "What to watch next", body: "Utilisation and customer demand will indicate how much of the added capacity is needed, and how cross-border procedures keep pace with the physical expansion." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Region", value: "Southeast Asia" }, { label: "Focus", value: "Logistics capacity" }, { label: "Format", value: "Industry report" }],
+  }),
+  makeArticle({
+    id: "smart-cities-jones-act-waiver-coastal-shipping",
+    section: "Smart Cities",
+    category: "MARITIME LOGISTICS",
+    title: "Jones Act Waiver Changes the Operating Picture for U.S. Coastal Shipping",
+    dek: "A temporary waiver framework is affecting certain coastal cargo movements, adding a policy dimension to logistics and infrastructure planning.",
+    image: Smartc2Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["A temporary waiver framework is affecting certain coastal cargo movements.", "Shipping policy is an input to port, energy and logistics planning.", "Temporary measures create planning uncertainty for operators.", "Details of scope and duration matter for the practical effect."],
+    sections: [
+      { heading: "A policy shift for coastal cargo", body: "A temporary waiver framework is affecting certain coastal cargo movements, adding a policy dimension to logistics and infrastructure planning. Rules on which vessels may carry cargo between U.S. ports shape costs and routing for operators and shippers." },
+      { heading: "Why it matters for infrastructure", body: "Port capacity, rail and road links, and energy and fuel supply chains are planned around expected shipping patterns. A change in what is allowed, even temporarily, can alter those assumptions." },
+      { heading: "What to watch next", body: "The scope and length of the waiver, and whether operators change their routes or contracts in response, will show how large the practical effect is. Readers should check official notices for the exact terms." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "Maritime logistics" }, { label: "Policy", value: "Temporary waiver framework" }, { label: "Format", value: "Policy report" }],
+  }),
+  makeArticle({
+    id: "smart-cities-ai-iot-energy-management",
+    section: "Smart Cities",
+    category: "ENERGY MANAGEMENT",
+    title: "AI and IoT Turn Energy Management Into a Real-Time Urban Operating System",
+    dek: "Connected sensors and AI-driven analytics are helping operators monitor demand, detect inefficiencies and coordinate energy use.",
+    image: Smartc3Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["Connected sensors give operators a live view of energy use.", "Analytics can flag inefficiencies and unusual demand.", "Coordinated control can reduce waste across buildings and networks.", "Data quality, security and integration decide the real benefit."],
+    sections: [
+      { heading: "A live view of energy use", body: "Connected sensors and AI-driven analytics are helping operators monitor demand, detect inefficiencies and coordinate energy use. Buildings, districts and utilities can see consumption as it happens instead of relying on periodic readings." },
+      { heading: "From monitoring to coordination", body: "Once data is flowing, systems can adjust heating, cooling, lighting and charging in response to demand and supply conditions. The benefit depends on whether different systems are integrated rather than run separately." },
+      { heading: "What to watch next", body: "Cybersecurity, data quality and measurable savings will determine whether these platforms scale beyond pilot projects." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "Energy management" }, { label: "Technologies", value: "AI and IoT" }, { label: "Format", value: "Industry report" }],
+  }),
+  makeArticle({
+    id: "smart-cities-camera-agnostic-ai-urban-video",
+    section: "Smart Cities",
+    category: "PUBLIC SAFETY",
+    title: "Camera-Agnostic AI Broadens the Role of Urban Video Infrastructure",
+    dek: "AI analytics are being designed to work across diverse camera environments and support wider urban operations beyond conventional security.",
+    image: Smartc4Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["Analytics software is being built to work with many camera types.", "Existing video infrastructure can serve more than security.", "Wider use raises privacy and accountability questions.", "Clear rules on data use are central to public trust."],
+    sections: [
+      { heading: "Software that works with existing cameras", body: "AI analytics are being designed to work across diverse camera environments and support wider urban operations beyond conventional security. This lets operators add capabilities without replacing the cameras already installed." },
+      { heading: "Beyond security", body: "Video analytics can be applied to traffic flow, crowd density, queue management and facility operations as well as safety. Each additional use increases the amount of information collected from public spaces." },
+      { heading: "What to watch next", body: "Privacy safeguards, retention limits and independent oversight will be closely watched as the technology spreads. Public acceptance will depend on clear rules about what is analysed and who can see the results." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "Urban video analytics" }, { label: "Key issue", value: "Privacy and oversight" }, { label: "Format", value: "Industry report" }],
+  }),
+  makeArticle({
+    id: "smart-cities-investment-integrated-urban-infrastructure",
+    section: "Smart Cities",
+    category: "URBAN INFRASTRUCTURE",
+    title: "Smart-City Investment Shifts Toward Integrated Urban Infrastructure",
+    dek: "The next phase connects energy, mobility, logistics, public services and digital infrastructure instead of treating them as isolated projects.",
+    image: Smartc1Img,
+    publishedAt: "September 29, 2026",
+    highlights: ["Investment is moving from stand-alone pilots to connected systems.", "Energy, mobility, logistics and digital services are planned together.", "Interoperability and shared standards reduce fragmentation.", "Long-term operation and maintenance matter as much as launch."],
+    sections: [
+      { heading: "From pilots to connected systems", body: "The next phase connects energy, mobility, logistics, public services and digital infrastructure instead of treating them as isolated projects. Earlier smart-city programmes often delivered individual pilots that did not work together." },
+      { heading: "The case for integration", body: "Shared data and common standards allow one investment to support several services, and help avoid duplicated systems. Integration also requires coordination between departments, utilities and private operators." },
+      { heading: "What to watch next", body: "Funding models, procurement and long-term maintenance plans will show which programmes move beyond demonstration. Results will be judged on service quality and cost rather than the number of connected devices." },
+    ],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "Integrated infrastructure" }, { label: "Priority", value: "Interoperability" }, { label: "Format", value: "Industry report" }],
+  }),
 ];
 
 const supplyChainArticles: SpecialArticle[] = [
@@ -2244,7 +2372,13 @@ export function specialArticlePath(id: string) {
   return `/article/${id}`;
 }
 
+const normalizeTitle = (value: string) =>
+  value.toLowerCase().replace(/\s+/g, " ").trim();
+
 export function specialArticlePathByTitle(title: string) {
-  const article = specialArticles.find((item) => item.title === title);
+  const wanted = normalizeTitle(title);
+  const article = specialArticles.find(
+    (item) => normalizeTitle(item.title) === wanted
+  );
   return article ? specialArticlePath(article.id) : "/";
 }
