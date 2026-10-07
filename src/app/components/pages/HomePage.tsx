@@ -631,11 +631,8 @@ export function HomePage() {
             </div>
           </section>
 
-          <details className="mb-12 rounded-md border border-gray-200">
-            <summary className="cursor-pointer select-none px-4 py-4 text-[11px] font-bold uppercase tracking-[0.16em] text-gray-900">
-              More News · Previous Coverage and Related News
-            </summary>
-            <div className="border-t border-gray-200 px-4 pt-5 sm:px-6">
+          <section className="mb-12">
+            <SectionHeader title="More News · Previous Coverage and Related News" />
 
           {/* =================================================
               GLOBAL SECTOR NEWS REPORT 2026 (new; additive)
@@ -1136,8 +1133,7 @@ export function HomePage() {
               ))}
             </div>
           </section>
-            </div>
-          </details>
+          </section>
         </main>
       </div>
 
