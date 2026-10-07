@@ -460,7 +460,7 @@ export function HomePage() {
 
           <section
             aria-label="Top stories"
-            className="mb-20 border border-[#4a4a4a] bg-[#4a4a4a]"
+            className="mb-20 border border-transparent bg-white"
           >
             <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-3">
               {newsroomStories.map((story, index) => (
@@ -576,7 +576,7 @@ export function HomePage() {
 
               {/* FILTER TABS */}
 
-              <div className="flex items-center gap-7 overflow-x-auto no-scrollbar border-b border-[#4a4a4a] pb-4 mb-2">
+              <div className="flex items-center gap-7 overflow-x-auto no-scrollbar border-b border-transparent pb-4 mb-2">
                 {latestNewsTabs.map((tab) => (
                   <button
                     key={tab}
@@ -595,7 +595,7 @@ export function HomePage() {
 
               {/* STORY LIST */}
 
-              <div className="divide-y divide-[#4a4a4a]">
+              <div>
                 {latestStories.length === 0 && (
                   <p className="py-6 text-[11px] text-gray-400">
                     No stories in this category yet.
@@ -650,7 +650,7 @@ export function HomePage() {
               </div>
 
               {hasMore && (
-                <div className="mt-8 flex flex-col items-center gap-3 border-t border-[#4a4a4a] pt-8">
+                <div className="mt-8 flex flex-col items-center gap-3 border-t border-transparent pt-8">
                   <button
                     type="button"
                     onClick={() =>
@@ -715,7 +715,7 @@ export function HomePage() {
 
           <section
             aria-label="Older articles"
-            className="mb-20 border-y border-[#4a4a4a] py-10 text-center"
+            className="mb-20 border-y border-transparent py-10 text-center"
           >
             <button
               type="button"
@@ -740,7 +740,7 @@ export function HomePage() {
 
           <section
             aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
-            className="mb-20 border-b border-[#4a4a4a] pb-14"
+            className="mb-20 border-b border-transparent pb-14"
           >
             <SectionHeader
               title={`Global Corporate News Digest · ${maEdition1Meta.edition} · Headlines by Industry`}
@@ -891,7 +891,7 @@ export function HomePage() {
               {digestSections.map((section) => (
                 <div
                   key={section.slug}
-                  className="flex flex-col rounded-md border border-gray-200 p-6 transition-colors hover:border-gray-300"
+                  className="flex flex-col rounded-md border border-transparent p-6 transition-colors"
                 >
                   <span className="font-serif text-2xl font-bold tabular-nums text-gray-200">
                     {String(section.number).padStart(2, "0")}
@@ -910,7 +910,7 @@ export function HomePage() {
                       to={digestArticlePath(
                         sectionHeadlines.get(section.number)!
                       )}
-                      className="group mt-3 block border-t border-gray-100 pt-3"
+                      className="group mt-3 block border-t border-transparent pt-3"
                     >
                       <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
                         Top headline
@@ -926,7 +926,7 @@ export function HomePage() {
                     </Link>
                   )}
 
-                  <ul className="mt-3 space-y-1 border-t border-gray-100 pt-3">
+                  <ul className="mt-3 space-y-1 border-t border-transparent pt-3">
                     {section.glance.map((item) => (
                       <li
                         key={item.theme}
@@ -981,7 +981,7 @@ export function HomePage() {
                 <Link
                   key={item.sector}
                   to={`/article/${globalSectorArticleId}`}
-                  className="group block rounded-md border border-gray-200 p-6 transition-colors hover:border-gray-300"
+                  className="group block rounded-md border border-transparent p-6 transition-colors"
                 >
                   <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                     {item.sector}
@@ -1021,7 +1021,7 @@ export function HomePage() {
                     {group.sector}
                   </span>
 
-                  <ul className="mt-3 divide-y divide-[#4a4a4a]">
+                  <ul className="mt-3">
                     {group.headlines.map((headline) => (
                       <li key={headline}>
                         <Link
@@ -1100,7 +1100,7 @@ export function HomePage() {
               {prideTimes30.map((leader) => (
                 <div
                   key={leader.rank}
-                  className="flex items-start gap-5 p-6 border border-gray-200 rounded-md hover:border-gray-300 transition-colors"
+                  className="flex items-start gap-5 p-6 border border-transparent rounded-md transition-colors"
                 >
                   <span className="font-serif text-2xl font-bold text-gray-200 tabular-nums shrink-0 w-8">
                     {String(leader.rank).padStart(2, "0")}
