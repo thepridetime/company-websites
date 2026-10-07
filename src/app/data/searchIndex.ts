@@ -12,6 +12,8 @@
    drifts out of sync. This file is a working starting point.
 ========================================================= */
 
+import { octEditionArticles } from "./octEditionData";
+
 export type SearchItem = {
   id: string;
   title: string;
@@ -194,3 +196,16 @@ export const searchIndex: SearchItem[] = [
     link: "/technology",
   },
 ];
+
+/* Newest edition (Global Industry Edition, 7 October 2026) is searchable
+   too; each result opens its inner article. */
+searchIndex.unshift(
+  ...octEditionArticles.map((article) => ({
+    id: article.id,
+    title: article.title,
+    category: article.industry,
+    excerpt: article.lede,
+    time: article.publishedAt,
+    link: `/article/${article.id}`,
+  }))
+);
