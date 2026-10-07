@@ -415,85 +415,6 @@ export function HomePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
 
-          {/* =================================================
-              OCTOBER 7, 2026 — CURRENT HEADLINES
-          ================================================= */}
-
-          <section className="mb-12 border-b border-gray-300 pb-10">
-            <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b-2 border-black pb-2.5">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-                  {octEditionMeta.edition} · {octEditionMeta.date}
-                </p>
-                <h1 className="mt-1 font-serif text-2xl font-bold leading-tight text-gray-950 md:text-3xl">
-                  {octEditionMeta.title}
-                </h1>
-              </div>
-              <Link
-                to="/business-news"
-                className="text-[9px] font-semibold uppercase tracking-wide text-red-600"
-              >
-                Full Edition <ArrowRight size={9} className="ml-1 inline" />
-              </Link>
-            </div>
-
-            <p className="mb-6 max-w-3xl text-[12px] leading-[1.6] text-gray-500">
-              {octEditionMeta.subtitle}
-            </p>
-
-            <Link
-              to={octEditionArticlePath(octoberLeadStory)}
-              className="group relative block overflow-hidden rounded-lg border border-gray-200 bg-black"
-            >
-              <div className="h-[250px] overflow-hidden md:h-[270px]">
-                <ImageWithFallback
-                  src={octoberLeadStory.image}
-                  alt={octoberLeadStory.title}
-                  className="h-full w-full object-cover opacity-75 transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-400">
-                  {octoberLeadStory.industry} · {octoberLeadStory.location}
-                </span>
-                <h2 className="mt-2 max-w-4xl font-serif text-2xl font-bold leading-[1.1] text-white md:text-3xl">
-                  {octoberLeadStory.title}
-                </h2>
-                <p className="mt-2 max-w-3xl text-[12px] leading-[1.5] text-gray-300 line-clamp-2">
-                  {octoberLeadStory.lede}
-                </p>
-              </div>
-            </Link>
-
-            <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-              {octoberRelatedStories.map((story) => (
-                <Link
-                  key={story.id}
-                  to={octEditionArticlePath(story)}
-                  className="group block"
-                >
-                  <div className="aspect-[16/10] w-full overflow-hidden rounded-md bg-gray-100">
-                    <ImageWithFallback
-                      src={story.image}
-                      alt={story.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="mt-3 block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
-                    {story.industry} · {story.location}
-                  </span>
-                  <h3 className="mt-1.5 font-serif text-xl font-bold leading-[1.2] text-gray-900 transition-colors group-hover:text-red-600">
-                    {story.title}
-                  </h3>
-                  <p className="mt-1.5 text-[12px] leading-[1.55] text-gray-500 line-clamp-2">
-                    {story.lede}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
-
           <details className="mb-12 rounded-md border border-gray-200" open>
             <summary className="cursor-pointer select-none px-4 py-4 text-[11px] font-bold uppercase tracking-[0.16em] text-gray-900">
               More News · Previous Homepage Coverage
@@ -1260,6 +1181,86 @@ export function HomePage() {
           </section>
             </div>
           </details>
+
+          {/* =================================================
+              OCTOBER 7, 2026 — CURRENT HEADLINES
+          ================================================= */}
+
+          <section className="mb-12 border-b border-gray-300 pb-10">
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b-2 border-black pb-2.5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                  {octEditionMeta.edition} · {octEditionMeta.date}
+                </p>
+                <h1 className="mt-1 font-serif text-2xl font-bold leading-tight text-gray-950 md:text-3xl">
+                  {octEditionMeta.title}
+                </h1>
+              </div>
+              <Link
+                to="/business-news"
+                className="text-[9px] font-semibold uppercase tracking-wide text-red-600"
+              >
+                Full Edition <ArrowRight size={9} className="ml-1 inline" />
+              </Link>
+            </div>
+
+            <p className="mb-6 max-w-3xl text-[12px] leading-[1.6] text-gray-500">
+              {octEditionMeta.subtitle}
+            </p>
+
+            <Link
+              to={octEditionArticlePath(octoberLeadStory)}
+              className="group relative block overflow-hidden rounded-lg border border-gray-200 bg-black"
+            >
+              <div className="h-[250px] overflow-hidden md:h-[270px]">
+                <ImageWithFallback
+                  src={octoberLeadStory.image}
+                  alt={octoberLeadStory.title}
+                  className="h-full w-full object-cover opacity-75 transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-400">
+                  {octoberLeadStory.industry} · {octoberLeadStory.location}
+                </span>
+                <h2 className="mt-2 max-w-4xl font-serif text-2xl font-bold leading-[1.1] text-white md:text-3xl">
+                  {octoberLeadStory.title}
+                </h2>
+                <p className="mt-2 max-w-3xl text-[12px] leading-[1.5] text-gray-300 line-clamp-2">
+                  {octoberLeadStory.lede}
+                </p>
+              </div>
+            </Link>
+
+            <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+              {octoberRelatedStories.map((story) => (
+                <Link
+                  key={story.id}
+                  to={octEditionArticlePath(story)}
+                  className="group block"
+                >
+                  <div className="aspect-[16/10] w-full overflow-hidden rounded-md bg-gray-100">
+                    <ImageWithFallback
+                      src={story.image}
+                      alt={story.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <span className="mt-3 block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+                    {story.industry} · {story.location}
+                  </span>
+                  <h3 className="mt-1.5 font-serif text-xl font-bold leading-[1.2] text-gray-900 transition-colors group-hover:text-red-600">
+                    {story.title}
+                  </h3>
+                  <p className="mt-1.5 text-[12px] leading-[1.55] text-gray-500 line-clamp-2">
+                    {story.lede}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+
         </main>
       </div>
 
