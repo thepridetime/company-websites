@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, MapPin, Quote, Share2 } from "lucide-react";
 
@@ -12,14 +12,8 @@ import {
 import {
   getBusinessArticleById,
   getRelatedBusinessArticles,
-  hero as businessHero,
-  headlineNews as businessHeadlineNews,
-  corporateNews as businessCorporateNews,
-  startupNews as businessStartupNews,
   type BusinessArticle,
 } from "../../data/businessNewsData";
-
-import { isOctBusinessArticle } from "../../data/octEditionData";
 
 import {
   getTechnologyArticleById,
@@ -174,6 +168,12 @@ function getSectionPath(section: string) {
     case "Sustainability & ESG":
       return "/sustainability-esg";
 
+    case "Smart Cities":
+      return "/smart-cities";
+
+    case "Supply Chain":
+      return "/supply-chain";
+
     default:
       return "/ceospotlight";
   }
@@ -216,6 +216,12 @@ function getSectionName(section: string) {
 
     case "Markets":
       return "Markets";
+
+    case "Smart Cities":
+      return "Smart Cities";
+
+    case "Supply Chain":
+      return "Supply Chain";
 
     default:
       return "CEO Spotlight";
@@ -633,26 +639,22 @@ function RelatedPosts<
   items,
   getHref,
   plainTitles = false,
-  eyebrow = "Keep exploring",
-  heading = "More ideas to explore",
 }: {
   items: T[];
   getHref: (item: T) => string;
   /* Show the original headline instead of the rewritten blog title. */
   plainTitles?: boolean;
-  eyebrow?: string;
-  heading?: string;
 }) {
   if (!items.length) return null;
 
   return (
     <section className="mt-14 border-t border-slate-200 pt-8">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-        {eyebrow}
+        Keep exploring
       </p>
 
       <h2 className="mt-2 font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-        {heading}
+        More ideas to explore
       </h2>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -692,52 +694,6 @@ function RelatedPosts<
           </Link>
         ))}
       </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   MORE ARTICLES - earlier business news, opened on demand
-   Shown under the newest business stories. Nothing is removed:
-   every earlier business article is listed here.
-========================================================= */
-
-const earlierBusinessArticles: BusinessArticle[] = [
-  businessHero,
-  ...businessHeadlineNews,
-  ...businessCorporateNews,
-  ...businessStartupNews,
-];
-
-function MoreBusinessArticles() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <section className="mt-14 border-t border-slate-200 pt-8 text-center">
-      <button
-        type="button"
-        onClick={() => setOpen((value) => !value)}
-        aria-expanded={open}
-        className={`rounded-full border border-slate-300 px-6 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-800 transition-colors duration-200 hover:border-red-600 hover:text-red-600 ${focusRing}`}
-      >
-        {open ? "Hide older articles" : "More articles"}
-      </button>
-
-      <p className="mt-3 text-xs text-slate-400">
-        {earlierBusinessArticles.length} earlier business stories
-      </p>
-
-      {open && (
-        <div className="text-left">
-          <RelatedPosts
-            items={earlierBusinessArticles}
-            plainTitles
-            eyebrow="Business News"
-            heading="Earlier business coverage"
-            getHref={(item) => `/article/${item.id}`}
-          />
-        </div>
-      )}
     </section>
   );
 }
@@ -1051,10 +1007,6 @@ function DigestBlog({
               plainTitles
               getHref={(item) => `/article/${item.slug}`}
             />
-
-            {isOctBusinessArticle(article.slug) && (
-              <MoreBusinessArticles key={article.slug} />
-            )}
           </main>
 
           <BlogSidebar
