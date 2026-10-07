@@ -11,7 +11,15 @@ import {
 
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Link } from "react-router";
-import CeospotImg from "../../../imports/Ceospot.png";
+import ceoJensen from "../../../imports/ceo-jensen-huang.png";
+import ceoSam from "../../../imports/ceo-sam-altman.png";
+import ceoMukesh from "../../../imports/ceo-mukesh-ambani.png";
+import ceoSundar from "../../../imports/ceo-sundar-pichai.png";
+import ceoSatya from "../../../imports/ceo-satya-nadella.png";
+import ceoElon from "../../../imports/ceo-elon-musk.png";
+import ceoTim from "../../../imports/ceo-tim-cook.png";
+import ceoLarry from "../../../imports/ceo-larry-fink.png";
+import ceoIndra from "../../../imports/ceo-indra-nooyi.png";
 import { PrideTimesAd } from "../AdSenseSlots";
 
 /* ============================================================
@@ -143,7 +151,7 @@ const featuredLeader = {
   name: "Jensen Huang",
   title: "President & CEO, NVIDIA Corporation · United States",
   bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company. His vision of the AI-first computing paradigm has reshaped industries from autonomous vehicles to drug discovery. Under his leadership, NVIDIA's market capitalization has grown into one of the defining stories of the AI infrastructure era.",
-  image: CeospotImg,
+  image: ceoJensen,
 };
 
 /* ============================================================
@@ -159,6 +167,7 @@ const leadersToWatch = [
     bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company.",
     edition: "Q3 2026 — AI Infrastructure Edition",
     initials: "JH",
+    image: ceoJensen,
   },
   {
     rank: 2,
@@ -168,6 +177,7 @@ const leadersToWatch = [
     bio: "Sam Altman leads OpenAI, the company at the forefront of developing artificial general intelligence and bringing it into everyday products.",
     edition: "Q2 2026 — AGI Edition",
     initials: "SA",
+    image: ceoSam,
   },
   {
     rank: 3,
@@ -177,6 +187,7 @@ const leadersToWatch = [
     bio: "Asia's richest man has transformed Reliance Industries from a petrochemicals and refining conglomerate into a diversified force in telecom and retail.",
     edition: "Q1 2026 — Green Energy Edition",
     initials: "MA",
+    image: ceoMukesh,
   },
   {
     rank: 4,
@@ -186,6 +197,7 @@ const leadersToWatch = [
     bio: "Sundar Pichai leads Alphabet through its most transformative period since the founding of Google, weaving AI across search, cloud and devices.",
     edition: "Q2 2026 — Search & AI Edition",
     initials: "SP",
+    image: ceoSundar,
   },
   {
     rank: 5,
@@ -195,6 +207,7 @@ const leadersToWatch = [
     bio: "Satya Nadella's decade at Microsoft's helm has been defined by a relentless cloud-first, AI-first transformation of the company's product line.",
     edition: "Q1 2026 — Cloud & Copilot Edition",
     initials: "SN",
+    image: ceoSatya,
   },
   {
     rank: 6,
@@ -204,6 +217,7 @@ const leadersToWatch = [
     bio: "Elon Musk remains the most consequential entrepreneur of his generation, simultaneously running Tesla, SpaceX and xAI's rapid model development.",
     edition: "Q3 2026 — Space & EV Edition",
     initials: "EM",
+    image: ceoElon,
   },
   {
     rank: 7,
@@ -213,6 +227,7 @@ const leadersToWatch = [
     bio: "Tim Cook has stewarded Apple through its most profitable era, guiding its journey to becoming one of the world's most valuable companies.",
     edition: "Q2 2026 — Apple Intelligence Edition",
     initials: "TC",
+    image: ceoTim,
   },
   {
     rank: 8,
@@ -222,6 +237,7 @@ const leadersToWatch = [
     bio: "Larry Fink manages more money than any other person in history, directing BlackRock's roughly $11.6 trillion in assets under management.",
     edition: "Q1 2026 — Asset Management Edition",
     initials: "LF",
+    image: ceoLarry,
   },
 ];
 
@@ -239,7 +255,7 @@ const ceoInterviews = [
       "The next decade will be defined by how organizations use AI to augment human capability.",
     duration: "35 min read",
     image:
-      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1000&q=85",
+      ceoSatya,
   },
   {
     id: 2,
@@ -250,7 +266,7 @@ const ceoInterviews = [
       "The companies that will win in the next 20 years are those that embed purpose into their P&L.",
     duration: "28 min read",
     image:
-      "https://images.unsplash.com/photo-1551836022-4c4c79ecde51?auto=format&fit=crop&w=1000&q=85",
+      ceoIndra,
   },
   {
     id: 3,
@@ -261,7 +277,7 @@ const ceoInterviews = [
       "We are not a chip company. We are the engine of the AI industrial revolution.",
     duration: "42 min read",
     image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=85",
+      ceoJensen,
   },
 ];
 
@@ -516,7 +532,7 @@ export function CeoSpotlightPage() {
               <ImageWithFallback
                 src={featuredLeader.image}
                 alt={featuredLeader.name}
-                className="h-[300px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] md:h-full md:min-h-[430px]"
+                className="h-[300px] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03] md:h-full md:min-h-[430px]"
               />
 
               <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/10" />
@@ -575,7 +591,7 @@ export function CeoSpotlightPage() {
               <Link
                 to={`/article/ceo-leader-${leader.rank}`}
                 key={leader.rank}
-                className="group flex cursor-pointer flex-col border-b border-gray-200 py-5 first:pt-0 sm:odd:border-r sm:sm:pr-5 lg:nth-[4n+1]:pr-5 lg:nth-[4n+2]:pr-5 lg:nth-[4n+3]:border-r lg:nth-[4n+3]:pr-5 lg:nth-[4n+4]:border-r-0 lg:nth-[4n+4]:pr-0"
+                className="group flex cursor-pointer flex-col border-b border-gray-200 py-5 sm:odd:border-r sm:sm:pr-5 lg:nth-[4n+1]:pr-5 lg:nth-[4n+2]:pr-5 lg:nth-[4n+3]:border-r lg:nth-[4n+3]:pr-5 lg:nth-[4n+4]:border-r-0 lg:nth-[4n+4]:pr-5"
               >
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <span className="font-serif text-3xl text-gray-300 transition-colors group-hover:text-red-600">
@@ -587,10 +603,12 @@ export function CeoSpotlightPage() {
                   </span>
                 </div>
 
-                <div className="mb-4 flex h-[110px] items-center justify-center bg-gradient-to-br from-gray-900 to-gray-700">
-                  <span className="font-serif text-4xl font-bold text-white/90">
-                    {leader.initials}
-                  </span>
+                <div className="mb-4 aspect-[4/5] w-full overflow-hidden bg-gray-100">
+                  <ImageWithFallback
+                    src={leader.image}
+                    alt={leader.name}
+                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
                 </div>
 
                 <h3 className="font-serif text-xl font-bold leading-tight transition-colors group-hover:text-red-600">
@@ -634,7 +652,7 @@ export function CeoSpotlightPage() {
             icon={Quote}
           />
 
-          <div className="grid grid-cols-1 gap-0 border-y border-black lg:grid-cols-[1.35fr_1fr_1fr]">
+          <div className="grid grid-cols-1 gap-0 border-y border-black lg:grid-cols-3">
 
             {ceoInterviews.map((ceo, index) => (
               <Link
@@ -644,13 +662,11 @@ export function CeoSpotlightPage() {
                   index !== 0 ? "lg:border-l lg:border-gray-200" : ""
                 }`}
               >
-                <div className="relative mb-5 overflow-hidden bg-gray-100">
+                <div className="relative mb-5 aspect-square w-full overflow-hidden bg-gray-100">
                   <ImageWithFallback
                     src={ceo.image}
                     alt={ceo.name}
-                    className={`w-full object-cover transition-transform duration-700 group-hover:scale-[1.04] ${
-                      index === 0 ? "h-[270px]" : "h-[190px]"
-                    }`}
+                    className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
                   />
 
                   <span className="absolute left-3 top-3 rounded-sm bg-black px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-white">
