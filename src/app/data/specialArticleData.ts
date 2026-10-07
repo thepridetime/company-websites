@@ -17,6 +17,7 @@ import Smartc4Img from "../../imports/Smartc4.png";
 import SC1Img from "../../imports/SC1.png";
 import SC2Img from "../../imports/SC2.png";
 import SC3Img from "../../imports/SC3.png";
+import { energyArticles as energyNewsArticles } from "./energyNewsData";
 import {
   healthcarePharmaArticles,
   type HealthcarePharmaArticle,
@@ -2335,6 +2336,7 @@ export const specialArticles: SpecialArticle[] = [
   ...worldWatchArticles,
   ...smartCitiesArticles,
   ...supplyChainArticles,
+  ...energyNewsArticles, // cards on the current Energy page (energyNewsData.ts)
   ...energyArticles,
   ...marketArticles,
 ];
