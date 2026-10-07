@@ -13,7 +13,7 @@ import {
   type BusinessArticle,
 } from "../../data/businessNewsData";
 import {
-  octEditionArticles,
+  octBusinessArticles,
   octEditionMeta,
   octEditionGlance,
   octEditionArticlePath,
@@ -55,14 +55,14 @@ function storyImage(story: BusinessArticle, index = 0): string {
 
 /* =========================================================
    PAGE DATA
-   Top block  : every headline of the newest edition
+   Top block  : every business headline of the newest edition
                 (The Pride Times News, Global Industry Edition,
                 7 October 2026 - src/app/data/octEditionData.ts)
    Hidden     : ALL earlier business stories, behind the
                 "More articles" toggle. Nothing is removed.
 ========================================================= */
 
-const newStories: OctEditionArticle[] = octEditionArticles;
+const newStories: OctEditionArticle[] = octBusinessArticles;
 
 const earlierHeadlines: BusinessArticle[] = [hero, ...headlineNews];
 
@@ -309,7 +309,7 @@ export function BusinessNewsPage() {
 
             {/* NUMBERS AT A GLANCE */}
 
-            <div className="bg-white p-7">
+            <div className="bg-white p-7 sm:col-span-2 lg:col-span-1">
               <div className="mb-5 border-b-2 border-black pb-3">
                 <h3 className="text-[12px] font-bold uppercase tracking-[0.16em]">
                   Numbers at a Glance
@@ -335,16 +335,14 @@ export function BusinessNewsPage() {
                 ))}
               </ul>
             </div>
-
-            {/* ADVERTISEMENT */}
-
-            <div className="flex items-center bg-white p-7">
-              <div className="w-full">
-                <AdSpace />
-              </div>
-            </div>
           </div>
         </section>
+
+        {/* ADVERTISEMENT */}
+
+        <div className="mb-20">
+          <AdSpace />
+        </div>
 
 
         {/* =================================================
