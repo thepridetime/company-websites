@@ -932,7 +932,11 @@ function DigestBlog({
       <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-            <span>Global Corporate News Digest</span>
+            <span>
+              {article.tags.includes("Global Industry Edition")
+                ? "The Pride Times News · Global Industry Edition"
+                : "Global Corporate News Digest"}
+            </span>
             <span className="text-slate-300">/</span>
             <Link
               to={digest.sectionPath}
