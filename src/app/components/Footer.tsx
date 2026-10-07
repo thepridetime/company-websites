@@ -69,7 +69,7 @@ const socialLinks = [
   },
   {
     icon: (s: number) => <Youtube size={s} />,
-    href: "https://www.youtube.com/@thepridetime",
+    href: "https://www.youtube.com/@vmpridetimes",
     label: "YouTube",
   },
 ];
