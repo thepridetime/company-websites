@@ -991,10 +991,6 @@ function DigestBlog({
 
             </div>
 
-            <p className="mt-8 border-t border-slate-200 pt-4 text-[11px] leading-5 text-slate-400">
-              {article.editorNote}
-            </p>
-
             <ShareAndBack
               to="/"
               label="Home"
