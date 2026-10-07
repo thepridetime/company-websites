@@ -418,7 +418,7 @@ export function HomePage() {
               {/* LEAD STORY */}
 
               <Link to={digestArticlePath(leadStory)} className="group block min-w-0">
-                <div className={`${IMG_FRAME} relative rounded-lg bg-gray-100`}>
+                <div className="h-[285px] w-full overflow-hidden relative rounded-lg bg-gray-100">
                   <ImageWithFallback
                     src={leadStory.image}
                     alt={leadStory.title}
@@ -430,15 +430,15 @@ export function HomePage() {
                   </span>
                 </div>
 
-                <h1 className="mt-3 font-serif text-2xl md:text-[28px] font-bold leading-[1.12] text-gray-950 group-hover:text-red-600 transition-colors">
+                <h1 className="mt-2 font-serif text-2xl md:text-[28px] font-bold leading-[1.12] text-gray-950 group-hover:text-red-600 transition-colors">
                   {leadStory.title}
                 </h1>
 
-                <p className="text-[12px] text-gray-600 leading-[1.6] mt-2 line-clamp-4">
+                <p className="text-[12px] text-gray-600 leading-[1.5] mt-1.5 line-clamp-4">
                   {leadStory.lede}
                 </p>
 
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-red-600 uppercase tracking-wide mt-3">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-red-600 uppercase tracking-wide mt-2">
                   Read Full Story
                   <ArrowRight size={12} />
                 </span>
