@@ -14,6 +14,7 @@ import {
   type DigestKeyFact,
 } from "./digestArticleData";
 import { maEdition1Articles, type EditionArticle } from "./maEdition1Data";
+import { octEditionArticles, type OctEditionArticle } from "./octEditionData";
 import {
   globalSectorReport,
   globalSectorItems,
@@ -54,7 +55,10 @@ export function articlePath(title: string) {
   return `/article/${articleSlug(title)}`;
 }
 
-function toHomepageArticle(article: DigestArticle | EditionArticle): HomepageArticle {
+function toHomepageArticle(
+  article: DigestArticle | EditionArticle | OctEditionArticle,
+  collection = "Global Corporate News Digest"
+): HomepageArticle {
   return {
     slug: article.id,
     title: article.title,
@@ -65,7 +69,7 @@ function toHomepageArticle(article: DigestArticle | EditionArticle): HomepageArt
     publishedAt: article.publishedAt,
     readTime: article.readTime,
     highlights: article.highlights,
-    tags: [article.section, "Global Corporate News Digest", "The Pride Times"],
+    tags: [article.section, collection, "The Pride Times"],
     editorNote:
       ("editorNote" in article && article.editorNote) ||
       "Sample publication — all companies, people, quotations and figures are fictional and for layout and demonstration purposes only.",
@@ -131,10 +135,16 @@ const globalSectorArticle: HomepageArticle = {
   },
 };
 
-/* Existing September digest first (unchanged), then Edition 1 (M&A),
-   then the Global Sector News Report 2026 article. */
+/* Newest edition first (Global Industry Edition, 7 October 2026), then
+   the existing September digest (unchanged), Edition 1 (M&A), and the
+   Global Sector News Report 2026 article. */
 export const homepageArticles: HomepageArticle[] = [
-  ...[...digestArticles, ...maEdition1Articles].map(toHomepageArticle),
+  ...octEditionArticles.map((article) =>
+    toHomepageArticle(article, "Global Industry Edition")
+  ),
+  ...[...digestArticles, ...maEdition1Articles].map((article) =>
+    toHomepageArticle(article)
+  ),
   globalSectorArticle,
 ];
 
