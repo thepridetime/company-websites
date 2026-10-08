@@ -1,6 +1,5 @@
 const FINNHUB_KEY        = import.meta.env.VITE_FINNHUB_API_KEY;
 const ALPHA_VANTAGE_KEY  = import.meta.env.VITE_ALPHA_VANTAGE_API_KEY;
-const MARKETSTACK_KEY    = import.meta.env.VITE_MARKETSTACK_API_KEY;
 
 // ── 1. FINNHUB ─────────────────────────────────────────────────
 async function finnhubQuote(symbol: string) {
@@ -50,102 +49,6 @@ async function avForex(from: string, to: string) {
   const r = data["Realtime Currency Exchange Rate"];
   if (!r) throw new Error("AV forex no data");
   return parseFloat(r["5. Exchange Rate"]);
-}
-
-// ── 3. MARKETSTACK ─────────────────────────────────────────────
-// EOD (end-of-day) data — this is the free tier's ceiling. Values
-// reflect the PREVIOUS completed trading session's close, not the
-// live intraday price. That's expected behavior, not a bug.
-async function marketstackQuote(symbol: string) {
-  const res = await fetch(
-    `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${symbol}`
-  );
-  if (!res.ok) throw new Error(`Marketstack failed: ${symbol}`);
-  const data = await res.json();
-  const eod = data.data?.[0];
-  if (!eod) throw new Error(`Marketstack no data: ${symbol}`);
-  const changePct = ((eod.close - eod.open) / eod.open) * 100;
-  return {
-    price:     eod.close,
-    changePct,
-    changeAbs: eod.close - eod.open,
-    open:      eod.open,
-    high:      eod.high,
-    low:       eod.low,
-    volume:    eod.volume,
-    date:      eod.date,
-  };
-}
-
-// Preferred path: our own Cloudflare Worker proxy (worker/index.js, route
-// /api/marketstack). It keeps the API key out of the browser bundle and caches
-// the response at the edge, so Marketstack is hit a few times a day no matter
-// how many people visit.
-// Fallback: a direct call using VITE_MARKETSTACK_API_KEY, only useful in plain
-// `vite dev` where the Worker isn't running. Don't set that variable in
-// production.
-async function marketstackBatch(symbols: string[]) {
-  const joined = symbols.join(",");
-
-  try {
-    const res = await fetch(
-      `/api/marketstack?symbols=${encodeURIComponent(joined)}`
-    );
-    const type = res.headers.get("content-type") ?? "";
-    if (res.ok && type.includes("application/json")) {
-      const data = await res.json();
-      return data.data ?? [];
-    }
-  } catch {
-    /* proxy unavailable, try direct below */
-  }
-
-  if (!MARKETSTACK_KEY) throw new Error("Marketstack: proxy unavailable and no local key");
-  const res = await fetch(
-    `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${joined}&limit=${symbols.length}`
-  );
-  if (!res.ok) throw new Error(`Marketstack batch failed (${res.status})`);
-  const data = await res.json();
-  return data.data ?? [];
-}
-
-// EOD data only changes once a day, so cache it hard. localStorage is wrapped in
-// try/catch because browser tracking prevention can block storage access.
-const MS_CACHE_KEY = "ms_eod_v1";
-const MS_TTL_MS = 6 * 60 * 60 * 1000;      // reuse a good result for 6 hours
-const MS_BACKOFF_MS = 30 * 60 * 1000;      // after a failure (e.g. 429), wait 30 min
-let msFailedAt = 0;
-
-function readMsCache(): { at: number; data: any[] } | null {
-  try {
-    const raw = localStorage.getItem(MS_CACHE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-async function marketstackCached(symbols: string[]) {
-  const cached = readMsCache();
-  if (cached && Date.now() - cached.at < MS_TTL_MS) return cached.data;
-
-  // Recently failed (rate-limited?): don't hammer the API. Serve stale data if we have any.
-  if (Date.now() - msFailedAt < MS_BACKOFF_MS) {
-    if (cached) return cached.data;
-    throw new Error("Marketstack: backing off after recent failure");
-  }
-
-  try {
-    const data = await marketstackBatch(symbols);
-    try {
-      localStorage.setItem(MS_CACHE_KEY, JSON.stringify({ at: Date.now(), data }));
-    } catch {}
-    return data;
-  } catch (err) {
-    msFailedAt = Date.now();
-    if (cached) return cached.data; // stale beats fallback
-    throw err;
-  }
 }
 
 // ── STOCK WATCHLIST (Finnhub real-time quotes) ─────────────────
@@ -235,8 +138,6 @@ async function fetchQuotes() {
 
     niftyR, usdInrR,
 
-    mstackR,
-
   ] = await Promise.allSettled([
     finnhubQuote("SPY"),
     finnhubQuote("QQQ"),
@@ -261,8 +162,6 @@ async function fetchQuotes() {
     avQuote("NIFTYBEES.BSE"),
     avForex("USD", "INR"),
 
-    // Marketstack — Indian stocks (EOD only, since Upstox is out)
-    marketstackCached(["RELIANCE.XNSE", "TCS.XNSE", "HDFCBANK.XNSE", "INFY.XNSE"]),
   ]);
 
   // ── US INDICES (Finnhub + ETF scaling) ──────────────────────
@@ -340,32 +239,14 @@ async function fetchQuotes() {
   indianIndices.push({ ...FALLBACK.indianIndices[2], live: false, source: "fallback" }); // NIFTY BANK
   indianIndices.push({ ...FALLBACK.indianIndices[3], live: false, source: "fallback" }); // NIFTY IT
 
-  // ── INDIAN STOCKS (Marketstack EOD — Upstox removed) ────────
-  const indianStockSymbols = [
-    { name: "Reliance",  symbol: "RELIANCE.XNSE" },
-    { name: "TCS",       symbol: "TCS.XNSE" },
-    { name: "HDFC Bank", symbol: "HDFCBANK.XNSE" },
-    { name: "Infosys",   symbol: "INFY.XNSE" },
-  ];
-
-  const mstackData: any[] = mstackR.status === "fulfilled" ? mstackR.value : [];
-
-  const indianStocks: any[] = indianStockSymbols.map(({ name, symbol }, i) => {
-    const ms = mstackData.find((d: any) => d.symbol === symbol);
-    if (ms) {
-      const changePct = ((ms.close - ms.open) / ms.open) * 100;
-      return {
-        name,
-        value:  `₹${Number(ms.close).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`,
-        change: `${changePct.toFixed(2)}%`,
-        pts:    (ms.close - ms.open).toFixed(2),
-        up:     changePct >= 0,
-        live:   false, // EOD data — previous session's close, not live
-        source: "Marketstack (EOD)",
-      };
-    }
-    return { ...FALLBACK.indianStocks[i], live: false, source: "fallback" };
-  });
+  // ── INDIAN STOCKS ────────────────────────────────────────────
+  // No live source wired up (Marketstack removed), so these use fallback values.
+  // Add a new source here later if you want live NSE prices.
+  const indianStocks: any[] = FALLBACK.indianStocks.map((f) => ({
+    ...f,
+    live: false,
+    source: "fallback",
+  }));
 
   // ── CRYPTO (Finnhub) ────────────────────────────────────────
   const cryptoRaw = [
@@ -454,7 +335,7 @@ async function fetchQuotes() {
 // ── PUBLIC API: shared cache + in-flight de-duplication ────────
 // MarketsTicker, HomePage and MarketsPage all call getQuotes(). Without this,
 // every page view fired the full set of API requests several times over, which
-// is what exhausted the Marketstack quota (HTTP 429).
+// used to cause a burst of duplicate API calls and rate-limit (429) errors.
 type Quotes = Awaited<ReturnType<typeof fetchQuotes>>;
 const QUOTES_TTL_MS = 5 * 60 * 1000;
 let quotesCache: { at: number; data: Quotes } | null = null;
