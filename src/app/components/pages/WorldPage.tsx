@@ -1,6 +1,7 @@
 import { TimeAgo } from "../../utils/timeAgo";
-import { Clock, Globe } from "lucide-react";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { Clock } from "lucide-react";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+
 import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
@@ -147,23 +148,6 @@ const latestNews = [
 ];
 
 /* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-const sponsoredEvents = [
-  "Global Finance Summit 2026",
-  "Tech Leaders Forum",
-  "Energy Transition Conference",
-  "AI & Business World",
-];
-
-/* =========================================================
-   ADVERTISEMENT
-========================================================= */
-
-
-
-/* =========================================================
    SECTION HEADER
 ========================================================= */
 
@@ -177,40 +161,6 @@ function SectionHeader({
       <h2 className="font-bold text-[15px] md:text-base text-[#17140F]">
         {title}
       </h2>
-    </div>
-  );
-}
-
-/* =========================================================
-   SPONSORED CONTENT
-========================================================= */
-
-function SponsoredCard() {
-  return (
-    <div className="border border-[#e5dfd0] bg-[#fffdf7] overflow-hidden rounded-[4px]">
-      <div className="flex items-center justify-between px-3 py-1.5">
-        <span className="text-[7px] font-bold uppercase tracking-[0.12em] text-gray-400">
-          Sponsored Content
-        </span>
-
-        <span className="text-[7px] text-gray-400">
-          Ad
-        </span>
-      </div>
-
-      <div className="mx-3 mb-3 h-[155px] md:h-[158px] bg-[#151a39] flex flex-col items-center justify-center text-center">
-        <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-yellow-400">
-          Featured Partner
-        </span>
-
-        <span className="mt-2 text-white text-sm font-semibold">
-          Your Ad Here
-        </span>
-
-        <span className="mt-1 text-[9px] text-gray-300">
-          Reach 2M+ business readers
-        </span>
-      </div>
     </div>
   );
 }
@@ -314,51 +264,6 @@ function NewsCard({
         </div>
       </div>
     </article>
-  );
-}
-
-/* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-function SponsoredEvents() {
-  return (
-    <section className="bg-[#f8f8f8] rounded-[5px] p-4 md:p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="border border-gray-300 rounded-[3px] px-2 py-1 text-[7px] font-bold uppercase tracking-wide text-gray-400">
-          Sponsorship
-        </span>
-
-        <span className="text-[8px] text-gray-400">
-          Presented by our partners
-        </span>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {sponsoredEvents.map((event) => (
-          <div
-            key={event}
-            className="bg-white border border-gray-200 rounded-[4px] min-h-[92px] flex flex-col items-center justify-center text-center px-3 py-3"
-          >
-            <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
-              <Globe
-                size={13}
-                className="text-red-500"
-                strokeWidth={2}
-              />
-            </div>
-
-            <h3 className="text-[9px] font-bold text-gray-800">
-              {event}
-            </h3>
-
-            <span className="text-[7px] text-gray-400 mt-1">
-              Sponsored Event
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -477,7 +382,7 @@ export function WorldPage() {
           {/* RIGHT SIDEBAR */}
 
           <aside>
-            <SponsoredCard />
+            <PrideTimesAd variant="fourth" className="mb-5" />
             <MoreStories />
           </aside>
         </section>
@@ -505,14 +410,6 @@ export function WorldPage() {
 
         <div className="mb-5 md:mb-6">
           <PrideTimesAd variant="second" />
-        </div>
-
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================= */}
-
-        <div className="mb-5 md:mb-6">
-          <SponsoredEvents />
         </div>
 
         {/* =================================================
