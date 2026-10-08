@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { Clock, ChevronRight } from "lucide-react";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+
 import { PrideTimesAd } from "../AdSenseSlots";
 
 const articleIds: Record<string, string> = {
@@ -158,17 +159,6 @@ const latestNews: Story[] = [
 ];
 
 /* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-const sponsoredEvents = [
-  "Global Finance Summit 2026",
-  "Tech Leaders Forum",
-  "Energy Transition Conference",
-  "AI & Business World",
-];
-
-/* =========================================================
    SHARED SECTION HEADER
 ========================================================= */
 
@@ -203,12 +193,6 @@ function SectionHeader({
 }
 
 /* =========================================================
-   ADVERTISEMENT
-========================================================= */
-
-
-
-/* =========================================================
    STORY META
 ========================================================= */
 
@@ -230,38 +214,6 @@ function StoryMeta({
         {time}
       </span>
     </div>
-  );
-}
-
-/* =========================================================
-   SPONSORED CONTENT
-========================================================= */
-
-function SponsoredSidebar() {
-  return (
-    <aside className="w-full border border-[#ece8dc] rounded-md overflow-hidden bg-[#fffdf6] h-fit">
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-[8px] uppercase tracking-[0.12em] text-gray-500 font-semibold">
-          Sponsored Content
-        </span>
-
-        <span className="text-[8px] text-gray-400">Ad</span>
-      </div>
-
-      <div className="mx-3 mb-3 h-[190px] md:h-[210px] bg-[#171b3b] flex items-center justify-center text-white text-center">
-        <div>
-          <p className="text-[8px] font-bold tracking-[0.14em] text-yellow-300">
-            FEATURED PARTNER
-          </p>
-
-          <p className="text-sm font-bold mt-3">Your Ad Here</p>
-
-          <p className="text-[9px] text-gray-300 mt-2">
-            Reach 2M+ business readers
-          </p>
-        </div>
-      </div>
-    </aside>
   );
 }
 
@@ -536,45 +488,6 @@ function LatestNewsCard({ story }: { story: Story }) {
 }
 
 /* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-function SponsorshipSection() {
-  return (
-    <section className="bg-[#f7f7f7] rounded-md p-4 md:p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-[8px] border border-gray-300 rounded-sm px-2 py-1 uppercase tracking-wide text-gray-400 font-bold">
-          Sponsorship
-        </span>
-
-        <span className="text-[9px] text-gray-400">
-          Presented by our partners
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {sponsoredEvents.map((event) => (
-          <div
-            key={event}
-            className="bg-white border border-gray-200 rounded-md h-[92px] flex flex-col items-center justify-center text-center hover:shadow-sm transition-shadow"
-          >
-            <div className="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center mb-2">
-              <span className="text-red-600 text-sm font-bold">◆</span>
-            </div>
-
-            <p className="text-[10px] font-bold text-gray-800">{event}</p>
-
-            <p className="text-[8px] text-gray-400 mt-1">
-              Sponsored Event
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
    NEWSLETTER
 ========================================================= */
 
@@ -713,7 +626,7 @@ export function WhiteHouseWatchPage() {
           {/* RIGHT EDITORIAL RAIL */}
 
           <aside className="border-t-2 lg:border-t-0 lg:border-l border-black lg:pl-5">
-            <SponsoredSidebar />
+            <PrideTimesAd variant="fourth" className="mb-5" />
 
             <MoreStories />
           </aside>
@@ -761,15 +674,7 @@ export function WhiteHouseWatchPage() {
             SECOND AD
         ================================================= */}
 
-        <PrideTimesAd variant="second" />
-
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================= */}
-
-        <section className="mb-8">
-          <SponsorshipSection />
-        </section>
+        <PrideTimesAd variant="second" className="mb-8" />
 
         {/* =================================================
             EDITORIAL STREAM
