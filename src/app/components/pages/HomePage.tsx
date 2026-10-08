@@ -33,6 +33,7 @@ import {
   globalSectorReport,
   globalSectorItems,
   globalSectorAnchorId,
+  globalSectorArticleId,
 } from "../../data/globalSectorReportData";
 import {
   octEditionArticles,
@@ -381,8 +382,8 @@ export function HomePage() {
 
               {/* LEAD STORY */}
 
-              <a
-                href={`#${globalSectorAnchorId}`}
+              <Link
+                to={`/article/${globalSectorArticleId}`}
                 className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
               >
                 <ImageWithFallback
@@ -415,7 +416,7 @@ export function HomePage() {
                     <ArrowRight size={12} />
                   </span>
                 </div>
-              </a>
+              </Link>
 
               {/* MAJOR COVERAGE */}
 
