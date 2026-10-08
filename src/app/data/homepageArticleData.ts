@@ -127,7 +127,7 @@ const globalSectorArticle: HomepageArticle = {
       text: globalSectorReport.subheadline,
       by: globalSectorReport.kicker,
     },
-    quoteAfter: 0,
+    quoteAfter: -1,
     keyFacts: globalSectorReport.stats.map((stat) => ({
       label: stat.label,
       value: stat.value,
