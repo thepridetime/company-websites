@@ -5,7 +5,8 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 import SC1Img from "../../../imports/SC1.png";
 import SC2Img from "../../../imports/SC2.png";
-import SC3Img from "../../../imports/SC3.png";
+import SC3Img from "../../../imports/SC3.png";
+
 import { PrideTimesAd } from "../AdSenseSlots";
 
 /* =========================================================
@@ -158,44 +159,6 @@ const latestNews: Story[] = [
     image: SC1Img,
   },
 ];
-
-/* =========================================================
-   ADVERTISEMENT
-========================================================= */
-
-
-
-/* =========================================================
-   SPONSORED CONTENT
-========================================================= */
-
-function SponsoredContent() {
-  return (
-    <div className="border border-[#eee] rounded-md overflow-hidden">
-      <div className="px-2.5 py-2 flex items-center justify-between bg-[#faf9f4]">
-        <span className="text-[7px] font-bold tracking-[0.12em] uppercase text-[#999]">
-          Sponsored Content
-        </span>
-
-        <span className="text-[7px] text-[#aaa]">Ad</span>
-      </div>
-
-      <div className="h-[145px] md:h-[160px] bg-[#171d3b] flex flex-col items-center justify-center text-center px-3">
-        <p className="text-[8px] font-bold tracking-[0.12em] text-[#e7c829] uppercase">
-          Featured Partner
-        </p>
-
-        <p className="mt-2 text-[12px] font-semibold text-white">
-          Your Ad Here
-        </p>
-
-        <p className="mt-1 text-[8px] text-gray-300">
-          Reach 2M+ business readers
-        </p>
-      </div>
-    </div>
-  );
-}
 
 /* =========================================================
    HERO STORY
@@ -405,54 +368,6 @@ function NewsroomStream() {
 }
 
 /* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-const sponsorships = [
-  "Global Finance Summit 2026",
-  "Tech Leaders Forum",
-  "Energy Transition Conference",
-  "AI & Business World",
-];
-
-function SponsorshipSection() {
-  return (
-    <section className="mt-5 md:mt-7 bg-[#fafafa] border border-[#eee] rounded-md p-3 md:p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-[7px] font-bold uppercase tracking-[0.12em] border border-[#ddd] rounded px-1.5 py-1 text-[#aaa]">
-          Sponsorship
-        </span>
-
-        <span className="text-[8px] text-[#aaa]">
-          Presented by our partners
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-        {sponsorships.map((event) => (
-          <div
-            key={event}
-            className="min-h-[74px] border border-[#e2e2e2] bg-white rounded-md flex flex-col items-center justify-center text-center px-2"
-          >
-            <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
-              <span className="text-[#e31b23] text-xs">✦</span>
-            </div>
-
-            <p className="text-[9px] font-bold text-gray-800">
-              {event}
-            </p>
-
-            <p className="mt-0.5 text-[7px] text-[#aaa]">
-              Sponsored Event
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
    NEWSLETTER
 ========================================================= */
 
@@ -557,9 +472,7 @@ export function SupplyChainPage() {
               />
             ))}
 
-            <div className="mt-5">
-              <SponsoredContent />
-            </div>
+            <PrideTimesAd variant="fourth" className="mt-5" />
 
           </aside>
         </section>
@@ -638,10 +551,12 @@ export function SupplyChainPage() {
         </section>
 
         {/* =================================================
-            SPONSORED EVENTS
+            THIRD ADVERTISEMENT
         ================================================= */}
 
-        <SponsorshipSection />
+        <section className="mt-7 md:mt-9">
+          <PrideTimesAd variant="fifth" />
+        </section>
 
         {/* =================================================
             NEWSLETTER
