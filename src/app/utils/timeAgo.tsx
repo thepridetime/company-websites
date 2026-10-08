@@ -92,6 +92,27 @@ export function toIso(value: string): string | null {
   return off === null ? null : new Date(BUILD_MS - off).toISOString();
 }
 
+/** True only for real ISO timestamps (the only values that carry a true upload time). */
+export function isIsoTimestamp(value: string): boolean {
+  return ISO_DATE.test(value) && !Number.isNaN(new Date(value).getTime());
+}
+
+/** "October 8, 2026 at 12:15 PM GMT+5:30" in the reader's own time zone. */
+export function formatTimestamp(iso: string): string {
+  const d = new Date(iso);
+  const day = d.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const time = d.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "shortOffset",
+  });
+  return `${day} at ${time}`;
+}
+
 /** Reading time estimated from the real article text (~200 words/min). */
 export function estimateReadTime(...parts: (string | undefined)[]): string {
   const words = parts.join(" ").split(/\s+/).filter(Boolean).length;
