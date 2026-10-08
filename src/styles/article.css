@@ -1,0 +1,53 @@
+/* =========================================================
+   INNER ARTICLE TYPOGRAPHY
+   Applies to the reading column (.blog-prose) on article pages.
+========================================================= */
+
+.blog-prose {
+  max-width: 42rem;
+  font-feature-settings: "kern", "liga";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+
+.blog-prose p {
+  text-wrap: pretty;
+}
+
+.blog-prose h2 {
+  text-wrap: balance;
+}
+
+/* Section headings: small red rule above for clear structure */
+.blog-prose section + section {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ---------- Drop cap: large first letter of the article ---------- */
+.blog-prose .drop-cap::first-letter {
+  float: left;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 4.4em;
+  line-height: 0.82;
+  padding: 0.07em 0.12em 0 0;
+  margin-right: 0.02em;
+  color: #dc2626;
+}
+
+@media (max-width: 640px) {
+  .blog-prose .drop-cap::first-letter {
+    font-size: 3.6em;
+  }
+}
+
+/* Keep the drop cap from clashing with the section divider rule */
+.blog-prose section:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
