@@ -99,7 +99,7 @@ function AdSenseUnit({
   }
 
   return (
-    <div className="clear-both my-12 w-full overflow-hidden border-y border-slate-200 bg-white py-5">
+    <div className="clear-both my-6 w-full overflow-hidden border-y border-slate-200 bg-white py-5">
       <div className="mx-auto max-w-3xl px-3 sm:px-5">
         <p className="mb-3 select-none text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
           Advertisement
@@ -364,7 +364,7 @@ function BlogMeta({
   readTime?: string;
 }) {
   return (
-    <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-slate-200 py-4 text-[11px] text-slate-500">
+    <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-slate-200 py-4 text-[11px] text-slate-500">
       <span className="font-semibold text-slate-800">
         By {author}
       </span>
@@ -409,7 +409,7 @@ function BlogBody({
   return (
     <div className="blog-prose mt-2">
       {intro && (
-        <p className="mb-8 border-l-[3px] border-red-600 pl-5 text-xl font-medium leading-8 tracking-[-0.02em] text-slate-800 sm:text-2xl sm:leading-9">
+        <p className="mb-5 border-l-[3px] border-red-600 pl-5 text-lg font-medium leading-7 tracking-[-0.02em] text-slate-800 sm:text-xl sm:leading-8">
           {intro}
         </p>
       )}
@@ -417,18 +417,42 @@ function BlogBody({
       {sections.map((section, index) => (
         <section
           key={`${section.heading}-${index}`}
-          className="mb-8 scroll-mt-24"
+          className="mb-5 scroll-mt-24"
         >
-          <h2 className="max-w-3xl break-words font-serif text-2xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-3xl">
+          <h2 className="max-w-3xl break-words font-serif text-xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-2xl">
             {formatSectionHeading(section.heading, category)}
           </h2>
 
-          <p className="mt-4 break-words text-[16px] leading-[1.85] text-slate-700 sm:text-[17px]">
+          <p
+            className={`mt-2 break-words text-[16px] leading-[1.75] text-slate-700 sm:text-[17px]${
+              index === 0 ? " drop-cap" : ""
+            }`}
+          >
             {section.body}
           </p>
         </section>
       ))}
     </div>
+  );
+}
+
+/* =========================================================
+   INLINE PULL QUOTE (inside the main article)
+========================================================= */
+
+function ArticleQuote({ text, by }: { text: string; by: string }) {
+  return (
+    <blockquote className="my-6 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-4 not-italic">
+      <Quote size={16} className="mb-1.5 text-red-600" />
+
+      <p className="font-serif text-lg font-semibold leading-7 text-slate-900 sm:text-xl sm:leading-8">
+        &ldquo;{text}&rdquo;
+      </p>
+
+      <footer className="mt-2 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+        {by}
+      </footer>
+    </blockquote>
   );
 }
 
@@ -451,16 +475,13 @@ const defaultSideAdSlots: SideAdSlots = {
 };
 
 function BlogSidebar({
-  highlights,
-  category,
-  section,
-  facts,
-  quote,
   adSlots = defaultSideAdSlots,
 }: {
-  highlights: string[];
-  category: string;
-  section: string;
+  /* Kept optional so existing call sites still compile; the sidebar
+     now only holds ads (no coloured info boxes). */
+  highlights?: string[];
+  category?: string;
+  section?: string;
   facts?: { label: string; value: string }[];
   quote?: { text: string; by: string };
   adSlots?: SideAdSlots;
@@ -468,95 +489,6 @@ function BlogSidebar({
   return (
     <aside className="space-y-5">
       <AdSenseUnit slot={adSlots.top} side />
-
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.04)] transition-shadow duration-300 hover:shadow-[0_12px_36px_rgba(15,23,42,0.08)]">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-          In this post
-        </p>
-
-        <h2 className="mt-2 font-serif text-xl font-bold text-slate-950">
-          Key points
-        </h2>
-
-        <ol className="mt-3 divide-y divide-slate-100">
-          {highlights.slice(0, 5).map((point, index) => (
-            <li
-              key={`${index}-${point}`}
-              className="flex items-start gap-3 py-3 text-sm leading-6 text-slate-600"
-            >
-              <span className="shrink-0 font-semibold tabular-nums text-red-600">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-
-              <span className="min-w-0 break-words">{point}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {quote && (
-        <blockquote className="rounded-2xl border-l-4 border-red-600 bg-slate-50 px-5 py-5 not-italic">
-          <Quote size={16} className="mb-2 text-red-600" />
-
-          <p className="font-serif text-lg font-semibold leading-7 text-slate-900">
-            &ldquo;{quote.text}&rdquo;
-          </p>
-
-          <footer className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
-            {quote.by}
-          </footer>
-        </blockquote>
-      )}
-
-      {facts && facts.length > 0 && (
-        <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-            At a glance
-          </p>
-
-          <dl className="mt-3 divide-y divide-slate-200">
-            {facts.map((fact) => (
-              <div key={fact.label} className="min-w-0 py-2.5">
-                <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
-                  {fact.label}
-                </dt>
-
-                <dd className="mt-0.5 break-words text-sm font-semibold text-slate-800">
-                  {fact.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      )}
-
-      <section className="overflow-hidden rounded-2xl bg-[#101827] p-5 text-white shadow-[0_8px_30px_rgba(15,23,42,0.12)]">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
-          The Pride Times
-        </p>
-
-        <p className="mt-3 font-serif text-2xl font-semibold leading-tight">
-          Ideas, context and the bigger picture.
-        </p>
-
-        <div className="mt-5 space-y-3 border-t border-white/15 pt-4 text-sm">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
-              Topic
-            </p>
-
-            <p className="mt-1 break-words">{category}</p>
-          </div>
-
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
-              Coverage
-            </p>
-
-            <p className="mt-1 break-words">{section}</p>
-          </div>
-        </div>
-      </section>
 
       <div className="lg:sticky lg:top-6">
         <AdSenseUnit slot={adSlots.bottom} side />
@@ -581,7 +513,7 @@ function ShareAndBack({
   description: string;
 }) {
   return (
-    <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-5">
+    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-4">
       <Link
         to={to}
         className={`group inline-flex items-center gap-2 rounded-sm text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
@@ -648,7 +580,7 @@ function RelatedPosts<
   if (!items.length) return null;
 
   return (
-    <section className="mt-14 border-t border-slate-200 pt-8">
+    <section className="mt-10 border-t border-slate-200 pt-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
         Keep exploring
       </p>
@@ -738,7 +670,7 @@ function SpecialBlog({
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             <span>The Pride Times Blog</span>
@@ -748,11 +680,11 @@ function SpecialBlog({
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 max-w-4xl break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-3 max-w-4xl break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
-          <p className="mt-6 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+          <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
             {article.dek}
           </p>
 
@@ -763,7 +695,7 @@ function SpecialBlog({
           />
         </header>
 
-        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
           <main className="min-w-0">
             <BlogBody
               sections={article.sections}
@@ -838,7 +770,7 @@ function HomepageBlog({
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             <span>The Pride Times Blog</span>
@@ -848,11 +780,11 @@ function HomepageBlog({
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
-          <p className="mt-6 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+          <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
             {article.dek}
           </p>
 
@@ -863,7 +795,7 @@ function HomepageBlog({
           />
         </header>
 
-        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
           <main className="min-w-0">
             <BlogBody
               sections={article.sections}
@@ -941,7 +873,7 @@ function DigestBlog({
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             <span>
@@ -958,11 +890,11 @@ function DigestBlog({
             </Link>
           </div>
 
-          <h1 className="mt-5 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {article.title}
           </h1>
 
-          <p className="mt-6 max-w-3xl break-words text-lg font-medium leading-8 text-slate-700 sm:text-xl sm:leading-9">
+          <p className="mt-4 max-w-3xl break-words text-lg font-medium leading-8 text-slate-700 sm:text-xl sm:leading-9">
             {digest.lede}
           </p>
 
@@ -978,14 +910,25 @@ function DigestBlog({
           />
         </header>
 
-        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
           <main className="min-w-0">
-            <div className="blog-prose mt-4">
+            <div className="blog-prose mt-2">
               {digest.body.map((paragraph, index) => (
                 <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
-                  <p className="mb-6 break-words text-[16px] leading-[1.9] text-slate-700 sm:text-[17px]">
+                  <p
+                    className={`mb-4 break-words text-[16px] leading-[1.75] text-slate-700 sm:text-[17px]${
+                      index === 0 ? " drop-cap" : ""
+                    }`}
+                  >
                     {paragraph}
                   </p>
+
+                  {digest.quote && index === digest.quoteAfter && (
+                    <ArticleQuote
+                      text={digest.quote.text}
+                      by={digest.quote.by}
+                    />
+                  )}
                 </Fragment>
               ))}
 
@@ -1115,7 +1058,7 @@ function MagazineBlog({
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
         <header className="mx-auto max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             <span>The Pride Times Blog</span>
@@ -1125,12 +1068,12 @@ function MagazineBlog({
             <span>{article.category}</span>
           </div>
 
-          <h1 className="mt-5 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
             {title}
           </h1>
 
           {dek && (
-            <p className="mt-6 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+            <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
               {dek}
             </p>
           )}
@@ -1142,7 +1085,7 @@ function MagazineBlog({
           />
         </header>
 
-        <div className="mx-auto mt-10 grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-14">
+        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
           <main className="min-w-0">
             <BlogBody
               sections={article.sections}
