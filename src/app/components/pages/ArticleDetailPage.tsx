@@ -1,6 +1,12 @@
 import { Fragment, useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, MapPin, Quote, Share2 } from "lucide-react";
+import {
+  TimeAgo,
+  estimateReadTime,
+  formatTimestamp,
+  isIsoTimestamp,
+} from "../../utils/timeAgo";
 
 import {
   getHomepageArticleBySlug,
@@ -354,34 +360,70 @@ function relatedHomepageArticles(
    BLOG META
 ========================================================= */
 
+/* "By A and B" with each name underlined. */
+function Byline({ author }: { author: string }) {
+  const names = author
+    .split(/\s*(?:,|&|\band\b)\s*/i)
+    .map((name) => name.trim())
+    .filter(Boolean);
+
+  return (
+    <p className="text-lg text-slate-900 sm:text-xl">
+      By{" "}
+      {names.map((name, index) => (
+        <span key={`${name}-${index}`}>
+          {index > 0 && (index === names.length - 1 ? " and " : ", ")}
+          <span className="underline decoration-1 underline-offset-4">
+            {name}
+          </span>
+        </span>
+      ))}
+    </p>
+  );
+}
+
+/* Real timestamps show the exact upload time in the reader's time zone.
+   Date-only or relative labels are shown as the data provides them, since
+   no true upload time exists for them. */
+function MetaTime({ value }: { value: string }) {
+  if (isIsoTimestamp(value)) {
+    return <time dateTime={value}>{formatTimestamp(value)}</time>;
+  }
+
+  return <TimeAgo iso={value} />;
+}
+
 function BlogMeta({
   author,
   date,
+  updatedAt,
   readTime,
 }: {
   author: string;
   date: string;
+  /** ISO timestamp of the last edit, e.g. "2026-10-08T08:14:00Z". */
+  updatedAt?: string;
   readTime?: string;
 }) {
   return (
-    <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-slate-200 py-4 text-[11px] text-slate-500">
-      <span className="font-semibold text-slate-800">
-        By {author}
-      </span>
+    <div className="mt-5 space-y-1 border-y border-slate-200 py-4">
+      <Byline author={author} />
 
-      <span className="hidden h-1 w-1 shrink-0 rounded-full bg-red-600 sm:block" />
+      <p className="text-base text-slate-500 sm:text-lg">
+        <MetaTime value={date} />
+      </p>
 
-      <time className="tabular-nums">{date}</time>
+      {updatedAt && updatedAt !== date && (
+        <p className="text-base italic text-slate-500 sm:text-lg">
+          Updated on <MetaTime value={updatedAt} />
+        </p>
+      )}
 
       {readTime && (
-        <>
-          <span className="hidden h-1 w-1 shrink-0 rounded-full bg-slate-300 sm:block" />
-
-          <span className="inline-flex items-center gap-1.5 tabular-nums">
-            <Clock size={12} className="shrink-0" />
-            {readTime}
-          </span>
-        </>
+        <p className="inline-flex items-center gap-1.5 pt-1 text-xs tabular-nums text-slate-400">
+          <Clock size={12} className="shrink-0" />
+          {readTime}
+        </p>
       )}
     </div>
   );
@@ -691,7 +733,11 @@ function SpecialBlog({
           <BlogMeta
             author={article.author}
             date={article.publishedAt}
-            readTime={article.readTime}
+            updatedAt={(article as { updatedAt?: string }).updatedAt}
+            readTime={estimateReadTime(
+              article.dek,
+              ...article.sections.map((x) => x.heading + " " + x.body)
+            )}
           />
         </header>
 
@@ -791,7 +837,11 @@ function HomepageBlog({
           <BlogMeta
             author={article.author}
             date={article.publishedAt}
-            readTime={article.readTime}
+            updatedAt={(article as { updatedAt?: string }).updatedAt}
+            readTime={estimateReadTime(
+              article.dek,
+              ...article.sections.map((x) => x.heading + " " + x.body)
+            )}
           />
         </header>
 
@@ -906,7 +956,11 @@ function DigestBlog({
           <BlogMeta
             author={article.author}
             date={article.publishedAt}
-            readTime={article.readTime}
+            updatedAt={(article as { updatedAt?: string }).updatedAt}
+            readTime={estimateReadTime(
+              article.dek,
+              ...article.sections.map((x) => x.heading + " " + x.body)
+            )}
           />
         </header>
 
@@ -1008,13 +1062,14 @@ function MagazineBlog({
 
   const dateLabel = isBusiness
     ? (article as BusinessArticle).time
-    : formatIsoDate(
-        (article as TechnologyArticle).publishedAt
-      );
+    : (article as TechnologyArticle).publishedAt;
 
-  const readTime = isBusiness
-    ? undefined
-    : (article as TechnologyArticle).readTime;
+  const updatedAt = (article as { updatedAt?: string }).updatedAt;
+
+  const readTime = estimateReadTime(
+    dek,
+    ...article.sections.map((x) => x.heading + " " + x.body)
+  );
 
   const keyFacts = isBusiness
     ? undefined
@@ -1081,6 +1136,7 @@ function MagazineBlog({
           <BlogMeta
             author={article.author}
             date={dateLabel}
+            updatedAt={updatedAt}
             readTime={readTime}
           />
         </header>
