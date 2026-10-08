@@ -1,13 +1,8 @@
 import { Clock } from "lucide-react";
 import { Link } from "react-router";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+
 import { PrideTimesAd } from "../AdSenseSlots";
-
-/* =========================================================
-   ADVERTISEMENT SLOT
-========================================================= */
-
-
 
 /* =========================================================
    DATA
@@ -128,29 +123,6 @@ const latestNews = [
 ];
 
 /* =========================================================
-   SPONSORED EVENTS
-========================================================= */
-
-const sponsoredEvents = [
-  {
-    name: "Finance Summit 2026",
-    tag: "Finance",
-  },
-  {
-    name: "Technology Leaders Forum",
-    tag: "Technology",
-  },
-  {
-    name: "Energy Transition Conference",
-    tag: "Energy",
-  },
-  {
-    name: "Smart Cities World",
-    tag: "Smart Cities",
-  },
-];
-
-/* =========================================================
    MAIN PAGE
 ========================================================= */
 
@@ -224,29 +196,9 @@ export function InnovationPage() {
 
           <aside className="min-w-0">
 
-            {/* Sponsored Advertisement */}
+            {/* Advertisement */}
 
-            <div className="relative bg-[#0b1a30] text-white p-6 mb-6 rounded-[2px] overflow-hidden">
-              <span className="absolute top-2 right-3 text-[10px] text-gray-400 uppercase tracking-wide">
-                Ad
-              </span>
-
-              <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">
-                Sponsored Content
-              </p>
-
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-amber-400 mt-4">
-                Featured Partner
-              </p>
-
-              <p className="font-semibold text-lg mt-1">
-                Your Ad Here
-              </p>
-
-              <p className="text-xs text-gray-400 mt-1">
-                Reach 2M+ business readers
-              </p>
-            </div>
+            <PrideTimesAd variant="fourth" className="mb-6" />
 
             {/* More Stories */}
 
@@ -357,44 +309,7 @@ export function InnovationPage() {
             SECOND ADVERTISEMENT
         ================================================== */}
 
-        <PrideTimesAd variant="second" />
-
-        {/* =================================================
-            SPONSORED EVENTS
-        ================================================== */}
-
-        <section className="bg-gray-50 border border-gray-200 py-6 px-4 mb-12 rounded-[2px]">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-5">
-            <span className="w-fit text-[10px] font-bold uppercase tracking-wide bg-gray-200 text-gray-600 px-2 py-1 rounded-[2px]">
-              Sponsorship
-            </span>
-
-            <span className="text-xs text-gray-500">
-              Presented by our partners
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {sponsoredEvents.map((event) => (
-              <article
-                key={event.name}
-                className="bg-white border border-gray-200 py-6 px-4 text-center hover:border-black transition-colors cursor-pointer"
-              >
-                <div className="w-9 h-9 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-3 font-bold text-sm">
-                  {event.tag[0]}
-                </div>
-
-                <p className="text-sm font-semibold">
-                  {event.name}
-                </p>
-
-                <p className="text-[11px] text-gray-400 mt-1">
-                  Sponsored Event
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
+        <PrideTimesAd variant="second" className="mb-12" />
 
         {/* =================================================
             NEWSLETTER CTA
