@@ -23,43 +23,6 @@ import ceoIndra from "../../../imports/ceo-indra-nooyi.png";
 import { PrideTimesAd } from "../AdSenseSlots";
 
 /* ============================================================
-   AD SLOT
-   Existing advertising presentation retained
-============================================================ */
-
-
-
-/* ============================================================
-   SPONSORED BANNER
-============================================================ */
-
-function SponsoredBanner() {
-  return (
-    <div className="relative mb-10 rounded-[2px] border border-white/10 bg-[#0b1220] px-4 py-7 text-center text-white sm:py-8">
-      <span className="absolute left-3 top-2 text-[9px] uppercase tracking-[0.15em] text-gray-500">
-        Sponsored Content
-      </span>
-
-      <span className="absolute right-3 top-2 text-[9px] uppercase tracking-wide text-gray-500">
-        Ad
-      </span>
-
-      <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-yellow-400">
-        Executive Leadership Program — Partner Content
-      </p>
-
-      <p className="font-serif text-xl font-bold sm:text-2xl">
-        Your Ad Here
-      </p>
-
-      <p className="mt-1 text-xs text-gray-400">
-        Reach 2M+ business readers
-      </p>
-    </div>
-  );
-}
-
-/* ============================================================
    NEWSLETTER CTA
 ============================================================ */
 
@@ -636,10 +599,10 @@ export function CeoSpotlightPage() {
         </section>
 
         {/* ====================================================
-            SPONSORED CONTENT
+            ADVERTISEMENT
         ==================================================== */}
 
-        <SponsoredBanner />
+        <PrideTimesAd variant="second" className="mb-10" />
 
         {/* ====================================================
             INTERVIEW DESK
