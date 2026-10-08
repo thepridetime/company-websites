@@ -13,12 +13,16 @@ async function finnhubQuote(symbol: string) {
   return d;
 }
 
-async function finnhubForex(base: string) {
+// NOTE: Finnhub's /forex/rates endpoint is premium-only (returns 403 on the
+// free plan), so forex now comes from Frankfurter: free, no API key, CORS-enabled.
+async function fxRates(): Promise<{ INR?: number; EUR?: number; GBP?: number }> {
   const res = await fetch(
-    `https://finnhub.io/api/v1/forex/rates?base=${base}&token=${FINNHUB_KEY}`
+    "https://api.frankfurter.dev/v1/latest?base=USD&symbols=INR,EUR,GBP"
   );
-  if (!res.ok) throw new Error(`Finnhub forex failed`);
-  return res.json();
+  if (!res.ok) throw new Error("FX rates failed");
+  const data = await res.json();
+  if (!data?.rates) throw new Error("FX rates: no data");
+  return data.rates;
 }
 
 // ── 2. ALPHA VANTAGE ───────────────────────────────────────────
@@ -73,14 +77,75 @@ async function marketstackQuote(symbol: string) {
   };
 }
 
+// Preferred path: our own Cloudflare Worker proxy (worker/index.js, route
+// /api/marketstack). It keeps the API key out of the browser bundle and caches
+// the response at the edge, so Marketstack is hit a few times a day no matter
+// how many people visit.
+// Fallback: a direct call using VITE_MARKETSTACK_API_KEY, only useful in plain
+// `vite dev` where the Worker isn't running. Don't set that variable in
+// production.
 async function marketstackBatch(symbols: string[]) {
   const joined = symbols.join(",");
+
+  try {
+    const res = await fetch(
+      `/api/marketstack?symbols=${encodeURIComponent(joined)}`
+    );
+    const type = res.headers.get("content-type") ?? "";
+    if (res.ok && type.includes("application/json")) {
+      const data = await res.json();
+      return data.data ?? [];
+    }
+  } catch {
+    /* proxy unavailable, try direct below */
+  }
+
+  if (!MARKETSTACK_KEY) throw new Error("Marketstack: proxy unavailable and no local key");
   const res = await fetch(
     `https://api.marketstack.com/v1/eod/latest?access_key=${MARKETSTACK_KEY}&symbols=${joined}&limit=${symbols.length}`
   );
-  if (!res.ok) throw new Error(`Marketstack batch failed`);
+  if (!res.ok) throw new Error(`Marketstack batch failed (${res.status})`);
   const data = await res.json();
   return data.data ?? [];
+}
+
+// EOD data only changes once a day, so cache it hard. localStorage is wrapped in
+// try/catch because browser tracking prevention can block storage access.
+const MS_CACHE_KEY = "ms_eod_v1";
+const MS_TTL_MS = 6 * 60 * 60 * 1000;      // reuse a good result for 6 hours
+const MS_BACKOFF_MS = 30 * 60 * 1000;      // after a failure (e.g. 429), wait 30 min
+let msFailedAt = 0;
+
+function readMsCache(): { at: number; data: any[] } | null {
+  try {
+    const raw = localStorage.getItem(MS_CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function marketstackCached(symbols: string[]) {
+  const cached = readMsCache();
+  if (cached && Date.now() - cached.at < MS_TTL_MS) return cached.data;
+
+  // Recently failed (rate-limited?): don't hammer the API. Serve stale data if we have any.
+  if (Date.now() - msFailedAt < MS_BACKOFF_MS) {
+    if (cached) return cached.data;
+    throw new Error("Marketstack: backing off after recent failure");
+  }
+
+  try {
+    const data = await marketstackBatch(symbols);
+    try {
+      localStorage.setItem(MS_CACHE_KEY, JSON.stringify({ at: Date.now(), data }));
+    } catch {}
+    return data;
+  } catch (err) {
+    msFailedAt = Date.now();
+    if (cached) return cached.data; // stale beats fallback
+    throw err;
+  }
 }
 
 // ── STOCK WATCHLIST (Finnhub real-time quotes) ─────────────────
@@ -158,8 +223,8 @@ const FALLBACK = {
   ],
 };
 
-// ── MAIN EXPORT ────────────────────────────────────────────────
-export async function getQuotes() {
+// ── MAIN FETCH (not exported: use getQuotes below) ─────────────
+async function fetchQuotes() {
 
   const [
     spyR, qqqR, diaR, iwmR,
@@ -180,7 +245,7 @@ export async function getQuotes() {
     finnhubQuote("BINANCE:BTCUSDT"),
     finnhubQuote("BINANCE:ETHUSDT"),
     finnhubQuote("BINANCE:SOLUSDT"),
-    finnhubForex("USD"),
+    fxRates(),
     finnhubQuote("GLD"),
     finnhubQuote("USO"),
 
@@ -197,7 +262,7 @@ export async function getQuotes() {
     avForex("USD", "INR"),
 
     // Marketstack — Indian stocks (EOD only, since Upstox is out)
-    marketstackBatch(["RELIANCE.XNSE", "TCS.XNSE", "HDFCBANK.XNSE", "INFY.XNSE"]),
+    marketstackCached(["RELIANCE.XNSE", "TCS.XNSE", "HDFCBANK.XNSE", "INFY.XNSE"]),
   ]);
 
   // ── US INDICES (Finnhub + ETF scaling) ──────────────────────
@@ -324,26 +389,23 @@ export async function getQuotes() {
     return { ...fb, live: false, source: "fallback" };
   });
 
-  // ── FOREX (Alpha Vantage primary, Finnhub backup) ───────────
+  // ── FOREX (USD/INR: Alpha Vantage, then Frankfurter; EUR & GBP: Frankfurter) ──
   const forex: any[] = [];
+  const fx = forexR.status === "fulfilled" ? forexR.value : null;
 
   if (usdInrR.status === "fulfilled") {
     forex.push({ pair: "USD/INR", value: usdInrR.value.toFixed(2), change: "—", up: true, live: true, source: "Alpha Vantage" });
-  } else if (forexR.status === "fulfilled") {
-    const inr = forexR.value?.quote?.INR;
-    if (inr) forex.push({ pair: "USD/INR", value: Number(inr).toFixed(2), change: "—", up: true, live: true, source: "Finnhub" });
-    else forex.push({ ...FALLBACK.forex[0], live: false, source: "fallback" });
+  } else if (fx?.INR) {
+    forex.push({ pair: "USD/INR", value: Number(fx.INR).toFixed(2), change: "—", up: true, live: true, source: "Frankfurter" });
   } else {
     forex.push({ ...FALLBACK.forex[0], live: false, source: "fallback" });
   }
 
-  if (forexR.status === "fulfilled") {
-    const q = forexR.value?.quote;
-    if (q?.EUR) forex.push({ pair: "EUR/USD", value: (1 / Number(q.EUR)).toFixed(4), change: "—", up: true, live: true, source: "Finnhub" });
-    if (q?.GBP) forex.push({ pair: "GBP/USD", value: (1 / Number(q.GBP)).toFixed(4), change: "—", up: true, live: true, source: "Finnhub" });
-  } else {
-    forex.push(...FALLBACK.forex.slice(1).map(f => ({ ...f, live: false, source: "fallback" })));
-  }
+  if (fx?.EUR) forex.push({ pair: "EUR/USD", value: (1 / Number(fx.EUR)).toFixed(4), change: "—", up: true, live: true, source: "Frankfurter" });
+  else forex.push({ ...FALLBACK.forex[1], live: false, source: "fallback" });
+
+  if (fx?.GBP) forex.push({ pair: "GBP/USD", value: (1 / Number(fx.GBP)).toFixed(4), change: "—", up: true, live: true, source: "Frankfurter" });
+  else forex.push({ ...FALLBACK.forex[2], live: false, source: "fallback" });
 
   // ── COMMODITIES (Finnhub ETF proxies + fallback) ────────────
   const commodities: any[] = [];
@@ -387,4 +449,31 @@ export async function getQuotes() {
     commodities,
     bonds: [],
   };
+}
+
+// ── PUBLIC API: shared cache + in-flight de-duplication ────────
+// MarketsTicker, HomePage and MarketsPage all call getQuotes(). Without this,
+// every page view fired the full set of API requests several times over, which
+// is what exhausted the Marketstack quota (HTTP 429).
+type Quotes = Awaited<ReturnType<typeof fetchQuotes>>;
+const QUOTES_TTL_MS = 5 * 60 * 1000;
+let quotesCache: { at: number; data: Quotes } | null = null;
+let quotesInflight: Promise<Quotes> | null = null;
+
+export function getQuotes(): Promise<Quotes> {
+  if (quotesCache && Date.now() - quotesCache.at < QUOTES_TTL_MS) {
+    return Promise.resolve(quotesCache.data);
+  }
+  if (quotesInflight) return quotesInflight;
+
+  quotesInflight = fetchQuotes()
+    .then((data) => {
+      quotesCache = { at: Date.now(), data };
+      return data;
+    })
+    .finally(() => {
+      quotesInflight = null;
+    });
+
+  return quotesInflight;
 }
