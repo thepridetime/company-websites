@@ -16,7 +16,6 @@ import {
   digestArticles,
   digestArticlePath,
   digestSections,
-  regionalSnapshot,
   type DigestArticle,
 } from "../../data/digestArticleData";
 import {
@@ -1050,50 +1049,6 @@ export function HomePage() {
                 </div>
               ))}
             </div>
-          </section>
-
-          {/* =================================================
-              REGIONAL SNAPSHOT (illustrative)
-          ================================================= */}
-
-          <section className="mb-12">
-            <SectionHeader title="Regional Snapshot (Illustrative)" />
-
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[520px] text-left text-[11px]">
-                <thead>
-                  <tr className="border-b border-gray-300 text-[9px] uppercase tracking-[0.14em] text-gray-500">
-                    <th className="py-2 pr-4 font-bold">Region</th>
-                    <th className="py-2 pr-4 font-bold">Deal value (US$ bn)</th>
-                    <th className="py-2 pr-4 font-bold">Earnings growth</th>
-                    <th className="py-2 font-bold">Hiring outlook</th>
-                  </tr>
-                </thead>
-
-                <tbody className="divide-y divide-gray-100">
-                  {regionalSnapshot.map((row) => (
-                    <tr key={row.region}>
-                      <td className="py-2.5 pr-4 font-semibold text-gray-900">
-                        {row.region}
-                      </td>
-                      <td className="py-2.5 pr-4 tabular-nums text-gray-700">
-                        {row.dealValue}
-                      </td>
-                      <td className="py-2.5 pr-4 tabular-nums text-gray-700">
-                        {row.earningsGrowth}
-                      </td>
-                      <td className="py-2.5 text-gray-700">{row.hiring}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <p className="mt-3 text-[9px] leading-[1.5] text-gray-400">
-              Sample publication — all companies, people, quotations and
-              figures are fictional and for layout and demonstration purposes
-              only.
-            </p>
           </section>
 
           {/* =================================================
