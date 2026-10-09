@@ -1,34 +1,25 @@
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router";
 import {
   TrendingUp,
   TrendingDown,
   ChevronLeft,
   ChevronRight,
+  ArrowRight,
+  Clock,
+  MapPin,
 } from "lucide-react";
+
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { getQuotes } from "../../../services/marketApi";
-
 import { PrideTimesAd } from "../AdSenseSlots";
-import { specialArticles } from "../../data/specialArticleData";
-
-// Markets articles are maintained in the shared specialArticleData.ts file.
-const marketArticles = specialArticles.filter(
-  (article) => article.section === "Markets"
-);
-
-// The two lead stories shown as the page headlines (order = display order).
-const HEADLINE_IDS = [
-  "market-india-hurun-unicorn-2026",
-  "market-zerodha-unicorn",
-];
-
-const headlineArticles = HEADLINE_IDS.map((id) =>
-  marketArticles.find((article) => article.id === id)
-).filter((article): article is (typeof marketArticles)[number] => Boolean(article));
-
-const otherMarketArticles = marketArticles.filter(
-  (article) => !HEADLINE_IDS.includes(article.id)
-);
+import {
+  octEditionArticles,
+  octEditionGlance,
+  octEditionMeta,
+  octEditionArticlePath,
+  type OctEditionArticle,
+} from "../../data/octEditionData";
 
 interface TickerCard {
   symbol: string;
@@ -431,407 +422,658 @@ export function MarketsTicker() {
 }
 
 /* =========================================================
-   MARKETS PAGE
-   Data source: Global Corporate News Digest (Oct 2026)
-   — "Market Snapshot" + "1 Markets & Finance" section only.
+   MARKETS NEWS — SOURCE
+   Every story on this page comes from
+   src/app/data/octEditionData.ts (Global Industry Edition).
+   Only the industries listed below count as Markets news.
+   Add an industry name here to pull more stories in; any new
+   article added to octEditionData.ts with a matching
+   `industry` shows up automatically.
 ========================================================= */
 
-type MarketTab =
-  | "Overview"
-  | "Regional Snapshot"
-  | "Market Themes"
-  | "Market Stories";
-
-const tabs: MarketTab[] = [
-  "Overview",
-  "Regional Snapshot",
-  "Market Themes",
-  "Market Stories",
+const MARKET_INDUSTRIES = [
+  "Global Economy & Finance",
+  "Energy",
+  "AI & Cloud Infrastructure",
+  "Corporate",
 ];
 
-/* ---------- Market Snapshot (Illustrative) ---------- */
+const marketStories: OctEditionArticle[] = octEditionArticles.filter(
+  (article) => MARKET_INDUSTRIES.includes(article.industry)
+);
 
-interface RegionRow {
-  region: string;
-  dealValue: number; // US$ bn
-  earningsGrowth: number; // %
-  hiringOutlook: "Mixed" | "Stable";
+/* Headline figures from the edition that relate to markets
+   (growth, inflation, oil, AI capex and earnings). */
+const marketGlance = octEditionGlance.filter((item) =>
+  /growth|inflation|oil|hyperscaler|nvidia/i.test(item.indicator)
+);
+
+/* =========================================================
+   LAYOUT SLOTS (same structure as the homepage)
+========================================================= */
+
+const leadStory: OctEditionArticle | undefined = marketStories[0];
+const majorStories = marketStories.slice(1, 3);
+const editorsPick: OctEditionArticle | undefined = marketStories[3];
+
+const featuredIds = new Set(
+  [leadStory, ...majorStories, editorsPick]
+    .filter((article): article is OctEditionArticle => Boolean(article))
+    .map((article) => article.id)
+);
+
+const sidebarStories = marketStories
+  .filter((article) => !featuredIds.has(article.id))
+  .slice(0, 6);
+
+const industryNames = Array.from(
+  new Set(marketStories.map((article) => article.industry))
+);
+const latestNewsTabs = ["All", ...industryNames];
+
+const PAGE_SIZE = 8;
+
+/* =========================================================
+   TYPES
+========================================================= */
+
+type MarketItem = {
+  symbol: string;
+  value: string | number;
+  change: string;
+  up: boolean;
+};
+
+/* =========================================================
+   SMALL COMPONENTS
+========================================================= */
+
+function ChangeChip({ change, up }: { change: string; up: boolean }) {
+  return (
+    <span
+      className={`text-[10px] font-semibold tabular-nums flex items-center gap-1 ${
+        up ? "text-green-600" : "text-red-600"
+      }`}
+    >
+      {up ? (
+        <TrendingUp size={10} strokeWidth={2.25} />
+      ) : (
+        <TrendingDown size={10} strokeWidth={2.25} />
+      )}
+      {change}
+    </span>
+  );
 }
 
-const regionalSnapshot: RegionRow[] = [
-  { region: "North America", dealValue: 21.4, earningsGrowth: 10.3, hiringOutlook: "Mixed" },
-  { region: "Europe", dealValue: 48.5, earningsGrowth: 13.8, hiringOutlook: "Mixed" },
-  { region: "Asia-Pacific", dealValue: 4.4, earningsGrowth: 3.6, hiringOutlook: "Stable" },
-  { region: "Latin America", dealValue: 38.5, earningsGrowth: 17.7, hiringOutlook: "Mixed" },
-  { region: "Middle East & Africa", dealValue: 15.7, earningsGrowth: 7.8, hiringOutlook: "Stable" },
-];
+function SectionHeader({
+  title,
+  link,
+  linkText = "View All",
+}: {
+  title: string;
+  link?: string;
+  linkText?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+        {title}
+      </h2>
 
-/* ---------- Markets & Finance — Section at a glance ---------- */
-
-interface ThemeRow {
-  theme: string;
-  momentum: string;
-  outlook: "Neutral" | "Positive";
+      {link && (
+        <Link
+          to={link}
+          className="text-[9px] font-semibold text-red-600 flex items-center gap-1"
+        >
+          {linkText}
+          <ArrowRight size={9} />
+        </Link>
+      )}
+    </div>
+  );
 }
 
-const marketThemes: ThemeRow[] = [
-  { theme: "Capital markets", momentum: "Building", outlook: "Neutral" },
-  { theme: "Credit conditions", momentum: "Moderate", outlook: "Neutral" },
-  { theme: "Treasury yields", momentum: "Uneven", outlook: "Neutral" },
-  { theme: "Equity valuations", momentum: "Moderate", outlook: "Positive" },
-];
-
-/* ---------- Markets & Finance — Stories ----------
-   Cards come from src/app/data/specialArticleData.ts (section "Markets")
-   and open the full post at /article/:id. */
-
-const maxDealValue = Math.max(...regionalSnapshot.map((r) => r.dealValue));
+/* =========================================================
+   MARKETS PAGE
+========================================================= */
 
 export function MarketsPage() {
-  // Active tab lives in the URL (?tab=Market Stories) so menu links,
-  // the tab bar, the back button and shared links all stay in sync.
-  const [searchParams, setSearchParams] = useSearchParams();
-  const tabParam = searchParams.get("tab") as MarketTab | null;
-  const activeTab: MarketTab =
-    tabParam && tabs.includes(tabParam) ? tabParam : "Overview";
+  const [activeMarketTab, setActiveMarketTab] = useState<"Indices" | "Crypto">(
+    "Indices"
+  );
+  const [activeNewsTab, setActiveNewsTab] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const selectTab = (tab: MarketTab) =>
-    setSearchParams(tab === "Overview" ? {} : { tab });
+  const [marketSnapshotData, setMarketSnapshotData] = useState<
+    Record<string, MarketItem[]>
+  >({
+    Indices: [],
+    Crypto: [],
+  });
 
-  const hiringBadge: Record<RegionRow["hiringOutlook"], string> = {
-    Mixed: "bg-amber-50 text-amber-700",
-    Stable: "bg-emerald-50 text-emerald-700",
+  /* ---------- MARKET DATA ---------- */
+
+  useEffect(() => {
+    const loadMarketData = async () => {
+      try {
+        const data = await getQuotes();
+
+        setMarketSnapshotData({
+          Indices: data.indices.map((item: any) => ({
+            symbol: item.name,
+            value: item.value,
+            change: item.change,
+            up: item.up,
+          })),
+          Crypto: data.crypto.map((item: any) => ({
+            symbol: item.name,
+            value: item.value,
+            change: item.change,
+            up: item.up,
+          })),
+        });
+      } catch (error) {
+        console.error("Market API Error:", error);
+      }
+    };
+
+    loadMarketData();
+  }, []);
+
+  /* ---------- LATEST NEWS FILTERING ---------- */
+
+  const filteredStories = useMemo(
+    () =>
+      activeNewsTab === "All"
+        ? marketStories
+        : marketStories.filter((article) => article.industry === activeNewsTab),
+    [activeNewsTab]
+  );
+
+  const latestStories =
+    activeNewsTab === "All"
+      ? filteredStories.slice(0, visibleCount)
+      : filteredStories;
+
+  const hasMore =
+    activeNewsTab === "All" && visibleCount < filteredStories.length;
+
+  const selectTab = (tab: string) => {
+    setActiveNewsTab(tab);
+    setVisibleCount(PAGE_SIZE);
   };
 
-  const outlookBadge: Record<ThemeRow["outlook"], string> = {
-    Neutral: "bg-gray-100 text-gray-600",
-    Positive: "bg-emerald-50 text-emerald-700",
-  };
+  /* ---------- EMPTY STATE ---------- */
 
-  const showSnapshot =
-    activeTab === "Overview" || activeTab === "Regional Snapshot";
-  const showThemes =
-    activeTab === "Overview" || activeTab === "Market Themes";
-  const showStories =
-    activeTab === "Overview" || activeTab === "Market Stories";
-  const showHeadlines =
-    headlineArticles.length > 0 &&
-    (activeTab === "Overview" || activeTab === "Market Stories");
-
-  return (
-    <main className="min-h-screen bg-white text-[#17140F]">
-      <div className="pt-container">
-        {/* Red editorial rule */}
-        <div className="border-t-[3px] border-[#d71920] pt-4 sm:pt-5" />
-
-        {/* Page heading */}
-        <header className="pb-5">
-          <h1 className="font-serif text-[30px] font-bold leading-tight sm:text-[36px]">
-            Markets Dashboard
-          </h1>
-          <p className="mt-1 text-[13px] text-[#777]">
-            Capital flows, earnings, rate expectations and the deals that moved global markets.
-          </p>
-        </header>
-
-        {/* Tabs */}
-        <nav
-          aria-label="Markets sections"
-          className="border-b border-[#dedede]"
-        >
-          <div className="flex min-w-0 gap-7 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => selectTab(tab)}
-                className={`relative whitespace-nowrap pb-3 pt-1 text-[12px] font-semibold transition ${
-                  activeTab === tab
-                    ? "text-[#d71920]"
-                    : "text-[#666] hover:text-black"
-                }`}
-              >
-                {tab}
-                {activeTab === tab && (
-                  <span className="absolute inset-x-0 bottom-[-1px] h-[2px] bg-[#d71920]" />
-                )}
-              </button>
-            ))}
-          </div>
-        </nav>
-
-        {/* Dashboard content */}
-        <div className="pb-16 pt-5 sm:pt-6">
-          {/* ---------------- Top Headlines ---------------- */}
-          {showHeadlines && (
-            <section
-              aria-labelledby="market-headlines-heading"
-              className="mb-7 sm:mb-8"
-            >
-              <h2
-                id="market-headlines-heading"
-                className="mb-4 font-serif text-[18px] font-bold"
-              >
-                Top Headlines
-              </h2>
-
-              <div className="grid gap-5 md:grid-cols-2">
-                {headlineArticles.map((story, index) => (
-                  <Link
-                    key={story.id}
-                    to={`/article/${story.id}`}
-                    className="group flex flex-col border-t-[3px] border-[#d71920] bg-[#faf9f7] p-5 transition-shadow duration-200 hover:shadow-md"
-                  >
-                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#d71920]">
-                      <span>{index === 0 ? "Lead Story" : "Top Story"}</span>
-                      <span aria-hidden="true" className="text-[#bbb]">|</span>
-                      <span>{story.category}</span>
-                    </div>
-
-                    <h3 className="mt-3 font-serif text-[22px] font-bold leading-snug transition-colors duration-200 group-hover:text-[#d71920] sm:text-[24px]">
-                      {story.title}
-                    </h3>
-
-                    <p className="mt-3 text-[13px] leading-relaxed text-[#444]">
-                      {story.dek}
-                    </p>
-
-                    <ul className="mt-4 list-disc space-y-1.5 pl-4 text-[12px] leading-relaxed text-[#555]">
-                      {story.highlights.slice(0, 3).map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-
-                    <p className="mt-4 text-[10px] text-[#999]">
-                      By {story.author} &nbsp;·&nbsp; {story.publishedAt} &nbsp;·&nbsp; {story.readTime}
-                    </p>
-
-                    <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#d71920]">
-                      Read the full story
-                      <span
-                        aria-hidden="true"
-                        className="transition-transform duration-200 group-hover:translate-x-0.5"
-                      >
-                        →
-                      </span>
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* ---------------- Regional Snapshot ---------------- */}
-          {showSnapshot && (
-            <section aria-labelledby="regional-snapshot-heading">
-              <h2
-                id="regional-snapshot-heading"
-                className="font-serif text-[18px] font-bold"
-              >
-                Market Snapshot
-              </h2>
-              <p className="mb-4 mt-1 text-[11px] text-[#777]">
-                Illustrative regional indicators.
-              </p>
-
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[620px] border-collapse text-left">
-                  <thead>
-                    <tr className="border-b border-black">
-                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Region
-                      </th>
-                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Deal Value (US$ bn)
-                      </th>
-                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Earnings Growth
-                      </th>
-                      <th className="py-2 text-[10px] font-bold uppercase">
-                        Hiring Outlook
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {regionalSnapshot.map((row) => (
-                      <tr
-                        key={row.region}
-                        className="border-b border-[#ececec] last:border-b-0"
-                      >
-                        <td className="py-2.5 pr-4 text-[11px] font-semibold">
-                          {row.region}
-                        </td>
-                        <td className="py-2.5 pr-4 text-[11px]">
-                          <div className="flex items-center gap-3">
-                            <span className="w-10 font-mono font-bold text-[#555]">
-                              {row.dealValue.toFixed(1)}
-                            </span>
-                            <span className="h-1.5 w-28 overflow-hidden rounded-full bg-[#f0f0f0]">
-                              <span
-                                className="block h-full rounded-full bg-[#d71920]"
-                                style={{
-                                  width: `${(row.dealValue / maxDealValue) * 100}%`,
-                                }}
-                              />
-                            </span>
-                          </div>
-                        </td>
-                        <td className="py-2.5 pr-4 text-[11px] font-semibold text-emerald-600">
-                          ▲ {row.earningsGrowth.toFixed(1)}%
-                        </td>
-                        <td className="py-2.5 text-[11px]">
-                          <span
-                            className={`inline-flex rounded-[3px] px-2 py-0.5 text-[10px] font-bold ${hiringBadge[row.hiringOutlook]}`}
-                          >
-                            {row.hiringOutlook}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          )}
-
-          {/* ---------------- Market Themes ---------------- */}
-          {showThemes && (
-            <section
-              aria-labelledby="market-themes-heading"
-              className={showSnapshot ? "mt-7 sm:mt-8" : ""}
-            >
-              <h2
-                id="market-themes-heading"
-                className="font-serif text-[18px] font-bold"
-              >
-                Markets &amp; Finance: Section at a Glance
-              </h2>
-              <p className="mb-4 mt-1 text-[11px] text-[#777]">
-                Capital flows, earnings, rate expectations and the deals that moved global markets.
-              </p>
-
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[520px] border-collapse text-left">
-                  <thead>
-                    <tr className="border-b border-black">
-                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Theme
-                      </th>
-                      <th className="py-2 pr-4 text-[10px] font-bold uppercase">
-                        Momentum
-                      </th>
-                      <th className="py-2 text-[10px] font-bold uppercase">
-                        Outlook
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {marketThemes.map((row) => (
-                      <tr
-                        key={row.theme}
-                        className="border-b border-[#ececec] last:border-b-0"
-                      >
-                        <td className="py-2.5 pr-4 text-[11px] font-semibold">
-                          {row.theme}
-                        </td>
-                        <td className="py-2.5 pr-4 text-[11px] text-[#555]">
-                          {row.momentum}
-                        </td>
-                        <td className="py-2.5 text-[11px]">
-                          <span
-                            className={`inline-flex rounded-[3px] px-2 py-0.5 text-[10px] font-bold ${outlookBadge[row.outlook]}`}
-                          >
-                            {row.outlook}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          )}
-
-          {/* ---------------- Market Stories ---------------- */}
-          {showStories && (
-            <section
-              aria-labelledby="market-stories-heading"
-              className={
-                showSnapshot || showThemes ? "mt-7 sm:mt-8" : ""
-              }
-            >
-              <h2
-                id="market-stories-heading"
-                className="mb-4 font-serif text-[18px] font-bold"
-              >
-                More Markets &amp; Finance Stories
-              </h2>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                {otherMarketArticles.map((story) => (
-                  <Link
-                    key={story.id}
-                    to={`/article/${story.id}`}
-                    className="group flex flex-col rounded-[7px] border border-[#dedede] bg-white p-4 transition-[border-color,box-shadow] duration-200 hover:border-[#d71920]/40 hover:shadow-md"
-                  >
-                    <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#d71920]">
-                      {story.category}
-                    </div>
-
-                    <h3 className="mt-2 font-serif text-[16px] font-bold leading-snug transition-colors duration-200 group-hover:text-[#d71920]">
-                      {story.title}
-                    </h3>
-
-                    <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-[#555]">
-                      {story.dek}
-                    </p>
-
-                    <p className="mt-2 text-[10px] text-[#999]">
-                      By {story.author} &nbsp;·&nbsp; {story.readTime}
-                    </p>
-
-                    <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 border-t border-[#ececec] pt-3 text-[11px]">
-                      {story.keyFacts.map((fact) => (
-                        <Fragment key={fact.label}>
-                          <dt className="text-[10px] font-bold uppercase text-[#999]">
-                            {fact.label}
-                          </dt>
-                          <dd
-                            className={
-                              fact.label === "Est. Value"
-                                ? "font-mono font-bold"
-                                : fact.label === "Company"
-                                ? "font-semibold"
-                                : ""
-                            }
-                          >
-                            {fact.value}
-                          </dd>
-                        </Fragment>
-                      ))}
-                    </dl>
-
-                    <span className="mt-4 inline-flex items-center gap-1 text-[11px] font-semibold text-[#d71920]">
-                      Read the post
-                      <span
-                        aria-hidden="true"
-                        className="transition-transform duration-200 group-hover:translate-x-0.5"
-                      >
-                        →
-                      </span>
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <p className="mt-6 text-[10px] text-[#999]">
-            Regional snapshot and theme tables are illustrative data for display purposes only.
+  if (!leadStory) {
+    return (
+      <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <h1 className="font-serif text-3xl font-bold">Markets</h1>
+          <p className="mt-2 text-sm text-gray-500">
+            No markets stories are available yet.
           </p>
         </div>
       </div>
-      <PrideTimesAd variant="first" />
-    </main>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <main className="pt-4 md:pt-6 pb-16">
+          {/* =================================================
+              TOP STORIES / NEWSROOM LEAD
+          ================================================= */}
+
+          <section className="pb-8 mb-8 border-b border-gray-300">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
+              {/* LEAD STORY */}
+
+              <Link
+                to={octEditionArticlePath(leadStory)}
+                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
+              >
+                <ImageWithFallback
+                  src={leadStory.image}
+                  alt={leadStory.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+
+                <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
+                  Markets | {leadStory.industry} | {leadStory.location}
+                </span>
+
+                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                  <h1 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
+                    {leadStory.title}
+                  </h1>
+
+                  <p className="text-[13px] md:text-[14px] font-semibold text-red-200 leading-[1.5] mt-3">
+                    {leadStory.lede}
+                  </p>
+
+                  <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-2 line-clamp-3">
+                    {leadStory.body[0]}
+                  </p>
+
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
+                    Read Full Story
+                    <ArrowRight size={12} />
+                  </span>
+                </div>
+              </Link>
+
+              {/* MAJOR COVERAGE */}
+
+              <div className="min-w-0">
+                {majorStories[0] && (
+                  <div className="mb-4">
+                    <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.15em] mb-2">
+                      {majorStories[0].industry} | {majorStories[0].location}
+                    </span>
+
+                    <Link
+                      to={octEditionArticlePath(majorStories[0])}
+                      className="group block"
+                    >
+                      <div className="overflow-hidden rounded-lg">
+                        <ImageWithFallback
+                          src={majorStories[0].image}
+                          alt={majorStories[0].title}
+                          className="w-full h-[220px] md:h-[250px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
+                      </div>
+
+                      <h2 className="font-serif text-xl md:text-2xl font-bold leading-[1.15] mt-3 text-gray-950 group-hover:text-red-600 transition-colors">
+                        {majorStories[0].title}
+                      </h2>
+
+                      <p className="text-[12px] text-gray-600 mt-2 leading-[1.6] line-clamp-3">
+                        {majorStories[0].lede}
+                      </p>
+                    </Link>
+                  </div>
+                )}
+
+                {/* SECOND MAJOR STORY */}
+
+                {majorStories[1] && (
+                  <Link
+                    to={octEditionArticlePath(majorStories[1])}
+                    className="group flex gap-3 pt-4 border-t border-gray-200"
+                  >
+                    <div className="shrink-0 w-[105px] h-[75px] overflow-hidden rounded-md">
+                      <ImageWithFallback
+                        src={majorStories[1].image}
+                        alt={majorStories[1].title}
+                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                        {majorStories[1].industry}
+                      </span>
+
+                      <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                        {majorStories[1].title}
+                      </h3>
+
+                      <p className="mt-1 text-[11px] leading-[1.45] text-gray-500 line-clamp-2">
+                        {majorStories[1].lede}
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
+                        <Clock size={9} />
+                        {majorStories[1].publishedAt}
+                      </span>
+                    </div>
+                  </Link>
+                )}
+
+                {/* MARKET CONTEXT (live quotes) */}
+
+                <div className="mt-5 border-t border-gray-200 pt-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
+                      Market Snapshot
+                    </h3>
+
+                    <div className="flex gap-3">
+                      {(["Indices", "Crypto"] as const).map((tab) => (
+                        <button
+                          key={tab}
+                          type="button"
+                          onClick={() => setActiveMarketTab(tab)}
+                          className={`text-[9px] font-semibold uppercase tracking-wide ${
+                            activeMarketTab === tab
+                              ? "text-red-600"
+                              : "text-gray-400 hover:text-gray-700"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="divide-y divide-gray-100">
+                    {(marketSnapshotData[activeMarketTab] || [])
+                      .slice(0, 4)
+                      .map((market) => (
+                        <div
+                          key={market.symbol}
+                          className="py-2 flex items-center justify-between"
+                        >
+                          <span className="text-[10px] font-semibold text-gray-800">
+                            {market.symbol}
+                          </span>
+
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] text-gray-500 tabular-nums">
+                              {market.value}
+                            </span>
+
+                            <ChangeChip
+                              change={market.change}
+                              up={market.up}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT NEWSROOM COLUMN */}
+
+              <aside className="min-w-0">
+                {/* EDITOR'S PICK (only when a 4th markets story exists) */}
+
+                {editorsPick && (
+                  <div className="pb-5 border-b border-gray-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h2 className="font-serif text-lg font-bold">
+                        Editor's Pick
+                      </h2>
+
+                      <Link
+                        to={editorsPick.sectionPath}
+                        className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium hover:border-gray-500 transition-colors"
+                      >
+                        Explore More
+                      </Link>
+                    </div>
+
+                    <Link
+                      to={octEditionArticlePath(editorsPick)}
+                      className="group block"
+                    >
+                      <div className="relative overflow-hidden rounded-lg">
+                        <ImageWithFallback
+                          src={editorsPick.image}
+                          alt={editorsPick.title}
+                          className="w-full h-[175px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
+                      </div>
+
+                      <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.14em] mt-2.5">
+                        {editorsPick.industry}
+                      </span>
+
+                      <h3 className="text-[13px] font-semibold leading-[1.4] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {editorsPick.title}
+                      </h3>
+
+                      <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-3">
+                        {editorsPick.lede}
+                      </p>
+                    </Link>
+                  </div>
+                )}
+
+                {/* MARKETS NUMBERS AT A GLANCE */}
+
+                {marketGlance.length > 0 && (
+                  <div className={editorsPick ? "pt-5" : ""}>
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                      <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
+                        Numbers at a Glance
+                      </h2>
+
+                      <span className="text-[8px] uppercase tracking-wide text-gray-400">
+                        {octEditionMeta.date}
+                      </span>
+                    </div>
+
+                    <div className="divide-y divide-gray-100">
+                      {marketGlance.map((item) => (
+                        <div key={item.indicator} className="py-3">
+                          <span className="block text-[10px] leading-[1.4] text-gray-500">
+                            {item.indicator}
+                          </span>
+
+                          <span className="mt-0.5 block font-serif text-lg font-bold leading-[1.2] text-gray-900">
+                            {item.figure}
+                          </span>
+
+                          <span className="mt-0.5 block text-[9px] text-gray-400">
+                            {item.source}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* LATEST NEWS STREAM (sidebar headlines) */}
+
+                {sidebarStories.length > 0 && (
+                  <div className="pt-5">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                      <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
+                        Latest News
+                      </h2>
+
+                      <span className="text-[8px] uppercase tracking-wide text-gray-400">
+                        Newsroom
+                      </span>
+                    </div>
+
+                    <div className="divide-y divide-gray-100">
+                      {sidebarStories.map((item) => (
+                        <Link
+                          key={item.id}
+                          to={octEditionArticlePath(item)}
+                          className="group block py-3"
+                        >
+                          <div className="flex gap-3">
+                            <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
+                              {item.location}
+                            </span>
+
+                            <div className="min-w-0">
+                              <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
+                                {item.title}
+                              </span>
+
+                              <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
+                                {item.lede}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </aside>
+            </div>
+          </section>
+
+          {/* =================================================
+              ADVERTISEMENT
+          ================================================= */}
+
+          <PrideTimesAd variant="first" className="mb-8" />
+
+          {/* =================================================
+              LATEST MARKETS NEWS
+          ================================================= */}
+
+          <section className="mb-12">
+            <SectionHeader
+              title={`${octEditionMeta.title} · ${octEditionMeta.edition} · ${octEditionMeta.date}`}
+            />
+
+            <div className="-mt-2 mb-5 text-[11px] leading-[1.5] text-gray-500">
+              Markets coverage: the global economy and inflation, energy and
+              oil prices, AI spending and funding, and deals.
+            </div>
+
+            {/* FILTER TABS */}
+
+            <div className="flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3 mb-1">
+              {latestNewsTabs.map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => selectTab(tab)}
+                  className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
+                    activeNewsTab === tab
+                      ? "text-red-600"
+                      : "text-gray-400 hover:text-gray-700"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            {/* STORY LIST */}
+
+            <div className="divide-y divide-gray-200">
+              {latestStories.length === 0 && (
+                <p className="py-6 text-[11px] text-gray-400">
+                  No stories in this category yet.
+                </p>
+              )}
+
+              {latestStories.map((story) => (
+                <Link
+                  key={story.id}
+                  to={octEditionArticlePath(story)}
+                  className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
+                >
+                  <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
+                    <ImageWithFallback
+                      src={story.image}
+                      alt={story.title}
+                      className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-x-2">
+                      <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                        {story.industry}
+                      </span>
+
+                      <span className="text-[8px] text-gray-300">•</span>
+
+                      <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                        <MapPin size={8} />
+                        {story.location}
+                      </span>
+                    </div>
+
+                    <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                      {story.title}
+                    </h3>
+
+                    <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
+                      {story.lede}
+                    </p>
+
+                    <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
+                      <Clock size={8} />
+                      {story.publishedAt} · {story.readTime}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setVisibleCount((count) =>
+                      Math.min(count + PAGE_SIZE, filteredStories.length)
+                    )
+                  }
+                  className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+                >
+                  Show more stories
+                </button>
+
+                <span className="text-[9px] text-gray-400">
+                  Showing {latestStories.length} of {filteredStories.length}
+                </span>
+              </div>
+            )}
+
+            <p className="mt-6 border-t border-gray-200 pt-4 text-[10px] leading-[1.5] text-gray-400">
+              {leadStory.editorNote}
+            </p>
+          </section>
+
+          {/* =================================================
+              SECOND ADVERTISEMENT
+          ================================================= */}
+
+          <PrideTimesAd variant="second" className="mb-12" />
+
+          {/* =================================================
+              NEWSLETTER CTA
+          ================================================= */}
+
+          <section className="bg-[#0b1a30] text-white text-center p-8 md:p-10 rounded-[2px]">
+            <h2 className="font-serif text-2xl md:text-[30px] mb-2">
+              Stay Ahead with The Pride Times
+            </h2>
+
+            <p className="text-gray-400 text-sm mb-6">
+              Daily briefings on Markets delivered to your inbox.
+            </p>
+
+            <form
+              onSubmit={(event) => event.preventDefault()}
+              className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto"
+            >
+              <input
+                type="email"
+                placeholder="Enter your email"
+                aria-label="Email address"
+                className="flex-1 min-w-0 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 px-4 py-3 text-sm outline-none focus:border-white/50 rounded-[2px]"
+              />
+
+              <button
+                type="submit"
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 text-sm font-semibold transition-colors rounded-[2px] whitespace-nowrap"
+              >
+                Subscribe Free
+              </button>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
   );
 }
+
+export default MarketsPage;
