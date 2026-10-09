@@ -97,3 +97,8 @@ export const globalSectorItems: GlobalSectorItem[] = [
     verdict: "Mainstream adoption is beginning, but the format is still niche",
   },
 ];
+
+/* Slug of each sector's inner article: /article/global-sector-<sector> */
+export function globalSectorItemArticleId(item: Pick<GlobalSectorItem, "sector">) {
+  return `global-sector-${item.sector.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+}
