@@ -31,7 +31,7 @@ import {
   type BusinessArticle,
 } from "../../data/businessNewsData";
 import {
-  octBusinessArticles,
+  octEditionArticles,
   octEditionMeta,
   octEditionGlance,
   octEditionArticlePath,
@@ -138,7 +138,7 @@ function PrideTimesAd({
    Every business story on the site, newest edition first:
    1. The Pride Times News, Global Industry Edition (7 Oct 2026)
    2. Global Corporate News Digest, Edition 1: M&A (2 Oct 2026)
-   3. Global Corporate News Digest, September 2026 (all sections)
+   3. Global Corporate News Digest, September 2026 (business desks)
    4. Earlier Business News stories (corporate strategy, deals,
       corporate news, startups)
    Nothing is removed; duplicates by id are dropped.
@@ -168,7 +168,20 @@ function legacyImage(story: BusinessArticle, index: number): string {
   );
 }
 
-const octCards: NewsCard[] = octBusinessArticles.map((a) => ({
+/* Only business desks are shown here. Technology & AI, Energy &
+   Climate, Healthcare & Pharma, Sustainability & ESG and the Regional
+   Roundup have their own section pages and are left out. */
+const BUSINESS_SECTIONS = new Set([
+  "Markets & Finance",
+  "Mergers & Acquisitions",
+  "Consumer & Retail",
+  "Industry & Supply Chain",
+  "Leadership & Governance",
+]);
+
+const octCards: NewsCard[] = octEditionArticles
+  .filter((a) => BUSINESS_SECTIONS.has(a.section))
+  .map((a) => ({
   id: a.id,
   title: a.title,
   lede: a.lede,
@@ -180,6 +193,11 @@ const octCards: NewsCard[] = octBusinessArticles.map((a) => ({
   readTime: a.readTime,
   path: octEditionArticlePath(a),
 }));
+
+/* Business and economy figures only. */
+const businessGlance = octEditionGlance.filter(
+  (item) => !/obesity/i.test(item.indicator)
+);
 
 const maCards: NewsCard[] = maEdition1Articles.map((a) => ({
   id: a.id,
@@ -194,7 +212,9 @@ const maCards: NewsCard[] = maEdition1Articles.map((a) => ({
   path: maEdition1ArticlePath(a),
 }));
 
-const digestCards: NewsCard[] = digestArticles.map((a) => ({
+const digestCards: NewsCard[] = digestArticles
+  .filter((a) => BUSINESS_SECTIONS.has(a.section))
+  .map((a) => ({
   id: a.id,
   title: a.title,
   lede: a.lede,
@@ -253,7 +273,9 @@ const sidebarStories = allCards
 /* Filter tabs: department order from the digest first, then any
    other tab that appears in the data. */
 const tabOrder = [
-  ...digestSections.map((section) => section.name),
+  ...digestSections
+    .map((section) => section.name)
+    .filter((name) => BUSINESS_SECTIONS.has(name)),
   LEGACY_TAB,
 ];
 const presentTabs = new Set(allCards.map((card) => card.tab));
@@ -738,7 +760,9 @@ export function BusinessNewsPage() {
             />
 
             <p className="-mt-2 mb-5 text-[11px] leading-[1.5] text-gray-500">
-              {octEditionMeta.subtitle}
+              Business stories from the edition: the global economy and
+              finance, corporate deals, and industry moves in automotive and
+              aerospace.
             </p>
 
             <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
@@ -780,7 +804,7 @@ export function BusinessNewsPage() {
             </p>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {octEditionGlance.map((item) => (
+              {businessGlance.map((item) => (
                 <div
                   key={item.indicator}
                   className="flex flex-col rounded-md border border-gray-200 p-4 transition-colors hover:border-gray-300"
