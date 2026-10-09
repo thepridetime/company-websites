@@ -19,7 +19,9 @@ import {
   globalSectorReport,
   globalSectorItems,
   globalSectorArticleId,
+  globalSectorItemArticleId,
 } from "./globalSectorReportData";
+import { globalSectorMoreNews } from "./globalSectorMoreNewsData";
 
 export { articleSlug };
 
@@ -135,6 +137,61 @@ const globalSectorArticle: HomepageArticle = {
   },
 };
 
+
+/* One inner article per Global Sector Report headline, so every
+   sector headline on the homepage opens its own article page.
+   Built only from the report data (signal, verdict, bottleneck and
+   the sector's further analysis headlines). */
+const globalSectorItemArticles: HomepageArticle[] = globalSectorItems.map(
+  (item) => {
+    const moreHeadlines =
+      globalSectorMoreNews.find((entry) => entry.sector === item.sector)
+        ?.headlines ?? [];
+
+    const body: string[] = [
+      `${item.signal}. ${item.verdict}.`,
+      `Bottleneck: ${item.bottleneck}.`,
+      globalSectorReport.pattern,
+    ];
+
+    return {
+      slug: globalSectorItemArticleId(item),
+      title: item.headline,
+      category: `${item.sector} · ${globalSectorReport.kicker}`,
+      dek: `${item.verdict}.`,
+      image: globalSectorReport.image,
+      author: "The Pride Times",
+      publishedAt: "2026",
+      readTime: "3 min read",
+      highlights:
+        moreHeadlines.length > 0
+          ? moreHeadlines
+          : [`${item.sector}: ${item.verdict}`],
+      tags: [item.sector, globalSectorReport.kicker, "The Pride Times"],
+      editorNote:
+        "Source: Global Sector News Report 2026. Figures are quoted from the report.",
+      sections: body.map((text, index) => ({
+        heading: `Paragraph ${index + 1}`,
+        body: text,
+      })),
+      digest: {
+        sectionName: globalSectorReport.kicker,
+        sectionPath: "/business-news",
+        location: globalSectorReport.location,
+        lede: `${item.verdict}.`,
+        body,
+        quote: { text: "", by: "" },
+        quoteAfter: -1,
+        keyFacts: [
+          { label: "Signal", value: item.signal },
+          { label: "Bottleneck", value: item.bottleneck },
+          { label: "Editor's verdict", value: item.verdict },
+        ],
+      },
+    };
+  }
+);
+
 /* Newest edition first (Global Industry Edition, 7 October 2026), then
    the existing September digest (unchanged), Edition 1 (M&A), and the
    Global Sector News Report 2026 article. */
@@ -146,6 +203,7 @@ export const homepageArticles: HomepageArticle[] = [
     toHomepageArticle(article)
   ),
   globalSectorArticle,
+  ...globalSectorItemArticles,
 ];
 
 export function getHomepageArticleBySlug(slug?: string) {
