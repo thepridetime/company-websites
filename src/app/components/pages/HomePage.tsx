@@ -33,6 +33,7 @@ import {
   globalSectorItems,
   globalSectorAnchorId,
   globalSectorArticleId,
+  globalSectorItemArticleId,
 } from "../../data/globalSectorReportData";
 import {
   octEditionArticles,
@@ -652,12 +653,16 @@ export function HomePage() {
 
             <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
               {globalSectorItems.map((item) => (
-                <div key={item.sector}>
+                <Link
+                  key={item.sector}
+                  to={`/article/${globalSectorItemArticleId(item)}`}
+                  className="group block"
+                >
                   <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                     {item.sector}
                   </span>
 
-                  <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 md:text-[22px]">
+                  <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600 md:text-[22px]">
                     {item.headline}
                   </h4>
 
@@ -668,7 +673,7 @@ export function HomePage() {
                   <p className="mt-1 text-[11px] leading-[1.55] text-gray-500">
                     {item.signal}. Bottleneck: {item.bottleneck}.
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
