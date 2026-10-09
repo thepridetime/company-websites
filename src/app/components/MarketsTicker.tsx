@@ -35,10 +35,10 @@ const megaMenuColumns = [
   {
     title: "Markets",
     links: [
-      { label: "Overview", path: marketTab("Overview") },
-      { label: "Regional Snapshot", path: marketTab("Regional Snapshot") },
-      { label: "Market Themes", path: marketTab("Market Themes") },
-      { label: "Market Stories", path: marketTab("Market Stories") },
+      { label: "Global Economy & Finance", path: marketTab("Global Economy & Finance") },
+      { label: "Energy", path: marketTab("Energy") },
+      { label: "AI & Cloud Infrastructure", path: marketTab("AI & Cloud Infrastructure") },
+      { label: "Corporate", path: marketTab("Corporate") },
     ],
   },
   {
