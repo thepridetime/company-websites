@@ -6,25 +6,66 @@ import { PrideTimesAd } from "../AdSenseSlots";
 import {
   octEditionArticles,
   octEditionArticlePath,
-  type OctEditionArticle,
 } from "../../data/octEditionData";
+import {
+  specialArticles,
+  specialArticlePath,
+} from "../../data/specialArticleData";
+import HealthFallbackImg from "../../../imports/HC1.png";
 
-/* Display label for this section (shown on the page and on cards). */
+/* Display label for this section (page title, cards and feed). */
 const SECTION_LABEL = "Healthcare and Pharma";
 
 /* =========================================================
-   HEALTHCARE AND PHARMA STORIES
-   Stories from the October 2026 Global Industry Edition
-   (src/app/data/octEditionData.ts) in the
-   "Healthcare & Pharma" section.
+   HEALTHCARE ITEMS
+   - Healthcare & Pharma stories from the October 2026 Global
+     Industry Edition (src/app/data/octEditionData.ts)
+   - Healthcare articles from src/app/data/specialArticleData.ts
+     (section "Healthcare")
+   The October edition story comes first (most recent).
 ========================================================= */
 
-const healthStories: OctEditionArticle[] = octEditionArticles.filter(
-  (article) => article.section === "Healthcare & Pharma"
-);
+type HealthItem = {
+  id: string;
+  href: string;
+  title: string;
+  lede: string;
+  location?: string;
+  image: string;
+  meta: string;
+  keyFacts: { label: string; value: string }[];
+};
 
-const leadStory = healthStories[0];
-const otherStories = healthStories.slice(1);
+const octHealthItems: HealthItem[] = octEditionArticles
+  .filter((article) => article.section === "Healthcare & Pharma")
+  .map((article) => ({
+    id: article.id,
+    href: octEditionArticlePath(article),
+    title: article.title,
+    lede: article.lede,
+    location: article.location,
+    image: article.image,
+    meta: `${article.publishedAt} · ${article.readTime}`,
+    keyFacts: article.keyFacts,
+  }));
+
+const specialHealthItems: HealthItem[] = specialArticles
+  .filter((article) => article.section === "Healthcare")
+  .map((article) => ({
+    id: article.id,
+    href: specialArticlePath(article.id),
+    title: article.title,
+    lede: article.dek,
+    location: undefined,
+    image: article.image ?? HealthFallbackImg,
+    meta: `${article.publishedAt} · ${article.readTime}`,
+    keyFacts: article.keyFacts,
+  }));
+
+const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems];
+
+const leadStory = healthItems[0];
+const otherStories = healthItems.slice(1);
 
 /* =========================================================
    GOOGLE ADSENSE SLOTS
@@ -139,7 +180,7 @@ export function HealthcarePage() {
 
                 <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
                   Drugs, medtech, healthcare services and pharmaceutical
-                  business from The Pride Times Global Industry Edition.
+                  business from The Pride Times.
                 </p>
               </div>
 
@@ -153,7 +194,7 @@ export function HealthcarePage() {
 
           {!leadStory && (
             <p className="py-10 text-center text-[11px] text-gray-400">
-              No healthcare and pharma stories in this edition yet.
+              No healthcare and pharma stories yet.
             </p>
           )}
 
@@ -164,7 +205,7 @@ export function HealthcarePage() {
                 {/* LEAD STORY */}
 
                 <Link
-                  to={octEditionArticlePath(leadStory)}
+                  to={leadStory.href}
                   className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
                 >
                   <ImageWithFallback
@@ -176,7 +217,8 @@ export function HealthcarePage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                   <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                    {SECTION_LABEL} | {leadStory.location}
+                    {SECTION_LABEL}
+                    {leadStory.location ? ` | ${leadStory.location}` : ""}
                   </span>
 
                   <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
@@ -205,7 +247,7 @@ export function HealthcarePage() {
                       </h2>
 
                       <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
-                        {healthStories.length} stories
+                        {healthItems.length} stories
                       </span>
                     </div>
 
@@ -240,15 +282,15 @@ export function HealthcarePage() {
 
                     {otherStories.length > 0 ? (
                       <div className="divide-y divide-gray-100">
-                        {otherStories.map((item) => (
+                        {otherStories.slice(0, 6).map((item) => (
                           <Link
                             key={item.id}
-                            to={octEditionArticlePath(item)}
+                            to={item.href}
                             className="group block py-3"
                           >
                             <div className="flex gap-3">
                               <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
-                                {item.location}
+                                {item.location ?? "Healthcare"}
                               </span>
 
                               <div className="min-w-0">
@@ -279,21 +321,21 @@ export function HealthcarePage() {
 
           {/* LATEST HEALTHCARE FEED */}
 
-          {healthStories.length > 0 && (
+          {healthItems.length > 0 && (
             <section className="mb-12">
               <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
 
               <div className="divide-y divide-gray-200">
-                {healthStories.map((story) => (
+                {healthItems.map((item) => (
                   <Link
-                    key={story.id}
-                    to={octEditionArticlePath(story)}
+                    key={item.id}
+                    to={item.href}
                     className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
                   >
                     <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
                       <ImageWithFallback
-                        src={story.image}
-                        alt={story.title}
+                        src={item.image}
+                        alt={item.title}
                         className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
@@ -304,25 +346,29 @@ export function HealthcarePage() {
                           {SECTION_LABEL}
                         </span>
 
-                        <span className="text-[8px] text-gray-300">•</span>
+                        {item.location && (
+                          <>
+                            <span className="text-[8px] text-gray-300">•</span>
 
-                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
-                          <MapPin size={8} />
-                          {story.location}
-                        </span>
+                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                              <MapPin size={8} />
+                              {item.location}
+                            </span>
+                          </>
+                        )}
                       </div>
 
                       <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {story.title}
+                        {item.title}
                       </h3>
 
                       <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
-                        {story.lede}
+                        {item.lede}
                       </p>
 
                       <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
                         <Clock size={8} />
-                        {story.publishedAt} · {story.readTime}
+                        {item.meta}
                       </span>
                     </div>
                   </Link>
