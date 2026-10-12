@@ -1,163 +1,34 @@
-import { Clock, Rocket } from "lucide-react";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { Link } from "react-router";
-import { specialArticlePathByTitle } from "../../data/specialArticleData";
 import { useEffect } from "react";
-
+import { Link } from "react-router";
+import { ArrowRight, Clock, MapPin } from "lucide-react";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { PrideTimesAd } from "../AdSenseSlots";
+import {
+  octEditionArticles,
+  octEditionArticlePath,
+  type OctEditionArticle,
+} from "../../data/octEditionData";
 
 /* =========================================================
-   TYPES
+   STARTUP STORIES
+   Only startup-related stories from the October 2026
+   Global Industry Edition (src/app/data/octEditionData.ts).
+   Add more article ids here as new startup stories are added.
 ========================================================= */
 
-type Story = {
-  id?: number;
-  category: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  time: string;
-  image: string;
-  path?: string;
-};
-
-/* =========================================================
-   DATA
-========================================================= */
-
-const hero: Story = {
-  category: "STARTUP SUCCESS",
-  title: "Perplexity AI Raises $1.2B Series D, Valued at $15B",
-  excerpt:
-    "The AI search startup secures major backing from SoftBank, Bessemer, and Nvidia as it targets 100M daily active users by Q4 2026.",
-  author: "Sagar Kumar",
-  time: "2 hr ago",
-  image:
-    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400",
-  path: "/startup-success",
-};
-
-const latestNews = [
-  {
-    id: 1,
-    category: "TECHNOLOGY",
-    title:
-      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-    excerpt:
-      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and Southeast Asia.",
-    time: "12 min ago",
-    image:
-      "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=900&h=520&fit=crop",
-    path: "/technology",
-  },
-  {
-    id: 2,
-    category: "TECHNOLOGY",
-    title:
-      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
-    excerpt:
-      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
-    image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&h=520&fit=crop",
-    path: "/technology",
-  },
-  {
-    id: 3,
-    category: "TECHNOLOGY",
-    title:
-      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
-    excerpt:
-      "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing.",
-    time: "2 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&h=520&fit=crop",
-    path: "/technology",
-  },
-  {
-    id: 4,
-    category: "TECHNOLOGY",
-    title:
-      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 8 Languages",
-    excerpt:
-      "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative features.",
-    time: "3 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&h=520&fit=crop",
-    path: "/technology",
-  },
-  {
-    id: 5,
-    category: "TECHNOLOGY",
-    title:
-      "Meta's Llama 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
-    excerpt:
-      "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in enterprise reasoning.",
-    time: "5 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=900&h=520&fit=crop",
-    path: "/technology",
-  },
-  {
-    id: 6,
-    category: "TECHNOLOGY",
-    title:
-      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
-    excerpt:
-      "The latest satellite constellation expansion brings high-speed internet to more regions across Africa, South Asia, and Latin America.",
-    time: "6 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&h=520&fit=crop",
-    path: "/technology",
-  },
+const STARTUP_STORY_IDS = [
+  "photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
 ];
 
-/* =========================================================
-   RELATED / MORE STORIES
-========================================================= */
+const startupStories: OctEditionArticle[] = octEditionArticles.filter(
+  (article) => STARTUP_STORY_IDS.includes(article.id)
+);
 
-const moreStories = [
-  {
-    category: "STARTUP SUCCESS",
-    title: "Indian Unicorn Zepto Hits $10B Valuation, Eyes Global Expansion",
-    time: "4 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop",
-    path: "/startup-success",
-  },
-  {
-    category: "STARTUP SUCCESS",
-    title:
-      "Y Combinator W2026 Cohort: 40% of Startups Are Pure AI Companies",
-    time: "5 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300&h=200&fit=crop",
-    path: "/startup-success",
-  },
-];
+const leadStory = startupStories[0];
+const otherStories = startupStories.slice(1);
 
 /* =========================================================
-   SECTION HEADER
-========================================================= */
-
-function SectionHeader({ title }: { title: string }) {
-  return (
-    <div className="border-t-2 border-black pt-3 mb-5">
-      <div className="flex items-end justify-between gap-4">
-        <h2 className="text-[15px] md:text-[17px] font-bold text-gray-900 uppercase tracking-tight">
-          {title}
-        </h2>
-
-        <span className="hidden sm:block text-[8px] uppercase tracking-[0.16em] text-gray-400">
-          The Pride Times
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   REAL GOOGLE ADSENSE
+   GOOGLE ADSENSE SLOTS
 ========================================================= */
 
 type AdSlotProps = {
@@ -197,10 +68,7 @@ function AdSlot({
         Advertisement
       </div>
 
-      <div
-        className="w-full overflow-hidden"
-        style={{ minHeight }}
-      >
+      <div className="w-full overflow-hidden" style={{ minHeight }}>
         <ins
           className="adsbygoogle"
           style={{
@@ -222,11 +90,6 @@ function AdSlot({
   );
 }
 
-/* =========================================================
-   TOP / MOVABLE AD
-   SLOT: 5373718974
-========================================================= */
-
 function TopAd() {
   return (
     <AdSlot
@@ -237,11 +100,6 @@ function TopAd() {
     />
   );
 }
-
-/* =========================================================
-   SIDEBAR / MOVABLE AD
-   SLOT: 5373718974
-========================================================= */
 
 function SidebarAd() {
   return (
@@ -255,550 +113,239 @@ function SidebarAd() {
 }
 
 /* =========================================================
-   IN-ARTICLE / MOVABLE AD
-   SLOT: 8042854193
+   SECTION HEADER (same style as homepage)
 ========================================================= */
 
-function InArticleAd() {
+function SectionHeader({ title }: { title: string }) {
   return (
-    <AdSlot
-      slot="8042854193"
-      format="fluid"
-      layout="in-article"
-      minHeight={120}
-      className="my-8"
-    />
-  );
-}
-
-/* =========================================================
-   SECONDARY MOVABLE AD
-   SLOT: 5608262547
-========================================================= */
-
-function SecondaryAd() {
-  return (
-    <AdSlot
-      slot="5608262547"
-      format="fluid"
-      layoutKey="-ef+6k-30-ac+ty"
-      minHeight={120}
-      className="my-8"
-    />
-  );
-}
-
-/* =========================================================
-   SPONSORED CONTENT + RELATED COVERAGE
-========================================================= */
-
-function SponsoredContent() {
-  return (
-    <aside className="w-full">
-      {/* REAL ADSENSE SIDEBAR AD */}
-      <SidebarAd />
-
-      {/* RELATED COVERAGE */}
-      <div className="mt-6">
-        <div className="border-t-2 border-black pt-3 mb-2">
-          <h3 className="text-[12px] font-bold uppercase tracking-tight text-gray-900">
-            Related Coverage
-          </h3>
-        </div>
-
-        <div>
-          {moreStories.map((story) => (
-            <Link
-              key={story.title}
-              to={specialArticlePathByTitle(story.title)}
-              className="group flex gap-3 py-3 border-b border-gray-200"
-            >
-              <div className="w-[82px] h-[58px] shrink-0 overflow-hidden">
-                <ImageWithFallback
-                  src={story.image}
-                  alt={story.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="min-w-0">
-                <p className="text-[8px] font-bold uppercase tracking-wide text-red-600">
-                  {story.category}
-                </p>
-
-                <p className="mt-1 text-[11px] md:text-[12px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </p>
-
-                <p className="text-[8px] text-gray-400 mt-1">
-                  {story.time}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </aside>
-  );
-}
-
-/* =========================================================
-   HERO STORY
-========================================================= */
-
-function HeroStory() {
-  return (
-    <article className="group">
-      <Link
-        to={specialArticlePathByTitle(hero.title)}
-        className="block"
-      >
-        <div className="w-full overflow-hidden">
-          <ImageWithFallback
-            src={hero.image}
-            alt={hero.title}
-            className="w-full h-[250px] sm:h-[330px] md:h-[410px] lg:h-[445px] object-cover transition-transform duration-700 group-hover:scale-[1.015]"
-          />
-        </div>
-
-        <div className="pt-3">
-          <div className="flex items-center gap-2">
-            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
-              {hero.category}
-            </span>
-
-            <span className="h-px flex-1 bg-gray-200" />
-          </div>
-
-          <h2 className="mt-2 font-serif text-[27px] sm:text-[31px] md:text-[36px] lg:text-[40px] font-bold leading-[1.06] text-gray-950 group-hover:text-red-600 transition-colors">
-            {hero.title}
-          </h2>
-
-          <p className="mt-3 max-w-4xl text-[12px] md:text-[14px] text-gray-600 leading-[1.55]">
-            {hero.excerpt}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[9px] md:text-[10px]">
-            <span className="font-semibold text-gray-700">
-              By {hero.author}
-            </span>
-
-            <span className="text-gray-400 flex items-center gap-1">
-              <Clock size={10} />
-              {hero.time}
-            </span>
-          </div>
-        </div>
-      </Link>
-    </article>
-  );
-}
-
-/* =========================================================
-   MAJOR STORY
-========================================================= */
-
-function MajorStory({
-  story,
-}: {
-  story: (typeof latestNews)[number];
-}) {
-  return (
-    <Link
-      to={specialArticlePathByTitle(story.title)}
-      className="group grid grid-cols-[110px_minmax(0,1fr)] sm:grid-cols-[145px_minmax(0,1fr)] gap-3 py-3 border-b border-gray-200"
-    >
-      <div className="w-full h-[78px] sm:h-[92px] overflow-hidden">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-      </div>
-
-      <div className="min-w-0">
-        <p className="text-[8px] font-bold uppercase tracking-wide text-red-600">
-          {story.category}
-        </p>
-
-        <h3 className="mt-1 font-serif text-[13px] sm:text-[15px] font-bold leading-[1.18] text-gray-900 group-hover:text-red-600 transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="hidden sm:block mt-1 text-[10px] text-gray-500 leading-[1.4] line-clamp-2">
-          {story.excerpt}
-        </p>
-
-        <div className="mt-1.5 text-[8px] text-gray-400 flex items-center gap-1">
-          <Clock size={9} />
-          {story.time}
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-/* =========================================================
-   NEWS CARD
-========================================================= */
-
-function NewsCard({
-  story,
-}: {
-  story: (typeof latestNews)[number];
-}) {
-  return (
-    <Link
-      to={specialArticlePathByTitle(story.title)}
-      className="group block border-t border-gray-200 pt-3"
-    >
-      <div className="w-full h-[155px] sm:h-[170px] overflow-hidden mb-3">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.035]"
-        />
-      </div>
-
-      <p className="text-[8px] font-bold uppercase tracking-wide text-red-600">
-        {story.category}
-      </p>
-
-      <h3 className="mt-1.5 font-serif text-[14px] md:text-[15px] font-bold leading-[1.18] text-gray-900 group-hover:text-red-600 transition-colors">
-        {story.title}
-      </h3>
-
-      <p className="mt-1.5 text-[10px] md:text-[11px] text-gray-600 leading-[1.45] line-clamp-2">
-        {story.excerpt}
-      </p>
-
-      <div className="flex items-center justify-between gap-2 mt-2.5 text-[8px] text-gray-400">
-        <span>By Sagar Kumar</span>
-
-        <span className="flex items-center gap-1">
-          <Clock size={9} />
-          {story.time}
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-/* =========================================================
-   LATEST NEWS STREAM
-========================================================= */
-
-function LatestNewsStream() {
-  return (
-    <section>
-      <SectionHeader title="Latest News" />
-
-      <div className="border-t border-gray-200">
-        {latestNews.map((story) => (
-          <Link
-            key={`stream-${story.id}`}
-            to={specialArticlePathByTitle(story.title)}
-            className="group grid grid-cols-[72px_minmax(0,1fr)] sm:grid-cols-[95px_minmax(0,1fr)] gap-3 py-3 border-b border-gray-200"
-          >
-            <div className="text-[9px] md:text-[10px] text-gray-400 font-medium">
-              <span className="flex items-center gap-1">
-                <Clock size={9} />
-                {story.time}
-              </span>
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-[8px] font-bold uppercase tracking-wide text-red-600">
-                {story.category}
-              </p>
-
-              <h3 className="mt-1 text-[12px] md:text-[13px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors">
-                {story.title}
-              </h3>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   SPONSORSHIP
-========================================================= */
-
-const sponsorships = [
-  "Global Finance Summit 2026",
-  "Tech Leaders Forum",
-  "Energy Transition Conference",
-  "AI & Business World",
-];
-
-/* =========================================================
-   SPONSORSHIP SECTION
-========================================================= */
-
-function SponsorshipSection() {
-  return (
-    <section className="bg-[#f8f8f8] border border-gray-100 p-4 md:p-5 mb-6">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="px-2 py-1 border border-gray-200 bg-white text-[7px] font-bold uppercase tracking-wide text-gray-500">
-          Sponsorship
-        </span>
-
-        <span className="text-[9px] text-gray-400">
-          Presented by our partners
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {sponsorships.map((item) => (
-          <div
-            key={item}
-            className="bg-white border border-gray-200 min-h-[78px] flex flex-col items-center justify-center text-center px-3 hover:border-red-200 transition-colors"
-          >
-            <div className="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center mb-2">
-              <Rocket
-                size={13}
-                className="text-red-600"
-                strokeWidth={1.8}
-              />
-            </div>
-
-            <p className="text-[9px] md:text-[10px] font-semibold text-gray-800">
-              {item}
-            </p>
-
-            <p className="text-[7px] text-gray-400 mt-0.5">
-              Sponsored Event
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   NEWSLETTER
-========================================================= */
-
-function Newsletter() {
-  return (
-    <section className="rounded-md bg-[#071a2d] px-5 py-8 md:py-9 text-center mb-8">
-      <h2 className="font-serif text-white text-[20px] md:text-[24px] font-bold">
-        Stay Ahead with The Pride Times
+    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+        {title}
       </h2>
 
-      <p className="text-[10px] md:text-[11px] text-gray-300 mt-1">
-        Daily briefings on Startup Success delivered to your inbox.
-      </p>
-
-      <form
-        className="flex flex-col sm:flex-row justify-center gap-2 mt-5"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <input
-          type="email"
-          placeholder="Enter your email"
-          aria-label="Email address"
-          className="w-full sm:w-[260px] h-9 rounded border border-white/10 bg-[#1d3347] px-3 text-[10px] text-white placeholder:text-gray-400 outline-none focus:border-red-500"
-        />
-
-        <button
-          type="submit"
-          className="h-9 px-5 rounded bg-red-600 hover:bg-red-700 text-white text-[10px] font-semibold transition-colors"
-        >
-          Subscribe Free
-        </button>
-      </form>
-    </section>
+      <span className="hidden sm:block text-[8px] uppercase tracking-[0.16em] text-gray-400">
+        The Pride Times
+      </span>
+    </div>
   );
 }
 
 /* =========================================================
-   MAIN PAGE
+   STARTUP SUCCESS PAGE
 ========================================================= */
 
 export function StartupSuccessPage() {
-  const majorStories = latestNews.slice(0, 2);
-  const secondaryStories = latestNews.slice(2, 5);
-
   return (
-    <div className="w-full min-h-screen bg-white text-gray-900 antialiased">
-      <main className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 py-6 md:py-8">
+    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <main className="pt-4 md:pt-6 pb-16">
 
-        {/* ===================================================
-            PAGE TITLE
-        =================================================== */}
+          {/* PAGE TITLE */}
 
-        <header className="border-t-[3px] border-red-600 pt-4 mb-6">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
-            <div>
-              <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
-                Startup Success
-              </h1>
+          <header className="border-t-[3px] border-red-600 pt-4 mb-6">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
+              <div>
+                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
+                  Startup Success
+                </h1>
 
-              <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
-                The world's most exciting startups, funding rounds, and founder
-                stories.
-              </p>
-            </div>
-
-            <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
-              Business • Technology • Startups
-            </span>
-          </div>
-        </header>
-
-        {/* ===================================================
-            TOP REAL ADSENSE AD
-            SLOT 5373718974
-        =================================================== */}
-
-        <TopAd />
-
-        {/* ===================================================
-            LEAD EDITORIAL AREA
-        =================================================== */}
-
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,2.45fr)_minmax(280px,1fr)] gap-6 lg:gap-7 mb-9">
-
-          {/* Lead Story */}
-
-          <HeroStory />
-
-          {/* Supporting Editorial Rail */}
-
-          <aside className="lg:border-l lg:border-gray-200 lg:pl-5">
-            <div className="border-t-2 border-black pt-3 mb-1">
-              <h2 className="text-[12px] font-bold uppercase tracking-tight">
-                Major Technology Stories
-              </h2>
-            </div>
-
-            {majorStories.map((story) => (
-              <MajorStory
-                key={`major-${story.id}`}
-                story={story}
-              />
-            ))}
-
-            {/* MOVABLE REAL ADSENSE SIDEBAR */}
-            <SponsoredContent />
-          </aside>
-        </section>
-
-        {/* ===================================================
-            STARTUP COVERAGE
-        =================================================== */}
-
-        <section className="mb-9">
-          <SectionHeader title="Startup & Technology Coverage" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 lg:gap-x-8">
-            {secondaryStories.map((story) => (
-              <MajorStory
-                key={`secondary-${story.id}`}
-                story={story}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* ===================================================
-            LATEST STARTUP SUCCESS NEWS
-        =================================================== */}
-
-        <section className="mb-9">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)] gap-7">
-
-            {/* News Cards */}
-
-            <div>
-              <SectionHeader title="Latest Startup Success News" />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-7">
-                {latestNews.slice(0, 4).map((story) => (
-                  <NewsCard
-                    key={`latest-${story.id}`}
-                    story={story}
-                  />
-                ))}
+                <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
+                  Startup funding rounds, acquisitions and founder moves from
+                  The Pride Times Global Industry Edition.
+                </p>
               </div>
 
-              {/* IN-ARTICLE REAL ADSENSE */}
-              <InArticleAd />
+              <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
+                Startups • Venture • Funding
+              </span>
             </div>
+          </header>
 
-            {/* Chronological Stream */}
+          <TopAd />
 
-            <div className="lg:border-l lg:border-gray-200 lg:pl-5">
-              <LatestNewsStream />
-            </div>
-          </div>
-        </section>
+          {!leadStory && (
+            <p className="py-10 text-center text-[11px] text-gray-400">
+              No startup stories in this edition yet.
+            </p>
+          )}
 
-        {/* ===================================================
-            SECOND REAL ADSENSE AD
-            SLOT 5608262547
-        =================================================== */}
+          {leadStory && (
+            <>
+              {/* TOP STORIES */}
 
-        <SecondaryAd />
+              <section className="pb-8 mb-8 border-b border-gray-300">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-6">
 
-        {/* ===================================================
-            MORE STARTUP COVERAGE
-        =================================================== */}
+                  {/* LEAD STORY */}
 
-        <section className="mb-8">
-          <SectionHeader title="More Startup Coverage" />
+                  <Link
+                    to={octEditionArticlePath(leadStory)}
+                    className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
+                  >
+                    <ImageWithFallback
+                      src={leadStory.image}
+                      alt={leadStory.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-            {moreStories.map((story) => (
-              <Link
-                key={`coverage-${story.title}`}
-                to={specialArticlePathByTitle(story.title)}
-                className="group flex gap-4 py-4 border-b border-gray-200"
-              >
-                <div className="w-[120px] sm:w-[150px] h-[82px] sm:h-[96px] shrink-0 overflow-hidden">
-                  <ImageWithFallback
-                    src={story.image}
-                    alt={story.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                  />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+
+                    <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
+                      {leadStory.industry} | {leadStory.location}
+                    </span>
+
+                    <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                      <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
+                        {leadStory.title}
+                      </h2>
+
+                      <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
+                        {leadStory.lede}
+                      </p>
+
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
+                        Read Full Story
+                        <ArrowRight size={12} />
+                      </span>
+                    </div>
+                  </Link>
+
+                  {/* RIGHT COLUMN */}
+
+                  <aside className="min-w-0">
+                    <div className="pb-5 border-b border-gray-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h2 className="font-serif text-lg font-bold">
+                          Startup Watch
+                        </h2>
+
+                        <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
+                          {startupStories.length} stories
+                        </span>
+                      </div>
+
+                      <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                        {leadStory.industry}
+                      </span>
+
+                      <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-3">
+                        {leadStory.lede}
+                      </p>
+
+                      <Clock size={8} className="mt-2 inline text-gray-400" />
+                      <span className="ml-1 text-[9px] text-gray-400">
+                        {leadStory.publishedAt} · {leadStory.readTime}
+                      </span>
+                    </div>
+
+                    <div className="pt-5">
+                      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                        <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
+                          More Startup News
+                        </h2>
+
+                        <span className="text-[8px] uppercase tracking-wide text-gray-400">
+                          Newsroom
+                        </span>
+                      </div>
+
+                      {otherStories.length > 0 ? (
+                        <div className="divide-y divide-gray-100">
+                          {otherStories.map((item) => (
+                            <Link
+                              key={item.id}
+                              to={octEditionArticlePath(item)}
+                              className="group block py-3"
+                            >
+                              <div className="flex gap-3">
+                                <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
+                                  {item.location}
+                                </span>
+
+                                <div className="min-w-0">
+                                  <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
+                                    {item.title}
+                                  </span>
+
+                                  <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
+                                    {item.lede}
+                                  </span>
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="py-3 text-[10px] text-gray-400">
+                          More startup stories will appear here.
+                        </p>
+                      )}
+                    </div>
+
+                    <SidebarAd />
+                  </aside>
                 </div>
+              </section>
+            </>
+          )}
 
-                <div className="min-w-0">
-                  <p className="text-[8px] font-bold uppercase tracking-wide text-red-600">
-                    {story.category}
-                  </p>
+          {/* LATEST STARTUP NEWS FEED */}
 
-                  <h3 className="mt-1 font-serif text-[13px] sm:text-[15px] font-bold leading-[1.2] text-gray-900 group-hover:text-red-600 transition-colors">
-                    {story.title}
-                  </h3>
+          {startupStories.length > 0 && (
+            <section className="mb-12">
+              <SectionHeader title="Latest Startup News" />
 
-                  <p className="mt-2 text-[8px] text-gray-400">
-                    {story.time}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+              <div className="divide-y divide-gray-200">
+                {startupStories.map((story) => (
+                  <Link
+                    key={story.id}
+                    to={octEditionArticlePath(story)}
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
+                  >
+                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
+                      <ImageWithFallback
+                        src={story.image}
+                        alt={story.title}
+                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
 
-        {/* ===================================================
-            SPONSORED EVENTS
-        =================================================== */}
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2">
+                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                          {story.industry}
+                        </span>
 
-        <SponsorshipSection />
+                        <span className="text-[8px] text-gray-300">•</span>
 
-        {/* ===================================================
-            NEWSLETTER
-        =================================================== */}
+                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                          <MapPin size={8} />
+                          {story.location}
+                        </span>
+                      </div>
 
-        <Newsletter />
-        <PrideTimesAd variant="first" />
-    </main>
+                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {story.title}
+                      </h3>
+
+                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
+                        {story.lede}
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
+                        <Clock size={8} />
+                        {story.publishedAt} · {story.readTime}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <PrideTimesAd variant="first" />
+        </main>
+      </div>
     </div>
   );
 }
