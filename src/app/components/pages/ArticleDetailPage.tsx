@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, type ReactNode } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, MapPin, Quote, Share2 } from "lucide-react";
 import {
@@ -357,10 +357,10 @@ function relatedHomepageArticles(
 }
 
 /* =========================================================
-   BLOG META
+   BLOG META (one line: byline • date • read time)
 ========================================================= */
 
-/* "By A & B" — compact, uppercase, with a short accent rule. */
+/* "By A & B" in one compact, uppercase line with a short accent rule. */
 function Byline({ author }: { author: string }) {
   const names = author
     .split(/\s*(?:,|&|\band\b)\s*/i)
@@ -368,8 +368,8 @@ function Byline({ author }: { author: string }) {
     .filter(Boolean);
 
   return (
-    <p className="flex flex-wrap items-center gap-x-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-900 sm:text-sm">
-      <span aria-hidden className="h-px w-6 bg-slate-900" />
+    <span className="inline-flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-900 sm:text-xs">
+      <span aria-hidden className="h-px w-5 bg-slate-900" />
       <span className="text-slate-400">By</span>
       {names.map((name, index) => (
         <span key={`${name}-${index}`}>
@@ -377,7 +377,7 @@ function Byline({ author }: { author: string }) {
           {name}
         </span>
       ))}
-    </p>
+    </span>
   );
 }
 
@@ -390,6 +390,10 @@ function MetaTime({ value }: { value: string }) {
   }
 
   return <TimeAgo iso={value} />;
+}
+
+function MetaDot() {
+  return <span aria-hidden className="text-slate-300">•</span>;
 }
 
 function BlogMeta({
@@ -405,32 +409,136 @@ function BlogMeta({
   readTime?: string;
 }) {
   return (
-    <div className="mt-5 space-y-2 border-y border-slate-200 py-4">
+    <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-slate-200 py-3 text-[13px] text-slate-500 sm:text-sm">
       <Byline author={author} />
 
-      <p className="text-sm text-slate-500 sm:text-base">
+      <MetaDot />
+
+      <span>
         <MetaTime value={date} />
-      </p>
+      </span>
 
       {updatedAt && updatedAt !== date && (
-        <p className="text-sm italic text-slate-500 sm:text-base">
-          Updated on <MetaTime value={updatedAt} />
-        </p>
+        <>
+          <MetaDot />
+          <span className="italic">
+            Updated <MetaTime value={updatedAt} />
+          </span>
+        </>
       )}
 
       {readTime && (
-        <p className="inline-flex items-center gap-1.5 pt-1 text-xs tabular-nums text-slate-400">
-          <Clock size={12} className="shrink-0" />
-          {readTime}
-        </p>
+        <>
+          <MetaDot />
+          <span className="inline-flex items-center gap-1.5 tabular-nums text-slate-400">
+            <Clock size={12} className="shrink-0" />
+            {readTime}
+          </span>
+        </>
       )}
     </div>
   );
 }
 
 /* =========================================================
-   BLOG HIGHLIGHTS
+   SHARED ARTICLE SHELL
+   One layout for every article template so all article pages
+   look and space the same way.
 ========================================================= */
+
+function ArticleShell({
+  backTo,
+  backLabel,
+  topRight,
+  kicker,
+  title,
+  dek,
+  extra,
+  meta,
+  children,
+  sidebar,
+  related,
+  share,
+}: {
+  backTo: string;
+  backLabel: string;
+  topRight?: ReactNode;
+  kicker: ReactNode;
+  title: string;
+  dek?: ReactNode;
+  /** Optional line shown between the dek and the meta row. */
+  extra?: ReactNode;
+  meta: ReactNode;
+  children: ReactNode;
+  sidebar: ReactNode;
+  related: ReactNode;
+  share: {
+    to: string;
+    label: string;
+    title: string;
+    description: string;
+  };
+}) {
+  return (
+    <article className="min-h-screen bg-white text-slate-900 antialiased">
+      <div className="border-b border-slate-200 bg-slate-50/70">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+          <Link
+            to={backTo}
+            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
+          >
+            <ArrowLeft
+              size={14}
+              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+            />
+            Back to {backLabel}
+          </Link>
+
+          {topRight}
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 pb-12 pt-7 sm:px-6 sm:pt-9 lg:px-8">
+        <header className="mx-auto max-w-4xl">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+            {kicker}
+          </div>
+
+          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.1] tracking-[-0.03em] text-slate-950 sm:text-4xl md:text-5xl">
+            {title}
+          </h1>
+
+          {dek && (
+            <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+              {dek}
+            </p>
+          )}
+
+          {extra}
+
+          {meta}
+        </header>
+
+        <div className="mx-auto mt-7 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
+          <main className="min-w-0">
+            {children}
+
+            <ShareAndBack
+              to={share.to}
+              label={share.label}
+              title={share.title}
+              description={share.description}
+            />
+
+            {related}
+          </main>
+
+          {sidebar}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 /* =========================================================
    BLOG BODY
@@ -448,9 +556,9 @@ function BlogBody({
   /* Reading column only: no ads, pull-quotes or extras between
      sections. Those live in the sidebar. */
   return (
-    <div className="blog-prose mt-2">
+    <div className="blog-prose">
       {intro && (
-        <p className="mb-5 border-l-[3px] border-red-600 pl-5 text-lg font-medium leading-7 tracking-[-0.02em] text-slate-800 sm:text-xl sm:leading-8">
+        <p className="mb-6 border-l-[3px] border-red-600 pl-5 text-lg font-medium leading-8 text-slate-800 sm:text-xl">
           {intro}
         </p>
       )}
@@ -458,14 +566,14 @@ function BlogBody({
       {sections.map((section, index) => (
         <section
           key={`${section.heading}-${index}`}
-          className="mb-5 scroll-mt-24"
+          className="mb-7 scroll-mt-24"
         >
-          <h2 className="max-w-3xl break-words font-serif text-xl font-bold leading-tight tracking-[-0.025em] text-slate-950 sm:text-2xl">
+          <h2 className="max-w-3xl break-words font-serif text-xl font-bold leading-tight tracking-[-0.02em] text-slate-950 sm:text-2xl">
             {formatSectionHeading(section.heading, category)}
           </h2>
 
           <p
-            className={`mt-2 break-words text-[16px] leading-[1.75] text-slate-700 sm:text-[17px]${
+            className={`mt-2.5 break-words text-[16px] leading-[1.8] text-slate-700 sm:text-[17px]${
               index === 0 ? " drop-cap" : ""
             }`}
           >
@@ -483,7 +591,7 @@ function BlogBody({
 
 function ArticleQuote({ text, by }: { text: string; by: string }) {
   return (
-    <blockquote className="my-6 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-4 not-italic">
+    <blockquote className="my-7 rounded-r-xl border-l-4 border-red-600 bg-slate-50 px-5 py-4 not-italic">
       <Quote size={16} className="mb-1.5 text-red-600" />
 
       <p className="font-serif text-lg font-semibold leading-7 text-slate-900 sm:text-xl sm:leading-8">
@@ -496,10 +604,6 @@ function ArticleQuote({ text, by }: { text: string; by: string }) {
     </blockquote>
   );
 }
-
-/* =========================================================
-   KEY FACTS ("AT A GLANCE")
-========================================================= */
 
 /* =========================================================
    BLOG SIDEBAR
@@ -554,7 +658,7 @@ function ShareAndBack({
   description: string;
 }) {
   return (
-    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-4">
+    <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-4">
       <Link
         to={to}
         className={`group inline-flex items-center gap-2 rounded-sm text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
@@ -621,7 +725,7 @@ function RelatedPosts<
   if (!items.length) return null;
 
   return (
-    <section className="mt-10 border-t border-slate-200 pt-6">
+    <section className="mt-8 border-t border-slate-200 pt-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
         Keep exploring
       </p>
@@ -630,7 +734,7 @@ function RelatedPosts<
         More ideas to explore
       </h2>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item, index) => (
           <Link
             key={item.id ?? item.slug ?? index}
@@ -672,6 +776,20 @@ function RelatedPosts<
 }
 
 /* =========================================================
+   KICKER HELPERS
+========================================================= */
+
+function BlogKicker({ category }: { category: string }) {
+  return (
+    <>
+      <span>The Pride Times Blog</span>
+      <span className="text-slate-300">/</span>
+      <span>{category}</span>
+    </>
+  );
+}
+
+/* =========================================================
    SPECIAL BLOGS
 ========================================================= */
 
@@ -694,84 +812,50 @@ function SpecialBlog({
   );
 
   return (
-    <article className="min-h-screen bg-white text-slate-900 antialiased">
-      <div className="border-b border-slate-200 bg-slate-50/70">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-          <Link
-            to={sectionPath}
-            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
-          >
-            <ArrowLeft
-              size={14}
-              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            />
-
-            Back to {sectionName}
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
-        <header className="mx-auto max-w-4xl">
-          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-            <span>The Pride Times Blog</span>
-
-            <span className="text-slate-300">/</span>
-
-            <span>{article.category}</span>
-          </div>
-
-          <h1 className="mt-3 max-w-4xl break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
-            {title}
-          </h1>
-
-          <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
-            {article.dek}
-          </p>
-
-          <BlogMeta
-            author={article.author}
-            date={article.publishedAt}
-            updatedAt={(article as { updatedAt?: string }).updatedAt}
-            readTime={estimateReadTime(
-              article.dek,
-              ...article.sections.map((x) => x.heading + " " + x.body)
-            )}
-          />
-        </header>
-
-        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
-          <main className="min-w-0">
-            <BlogBody
-              sections={article.sections}
-              category={article.category}
-              intro={article.dek}
-            />
-
-            <ShareAndBack
-              to={sectionPath}
-              label={sectionName}
-              title={title}
-              description={article.dek}
-            />
-
-            <RelatedPosts
-              items={related}
-              getHref={(item) =>
-                specialArticlePath(item.id)
-              }
-            />
-          </main>
-
-          <BlogSidebar
-            highlights={article.highlights}
-            category={article.category}
-            section={article.section}
-            facts={article.keyFacts}
-          />
-        </div>
-      </div>
-    </article>
+    <ArticleShell
+      backTo={sectionPath}
+      backLabel={sectionName}
+      kicker={<BlogKicker category={article.category} />}
+      title={title}
+      dek={article.dek}
+      meta={
+        <BlogMeta
+          author={article.author}
+          date={article.publishedAt}
+          updatedAt={(article as { updatedAt?: string }).updatedAt}
+          readTime={estimateReadTime(
+            article.dek,
+            ...article.sections.map((x) => x.heading + " " + x.body)
+          )}
+        />
+      }
+      share={{
+        to: sectionPath,
+        label: sectionName,
+        title,
+        description: article.dek,
+      }}
+      sidebar={
+        <BlogSidebar
+          highlights={article.highlights}
+          category={article.category}
+          section={article.section}
+          facts={article.keyFacts}
+        />
+      }
+      related={
+        <RelatedPosts
+          items={related}
+          getHref={(item) => specialArticlePath(item.id)}
+        />
+      }
+    >
+      <BlogBody
+        sections={article.sections}
+        category={article.category}
+        intro={article.dek}
+      />
+    </ArticleShell>
   );
 }
 
@@ -798,87 +882,53 @@ function HomepageBlog({
   ].includes(article.category);
 
   return (
-    <article className="min-h-screen bg-white text-slate-900 antialiased">
-      <div className="border-b border-slate-200 bg-slate-50/70">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-          <Link
-            to="/"
-            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
-          >
-            <ArrowLeft
-              size={14}
-              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            />
-
-            Back to Home
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
-        <header className="mx-auto max-w-4xl">
-          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-            <span>The Pride Times Blog</span>
-
-            <span className="text-slate-300">/</span>
-
-            <span>{article.category}</span>
-          </div>
-
-          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
-            {title}
-          </h1>
-
-          <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
-            {article.dek}
-          </p>
-
-          <BlogMeta
-            author={article.author}
-            date={article.publishedAt}
-            updatedAt={(article as { updatedAt?: string }).updatedAt}
-            readTime={estimateReadTime(
-              article.dek,
-              ...article.sections.map((x) => x.heading + " " + x.body)
-            )}
-          />
-        </header>
-
-        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
-          <main className="min-w-0">
-            <BlogBody
-              sections={article.sections}
-              category={article.category}
-              intro={article.dek}
-            />
-
-            <ShareAndBack
-              to="/"
-              label="Home"
-              title={title}
-              description={article.dek}
-            />
-
-            <RelatedPosts
-              items={related}
-              getHref={(item) =>
-                articlePath(item.title)
-              }
-            />
-          </main>
-
-          <BlogSidebar
-            highlights={article.highlights}
-            category={article.category}
-            section={article.category}
-            adSlots={{
-              top: isExpandedAdCategory ? "5608262547" : "5373718974",
-              bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
-            }}
-          />
-        </div>
-      </div>
-    </article>
+    <ArticleShell
+      backTo="/"
+      backLabel="Home"
+      kicker={<BlogKicker category={article.category} />}
+      title={title}
+      dek={article.dek}
+      meta={
+        <BlogMeta
+          author={article.author}
+          date={article.publishedAt}
+          updatedAt={(article as { updatedAt?: string }).updatedAt}
+          readTime={estimateReadTime(
+            article.dek,
+            ...article.sections.map((x) => x.heading + " " + x.body)
+          )}
+        />
+      }
+      share={{
+        to: "/",
+        label: "Home",
+        title,
+        description: article.dek,
+      }}
+      sidebar={
+        <BlogSidebar
+          highlights={article.highlights}
+          category={article.category}
+          section={article.category}
+          adSlots={{
+            top: isExpandedAdCategory ? "5608262547" : "5373718974",
+            bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
+          }}
+        />
+      }
+      related={
+        <RelatedPosts
+          items={related}
+          getHref={(item) => articlePath(item.title)}
+        />
+      }
+    >
+      <BlogBody
+        sections={article.sections}
+        category={article.category}
+        intro={article.dek}
+      />
+    </ArticleShell>
   );
 }
 
@@ -899,118 +949,95 @@ function DigestBlog({
   const related = relatedHomepageArticles(article, 3);
 
   return (
-    <article className="min-h-screen bg-white text-slate-900 antialiased">
-      <div className="border-b border-slate-200 bg-slate-50/70">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <Link
-            to="/"
-            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
-          >
-            <ArrowLeft
-              size={14}
-              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            />
-            Back to Home
+    <ArticleShell
+      backTo="/"
+      backLabel="Home"
+      topRight={
+        <Link
+          to={digest.sectionPath}
+          className={`rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
+        >
+          More in {digest.sectionName}
+        </Link>
+      }
+      kicker={
+        <>
+          <span>
+            {article.tags.includes("Global Industry Edition")
+              ? "The Pride Times News · Global Industry Edition"
+              : "Global Corporate News Digest"}
+          </span>
+          <span className="text-slate-300">/</span>
+          <Link to={digest.sectionPath} className="hover:underline">
+            {digest.sectionName}
           </Link>
-
-          <Link
-            to={digest.sectionPath}
-            className={`rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
-          >
-            More in {digest.sectionName}
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
-        <header className="mx-auto max-w-4xl">
-          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-            <span>
-              {article.tags.includes("Global Industry Edition")
-                ? "The Pride Times News · Global Industry Edition"
-                : "Global Corporate News Digest"}
-            </span>
-            <span className="text-slate-300">/</span>
-            <Link
-              to={digest.sectionPath}
-              className="hover:underline"
+        </>
+      }
+      title={article.title}
+      dek={
+        <span className="font-medium text-slate-700">{digest.lede}</span>
+      }
+      extra={
+        <p className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+          <MapPin size={12} className="text-red-600" />
+          {digest.location}
+        </p>
+      }
+      meta={
+        <BlogMeta
+          author={article.author}
+          date={article.publishedAt}
+          updatedAt={(article as { updatedAt?: string }).updatedAt}
+          readTime={estimateReadTime(
+            article.dek,
+            ...article.sections.map((x) => x.heading + " " + x.body)
+          )}
+        />
+      }
+      share={{
+        to: "/",
+        label: "Home",
+        title: article.title,
+        description: digest.lede,
+      }}
+      sidebar={
+        <BlogSidebar
+          highlights={article.highlights}
+          category={article.category}
+          section={article.category}
+          facts={digest.keyFacts}
+          quote={digest.quote}
+        />
+      }
+      related={
+        <RelatedPosts
+          items={related}
+          plainTitles
+          getHref={(item) => `/article/${item.slug}`}
+        />
+      }
+    >
+      <div className="blog-prose">
+        {digest.body.map((paragraph, index) => (
+          <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
+            <p
+              className={`mb-5 break-words text-[16px] leading-[1.8] text-slate-700 sm:text-[17px]${
+                index === 0 ? " drop-cap" : ""
+              }`}
             >
-              {digest.sectionName}
-            </Link>
-          </div>
+              {paragraph}
+            </p>
 
-          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
-            {article.title}
-          </h1>
-
-          <p className="mt-4 max-w-3xl break-words text-lg font-medium leading-8 text-slate-700 sm:text-xl sm:leading-9">
-            {digest.lede}
-          </p>
-
-          <p className="mt-5 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
-            <MapPin size={12} className="text-red-600" />
-            {digest.location}
-          </p>
-
-          <BlogMeta
-            author={article.author}
-            date={article.publishedAt}
-            updatedAt={(article as { updatedAt?: string }).updatedAt}
-            readTime={estimateReadTime(
-              article.dek,
-              ...article.sections.map((x) => x.heading + " " + x.body)
+            {digest.quote && index === digest.quoteAfter && (
+              <ArticleQuote
+                text={digest.quote.text}
+                by={digest.quote.by}
+              />
             )}
-          />
-        </header>
-
-        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
-          <main className="min-w-0">
-            <div className="blog-prose mt-2">
-              {digest.body.map((paragraph, index) => (
-                <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
-                  <p
-                    className={`mb-4 break-words text-[16px] leading-[1.75] text-slate-700 sm:text-[17px]${
-                      index === 0 ? " drop-cap" : ""
-                    }`}
-                  >
-                    {paragraph}
-                  </p>
-
-                  {digest.quote && index === digest.quoteAfter && (
-                    <ArticleQuote
-                      text={digest.quote.text}
-                      by={digest.quote.by}
-                    />
-                  )}
-                </Fragment>
-              ))}
-
-            </div>
-
-            <ShareAndBack
-              to="/"
-              label="Home"
-              title={article.title}
-              description={digest.lede}
-            />
-
-            <RelatedPosts
-              items={related}
-              plainTitles
-              getHref={(item) => `/article/${item.slug}`}
-            />
-          </main>
-
-          <BlogSidebar
-            highlights={article.highlights}
-            category={article.category}
-            section={article.category}
-            facts={digest.keyFacts}
-            quote={digest.quote}
-          />
-        </div>
+          </Fragment>
+        ))}
       </div>
-    </article>
+    </ArticleShell>
   );
 }
 
@@ -1095,81 +1122,47 @@ function MagazineBlog({
   );
 
   return (
-    <article className="min-h-screen bg-white text-slate-900 antialiased">
-      <div className="border-b border-slate-200 bg-slate-50/70">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-          <Link
-            to={backTo}
-            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
-          >
-            <ArrowLeft
-              size={14}
-              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            />
-
-            Back to {sectionLabel}
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 sm:pt-8">
-        <header className="mx-auto max-w-4xl">
-          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-            <span>The Pride Times Blog</span>
-
-            <span className="text-slate-300">/</span>
-
-            <span>{article.category}</span>
-          </div>
-
-          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl md:text-5xl">
-            {title}
-          </h1>
-
-          {dek && (
-            <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
-              {dek}
-            </p>
-          )}
-
-          <BlogMeta
-            author={article.author}
-            date={dateLabel}
-            updatedAt={updatedAt}
-            readTime={readTime}
-          />
-        </header>
-
-        <div className="mx-auto mt-6 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
-          <main className="min-w-0">
-            <BlogBody
-              sections={article.sections}
-              category={article.category}
-              intro={dek}
-            />
-
-            <ShareAndBack
-              to={backTo}
-              label={sectionLabel}
-              title={title}
-              description={dek}
-            />
-
-            <RelatedPosts
-              items={related}
-              getHref={relatedPath}
-            />
-          </main>
-
-          <BlogSidebar
-            highlights={article.highlights}
-            category={article.category}
-            section={sectionLabel}
-            facts={keyFacts}
-          />
-        </div>
-      </div>
-    </article>
+    <ArticleShell
+      backTo={backTo}
+      backLabel={sectionLabel}
+      kicker={<BlogKicker category={article.category} />}
+      title={title}
+      dek={dek || undefined}
+      meta={
+        <BlogMeta
+          author={article.author}
+          date={dateLabel}
+          updatedAt={updatedAt}
+          readTime={readTime}
+        />
+      }
+      share={{
+        to: backTo,
+        label: sectionLabel,
+        title,
+        description: dek,
+      }}
+      sidebar={
+        <BlogSidebar
+          highlights={article.highlights}
+          category={article.category}
+          section={sectionLabel}
+          facts={keyFacts}
+        />
+      }
+      related={
+        <RelatedPosts
+          items={related}
+          getHref={relatedPath}
+        />
+      }
+    >
+      <BlogBody
+        sections={article.sections}
+        category={article.category}
+        intro={dek}
+      />
+    </ArticleShell>
   );
 }
 
