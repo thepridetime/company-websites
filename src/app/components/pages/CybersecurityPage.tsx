@@ -6,21 +6,66 @@ import { PrideTimesAd } from "../AdSenseSlots";
 import {
   octEditionArticles,
   octEditionArticlePath,
-  type OctEditionArticle,
 } from "../../data/octEditionData";
+import {
+  specialArticles,
+  specialArticlePath,
+} from "../../data/specialArticleData";
+import CyberFallbackImg from "../../../imports/cyber-ops.png";
 
 /* =========================================================
-   CYBERSECURITY STORIES
-   Only the Cybersecurity stories from the October 2026
-   Global Industry Edition (src/app/data/octEditionData.ts).
+   CYBERSECURITY ITEMS
+   Combines:
+   - Cybersecurity stories from the October 2026 Global
+     Industry Edition (src/app/data/octEditionData.ts)
+   - Cybersecurity articles from src/app/data/specialArticleData.ts
+   The Oct edition stories come first (most recent).
 ========================================================= */
 
-const cyberStories: OctEditionArticle[] = octEditionArticles.filter(
-  (article) => article.industry === "Cybersecurity"
-);
+type CyberItem = {
+  id: string;
+  href: string;
+  title: string;
+  lede: string;
+  kicker: string;
+  location?: string;
+  image: string;
+  meta: string;
+  keyFacts: { label: string; value: string }[];
+};
 
-const leadStory = cyberStories[0];
-const otherStories = cyberStories.slice(1);
+const octCyberItems: CyberItem[] = octEditionArticles
+  .filter((article) => article.industry === "Cybersecurity")
+  .map((article) => ({
+    id: article.id,
+    href: octEditionArticlePath(article),
+    title: article.title,
+    lede: article.lede,
+    kicker: article.industry,
+    location: article.location,
+    image: article.image,
+    meta: `${article.publishedAt} · ${article.readTime}`,
+    keyFacts: article.keyFacts,
+  }));
+
+const specialCyberItems: CyberItem[] = specialArticles
+  .filter((article) => article.section === "Cybersecurity")
+  .map((article) => ({
+    id: article.id,
+    href: specialArticlePath(article.id),
+    title: article.title,
+    lede: article.dek,
+    kicker: article.category,
+    location: undefined,
+    image: article.image ?? CyberFallbackImg,
+    meta: `${article.publishedAt} · ${article.readTime}`,
+    keyFacts: article.keyFacts,
+  }));
+
+const cyberItems: CyberItem[] = [...octCyberItems, ...specialCyberItems];
+
+const leadStory = cyberItems[0];
+const otherStories = cyberItems.slice(1);
 
 /* =========================================================
    GOOGLE ADSENSE SLOTS
@@ -135,8 +180,7 @@ export function CybersecurityPage() {
 
                 <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
                   Cyber threats, vulnerabilities, AI security and
-                  post-quantum readiness from The Pride Times Global
-                  Industry Edition.
+                  infrastructure protection from The Pride Times.
                 </p>
               </div>
 
@@ -150,7 +194,7 @@ export function CybersecurityPage() {
 
           {!leadStory && (
             <p className="py-10 text-center text-[11px] text-gray-400">
-              No cybersecurity stories in this edition yet.
+              No cybersecurity stories yet.
             </p>
           )}
 
@@ -161,7 +205,7 @@ export function CybersecurityPage() {
                 {/* LEAD STORY */}
 
                 <Link
-                  to={octEditionArticlePath(leadStory)}
+                  to={leadStory.href}
                   className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
                 >
                   <ImageWithFallback
@@ -173,7 +217,8 @@ export function CybersecurityPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                   <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                    {leadStory.industry} | {leadStory.location}
+                    {leadStory.kicker}
+                    {leadStory.location ? ` | ${leadStory.location}` : ""}
                   </span>
 
                   <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
@@ -202,7 +247,7 @@ export function CybersecurityPage() {
                       </h2>
 
                       <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
-                        {cyberStories.length} stories
+                        {cyberItems.length} stories
                       </span>
                     </div>
 
@@ -237,15 +282,15 @@ export function CybersecurityPage() {
 
                     {otherStories.length > 0 ? (
                       <div className="divide-y divide-gray-100">
-                        {otherStories.map((item) => (
+                        {otherStories.slice(0, 6).map((item) => (
                           <Link
                             key={item.id}
-                            to={octEditionArticlePath(item)}
+                            to={item.href}
                             className="group block py-3"
                           >
                             <div className="flex gap-3">
                               <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
-                                {item.location}
+                                {item.location ?? item.kicker}
                               </span>
 
                               <div className="min-w-0">
@@ -276,21 +321,21 @@ export function CybersecurityPage() {
 
           {/* LATEST CYBERSECURITY FEED */}
 
-          {cyberStories.length > 0 && (
+          {cyberItems.length > 0 && (
             <section className="mb-12">
               <SectionHeader title="Latest Cybersecurity News" />
 
               <div className="divide-y divide-gray-200">
-                {cyberStories.map((story) => (
+                {cyberItems.map((item) => (
                   <Link
-                    key={story.id}
-                    to={octEditionArticlePath(story)}
+                    key={item.id}
+                    to={item.href}
                     className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
                   >
                     <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
                       <ImageWithFallback
-                        src={story.image}
-                        alt={story.title}
+                        src={item.image}
+                        alt={item.title}
                         className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
@@ -298,28 +343,32 @@ export function CybersecurityPage() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-x-2">
                         <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {story.industry}
+                          {item.kicker}
                         </span>
 
-                        <span className="text-[8px] text-gray-300">•</span>
+                        {item.location && (
+                          <>
+                            <span className="text-[8px] text-gray-300">•</span>
 
-                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
-                          <MapPin size={8} />
-                          {story.location}
-                        </span>
+                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                              <MapPin size={8} />
+                              {item.location}
+                            </span>
+                          </>
+                        )}
                       </div>
 
                       <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {story.title}
+                        {item.title}
                       </h3>
 
                       <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
-                        {story.lede}
+                        {item.lede}
                       </p>
 
                       <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
                         <Clock size={8} />
-                        {story.publishedAt} · {story.readTime}
+                        {item.meta}
                       </span>
                     </div>
                   </Link>
