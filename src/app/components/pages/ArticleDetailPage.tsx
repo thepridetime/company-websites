@@ -360,7 +360,7 @@ function relatedHomepageArticles(
    BLOG META
 ========================================================= */
 
-/* "By A and B" with each name underlined. */
+/* "By A & B" — compact, uppercase, with a short accent rule. */
 function Byline({ author }: { author: string }) {
   const names = author
     .split(/\s*(?:,|&|\band\b)\s*/i)
@@ -368,14 +368,13 @@ function Byline({ author }: { author: string }) {
     .filter(Boolean);
 
   return (
-    <p className="text-lg text-slate-900 sm:text-xl">
-      By{" "}
+    <p className="flex flex-wrap items-center gap-x-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-900 sm:text-sm">
+      <span aria-hidden className="h-px w-6 bg-slate-900" />
+      <span className="text-slate-400">By</span>
       {names.map((name, index) => (
         <span key={`${name}-${index}`}>
-          {index > 0 && (index === names.length - 1 ? " and " : ", ")}
-          <span className="underline decoration-1 underline-offset-4">
-            {name}
-          </span>
+          {index > 0 && (index === names.length - 1 ? " & " : ", ")}
+          {name}
         </span>
       ))}
     </p>
@@ -406,15 +405,15 @@ function BlogMeta({
   readTime?: string;
 }) {
   return (
-    <div className="mt-5 space-y-1 border-y border-slate-200 py-4">
+    <div className="mt-5 space-y-2 border-y border-slate-200 py-4">
       <Byline author={author} />
 
-      <p className="text-base text-slate-500 sm:text-lg">
+      <p className="text-sm text-slate-500 sm:text-base">
         <MetaTime value={date} />
       </p>
 
       {updatedAt && updatedAt !== date && (
-        <p className="text-base italic text-slate-500 sm:text-lg">
+        <p className="text-sm italic text-slate-500 sm:text-base">
           Updated on <MetaTime value={updatedAt} />
         </p>
       )}
