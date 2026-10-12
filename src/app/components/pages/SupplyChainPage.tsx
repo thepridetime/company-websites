@@ -1,40 +1,114 @@
-import { Clock } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router";
-import { specialArticlePathByTitle } from "../../data/specialArticleData";
+import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-
-import SC1Img from "../../../imports/SC1.png";
-import SC2Img from "../../../imports/SC2.png";
-import SC3Img from "../../../imports/SC3.png";
-
 import { PrideTimesAd } from "../AdSenseSlots";
+import {
+  octEditionArticles,
+  octEditionArticlePath,
+  type OctEditionArticle,
+} from "../../data/octEditionData";
 
 /* =========================================================
-   TYPES
+   SUPPLY CHAIN STORIES
+   Stories from the October 2026 Global Industry Edition
+   (src/app/data/octEditionData.ts) in the
+   "Industry & Supply Chain" section.
 ========================================================= */
 
-type Story = {
-  category: string;
-  title: string;
-  excerpt?: string;
-  author?: string;
-  time: string;
-  image: string;
-  badge?: string;
-};
+const supplyChainStories: OctEditionArticle[] = octEditionArticles.filter(
+  (article) => article.section === "Industry & Supply Chain"
+);
+
+const leadStory = supplyChainStories[0];
+const otherStories = supplyChainStories.slice(1);
 
 /* =========================================================
-   SECTION HEADER
+   GOOGLE ADSENSE SLOTS
+========================================================= */
+
+type AdSlotProps = {
+  slot: string;
+  format?: "auto" | "fluid";
+  layout?: string;
+  layoutKey?: string;
+  className?: string;
+  minHeight?: number;
+};
+
+function AdSlot({
+  slot,
+  format = "auto",
+  layout,
+  layoutKey,
+  className = "",
+  minHeight = 90,
+}: AdSlotProps) {
+  useEffect(() => {
+    try {
+      const w = window as Window & {
+        adsbygoogle?: unknown[];
+      };
+
+      w.adsbygoogle = w.adsbygoogle || [];
+      w.adsbygoogle.push({});
+    } catch {
+      // AdSense may be unavailable because of an ad blocker,
+      // development environment, consent settings, or no inventory.
+    }
+  }, []);
+
+  return (
+    <div className={`w-full overflow-hidden ${className}`}>
+      <div className="mb-1 text-center text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+        Advertisement
+      </div>
+
+      <div className="w-full overflow-hidden" style={{ minHeight }}>
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: "block",
+            width: "100%",
+            minHeight,
+          }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive={
+            format === "auto" ? "true" : undefined
+          }
+          data-ad-layout={layout}
+          data-ad-layout-key={layoutKey}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SidebarAd() {
+  return (
+    <AdSlot
+      slot="5373718974"
+      format="auto"
+      minHeight={250}
+      className="mt-6"
+    />
+  );
+}
+
+/* =========================================================
+   SECTION HEADER (same style as homepage)
 ========================================================= */
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center justify-between border-t-2 border-black pt-3 pb-2 mb-4">
-      <h2 className="font-serif text-[15px] md:text-[17px] font-bold text-gray-950 uppercase tracking-tight">
+    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
         {title}
       </h2>
 
-      <span className="hidden sm:block text-[7px] md:text-[8px] uppercase tracking-[0.16em] text-[#999]">
+      <span className="hidden sm:block text-[8px] uppercase tracking-[0.16em] text-gray-400">
         The Pride Times
       </span>
     </div>
@@ -42,530 +116,221 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 /* =========================================================
-   HERO DATA
-========================================================= */
-
-const hero: Story = {
-  category: "SUPPLY CHAIN",
-  title: "Red Sea Rerouting Adds $22B to Global Shipping Costs in H1 2026",
-  excerpt:
-    "Continued Houthi threats force 85% of Asia-Europe shipping around the Cape of Good Hope, adding 14 days to transit times.",
-  author: "Sagar Kumar",
-  time: "September 15, 2026",
-  image: SC1Img,
-};
-
-/* =========================================================
-   MAJOR STORIES
-========================================================= */
-
-const majorStories: Story[] = [
-  {
-    category: "SUPPLY CHAIN",
-    title:
-      "Apple Moves 25% of iPhone Production to India Ahead of Schedule",
-    time: "4 hr ago",
-    image: SC2Img,
-  },
-  {
-    category: "GLOBAL TRADE",
-    title:
-      "Global Manufacturers Redesign Supply Networks Amid Trade Uncertainty",
-    time: "6 hr ago",
-    image: SC3Img,
-  },
-];
-
-/* =========================================================
-   RELATED COVERAGE
-========================================================= */
-
-const relatedStories: Story[] = [
-  {
-    category: "LOGISTICS",
-    title:
-      "Shipping Companies Accelerate Digital Transformation Across Global Routes",
-    time: "8 hr ago",
-    image: SC1Img,
-  },
-  {
-    category: "SUPPLY CHAIN",
-    title:
-      "Apple Moves 25% of iPhone Production to India Ahead of Schedule",
-    time: "4 hr ago",
-    image: SC2Img,
-  },
-];
-
-/* =========================================================
-   LATEST SUPPLY CHAIN NEWS
-========================================================= */
-
-const latestNews: Story[] = [
-  {
-    category: "TECHNOLOGY",
-    badge: "HOT",
-    title:
-      "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-    excerpt:
-      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South...",
-    time: "12 min ago",
-    image: SC2Img,
-  },
-  {
-    category: "TECHNOLOGY",
-    badge: "HOT",
-    title:
-      "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
-    excerpt:
-      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
-    image: SC3Img,
-  },
-  {
-    category: "TECHNOLOGY",
-    title:
-      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
-    excerpt:
-      "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing...",
-    time: "2 hr ago",
-    image: SC1Img,
-  },
-  {
-    category: "TECHNOLOGY",
-    title:
-      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
-    excerpt:
-      "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative...",
-    time: "3 hr ago",
-    image: SC2Img,
-  },
-  {
-    category: "TECHNOLOGY",
-    title:
-      "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
-    excerpt:
-      "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in 14 of 18 enterprise reasoning...",
-    time: "5 hr ago",
-    image: SC3Img,
-  },
-  {
-    category: "TECHNOLOGY",
-    title:
-      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
-    excerpt:
-      "The latest satellite constellation expansion brings high-speed internet to remote regions across Africa, South Asia, and Latin...",
-    time: "6 hr ago",
-    image: SC1Img,
-  },
-];
-
-/* =========================================================
-   HERO STORY
-========================================================= */
-
-function HeroStory() {
-  return (
-    <Link to={specialArticlePathByTitle(hero.title)} className="min-w-0 block">
-      <div className="relative overflow-hidden rounded-md h-[250px] sm:h-[330px] md:h-[400px] lg:h-[405px]">
-        <ImageWithFallback
-          src={hero.image}
-          alt={hero.title}
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      <div className="pt-3">
-        <p className="text-[8px] md:text-[9px] font-bold tracking-[0.14em] uppercase text-[#e31b23]">
-          {hero.category}
-        </p>
-
-        <h1 className="mt-1.5 font-serif text-[24px] sm:text-[28px] md:text-[33px] lg:text-[36px] font-bold leading-[1.08] text-gray-950">
-          {hero.title}
-        </h1>
-
-        <p className="mt-2.5 text-[11px] md:text-[12px] leading-[1.55] text-[#666] max-w-[950px]">
-          {hero.excerpt}
-        </p>
-
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-[8px] md:text-[9px] text-[#999]">
-          <span className="font-medium text-gray-600">
-            By {hero.author}
-          </span>
-
-          <span>·</span>
-
-          <span>{hero.time}</span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-/* =========================================================
-   MAJOR STORY
-========================================================= */
-
-function MajorStory({ story }: { story: Story }) {
-  return (
-    <Link
-      to={specialArticlePathByTitle(story.title)}
-      className="group grid grid-cols-[82px_minmax(0,1fr)] sm:grid-cols-[105px_minmax(0,1fr)] gap-3 py-3 border-b border-[#dedede]"
-    >
-      <div className="w-full h-[64px] sm:h-[76px] overflow-hidden rounded-sm bg-gray-100">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
-        />
-      </div>
-
-      <div className="min-w-0">
-        <p className="text-[7px] uppercase font-bold tracking-[0.08em] text-[#e31b23]">
-          {story.category}
-        </p>
-
-        <h3 className="mt-1 font-serif text-[11px] sm:text-[13px] leading-[1.22] font-bold text-gray-900 group-hover:text-[#e31b23] transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="mt-1 text-[7px] text-[#aaa] flex items-center gap-1">
-          <Clock size={8} />
-          {story.time}
-        </p>
-      </div>
-    </Link>
-  );
-}
-
-/* =========================================================
-   SUPPORTING STORY
-========================================================= */
-
-function SupportingStory({ story }: { story: Story }) {
-  return (
-    <Link
-      to={specialArticlePathByTitle(story.title)}
-      className="group flex gap-3 py-3 border-b border-[#dedede]"
-    >
-      <div className="w-[95px] sm:w-[120px] h-[68px] sm:h-[78px] shrink-0 overflow-hidden rounded-sm">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
-        />
-      </div>
-
-      <div className="min-w-0">
-        <p className="text-[7px] uppercase font-bold tracking-[0.08em] text-[#e31b23]">
-          {story.category}
-        </p>
-
-        <h3 className="mt-1 font-serif text-[12px] sm:text-[14px] font-bold leading-[1.22] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="mt-1 text-[7px] sm:text-[8px] text-[#aaa] flex items-center gap-1">
-          <Clock size={8} />
-          {story.time}
-        </p>
-      </div>
-    </Link>
-  );
-}
-
-/* =========================================================
-   NEWS CARD
-========================================================= */
-
-function NewsCard({ story }: { story: Story }) {
-  return (
-    <Link
-      to={specialArticlePathByTitle(story.title)}
-      className="group block min-w-0 border-t border-[#dedede] pt-3"
-    >
-      <div className="relative h-[145px] sm:h-[155px] md:h-[160px] overflow-hidden bg-gray-100">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-        />
-      </div>
-
-      <div className="pt-2.5">
-        <div className="flex items-center gap-1.5">
-          <p className="text-[7px] font-bold uppercase tracking-[0.08em] text-[#e31b23]">
-            {story.category}
-          </p>
-
-          {story.badge && (
-            <span className="bg-[#e31b23] text-white text-[6px] font-bold px-1.5 py-0.5 rounded-sm uppercase">
-              {story.badge}
-            </span>
-          )}
-        </div>
-
-        <h3 className="mt-1.5 font-serif text-[13px] md:text-[14px] font-bold leading-[1.22] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-          {story.title}
-        </h3>
-
-        {story.excerpt && (
-          <p className="mt-1.5 text-[9px] md:text-[10px] leading-[1.45] text-[#777] line-clamp-2">
-            {story.excerpt}
-          </p>
-        )}
-
-        <div className="mt-2 flex items-center justify-between text-[7px] text-[#aaa]">
-          <span>By Sagar Kumar</span>
-
-          <span className="flex items-center gap-1">
-            <Clock size={8} />
-            {story.time}
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-/* =========================================================
-   NEWSROOM STREAM
-========================================================= */
-
-function NewsroomStream() {
-  return (
-    <section>
-      <SectionHeader title="Newsroom" />
-
-      <div className="border-t border-[#dedede]">
-        {latestNews.map((news) => (
-          <Link
-            key={`stream-${news.title}`}
-            to={specialArticlePathByTitle(news.title)}
-            className="grid grid-cols-[70px_minmax(0,1fr)] sm:grid-cols-[82px_minmax(0,1fr)] gap-3 py-3 border-b border-[#dedede] group"
-          >
-            <div className="text-[8px] text-[#999] pt-0.5">
-              <span className="flex items-center gap-1">
-                <Clock size={8} />
-                {news.time}
-              </span>
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-[7px] font-bold uppercase tracking-[0.08em] text-[#e31b23]">
-                {news.category}
-              </p>
-
-              <h3 className="mt-1 text-[11px] sm:text-[12px] font-semibold leading-[1.3] text-gray-900 group-hover:text-[#e31b23] transition-colors">
-                {news.title}
-              </h3>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   NEWSLETTER
-========================================================= */
-
-function Newsletter() {
-  return (
-    <section className="mt-6 md:mt-8 mb-10">
-      <div className="rounded-md bg-[#071a2d] px-5 py-7 md:py-8 text-center">
-        <h2 className="font-serif text-[18px] md:text-[20px] font-bold text-white">
-          Stay Ahead with The Pride Times
-        </h2>
-
-        <p className="mt-1 text-[9px] md:text-[10px] text-gray-300">
-          Daily briefings on Supply Chain delivered to your inbox.
-        </p>
-
-        <div className="mt-4 flex flex-col sm:flex-row justify-center gap-2">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            aria-label="Email address"
-            className="h-8 w-full sm:w-[190px] rounded border border-[#42566b] bg-[#1c344b] px-3 text-[9px] text-white placeholder:text-[#8796a6] outline-none focus:border-[#e31b23]"
-          />
-
-          <button
-            type="button"
-            className="h-8 px-4 rounded bg-[#e31b23] text-white text-[9px] font-bold hover:bg-[#c9151c] transition-colors"
-          >
-            Subscribe Free
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   MAIN PAGE
+   SUPPLY CHAIN PAGE
 ========================================================= */
 
 export function SupplyChainPage() {
   return (
-    <div className="w-full bg-white text-[#17140F]">
-      <main className="max-w-[1450px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <main className="pt-4 md:pt-6 pb-16">
 
-        {/* =================================================
-            PAGE HEADER
-        ================================================= */}
+          {/* PAGE TITLE */}
 
-        <section className="pt-5 md:pt-7">
-          <div className="border-t-[3px] border-[#e31b23] pt-4 md:pt-5">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2">
+          <header className="border-t-[3px] border-red-600 pt-4 mb-6">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
               <div>
-                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] font-bold leading-tight">
+                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
                   Supply Chain
                 </h1>
 
-                <p className="mt-1 text-[12px] md:text-[13px] text-[#777]">
-                  Global logistics, trade disruption, and the future of
-                  commerce.
+                <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
+                  Manufacturing bottlenecks, logistics, tariffs and industrial
+                  sourcing from The Pride Times Global Industry Edition.
                 </p>
               </div>
 
-              <span className="text-[7px] md:text-[8px] uppercase tracking-[0.16em] text-[#aaa]">
-                Logistics • Trade • Global Commerce
+              <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
+                Logistics • Sourcing • Industry
               </span>
             </div>
-          </div>
-        </section>
+          </header>
 
-        {/* =================================================
-            TOP ADVERTISEMENT
-        ================================================= */}
-
-        <section className="mt-4 md:mt-5">
           <PrideTimesAd variant="first" />
-        </section>
 
-        {/* =================================================
-            LEAD EDITORIAL AREA
-        ================================================= */}
+          {!leadStory && (
+            <p className="py-10 text-center text-[11px] text-gray-400">
+              No supply chain stories in this edition yet.
+            </p>
+          )}
 
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_285px] gap-5 md:gap-6 mt-5 md:mt-6">
+          {leadStory && (
+            <section className="pb-8 mb-8 border-b border-gray-300">
+              <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-6">
 
-          {/* LEAD STORY */}
+                {/* LEAD STORY */}
 
-          <HeroStory />
+                <Link
+                  to={octEditionArticlePath(leadStory)}
+                  className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
+                >
+                  <ImageWithFallback
+                    src={leadStory.image}
+                    alt={leadStory.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
 
-          {/* EDITORIAL RAIL */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
-          <aside className="lg:border-l lg:border-[#dedede] lg:pl-5">
+                  <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
+                    {leadStory.industry} | {leadStory.location}
+                  </span>
 
-            <div className="border-t-2 border-black pt-3">
-              <h2 className="font-serif text-[13px] md:text-[14px] font-bold uppercase">
-                Major Supply Chain Stories
-              </h2>
-            </div>
+                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                    <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
+                      {leadStory.title}
+                    </h2>
 
-            {majorStories.map((story) => (
-              <MajorStory
-                key={story.title}
-                story={story}
-              />
-            ))}
+                    <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
+                      {leadStory.lede}
+                    </p>
 
-            <PrideTimesAd variant="fourth" className="mt-5" />
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
+                      Read Full Story
+                      <ArrowRight size={12} />
+                    </span>
+                  </div>
+                </Link>
 
-          </aside>
-        </section>
+                {/* RIGHT COLUMN */}
 
-        {/* =================================================
-            SUPPORTING COVERAGE
-        ================================================= */}
+                <aside className="min-w-0">
+                  <div className="pb-5 border-b border-gray-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h2 className="font-serif text-lg font-bold">
+                        Key Figures
+                      </h2>
 
-        <section className="mt-8 md:mt-10">
-          <SectionHeader title="Supply Chain Coverage" />
+                      <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
+                        {supplyChainStories.length} stories
+                      </span>
+                    </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 lg:gap-x-8">
-            {relatedStories.map((story) => (
-              <SupportingStory
-                key={story.title}
-                story={story}
-              />
-            ))}
-          </div>
-        </section>
+                    <div className="divide-y divide-gray-100">
+                      {leadStory.keyFacts.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className="py-2 flex items-start justify-between gap-3"
+                        >
+                          <span className="text-[10px] font-semibold text-gray-800">
+                            {fact.label}
+                          </span>
 
-        {/* =================================================
-            LATEST NEWS + NEWSROOM STREAM
-        ================================================= */}
+                          <span className="text-[10px] text-gray-500 text-right tabular-nums">
+                            {fact.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-        <section className="mt-8 md:mt-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)] gap-7">
+                  <div className="pt-5">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                      <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
+                        More Supply Chain News
+                      </h2>
 
-            {/* LATEST STORIES */}
+                      <span className="text-[8px] uppercase tracking-wide text-gray-400">
+                        Newsroom
+                      </span>
+                    </div>
 
-            <div>
+                    {otherStories.length > 0 ? (
+                      <div className="divide-y divide-gray-100">
+                        {otherStories.map((item) => (
+                          <Link
+                            key={item.id}
+                            to={octEditionArticlePath(item)}
+                            className="group block py-3"
+                          >
+                            <div className="flex gap-3">
+                              <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
+                                {item.location}
+                              </span>
+
+                              <div className="min-w-0">
+                                <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
+                                  {item.title}
+                                </span>
+
+                                <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
+                                  {item.lede}
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="py-3 text-[10px] text-gray-400">
+                        More supply chain stories will appear here.
+                      </p>
+                    )}
+                  </div>
+
+                  <SidebarAd />
+                </aside>
+              </div>
+            </section>
+          )}
+
+          {/* LATEST SUPPLY CHAIN FEED */}
+
+          {supplyChainStories.length > 0 && (
+            <section className="mb-12">
               <SectionHeader title="Latest Supply Chain News" />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-7">
-                {latestNews.map((news) => (
-                  <NewsCard
-                    key={news.title}
-                    story={news}
-                  />
+              <div className="divide-y divide-gray-200">
+                {supplyChainStories.map((story) => (
+                  <Link
+                    key={story.id}
+                    to={octEditionArticlePath(story)}
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
+                  >
+                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
+                      <ImageWithFallback
+                        src={story.image}
+                        alt={story.title}
+                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2">
+                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                          {story.industry}
+                        </span>
+
+                        <span className="text-[8px] text-gray-300">•</span>
+
+                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                          <MapPin size={8} />
+                          {story.location}
+                        </span>
+                      </div>
+
+                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {story.title}
+                      </h3>
+
+                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
+                        {story.lede}
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
+                        <Clock size={8} />
+                        {story.publishedAt} · {story.readTime}
+                      </span>
+                    </div>
+                  </Link>
                 ))}
               </div>
-            </div>
+            </section>
+          )}
 
-            {/* NEWSROOM */}
-
-            <div className="lg:border-l lg:border-[#dedede] lg:pl-5">
-              <NewsroomStream />
-            </div>
-
-          </div>
-        </section>
-
-        {/* =================================================
-            SECOND ADVERTISEMENT
-        ================================================= */}
-
-        <section className="mt-7 md:mt-8">
           <PrideTimesAd variant="second" />
-        </section>
-
-        {/* =================================================
-            MORE FROM SUPPLY CHAIN
-        ================================================= */}
-
-        <section className="mt-7 md:mt-9">
-          <SectionHeader title="More From Supply Chain" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-7">
-            {relatedStories.map((story) => (
-              <SupportingStory
-                key={`more-${story.title}`}
-                story={story}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================
-            THIRD ADVERTISEMENT
-        ================================================= */}
-
-        <section className="mt-7 md:mt-9">
-          <PrideTimesAd variant="fifth" />
-        </section>
-
-        {/* =================================================
-            NEWSLETTER
-        ================================================= */}
-
-        <Newsletter />
-
-        
-    </main>
+        </main>
+      </div>
     </div>
   );
 }
