@@ -1,187 +1,136 @@
-import { useNavigate } from "react-router";
-import { Clock, ChevronRight } from "lucide-react";
+import { useEffect } from "react";
+import { Link } from "react-router";
+import { ArrowRight, Clock } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-
 import { PrideTimesAd } from "../AdSenseSlots";
+import {
+  specialArticles,
+  specialArticlePath,
+} from "../../data/specialArticleData";
+import WhiteHouseFallbackImg from "../../../imports/Insightimage.png";
 
-const articleIds: Record<string, string> = {
-  "President Signs Historic AI Accountability Act into Law": "whitehouse-president-signs-ai-accountability-act",
-  "White House Announces $500B Infrastructure Investment in AI": "whitehouse-500b-ai-infrastructure",
-  "Administration Begins New Round of Federal Technology Reviews": "whitehouse-federal-technology-reviews",
-  "Congress Debates New Framework for Artificial Intelligence": "whitehouse-congress-ai-framework",
-  "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push": "whitehouse-nvidia-humanoid-robot-push",
-  "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion": "whitehouse-alphabet-ai-data-center",
-  "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved": "whitehouse-quantum-1000-qubit",
-  "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages": "whitehouse-apple-ai-translation",
-  "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests": "whitehouse-meta-llama4-enterprise",
-  "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally": "whitehouse-starlink-gen3-global"
-};
-
-const articlePath = (title: string) =>
-  `/article/${articleIds[title] || "whitehouse-" + title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/g, "")}`;
+/* Display label for this section (page title, cards and feed). */
+const SECTION_LABEL = "White House Watch";
 
 /* =========================================================
-   TYPES
+   WHITE HOUSE WATCH ITEMS
+   Articles from src/app/data/specialArticleData.ts that are
+   White House Watch stories (category "WHITE HOUSE WATCH").
 ========================================================= */
 
-type Story = {
-  id: number;
-  category: string;
+type WhiteHouseItem = {
+  id: string;
+  href: string;
   title: string;
-  excerpt: string;
-  time: string;
+  lede: string;
+  kicker: string;
   image: string;
+  meta: string;
+  keyFacts: { label: string; value: string }[];
 };
 
-type SimpleStory = {
-  id: number;
-  category: string;
-  title: string;
-  time: string;
-  image: string;
+const whiteHouseItems: WhiteHouseItem[] = specialArticles
+  .filter(
+    (article) =>
+      article.section === "White House Watch" &&
+      article.category === "WHITE HOUSE WATCH"
+  )
+  .map((article) => ({
+    id: article.id,
+    href: specialArticlePath(article.id),
+    title: article.title,
+    lede: article.dek,
+    kicker: article.category,
+    image: article.image ?? WhiteHouseFallbackImg,
+    meta: `${article.publishedAt} · ${article.readTime}`,
+    keyFacts: article.keyFacts,
+  }));
+
+const leadStory = whiteHouseItems[0];
+const otherStories = whiteHouseItems.slice(1);
+
+/* =========================================================
+   GOOGLE ADSENSE SLOTS
+========================================================= */
+
+type AdSlotProps = {
+  slot: string;
+  format?: "auto" | "fluid";
+  layout?: string;
+  layoutKey?: string;
+  className?: string;
+  minHeight?: number;
 };
 
-/* =========================================================
-   HERO STORY
-========================================================= */
+function AdSlot({
+  slot,
+  format = "auto",
+  layout,
+  layoutKey,
+  className = "",
+  minHeight = 90,
+}: AdSlotProps) {
+  useEffect(() => {
+    try {
+      const w = window as Window & {
+        adsbygoogle?: unknown[];
+      };
 
-const hero = {
-  category: "WHITE HOUSE WATCH",
-  title: "President Signs Historic AI Accountability Act into Law",
-  excerpt:
-    "The most comprehensive AI legislation in US history mandates transparency, safety audits, and liability frameworks for high-risk AI systems across 14 sectors.",
-  author: "Sagar Kumar",
-  date: "September 15, 2026",
-  time: "30 min ago",
-  image:
-    "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1400&q=85",
-};
+      w.adsbygoogle = w.adsbygoogle || [];
+      w.adsbygoogle.push({});
+    } catch {
+      // AdSense may be unavailable because of an ad blocker,
+      // development environment, consent settings, or no inventory.
+    }
+  }, []);
 
-/* =========================================================
-   MORE STORIES
-========================================================= */
-
-const moreStories: SimpleStory[] = [
-  {
-    id: 1,
-    category: "WHITE HOUSE WATCH",
-    title: "White House Announces $500B Infrastructure Investment in AI",
-    time: "2 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: 2,
-    category: "WHITE HOUSE WATCH",
-    title: "Administration Begins New Round of Federal Technology Reviews",
-    time: "4 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    id: 3,
-    category: "WHITE HOUSE WATCH",
-    title: "Congress Debates New Framework for Artificial Intelligence",
-    time: "6 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1580130379624-3a069adbffc5?auto=format&fit=crop&w=400&q=80",
-  },
-];
-
-/* =========================================================
-   LATEST NEWS
-========================================================= */
-
-const latestNews: Story[] = [
-  {
-    id: 1,
-    category: "TECHNOLOGY",
-    title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-    excerpt:
-      "Nvidia has announced an ambitious collaboration with humanoid robot manufacturers across the United States, Europe, and South...",
-    time: "12 min ago",
-    image:
-      "https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=700&q=80",
-  },
-  {
-    id: 2,
-    category: "TECHNOLOGY",
-    title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
-    excerpt:
-      "Hyperscaler capex tops $700B while grid, water and community pushback intensifies across key markets.",
-    time: "35 min ago",
-    image:
-      "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=700&q=80",
-  },
-  {
-    id: 3,
-    category: "TECHNOLOGY",
-    title:
-      "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
-    excerpt:
-      "IBM and Google jointly announce stable 1,000-qubit processors, marking a watershed moment for enterprise quantum computing.",
-    time: "2 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=700&q=80",
-  },
-  {
-    id: 4,
-    category: "TECHNOLOGY",
-    title:
-      "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
-    excerpt:
-      "Apple's most ambitious software update rewrites the rules of personal AI, integrating on-device translation and generative...",
-    time: "3 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=700&q=80",
-  },
-  {
-    id: 5,
-    category: "TECHNOLOGY",
-    title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
-    excerpt:
-      "Open-source AI takes center stage as Meta's latest model outperforms proprietary systems in multiple enterprise reasoning...",
-    time: "5 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=700&q=80",
-  },
-  {
-    id: 6,
-    category: "TECHNOLOGY",
-    title:
-      "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
-    excerpt:
-      "The latest satellite constellation expansion brings high-speed internet to remote regions across Africa, South Asia, and Latin...",
-    time: "6 hr ago",
-    image:
-      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=700&q=80",
-  },
-];
-
-/* =========================================================
-   SHARED SECTION HEADER
-========================================================= */
-
-function SectionHeader({
-  title,
-  compact = false,
-}: {
-  title: string;
-  compact?: boolean;
-}) {
   return (
-    <div
-      className={`flex items-center justify-between border-b-2 border-black ${
-        compact ? "pb-2 mb-3" : "pb-2.5 mb-5"
-      }`}
-    >
-      <h2
-        className={`font-bold uppercase tracking-[0.07em] text-gray-900 ${
-          compact
-            ? "text-[12px] md:text-[13px]"
-            : "text-[14px] md:text-[16px]"
-        }`}
-      >
+    <div className={`w-full overflow-hidden ${className}`}>
+      <div className="mb-1 text-center text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+        Advertisement
+      </div>
+
+      <div className="w-full overflow-hidden" style={{ minHeight }}>
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: "block",
+            width: "100%",
+            minHeight,
+          }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive={
+            format === "auto" ? "true" : undefined
+          }
+          data-ad-layout={layout}
+          data-ad-layout-key={layoutKey}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SidebarAd() {
+  return (
+    <AdSlot
+      slot="5373718974"
+      format="auto"
+      minHeight={250}
+      className="mt-6"
+    />
+  );
+}
+
+/* =========================================================
+   SECTION HEADER (same style as homepage)
+========================================================= */
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
         {title}
       </h2>
 
@@ -193,566 +142,216 @@ function SectionHeader({
 }
 
 /* =========================================================
-   STORY META
-========================================================= */
-
-function StoryMeta({
-  time,
-  author = "Sagar Kumar",
-}: {
-  time: string;
-  author?: string;
-}) {
-  return (
-    <div className="flex flex-wrap items-center gap-2.5 mt-3 text-[8px] text-gray-400">
-      <span>By {author}</span>
-
-      <span className="text-gray-300">•</span>
-
-      <span className="flex items-center gap-1">
-        <Clock size={9} />
-        {time}
-      </span>
-    </div>
-  );
-}
-
-/* =========================================================
-   MORE STORIES
-========================================================= */
-
-function MoreStories() {
-  const navigate = useNavigate();
-  return (
-    <div className="mt-5">
-      <SectionHeader title="More White House Watch" compact />
-
-      {moreStories.map((story) => (
-        <article
-          key={story.id}
-          onClick={() => navigate(articlePath(story.title))}
-          className="flex gap-2.5 py-3 border-b border-gray-200 group cursor-pointer"
-        >
-          <ImageWithFallback
-            src={story.image}
-            alt={story.title}
-            className="w-[64px] h-[48px] object-cover rounded-[3px] shrink-0"
-          />
-
-          <div className="min-w-0">
-            <p className="text-[7px] text-red-600 font-bold uppercase tracking-wide">
-              {story.category}
-            </p>
-
-            <h3 className="text-[10px] font-bold leading-[1.25] text-gray-900 group-hover:text-red-600 transition-colors">
-              {story.title}
-            </h3>
-
-            <p className="text-[8px] text-gray-400 mt-1">{story.time}</p>
-          </div>
-        </article>
-      ))}
-    </div>
-  );
-}
-
-/* =========================================================
-   MAJOR STORY CARD
-========================================================= */
-
-function MajorStoryCard({ story }: { story: Story }) {
-  const navigate = useNavigate();
-  return (
-    <article onClick={() => navigate(articlePath(story.title))}
-                className="group cursor-pointer border-b border-gray-200 pb-4">
-      <div className="relative overflow-hidden h-[150px] md:h-[175px] bg-gray-100 rounded-sm">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-        />
-      </div>
-
-      <div className="pt-2.5">
-        <span className="text-[7px] uppercase tracking-wider font-bold text-red-600">
-          {story.category}
-        </span>
-
-        <h3 className="font-serif text-[15px] md:text-[17px] font-bold leading-[1.15] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="text-[9px] md:text-[10px] leading-4 text-gray-500 mt-1.5 line-clamp-2">
-          {story.excerpt}
-        </p>
-
-        <StoryMeta time={story.time} />
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   SUPPORTING STORY CARD
-========================================================= */
-
-function SupportingStoryCard({ story }: { story: Story }) {
-  const navigate = useNavigate();
-  return (
-    <article onClick={() => navigate(articlePath(story.title))}
-    className="group cursor-pointer">
-      <div className="flex gap-3">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-[105px] h-[78px] md:w-[125px] md:h-[88px] object-cover rounded-sm shrink-0"
-        />
-
-        <div className="min-w-0">
-          <span className="text-[7px] uppercase tracking-wider font-bold text-red-600">
-            {story.category}
-          </span>
-
-          <h3 className="font-serif text-[12px] md:text-[14px] font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-            {story.title}
-          </h3>
-
-          <p className="text-[9px] text-gray-500 mt-1 line-clamp-2">
-            {story.excerpt}
-          </p>
-
-          <div className="flex items-center gap-1 text-[8px] text-gray-400 mt-1.5">
-            <Clock size={8} />
-            {story.time}
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   NEWSROOM STREAM
-========================================================= */
-
-function NewsroomStream() {
-  const navigate = useNavigate();
-  const newsroomStories = [
-    {
-      category: "WHITE HOUSE WATCH",
-      title: "White House Announces $500B Infrastructure Investment in AI",
-      time: "2 hr ago",
-    },
-    {
-      category: "WHITE HOUSE WATCH",
-      title: "Administration Begins New Round of Federal Technology Reviews",
-      time: "4 hr ago",
-    },
-    {
-      category: "WHITE HOUSE WATCH",
-      title: "Congress Debates New Framework for Artificial Intelligence",
-      time: "6 hr ago",
-    },
-    {
-      category: "TECHNOLOGY",
-      title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push",
-      time: "12 min ago",
-    },
-    {
-      category: "TECHNOLOGY",
-      title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion",
-      time: "35 min ago",
-    },
-    {
-      category: "TECHNOLOGY",
-      title:
-        "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
-      time: "2 hr ago",
-    },
-    {
-      category: "TECHNOLOGY",
-      title:
-        "Apple Intelligence: iOS 21 Introduces Real-Time AI Translation Across 87 Languages",
-      time: "3 hr ago",
-    },
-    {
-      category: "TECHNOLOGY",
-      title: "Meta's LLaMA 4 Surpasses GPT-5 in Enterprise Benchmark Tests",
-      time: "5 hr ago",
-    },
-    {
-      category: "TECHNOLOGY",
-      title:
-        "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
-      time: "6 hr ago",
-    },
-  ];
-
-  return (
-    <aside className="border-l-0 lg:border-l lg:border-gray-300 lg:pl-5">
-      <div className="flex items-center justify-between border-b-2 border-black pb-2 mb-1">
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.08em]">
-          Newsroom
-        </h2>
-
-        <span className="text-[8px] uppercase tracking-widest text-gray-400">
-          Live Feed
-        </span>
-      </div>
-
-      <div>
-        {newsroomStories.map((story, index) => (
-          <article
-            key={`${story.title}-${index}`}
-            onClick={() => navigate(articlePath(story.title))}
-            className="py-3 border-b border-gray-200 group cursor-pointer"
-          >
-            <div className="flex items-start gap-2">
-              <span className="text-[8px] font-mono text-gray-300 pt-0.5 w-4 shrink-0">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-
-              <div>
-                <p className="text-[7px] uppercase tracking-wider font-bold text-red-600">
-                  {story.category}
-                </p>
-
-                <h3 className="text-[10px] md:text-[11px] font-bold leading-[1.3] mt-0.5 text-gray-900 group-hover:text-red-600 transition-colors">
-                  {story.title}
-                </h3>
-
-                <div className="flex items-center gap-1 mt-1 text-[8px] text-gray-400">
-                  <Clock size={8} />
-                  {story.time}
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </aside>
-  );
-}
-
-/* =========================================================
-   LATEST NEWS CARD
-========================================================= */
-
-function LatestNewsCard({ story }: { story: Story }) {
-  const navigate = useNavigate();
-  return (
-    <article
-      onClick={() => navigate(articlePath(story.title))}
-      className="border border-gray-200 rounded-md overflow-hidden bg-white group cursor-pointer"
-    >
-      <div className="h-[145px] md:h-[155px] overflow-hidden bg-gray-100">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-      </div>
-
-      <div className="p-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[7px] font-bold uppercase tracking-wide text-red-600">
-            {story.category}
-          </span>
-
-          {story.id <= 3 && (
-            <span className="text-[7px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded-sm">
-              HOT
-            </span>
-          )}
-        </div>
-
-        <h3 className="font-serif text-[14px] md:text-[15px] font-bold leading-[1.15] mt-1.5 text-gray-900 group-hover:text-red-600 transition-colors">
-          {story.title}
-        </h3>
-
-        <p className="text-[10px] leading-[1.45] text-gray-500 mt-2 line-clamp-2">
-          {story.excerpt}
-        </p>
-
-        <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-gray-100">
-          <span className="text-[8px] text-gray-500">By Sagar Kumar</span>
-
-          <span className="flex items-center gap-1 text-[8px] text-gray-400">
-            <Clock size={9} />
-            {story.time}
-          </span>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-/* =========================================================
-   NEWSLETTER
-========================================================= */
-
-function Newsletter() {
-  return (
-    <section className="bg-[#071a2d] rounded-md text-white text-center py-8 md:py-9 px-5">
-      <p className="text-[8px] uppercase tracking-[0.2em] text-red-400 font-bold">
-        Daily Briefing
-      </p>
-
-      <h2 className="font-serif text-xl md:text-[24px] font-bold mt-2">
-        Stay Ahead with The Pride Times
-      </h2>
-
-      <p className="text-[10px] md:text-xs text-gray-400 mt-2">
-        Daily briefings on White House Watch delivered to your inbox.
-      </p>
-
-      <div className="flex flex-col sm:flex-row justify-center gap-2 mt-4 max-w-md mx-auto">
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="h-10 flex-1 bg-[#1b3145] border border-[#31485c] rounded-[3px] px-3 text-xs text-white placeholder:text-gray-500 outline-none focus:border-red-500"
-        />
-
-        <button className="h-10 px-5 bg-red-600 hover:bg-red-700 transition-colors rounded-[3px] text-xs font-bold">
-          Subscribe Free
-        </button>
-      </div>
-    </section>
-  );
-}
-
-/* =========================================================
-   MAIN PAGE
+   WHITE HOUSE WATCH PAGE
 ========================================================= */
 
 export function WhiteHouseWatchPage() {
-  const navigate = useNavigate();
   return (
-    <main className="w-full bg-white text-gray-900 antialiased">
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-11 xl:px-14 py-5 md:py-7">
-        {/* =================================================
-            PAGE HEADER
-        ================================================= */}
+    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <main className="pt-4 md:pt-6 pb-16">
 
-        <header className="border-t-[3px] border-red-600 pt-4 mb-5">
-          <div className="flex items-end justify-between gap-5">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[8px] uppercase tracking-[0.18em] font-bold text-red-600">
-                  Politics · Policy · Business
-                </span>
+          {/* PAGE TITLE */}
+
+          <header className="border-t-[3px] border-red-600 pt-4 mb-6">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
+              <div>
+                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
+                  {SECTION_LABEL}
+                </h1>
+
+                <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
+                  Executive actions, federal policy and government decisions
+                  shaping technology and business from The Pride Times.
+                </p>
               </div>
 
-              <h1 className="font-serif text-[29px] md:text-[36px] lg:text-[40px] font-bold leading-none">
-                White House Watch
-              </h1>
-
-              <p className="text-xs md:text-sm text-gray-500 mt-2 max-w-3xl">
-                US policy, executive decisions, and Washington&apos;s impact
-                on global business.
-              </p>
+              <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
+                Policy • Executive • Federal
+              </span>
             </div>
+          </header>
 
-            <div className="hidden md:block text-right">
-              <p className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
-                Editorial Desk
-              </p>
+          <PrideTimesAd variant="first" />
 
-              <p className="text-[10px] text-gray-500 mt-1">
-                Washington &amp; Global Business
-              </p>
-            </div>
-          </div>
-        </header>
+          {!leadStory && (
+            <p className="py-10 text-center text-[11px] text-gray-400">
+              No White House Watch stories yet.
+            </p>
+          )}
 
-        {/* =================================================
-            TOP AD
-        ================================================= */}
+          {leadStory && (
+            <section className="pb-8 mb-8 border-b border-gray-300">
+              <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-6">
 
-        <PrideTimesAd variant="first" />
+                {/* LEAD STORY */}
 
-        {/* =================================================
-            LEAD EDITORIAL PACKAGE
-        ================================================= */}
-
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-6 lg:gap-7 mb-9">
-          {/* LEAD STORY */}
-
-          <article onClick={() => navigate(articlePath(hero.title))} className="min-w-0 group cursor-pointer">
-            <div className="relative overflow-hidden rounded-md bg-gray-100">
-              <ImageWithFallback
-                src={hero.image}
-                alt={hero.title}
-                className="w-full h-[255px] sm:h-[340px] md:h-[400px] lg:h-[410px] object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-              />
-            </div>
-
-            <div className="mt-3">
-              <div className="flex items-center gap-2">
-                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-wide text-red-600">
-                  {hero.category}
-                </span>
-
-                <span className="text-[7px] md:text-[8px] bg-red-600 text-white font-bold px-1.5 py-0.5 rounded-sm uppercase">
-                  Breaking
-                </span>
-              </div>
-
-              <h2 className="font-serif text-[27px] md:text-[34px] lg:text-[40px] font-bold leading-[1.04] mt-2 text-gray-950 group-hover:text-red-600 transition-colors max-w-[1050px]">
-                {hero.title}
-              </h2>
-
-              <p className="text-[11px] md:text-[13px] text-gray-500 leading-[1.6] mt-2 max-w-[950px]">
-                {hero.excerpt}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3 mt-3 text-[9px] text-gray-400">
-                <span>By {hero.author}</span>
-
-                <span>•</span>
-
-                <span>{hero.date}</span>
-
-                <span>•</span>
-
-                <span className="flex items-center gap-1">
-                  <Clock size={9} />
-                  {hero.time}
-                </span>
-              </div>
-            </div>
-          </article>
-
-          {/* RIGHT EDITORIAL RAIL */}
-
-          <aside className="border-t-2 lg:border-t-0 lg:border-l border-black lg:pl-5">
-            <PrideTimesAd variant="fourth" className="mb-5" />
-
-            <MoreStories />
-          </aside>
-        </section>
-
-        {/* =================================================
-            MAJOR STORIES
-        ================================================= */}
-
-        <section className="border-t-2 border-black pt-5 mb-9">
-          <SectionHeader title="Major Technology & Business Stories" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {latestNews.slice(0, 2).map((story) => (
-              <MajorStoryCard key={story.id} story={story} />
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================
-            SUPPORTING COVERAGE + NEWSROOM
-        ================================================= */}
-
-        <section className="border-t-2 border-black pt-5 mb-9">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2.2fr)_minmax(280px,1fr)] gap-7">
-            {/* SUPPORTING STORIES */}
-
-            <div>
-              <SectionHeader title="Latest Coverage" />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-                {latestNews.slice(2).map((story) => (
-                  <SupportingStoryCard key={story.id} story={story} />
-                ))}
-              </div>
-            </div>
-
-            {/* NEWSROOM */}
-
-            <NewsroomStream />
-          </div>
-        </section>
-
-        {/* =================================================
-            SECOND AD
-        ================================================= */}
-
-        <PrideTimesAd variant="second" className="mb-8" />
-
-        {/* =================================================
-            EDITORIAL STREAM
-        ================================================= */}
-
-        <section className="border-t-2 border-black pt-5 mb-9">
-          <SectionHeader title="White House Watch Coverage" />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {moreStories.map((story) => (
-              <article
-                key={story.id}
-                onClick={() => navigate(articlePath(story.title))}
-                className="group cursor-pointer border-b border-gray-200 pb-4"
-              >
-                <div className="h-[145px] overflow-hidden rounded-sm bg-gray-100">
+                <Link
+                  to={leadStory.href}
+                  className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
+                >
                   <ImageWithFallback
-                    src={story.image}
-                    alt={story.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    src={leadStory.image}
+                    alt={leadStory.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
-                </div>
 
-                <div className="pt-2.5">
-                  <span className="text-[7px] uppercase tracking-wider font-bold text-red-600">
-                    {story.category}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+
+                  <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
+                    {SECTION_LABEL}
                   </span>
 
-                  <h3 className="font-serif text-[14px] md:text-[16px] font-bold leading-[1.15] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                    {story.title}
-                  </h3>
+                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                    <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
+                      {leadStory.title}
+                    </h2>
 
-                  <div className="flex items-center gap-1 mt-2 text-[8px] text-gray-400">
-                    <Clock size={9} />
-                    {story.time}
+                    <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
+                      {leadStory.lede}
+                    </p>
+
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
+                      Read Full Story
+                      <ArrowRight size={12} />
+                    </span>
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+                </Link>
 
-        {/* =================================================
-            FULL LATEST NEWS INDEX
-        ================================================= */}
+                {/* RIGHT COLUMN */}
 
-        <section className="border-t-2 border-black pt-5 mb-9">
-          <SectionHeader title="Latest News Index" />
+                <aside className="min-w-0">
+                  <div className="pb-5 border-b border-gray-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h2 className="font-serif text-lg font-bold">
+                        Key Figures
+                      </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {latestNews.map((story) => (
-              <LatestNewsCard key={story.id} story={story} />
-            ))}
-          </div>
-        </section>
+                      <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
+                        {whiteHouseItems.length} stories
+                      </span>
+                    </div>
 
-        {/* =================================================
-            NEWSLETTER
-        ================================================= */}
+                    <div className="divide-y divide-gray-100">
+                      {leadStory.keyFacts.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className="py-2 flex items-start justify-between gap-3"
+                        >
+                          <span className="text-[10px] font-semibold text-gray-800">
+                            {fact.label}
+                          </span>
 
-        <div className="mb-8">
-          <Newsletter />
-        </div>
+                          <span className="text-[10px] text-gray-500 text-right tabular-nums">
+                            {fact.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-        {/* =================================================
-            BOTTOM EDITORIAL BAR
-        ================================================= */}
+                  <div className="pt-5">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                      <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
+                        More White House News
+                      </h2>
 
-        <footer className="pt-4 border-t border-gray-300 flex flex-col sm:flex-row justify-between gap-2 text-[8px] md:text-[9px] uppercase tracking-[0.14em] text-gray-400">
-          <span>White House Watch</span>
+                      <span className="text-[8px] uppercase tracking-wide text-gray-400">
+                        Newsroom
+                      </span>
+                    </div>
 
-          <span className="flex items-center gap-1">
-            Washington · Policy · Technology · Business
-            <ChevronRight size={10} />
-          </span>
-        </footer>
+                    {otherStories.length > 0 ? (
+                      <div className="divide-y divide-gray-100">
+                        {otherStories.map((item) => (
+                          <Link
+                            key={item.id}
+                            to={item.href}
+                            className="group block py-3"
+                          >
+                            <div className="flex gap-3">
+                              <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
+                                White House
+                              </span>
+
+                              <div className="min-w-0">
+                                <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
+                                  {item.title}
+                                </span>
+
+                                <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
+                                  {item.lede}
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="py-3 text-[10px] text-gray-400">
+                        More White House stories will appear here.
+                      </p>
+                    )}
+                  </div>
+
+                  <SidebarAd />
+                </aside>
+              </div>
+            </section>
+          )}
+
+          {/* LATEST WHITE HOUSE FEED */}
+
+          {whiteHouseItems.length > 0 && (
+            <section className="mb-12">
+              <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
+
+              <div className="divide-y divide-gray-200">
+                {whiteHouseItems.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
+                  >
+                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
+                      <ImageWithFallback
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2">
+                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                          {item.kicker}
+                        </span>
+                      </div>
+
+                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {item.title}
+                      </h3>
+
+                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
+                        {item.lede}
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
+                        <Clock size={8} />
+                        {item.meta}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <PrideTimesAd variant="second" />
+        </main>
       </div>
-      
-    </main>
+    </div>
   );
 }
+
+export default WhiteHouseWatchPage;
