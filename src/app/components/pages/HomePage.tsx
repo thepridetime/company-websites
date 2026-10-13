@@ -39,6 +39,7 @@ import {
   octEditionArticles,
   type OctEditionArticle,
 } from "../../data/octEditionData";
+import { oct13EditionArticles } from "../../data/oct13EditionData";
 
 /* =========================================================
    TYPES
@@ -105,7 +106,13 @@ const byTitle = (prefix: string): DigestArticle =>
   digestArticles.find((article) => article.title.startsWith(prefix)) ??
   digestArticles[0];
 
-const octoberStories: OctEditionArticle[] = octEditionArticles;
+/* Newest edition (13 October 2026) leads the homepage. The 7 October
+   Global Industry Edition stories are NOT removed: they follow in the
+   Latest News feed behind "Show more stories". */
+const octoberStories: OctEditionArticle[] = [
+  ...oct13EditionArticles,
+  ...octEditionArticles,
+];
 const leadStory = octoberStories[0];
 
 /* The previous lead story now follows the new Global Sector Report
