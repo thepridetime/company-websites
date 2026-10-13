@@ -221,5 +221,5 @@ export const industrySupplyChainArticles: IndustrySupplyChainArticle[] = [
 ];
 
 export function industrySupplyChainArticlePath(id: string) {
-  return `/supply-chain#${id}`;
+  return `/article/${id}`;
 }
