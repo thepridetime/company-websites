@@ -653,25 +653,37 @@ export function HomePage() {
               {oct13EditionArticles.map((story, index) => (
                 <li
                   key={story.id}
-                  className="border-b border-gray-200 py-3"
+                  className="border-b border-gray-200 py-4"
                 >
                   <Link
                     to={digestArticlePath(story)}
-                    className="group flex gap-3"
+                    className="group grid grid-cols-[120px_1fr] sm:grid-cols-[160px_1fr] gap-4"
                   >
-                    <span className="font-serif text-xl font-bold tabular-nums text-gray-300">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                    <div className="relative h-[84px] sm:h-[104px] w-full overflow-hidden rounded-md">
+                      <ImageWithFallback
+                        src={story.image}
+                        alt={story.title}
+                        className="h-full w-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                      />
 
-                    <span className="min-w-0">
+                      <span className="absolute left-0 top-0 bg-black/70 px-1.5 py-0.5 text-[9px] font-bold tabular-nums text-white">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    <div className="min-w-0">
                       <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                         {story.industry} · {story.location}
                       </span>
 
-                      <span className="mt-0.5 block text-[14px] font-semibold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
+                      <span className="mt-1 block text-[14px] sm:text-[15px] font-semibold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
                         {story.title}
                       </span>
-                    </span>
+
+                      <span className="mt-1 hidden sm:block text-[11px] leading-[1.45] text-gray-500 line-clamp-2">
+                        {story.lede}
+                      </span>
+                    </div>
                   </Link>
                 </li>
               ))}
