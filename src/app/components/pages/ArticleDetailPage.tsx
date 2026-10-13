@@ -368,7 +368,7 @@ function Byline({ author }: { author: string }) {
     .filter(Boolean);
 
   return (
-    <span className="inline-flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-900 sm:text-xs">
+    <span className="inline-flex flex-wrap items-center justify-center gap-x-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-900 sm:text-xs">
       <span aria-hidden className="h-px w-5 bg-slate-900" />
       <span className="text-slate-400">By</span>
       {names.map((name, index) => (
@@ -409,7 +409,7 @@ function BlogMeta({
   readTime?: string;
 }) {
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-slate-200 py-3 text-[13px] text-slate-500 sm:text-sm">
+    <div className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 border-y border-slate-200 py-3 text-center text-[13px] text-slate-500 sm:text-sm">
       <Byline author={author} />
 
       <MetaDot />
@@ -499,17 +499,17 @@ function ArticleShell({
       </div>
 
       <div className="mx-auto max-w-7xl px-4 pb-12 pt-7 sm:px-6 sm:pt-9 lg:px-8">
-        <header className="mx-auto max-w-4xl">
-          <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+        <header className="mx-auto max-w-3xl text-center">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             {kicker}
           </div>
 
-          <h1 className="mt-3 break-words font-serif text-3xl font-bold leading-[1.1] tracking-[-0.03em] text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mx-auto mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
             {title}
           </h1>
 
           {dek && (
-            <p className="mt-4 max-w-3xl break-words text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+            <p className="mx-auto mt-3 max-w-2xl break-words text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
               {dek}
             </p>
           )}
@@ -519,7 +519,7 @@ function ArticleShell({
           {meta}
         </header>
 
-        <div className="mx-auto mt-7 grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-10">
+        <div className="mx-auto mt-7 grid max-w-5xl gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-10">
           <main className="min-w-0">
             {children}
 
@@ -568,12 +568,12 @@ function BlogBody({
           key={`${section.heading}-${index}`}
           className="mb-7 scroll-mt-24"
         >
-          <h2 className="max-w-3xl break-words font-serif text-xl font-bold leading-tight tracking-[-0.02em] text-slate-950 sm:text-2xl">
+          <h2 className="max-w-3xl break-words font-serif text-lg font-bold leading-tight tracking-[-0.02em] text-slate-950 sm:text-xl">
             {formatSectionHeading(section.heading, category)}
           </h2>
 
           <p
-            className={`mt-2.5 break-words text-[16px] leading-[1.8] text-slate-700 sm:text-[17px]${
+            className={`mt-2.5 break-words text-[15px] leading-[1.75] text-slate-700 sm:text-[16px]${
               index === 0 ? " drop-cap" : ""
             }`}
           >
@@ -963,9 +963,13 @@ function DigestBlog({
       kicker={
         <>
           <span>
-            {article.tags.includes("Global Industry Edition")
-              ? "The Pride Times News · Global Industry Edition"
-              : "Global Corporate News Digest"}
+            {article.tags.includes(
+              "Global & India Tech, Innovation and Unicorn Edition"
+            )
+              ? "The Pride Times News · Global & India Tech, Innovation and Unicorn Edition"
+              : article.tags.includes("Global Industry Edition")
+                ? "The Pride Times News · Global Industry Edition"
+                : "Global Corporate News Digest"}
           </span>
           <span className="text-slate-300">/</span>
           <Link to={digest.sectionPath} className="hover:underline">
@@ -978,7 +982,7 @@ function DigestBlog({
         <span className="font-medium text-slate-700">{digest.lede}</span>
       }
       extra={
-        <p className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
           <MapPin size={12} className="text-red-600" />
           {digest.location}
         </p>
@@ -1021,7 +1025,7 @@ function DigestBlog({
         {digest.body.map((paragraph, index) => (
           <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
             <p
-              className={`mb-5 break-words text-[16px] leading-[1.8] text-slate-700 sm:text-[17px]${
+              className={`mb-5 break-words text-[15px] leading-[1.75] text-slate-700 sm:text-[16px]${
                 index === 0 ? " drop-cap" : ""
               }`}
             >
