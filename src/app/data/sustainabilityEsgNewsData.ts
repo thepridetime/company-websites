@@ -221,5 +221,5 @@ export const sustainabilityEsgArticles: SustainabilityEsgArticle[] = [
 ];
 
 export function sustainabilityEsgArticlePath(id: string) {
-  return `/sustainability-esg#${id}`;
+  return `/article/${id}`;
 }
