@@ -221,5 +221,5 @@ export const leadershipGovernanceArticles: LeadershipGovernanceArticle[] = [
 ];
 
 export function leadershipGovernanceArticlePath(id: string) {
-  return `/leadership-governance#${id}`;
+  return `/article/${id}`;
 }
