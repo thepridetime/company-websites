@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { supabase } from "../../lib/supabase";
 
 export type UserTier = "free" | "premium";
@@ -24,7 +25,10 @@ interface AuthContextType {
     password: string,
     metadata?: Record<string, unknown>
   ) => Promise<{ success: boolean; error?: string; needsEmailConfirmation?: boolean }>;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  /** Error that Google/Supabase sent back in the URL after the redirect. */
+  authError: string;
+  clearAuthError: () => void;
   signOut: () => Promise<void>;
   upgradeToPremoium: () => void;
   resetPassword: (
@@ -59,64 +63,69 @@ const AuthContext = createContext<AuthContextType | null>(null);
   },
 };*/}
 
+/* One place that turns a Supabase user (email/password OR Google) into the
+   app's User. Google puts the name in full_name/name and the photo in
+   avatar_url/picture. */
+function toUser(u: SupabaseUser): User {
+  const meta = u.user_metadata ?? {};
+
+  return {
+    id: u.id,
+    name: meta.full_name || meta.name || u.email?.split("@")[0] || "User",
+    email: u.email || "",
+    tier: "free",
+    avatar: meta.avatar_url || meta.picture || undefined,
+    joinedDate: "",
+    country: meta.country || "",
+    savedArticles: 0,
+    readingStreak: 0,
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authError, setAuthError] = useState("");
+
   useEffect(() => {
- const loadUser = async () => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    /* If Google/Supabase could not finish the sign-in, they send the user
+       back with ?error=...&error_description=... (or the same in the #hash).
+       Read it once, show it on the login/sign-up page, and clean the URL. */
+    const params = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const description =
+      params.get("error_description") ||
+      hashParams.get("error_description") ||
+      params.get("error") ||
+      hashParams.get("error");
 
-  if (session?.user) {
-    setUser({
-      id: session.user.id,
-      name:
-        session.user.user_metadata?.full_name ||
-        session.user.user_metadata?.name ||
-        session.user.email?.split("@")[0] ||
-        "User",
-      email: session.user.email || "",
-      tier: "free",
-      joinedDate: "",
-      country: "",
-      savedArticles: 0,
-      readingStreak: 0,
+    if (description) {
+      setAuthError(description.replace(/\+/g, " "));
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      setUser(session?.user ? toUser(session.user) : null);
+      setIsLoading(false);
+    };
+
+    loadUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ? toUser(session.user) : null);
+      setIsLoading(false);
     });
-  }
 
-  setIsLoading(false);
-};
-
-  loadUser();
-
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((_event, session) => {
-    if (session?.user) {
-      setUser({
-        id: session.user.id,
-        name:
-  session.user.user_metadata?.full_name ||
-  session.user.user_metadata?.name ||
-  session.user.email?.split("@")[0] ||
-  "User",
-        email: session.user.email || "",
-        tier: "free",
-        joinedDate: "",
-        country: "",
-        savedArticles: 0,
-        readingStreak: 0,
-      });
-   } else {
-  setUser(null);
-}
-
-setIsLoading(false);
-  });
-
-  return () => subscription.unsubscribe();
-}, []);
+    return () => subscription.unsubscribe();
+  }, []);
 
   const signIn = async (email: string, password: string) => {
   setIsLoading(true);
@@ -220,13 +229,19 @@ const signInWithGoogle = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: window.location.origin,
+      /* Must be listed under Supabase > Authentication > URL Configuration
+         > Redirect URLs (for localhost AND the live domain). */
+      redirectTo: `${window.location.origin}/dashboard`,
+      queryParams: { prompt: "select_account" },
     },
   });
 
   if (error) {
-    console.error(error);
+    return { success: false, error: error.message };
   }
+
+  // The browser now leaves for Google; nothing more to do here.
+  return { success: true };
 };
 
   const signOut = async () => {
@@ -247,7 +262,9 @@ const signInWithGoogle = async () => {
     signIn,
     signUp,
     signInWithGoogle,
-     resetPassword,
+    authError,
+    clearAuthError: () => setAuthError(""),
+    resetPassword,
     signOut,
     upgradeToPremoium,
   }}
