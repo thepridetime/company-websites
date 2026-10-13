@@ -13,6 +13,7 @@
 ========================================================= */
 
 import { octEditionArticles } from "./octEditionData";
+import { oct13EditionArticles } from "./oct13EditionData";
 
 export type SearchItem = {
   id: string;
@@ -201,6 +202,20 @@ export const searchIndex: SearchItem[] = [
    too; each result opens its inner article. */
 searchIndex.unshift(
   ...octEditionArticles.map((article) => ({
+    id: article.id,
+    title: article.title,
+    category: article.industry,
+    excerpt: article.lede,
+    time: article.publishedAt,
+    link: `/article/${article.id}`,
+  }))
+);
+
+/* Newest edition (Global & India Tech, Innovation and Unicorn Edition,
+   13 October 2026) goes in front of everything, so its stories come
+   first in search. The 7 October edition stays searchable below it. */
+searchIndex.unshift(
+  ...oct13EditionArticles.map((article) => ({
     id: article.id,
     title: article.title,
     category: article.industry,
