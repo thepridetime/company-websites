@@ -483,20 +483,20 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
           Back to M&A
         </Link>
 
-        <header className="mx-auto mt-8 max-w-4xl border-b border-gray-200 pb-7">
+        <header className="mx-auto mt-8 max-w-3xl border-b border-gray-200 pb-7 text-center">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-red-600">
             {article.category}
           </p>
 
-          <h1 className="mt-4 font-serif text-3xl font-bold leading-[1.12] tracking-tight text-gray-950 sm:text-4xl md:text-5xl">
+          <h1 className="mx-auto mt-4 font-serif text-2xl font-bold leading-[1.15] tracking-tight text-gray-950 sm:text-3xl md:text-[34px]">
             {article.title}
           </h1>
 
-          <p className="mt-5 text-base leading-[1.8] text-gray-600 md:text-lg">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-[1.75] text-gray-600">
             {article.subtitle}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] text-gray-400">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] text-gray-400">
             <span className="font-semibold text-gray-700">
               By {article.author}
             </span>
@@ -514,7 +514,7 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
           </div>
         </header>
 
-        <div className="mx-auto mt-9 grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_270px] lg:gap-14">
+        <div className="mx-auto mt-9 grid max-w-5xl grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_270px] lg:gap-12">
           <article className="min-w-0">
             <div className="border-l-2 border-red-600 bg-gray-50 px-5 py-5">
               <p className="text-[9px] font-bold uppercase tracking-[0.17em] text-red-600">
@@ -559,7 +559,7 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
                     <div className="h-px flex-1 bg-gray-200" />
                   </div>
 
-                  <h2 className="font-serif text-2xl font-bold leading-tight tracking-tight text-gray-950">
+                  <h2 className="font-serif text-xl font-bold leading-tight tracking-tight text-gray-950">
                     {section.heading}
                   </h2>
 
