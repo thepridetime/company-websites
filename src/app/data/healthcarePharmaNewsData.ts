@@ -179,5 +179,5 @@ export const healthcarePharmaArticles: HealthcarePharmaArticle[] = [
 ];
 
 export function healthcarePharmaArticlePath(id: string) {
-  return `/healthcare#${id}`;
+  return `/article/${id}`;
 }
