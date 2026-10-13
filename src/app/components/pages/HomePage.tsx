@@ -127,11 +127,6 @@ const featuredIds = new Set(
   [leadStory, ...majorStories, editorsPick].map((article) => article.id)
 );
 
-/* Sidebar stream: the first non-featured story from each of the
-   first six sections. */
-const sidebarStories = octoberStories
-  .filter((article) => !featuredIds.has(article.id))
-  .slice(0, 6);
 
 /* =========================================================
    LATEST NEWS
@@ -593,46 +588,6 @@ export function HomePage() {
                       {editorsPick.lede}
                     </p>
                   </Link>
-                </div>
-
-                {/* LATEST NEWS STREAM (sidebar headlines) */}
-
-                <div className="pt-5">
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
-                    <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-                      Latest News
-                    </h2>
-
-                    <span className="text-[8px] uppercase tracking-wide text-gray-400">
-                      Newsroom
-                    </span>
-                  </div>
-
-                  <div className="divide-y divide-gray-100">
-                    {sidebarStories.map((item) => (
-                      <Link
-                        key={item.id}
-                        to={digestArticlePath(item)}
-                        className="group block py-3"
-                      >
-                        <div className="flex gap-3">
-                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
-                            {item.location}
-                          </span>
-
-                          <div className="min-w-0">
-                            <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
-                              {item.title}
-                            </span>
-
-                            <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
-                              {item.lede}
-                            </span>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
                 </div>
               </aside>
             </div>
