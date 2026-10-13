@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -52,8 +52,30 @@ const STRENGTH_LABEL = ["Too short", "Weak", "Fair", "Good", "Strong"];
 const STRENGTH_COLOR = ["bg-gray-200", "bg-red-500", "bg-amber-500", "bg-lime-500", "bg-emerald-500"];
 
 export function SignUpPage() {
-  const { signUp, signInWithGoogle, isLoading } = useAuth();
+  const { signUp, signInWithGoogle, authError, clearAuthError, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const handleGoogle = async () => {
+    setError("");
+    setGoogleLoading(true);
+
+    const result = await signInWithGoogle();
+
+    // On success the browser leaves for Google, so only failures come back.
+    if (!result.success) {
+      setGoogleLoading(false);
+      setError(result.error ?? "Could not start Google sign-in. Please try again.");
+    }
+  };
+
+  // Show a Google/Supabase error that came back in the URL after the redirect.
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+      clearAuthError();
+    }
+  }, [authError, clearAuthError]);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -423,11 +445,12 @@ export function SignUpPage() {
 
             <button
               type="button"
-              onClick={signInWithGoogle}
-              className="flex items-center justify-center gap-2 w-full border border-gray-300 rounded py-2.5 text-sm hover:bg-gray-50 transition-colors"
+              onClick={handleGoogle}
+              disabled={googleLoading}
+              className="flex items-center justify-center gap-2 w-full border border-gray-300 rounded py-2.5 text-sm hover:bg-gray-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <GoogleIcon />
-              Continue with Google
+              {googleLoading ? "Redirecting to Google…" : "Continue with Google"}
             </button>
           </div>
         </div>
