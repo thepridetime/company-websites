@@ -32,7 +32,6 @@ import {
   globalSectorReport,
   globalSectorItems,
   globalSectorAnchorId,
-  globalSectorArticleId,
   globalSectorItemArticleId,
 } from "../../data/globalSectorReportData";
 import {
@@ -115,8 +114,8 @@ const octoberStories: OctEditionArticle[] = [
 ];
 const leadStory = octoberStories[0];
 
-/* The previous lead story now follows the new Global Sector Report
-   headline as the first major story. */
+/* Major coverage, Editor's Pick and the sidebar stream all come from the
+   newest edition, right after the lead story. */
 const majorStories = [
   octoberStories[1],
   octoberStories[2],
@@ -387,35 +386,35 @@ export function HomePage() {
           <section className="pb-8 mb-8 border-b border-gray-300">
             <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
 
-              {/* LEAD STORY */}
+              {/* LEAD STORY — newest edition (13 October 2026) */}
 
               <Link
-                to={`/article/${globalSectorArticleId}`}
+                to={digestArticlePath(leadStory)}
                 className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
               >
                 <ImageWithFallback
-                  src={globalSectorReport.image}
-                  alt={globalSectorReport.headline}
+                  src={leadStory.image}
+                  alt={leadStory.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                 <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                  {globalSectorReport.kicker} | {globalSectorReport.location}
+                  {leadStory.industry} | {leadStory.location}
                 </span>
 
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                   <h1 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
-                    {globalSectorReport.headline}
+                    {leadStory.title}
                   </h1>
 
                   <p className="text-[13px] md:text-[14px] font-semibold text-red-200 leading-[1.5] mt-3">
-                    {globalSectorReport.subheadline}
+                    {leadStory.lede}
                   </p>
 
                   <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-2 line-clamp-3">
-                    {globalSectorReport.pattern}
+                    {leadStory.body[1]}
                   </p>
 
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
@@ -639,12 +638,52 @@ export function HomePage() {
             </div>
           </section>
 
+          {/* =================================================
+              LATEST HEADLINES — every headline of the newest edition
+              (13 October 2026), numbered.
+          ================================================= */}
+
+          <section
+            aria-label="Latest headlines"
+            className="mb-12 border-b border-gray-300 pb-10"
+          >
+            <SectionHeader title="Latest Headlines · 13 October 2026" />
+
+            <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
+              {oct13EditionArticles.map((story, index) => (
+                <li
+                  key={story.id}
+                  className="border-b border-gray-200 py-3"
+                >
+                  <Link
+                    to={digestArticlePath(story)}
+                    className="group flex gap-3"
+                  >
+                    <span className="font-serif text-xl font-bold tabular-nums text-gray-300">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <span className="min-w-0">
+                      <span className="block text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
+                        {story.industry} · {story.location}
+                      </span>
+
+                      <span className="mt-0.5 block text-[14px] font-semibold leading-[1.35] text-gray-900 transition-colors group-hover:text-red-600">
+                        {story.title}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+
           <section className="mb-12">
             <SectionHeader title="More News · Previous Coverage and Related News" />
 
           {/* =================================================
               GLOBAL SECTOR NEWS REPORT 2026 (new; additive)
-              Destination of the main headline above.
+              Kept below as previous coverage (it no longer leads the homepage).
           ================================================= */}
 
           <section
