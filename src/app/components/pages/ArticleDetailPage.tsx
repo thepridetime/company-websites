@@ -35,6 +35,12 @@ import {
   type SpecialArticle,
 } from "../../data/specialArticleData";
 
+import {
+  getConsumerRetailArticleById,
+  getRelatedConsumerRetailArticles,
+  consumerRetailSections,
+} from "../../data/consumerRetailNewsData";
+
 /* Mergers & Acquisitions article lookup */
 import {
   getMAArticleBySlug,
@@ -1081,6 +1087,10 @@ function backToLabel(path: string) {
     return "Technology";
   }
 
+  if (path === "/consumer-retail") {
+    return "Consumer and Retail";
+  }
+
   return "Home";
 }
 
@@ -1091,9 +1101,11 @@ function backToLabel(path: string) {
 function MagazineBlog({
   article,
   backTo,
+  relatedItems,
 }: {
   article: EditorialArticle;
   backTo: string;
+  relatedItems?: EditorialArticle[];
 }) {
   const isBusiness = "time" in article;
 
@@ -1114,7 +1126,9 @@ function MagazineBlog({
     ? undefined
     : (article as TechnologyArticle).keyFacts;
 
-  const related = isBusiness
+  const related = relatedItems
+    ? relatedItems
+    : isBusiness
     ? getRelatedBusinessArticles(
         article as BusinessArticle
       )
@@ -1262,6 +1276,24 @@ export function ArticleDetailPage() {
       <MagazineBlog
         article={technologyArticle}
         backTo="/technology"
+      />
+    );
+  }
+
+  /* CONSUMER & RETAIL ARTICLES */
+  const consumerArticle = getConsumerRetailArticleById(id);
+
+  if (consumerArticle) {
+    return (
+      <MagazineBlog
+        article={{
+          ...consumerArticle,
+          sections: consumerRetailSections(consumerArticle),
+        }}
+        backTo="/consumer-retail"
+        relatedItems={getRelatedConsumerRetailArticles(
+          consumerArticle
+        ).map((a) => ({ ...a, sections: consumerRetailSections(a) }))}
       />
     );
   }
