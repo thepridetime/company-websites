@@ -139,7 +139,10 @@ const sectionNames = Array.from(
 );
 const latestNewsTabs = ["All", ...sectionNames];
 
-const interleavedArticles: DigestArticle[] = octoberStories;
+/* The newest edition is shown as the headlines list at the top of the
+   Latest News section, so the feed below carries the previous stories
+   (7 October edition) and nothing is shown twice. */
+const interleavedArticles: DigestArticle[] = octEditionArticles;
 
 const PAGE_SIZE = 8;
 
@@ -341,7 +344,7 @@ export function HomePage() {
     () =>
       activeNewsTab === "All"
         ? interleavedArticles
-        : octoberStories.filter((article) => article.section === activeNewsTab),
+        : octEditionArticles.filter((article) => article.section === activeNewsTab),
     [activeNewsTab]
   );
 
@@ -593,16 +596,21 @@ export function HomePage() {
             </div>
           </section>
 
+
           {/* =================================================
-              LATEST HEADLINES — every headline of the newest edition
-              (13 October 2026), numbered.
+              LATEST NEWS — ONE section.
+              1) All headlines of the newest edition (13 October 2026)
+              2) The latest news feed (previous stories) + Magazine
+              Everything else follows below.
           ================================================= */}
 
-          <section
-            aria-label="Latest headlines"
-            className="mb-12 border-b border-gray-300 pb-10"
-          >
-            <SectionHeader title="Latest Headlines · 13 October 2026" />
+          <section aria-label="Latest news" className="mb-12">
+            <SectionHeader
+              title="Latest News · 13 October 2026"
+              link="/business-news"
+            />
+
+            {/* ALL HEADLINES */}
 
             <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
               {oct13EditionArticles.map((story, index) => (
@@ -643,6 +651,150 @@ export function HomePage() {
                 </li>
               ))}
             </ol>
+
+            {/* LATEST NEWS FEED + MAGAZINE */}
+
+            <div className="mt-10 grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 border-t border-gray-300 pt-8">
+
+            <div ref={newsListRef} className="scroll-mt-24">
+              <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500">
+                More Latest News · Browse by Section
+              </h3>
+
+              {/* FILTER TABS */}
+
+              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar border-b border-gray-200 pb-3 mb-1">
+                {latestNewsTabs.map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => selectTab(tab)}
+                    className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
+                      activeNewsTab === tab
+                        ? "text-red-600"
+                        : "text-gray-400 hover:text-gray-700"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* STORY LIST */}
+
+              <div className="divide-y divide-gray-200">
+                {latestStories.length === 0 && (
+                  <p className="py-6 text-[11px] text-gray-400">
+                    No stories in this category yet.
+                  </p>
+                )}
+
+                {latestStories.map((story) => (
+                  <Link
+                    key={story.id}
+                    to={digestArticlePath(story)}
+                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
+                  >
+                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
+                      <ImageWithFallback
+                        src={story.image}
+                        alt={story.title}
+                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2">
+                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
+                          {"industry" in story
+                            ? (story as EditionArticle).industry
+                            : story.section}
+                        </span>
+
+                        <span className="text-[8px] text-gray-300">•</span>
+
+                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                          <MapPin size={8} />
+                          {story.location}
+                        </span>
+                      </div>
+
+                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {story.title}
+                      </h3>
+
+                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
+                        {story.lede}
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
+                        <Clock size={8} />
+                        {story.publishedAt} · {story.readTime}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {hasMore && (
+                <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setVisibleCount((count) =>
+                        Math.min(count + PAGE_SIZE, filteredStories.length)
+                      )
+                    }
+                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
+                  >
+                    Show more stories
+                  </button>
+
+                  <span className="text-[9px] text-gray-400">
+                    Showing {latestStories.length} of {filteredStories.length}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* MAGAZINE */}
+
+            <div>
+              <SectionHeader title="Magazine" link="/magazine" />
+
+              <Link
+                to="/magazine"
+                className="group block overflow-hidden rounded-md bg-black"
+              >
+                <div className="overflow-hidden">
+                  <ImageWithFallback
+                    src={magazinePreview.image}
+                    alt={magazinePreview.title}
+                    className="w-full h-[210px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                </div>
+
+                <div className="p-4">
+                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
+                    Pride Times Magazine
+                  </span>
+
+                  <h3 className="font-serif text-xl font-bold text-white mt-1">
+                    {magazinePreview.title}
+                  </h3>
+
+                  <p className="text-[11px] text-gray-400 leading-[1.5] mt-1.5">
+                    {magazinePreview.subtitle}
+                  </p>
+
+                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white border-b border-white/50 pb-1 mt-4">
+                    Read Digital Edition
+                    <ArrowRight size={10} />
+                  </span>
+                </div>
+              </Link>
+            </div>
+            </div>
           </section>
 
           <section className="mb-12">
@@ -836,155 +988,6 @@ export function HomePage() {
                 {maEdition1Sources}
               </p>
             </details>
-          </section>
-
-          {/* =================================================
-              LATEST NEWS (all 60 digest stories) + MAGAZINE
-          ================================================= */}
-
-          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
-
-            {/* LATEST NEWS */}
-
-            <div ref={newsListRef} className="scroll-mt-24">
-              <SectionHeader
-                title="Latest News"
-                link="/business-news"
-              />
-
-              {/* FILTER TABS */}
-
-              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar border-b border-gray-200 pb-3 mb-1">
-                {latestNewsTabs.map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => selectTab(tab)}
-                    className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
-                      activeNewsTab === tab
-                        ? "text-red-600"
-                        : "text-gray-400 hover:text-gray-700"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {/* STORY LIST */}
-
-              <div className="divide-y divide-gray-200">
-                {latestStories.length === 0 && (
-                  <p className="py-6 text-[11px] text-gray-400">
-                    No stories in this category yet.
-                  </p>
-                )}
-
-                {latestStories.map((story) => (
-                  <Link
-                    key={story.id}
-                    to={digestArticlePath(story)}
-                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
-                  >
-                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
-                      <ImageWithFallback
-                        src={story.image}
-                        alt={story.title}
-                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2">
-                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {"industry" in story
-                            ? (story as EditionArticle).industry
-                            : story.section}
-                        </span>
-
-                        <span className="text-[8px] text-gray-300">•</span>
-
-                        <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
-                          <MapPin size={8} />
-                          {story.location}
-                        </span>
-                      </div>
-
-                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {story.title}
-                      </h3>
-
-                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
-                        {story.lede}
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
-                        <Clock size={8} />
-                        {story.publishedAt} · {story.readTime}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              {hasMore && (
-                <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVisibleCount((count) =>
-                        Math.min(count + PAGE_SIZE, filteredStories.length)
-                      )
-                    }
-                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
-                  >
-                    Show more stories
-                  </button>
-
-                  <span className="text-[9px] text-gray-400">
-                    Showing {latestStories.length} of {filteredStories.length}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* MAGAZINE */}
-
-            <div>
-              <SectionHeader title="Magazine" link="/magazine" />
-
-              <Link
-                to="/magazine"
-                className="group block overflow-hidden rounded-md bg-black"
-              >
-                <div className="overflow-hidden">
-                  <ImageWithFallback
-                    src={magazinePreview.image}
-                    alt={magazinePreview.title}
-                    className="w-full h-[210px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                </div>
-
-                <div className="p-4">
-                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
-                    Pride Times Magazine
-                  </span>
-
-                  <h3 className="font-serif text-xl font-bold text-white mt-1">
-                    {magazinePreview.title}
-                  </h3>
-
-                  <p className="text-[11px] text-gray-400 leading-[1.5] mt-1.5">
-                    {magazinePreview.subtitle}
-                  </p>
-
-                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white border-b border-white/50 pb-1 mt-4">
-                    Read Digital Edition
-                    <ArrowRight size={10} />
-                  </span>
-                </div>
-              </Link>
-            </div>
           </section>
 
           {/* =================================================
