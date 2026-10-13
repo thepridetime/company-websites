@@ -401,7 +401,10 @@ function BlogMeta({
   date,
   updatedAt,
   readTime,
+  location,
 }: {
+  /** Shown first, on the same line as the byline, date and read time. */
+  location?: string;
   author: string;
   date: string;
   /** ISO timestamp of the last edit, e.g. "2026-10-08T08:14:00Z". */
@@ -410,6 +413,17 @@ function BlogMeta({
 }) {
   return (
     <div className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 border-y border-slate-200 py-3 text-center text-[13px] text-slate-500 sm:text-sm">
+      {location && (
+        <>
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+            <MapPin size={12} className="shrink-0 text-red-600" />
+            {location}
+          </span>
+
+          <MetaDot />
+        </>
+      )}
+
       <Byline author={author} />
 
       <MetaDot />
@@ -981,14 +995,9 @@ function DigestBlog({
       dek={
         <span className="font-medium text-slate-700">{digest.lede}</span>
       }
-      extra={
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
-          <MapPin size={12} className="text-red-600" />
-          {digest.location}
-        </p>
-      }
       meta={
         <BlogMeta
+          location={digest.location}
           author={article.author}
           date={article.publishedAt}
           updatedAt={(article as { updatedAt?: string }).updatedAt}
