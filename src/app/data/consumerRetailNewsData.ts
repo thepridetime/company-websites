@@ -166,6 +166,7 @@ export const consumerRetailArticles: ConsumerRetailArticle[] = [
   },
 ];
 
+/* Articles open on the shared article detail page (/article/:id). */
 export function consumerRetailArticlePath(id: string) {
-  return `/consumer-retail#${id}`;
+  return `/article/${id}`;
 }
