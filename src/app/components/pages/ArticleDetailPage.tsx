@@ -74,7 +74,7 @@ function AdSenseUnit({
     | "5608262547"
     | "6810700989";
   inArticle?: boolean;
-  /** Compact 300×250 rectangle used in the right-hand column. */
+  /** Compact 300×250 rectangle used beside / below the article body. */
   side?: boolean;
 }) {
   const insRef = useRef<HTMLModElement>(null);
@@ -105,7 +105,7 @@ function AdSenseUnit({
           Advertisement
         </p>
 
-        {/* 300×250 rectangle: fits the 300px side column exactly */}
+        {/* 300×250 rectangle */}
         <div className="flex w-full justify-center">
           <ins
             ref={insRef}
@@ -480,9 +480,11 @@ function BlogMeta({
    SHARED ARTICLE SHELL
    One layout for every article template.
    - Header (kicker, title, dek, meta) is centred.
-   - Body sits in the left column directly under the header.
-   - Ads sit in a fixed 300px right column beside the body on
-     desktop, and drop below the body on mobile.
+   - The article body sits in the SAME centred column
+     (max-w-3xl), directly under the header, so the headline,
+     header and article text all line up in the centre.
+   - Ads sit centred under the article text (two side by side
+     on tablet/desktop, stacked on mobile), above the share row.
    - Related posts keep their original card layout.
 ========================================================= */
 
@@ -563,10 +565,13 @@ function ArticleShell({
           {meta}
         </header>
 
-        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10">
-          {/* Body column: directly under the header */}
+        {/* Article body: same centred column as the header */}
+        <div className="mx-auto mt-8 w-full max-w-3xl">
           <main className="w-full min-w-0">
             {children}
+
+            {/* Ads: centred under the article text */}
+            <aside className="mt-8 w-full">{sidebar}</aside>
 
             <ShareAndBack
               to={share.to}
@@ -575,11 +580,6 @@ function ArticleShell({
               description={share.description}
             />
           </main>
-
-          {/* Ads: 300px right column on desktop, below the body on mobile */}
-          <aside className="w-full lg:sticky lg:top-6 lg:w-[300px]">
-            {sidebar}
-          </aside>
         </div>
 
         {related}
@@ -644,7 +644,7 @@ function ArticleQuote({ text, by }: { text: string; by: string }) {
 }
 
 /* =========================================================
-   ARTICLE SIDEBAR (ads, right-hand column)
+   ARTICLE SIDEBAR (ads, centred under the article text)
 ========================================================= */
 
 type SideAdSlots = {
@@ -670,7 +670,7 @@ function BlogSidebar({
   adSlots?: SideAdSlots;
 }) {
   return (
-    <div className="space-y-5">
+    <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2">
       <AdSenseUnit slot={adSlots.top} side />
       <AdSenseUnit slot={adSlots.bottom} side />
     </div>
