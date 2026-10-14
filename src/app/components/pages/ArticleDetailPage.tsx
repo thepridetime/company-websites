@@ -1,4 +1,4 @@
-import { Fragment, useEffect, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Clock, MapPin, Quote, Share2 } from "lucide-react";
 import {
@@ -55,9 +55,8 @@ type BlogSection = {
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2";
 
-/* Wide container used for the back bar, the header, the two-column
-   article area (body + ads) and the related posts. */
-const wideClass = "mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8";
+/* Page container shared by the back bar, header, article and related posts. */
+const pageClass = "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8";
 
 /* =========================================================
    ADSENSE
@@ -78,7 +77,17 @@ function AdSenseUnit({
   /** Compact variant used for the ad units in the right-hand column. */
   side?: boolean;
 }) {
+  const insRef = useRef<HTMLModElement>(null);
+
   useEffect(() => {
+    const el = insRef.current;
+
+    /* Skip if this slot already received an ad (protects against
+       StrictMode double-mounting and "already have ads" errors). */
+    if (!el || el.getAttribute("data-adsbygoogle-status") === "done") {
+      return;
+    }
+
     try {
       const adsWindow = window as AdSenseWindow;
 
@@ -87,7 +96,7 @@ function AdSenseUnit({
     } catch (error) {
       console.warn("AdSense could not initialize:", error);
     }
-  }, []);
+  }, [slot]);
 
   if (side) {
     return (
@@ -96,22 +105,21 @@ function AdSenseUnit({
           Advertisement
         </p>
 
-        {/* Fixed width and minimum height so the ad slot never collapses */}
-        <div className="flex w-full justify-center">
-          <ins
-            className="adsbygoogle"
-            style={{
-              display: "block",
-              width: "100%",
-              minWidth: "250px",
-              minHeight: "250px",
-            }}
-            data-ad-client="ca-pub-2331501617441941"
-            data-ad-slot={slot}
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-        </div>
+        {/* Sized to the 300px sidebar column; minHeight keeps the slot visible */}
+        <ins
+          ref={insRef}
+          className="adsbygoogle"
+          style={{
+            display: "block",
+            width: "100%",
+            minWidth: "250px",
+            minHeight: "250px",
+          }}
+          data-ad-client="ca-pub-2331501617441941"
+          data-ad-slot={slot}
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
       </div>
     );
   }
@@ -124,6 +132,7 @@ function AdSenseUnit({
         </p>
 
         <ins
+          ref={insRef}
           className="adsbygoogle"
           style={{ display: "block", width: "100%", minHeight: "90px" }}
           data-ad-client="ca-pub-2331501617441941"
@@ -469,10 +478,11 @@ function BlogMeta({
 /* =========================================================
    SHARED ARTICLE SHELL
    One layout for every article template.
-   - Header (kicker, title, dek, meta) is centred over the article.
-   - Below it, the body sits on the left and the ads on the right
-     (ads stack under the body on mobile).
-   - Related posts keep their original card layout, full width.
+   - Header (kicker, title, dek, meta) is centred.
+   - Article body is centred under the header; ads sit on the right
+     beside it on desktop and drop below it on mobile.
+   - Related posts keep their original card layout, directly under
+     the article.
 ========================================================= */
 
 function ArticleShell({
@@ -512,7 +522,7 @@ function ArticleShell({
     <article className="min-h-screen bg-white text-slate-900 antialiased">
       <div className="border-b border-slate-200 bg-slate-50/70">
         <div
-          className={`${wideClass} flex flex-wrap items-center justify-between gap-3 py-3`}
+          className={`${pageClass} flex flex-wrap items-center justify-between gap-3 py-3`}
         >
           <Link
             to={backTo}
@@ -529,7 +539,7 @@ function ArticleShell({
         </div>
       </div>
 
-      <div className={`${wideClass} pb-12 pt-7 sm:pt-9`}>
+      <div className={`${pageClass} pb-12 pt-7 sm:pt-9`}>
         <header className="mx-auto max-w-3xl text-center">
           <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             {kicker}
@@ -552,8 +562,9 @@ function ArticleShell({
           {meta}
         </header>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-10">
-          <main className="mx-auto w-full min-w-0 max-w-3xl lg:mx-0">
+        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10">
+          {/* Body column: centred under the header */}
+          <main className="mx-auto w-full min-w-0 max-w-2xl">
             {children}
 
             <ShareAndBack
@@ -564,9 +575,8 @@ function ArticleShell({
             />
           </main>
 
-          <aside className="lg:sticky lg:top-6 lg:self-start">
-            {sidebar}
-          </aside>
+          {/* Ads: right side on desktop, below the body on mobile */}
+          <aside className="w-full lg:sticky lg:top-6">{sidebar}</aside>
         </div>
 
         {related}
@@ -659,10 +669,7 @@ function BlogSidebar({
   return (
     <div className="space-y-5">
       <AdSenseUnit slot={adSlots.top} side />
-
-      <div>
-        <AdSenseUnit slot={adSlots.bottom} side />
-      </div>
+      <AdSenseUnit slot={adSlots.bottom} side />
     </div>
   );
 }
@@ -727,6 +734,7 @@ function ShareAndBack({
 /* =========================================================
    RELATED POSTS
    Original card layout: boxed cards in a responsive grid.
+   Top spacing is kept tight so it follows the article directly.
 ========================================================= */
 
 function RelatedPosts<
@@ -751,7 +759,7 @@ function RelatedPosts<
   if (!items.length) return null;
 
   return (
-    <section className="mt-8 border-t border-slate-200 pt-6">
+    <section className="mt-6 border-t border-slate-200 pt-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
         Keep exploring
       </p>
@@ -1229,6 +1237,12 @@ export function ArticleDetailPage() {
     );
   }
 
+  /* Keyed by article ID so every new article fully remounts,
+     including its ad slots. */
+  return <Fragment key={id}>{renderArticle(id)}</Fragment>;
+}
+
+function renderArticle(id: string | undefined): ReactNode {
   /* SPECIAL ARTICLES */
   const specialArticle = getSpecialArticleById(id);
 
