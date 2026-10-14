@@ -1,6 +1,8 @@
 /* =========================================================
    INNER ARTICLE TYPOGRAPHY
    Reading column (.blog-prose) used by every article template.
+   Bloomberg-style: left-aligned body, short paragraphs,
+   left-aligned section headings with a small red accent.
 ========================================================= */
 
 /* ---------- Reading column ---------- */
@@ -8,6 +10,7 @@
   max-width: 38rem;
   margin-left: auto;
   margin-right: auto;
+  text-align: left;
   color: #334155;
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
@@ -19,21 +22,21 @@
 
 /* ---------- Body paragraphs ---------- */
 .blog-prose section > p,
+.blog-prose > p:not(:first-child),
 .blog-prose > p.drop-cap {
   font-size: 1.0625rem;
-  line-height: 1.8;
-  text-align: justify;
-  text-justify: inter-word;
+  line-height: 1.75;
+  text-align: left;
   text-wrap: pretty;
   margin: 0 0 1.25rem;
 }
 
 .blog-prose section > p:last-child,
-.blog-prose > p.drop-cap:last-child {
+.blog-prose > p:last-child {
   margin-bottom: 0;
 }
 
-/* ---------- Intro / dek line (first paragraph, not the drop-cap one) ---------- */
+/* ---------- Intro / dek line at the top of the body ---------- */
 .blog-prose > p:first-child:not(.drop-cap) {
   max-width: 34rem;
   margin: 0 auto 2rem;
@@ -50,13 +53,14 @@
 /* ---------- Section headings ---------- */
 .blog-prose section > h2 {
   position: relative;
-  margin: 0 0 0.875rem;
+  margin: 0 0 0.75rem;
   padding-top: 0.875rem;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.01em;
-  text-align: center;
+  text-align: left;
   text-wrap: balance;
   color: #0f172a;
 }
@@ -66,10 +70,9 @@
   content: "";
   position: absolute;
   top: 0;
-  left: 50%;
+  left: 0;
   width: 2.5rem;
   height: 3px;
-  transform: translateX(-50%);
   background: #dc2626;
 }
 
@@ -92,8 +95,7 @@
 
 /* ---------- Drop cap: large first letter ----------
    Applies to the first body paragraph of every article template
-   (the element with the .drop-cap class). The letter floats left
-   so the text wraps around it over about three lines. */
+   (the element with the .drop-cap class). */
 .blog-prose .drop-cap::first-letter {
   float: left;
   margin: 0.04em 0.1em 0 0;
