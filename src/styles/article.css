@@ -1,73 +1,93 @@
 /* =========================================================
    INNER ARTICLE TYPOGRAPHY
-   Applies to the reading column (.blog-prose) on every article page.
-   Base rules use :where() so Tailwind utilities in the TSX still win.
+   Reading column (.blog-prose) used by every article template.
 ========================================================= */
 
 /* ---------- Reading column ---------- */
 .blog-prose {
-  max-width: 36rem;
+  max-width: 38rem;
   margin-left: auto;
   margin-right: auto;
-  text-align: justify;
-  text-justify: inter-word;
+  color: #334155;
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   hyphens: auto;
   -webkit-hyphens: auto;
   overflow-wrap: break-word;
-  color: #334155;
 }
 
 /* ---------- Body paragraphs ---------- */
-.blog-prose :where(p) {
-  line-height: 1.75;
-  margin: 0 0 1.25rem;
+.blog-prose section > p,
+.blog-prose > p.drop-cap {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  text-align: justify;
+  text-justify: inter-word;
   text-wrap: pretty;
+  margin: 0 0 1.25rem;
 }
 
-/* Justify every body paragraph, overriding the TSX text-center class */
-.blog-prose p {
-  text-align: justify !important;
-}
-
-/* Intro / dek line at the top of the body: centered, with rules */
-.blog-prose > p:first-child:not(.drop-cap) {
-  text-align: center !important;
-  text-align-last: center;
-  font-weight: 500;
-  color: #1e293b;
-}
-
-/* Last paragraph of a block: no trailing gap */
-.blog-prose :where(p:last-child) {
+.blog-prose section > p:last-child,
+.blog-prose > p.drop-cap:last-child {
   margin-bottom: 0;
 }
 
+/* ---------- Intro / dek line (first paragraph, not the drop-cap one) ---------- */
+.blog-prose > p:first-child:not(.drop-cap) {
+  max-width: 34rem;
+  margin: 0 auto 2rem;
+  padding: 1rem 0;
+  border-top: 2px solid #dc2626;
+  border-bottom: 2px solid #dc2626;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.7;
+  text-align: center;
+  color: #1e293b;
+}
+
 /* ---------- Section headings ---------- */
-.blog-prose :where(h2) {
-  text-wrap: balance;
+.blog-prose section > h2 {
+  position: relative;
+  margin: 0 0 0.875rem;
+  padding-top: 0.875rem;
+  font-size: 1.25rem;
+  font-weight: 700;
   line-height: 1.3;
-  margin: 0 0 0.75rem;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-wrap: balance;
+  color: #0f172a;
 }
 
-.blog-prose :where(section) {
-  margin-bottom: 1.75rem;
+/* Short red accent bar above each heading */
+.blog-prose section > h2::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2.5rem;
+  height: 3px;
+  transform: translateX(-50%);
+  background: #dc2626;
 }
 
-/* Section dividers */
+/* ---------- Section spacing and dividers ---------- */
+.blog-prose section {
+  margin-bottom: 2rem;
+}
+
 .blog-prose section + section {
-  margin-top: 1.75rem;
-  padding-top: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
   border-top: 1px solid #e2e8f0;
 }
 
-/* First section needs no divider */
 .blog-prose section:first-of-type {
-  border-top: 0;
-  padding-top: 0;
   margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 /* ---------- Drop cap: large first letter ----------
@@ -76,29 +96,27 @@
    so the text wraps around it over about three lines. */
 .blog-prose .drop-cap::first-letter {
   float: left;
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-  font-weight: 700;
-  font-size: 3.9em;
-  line-height: 0.8;
-  margin: 0.08em 0.12em 0 0;
+  margin: 0.04em 0.1em 0 0;
   padding: 0;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: 4em;
+  font-weight: 700;
+  line-height: 0.8;
   color: #dc2626;
 }
 
 @media (max-width: 640px) {
   .blog-prose .drop-cap::first-letter {
-    font-size: 3.3em;
-    margin-right: 0.1em;
+    font-size: 3.4em;
   }
 }
 
-/* ---------- Inline pull quote ----------
-   Keeps its own left alignment inside the justified column. */
+/* ---------- Inline pull quote ---------- */
 .blog-prose blockquote {
   text-align: left;
 }
 
 .blog-prose blockquote p {
-  text-align: left !important;
   margin: 0;
+  text-align: left;
 }
