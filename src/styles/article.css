@@ -1,56 +1,104 @@
 /* =========================================================
    INNER ARTICLE TYPOGRAPHY
-   Applies to the reading column (.blog-prose) on article pages.
+   Applies to the reading column (.blog-prose) on every article page.
+   Base rules use :where() so Tailwind utilities in the TSX still win.
 ========================================================= */
 
+/* ---------- Reading column ---------- */
 .blog-prose {
-  max-width: 42rem;
+  max-width: 36rem;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
+  text-align: justify;
+  text-justify: inter-word;
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   hyphens: auto;
-  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  color: #334155;
 }
 
-.blog-prose p {
+/* ---------- Body paragraphs ---------- */
+.blog-prose :where(p) {
+  line-height: 1.75;
+  margin: 0 0 1.25rem;
   text-wrap: pretty;
 }
 
-.blog-prose h2 {
-  text-wrap: balance;
+/* Justify every body paragraph, overriding the TSX text-center class */
+.blog-prose p {
+  text-align: justify !important;
 }
 
-/* Section headings: small red rule above for clear structure */
+/* Intro / dek line at the top of the body: centered, with rules */
+.blog-prose > p:first-child:not(.drop-cap) {
+  text-align: center !important;
+  text-align-last: center;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Last paragraph of a block: no trailing gap */
+.blog-prose :where(p:last-child) {
+  margin-bottom: 0;
+}
+
+/* ---------- Section headings ---------- */
+.blog-prose :where(h2) {
+  text-wrap: balance;
+  line-height: 1.3;
+  margin: 0 0 0.75rem;
+}
+
+.blog-prose :where(section) {
+  margin-bottom: 1.75rem;
+}
+
+/* Section dividers */
 .blog-prose section + section {
   margin-top: 1.75rem;
-  padding-top: 1.25rem;
+  padding-top: 1.5rem;
   border-top: 1px solid #e2e8f0;
 }
 
-/* ---------- Drop cap: large first letter of the article ---------- */
+/* First section needs no divider */
+.blog-prose section:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* ---------- Drop cap: large first letter ----------
+   Applies to the first body paragraph of every article template
+   (the element with the .drop-cap class). The letter floats left
+   so the text wraps around it over about three lines. */
 .blog-prose .drop-cap::first-letter {
-  float: none;
+  float: left;
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-weight: 700;
-  font-size: 4.4em;
-  line-height: 0.82;
+  font-size: 3.9em;
+  line-height: 0.8;
+  margin: 0.08em 0.12em 0 0;
   padding: 0;
-  margin-right: 0.02em;
   color: #dc2626;
 }
 
 @media (max-width: 640px) {
   .blog-prose .drop-cap::first-letter {
-    font-size: 3.6em;
+    font-size: 3.3em;
+    margin-right: 0.1em;
   }
 }
 
-/* Keep the drop cap from clashing with the section divider rule */
-.blog-prose section:first-of-type {
-  border-top: 0;
-  padding-top: 0;
-  margin-top: 0;
+/* ---------- Inline pull quote ----------
+   Keeps its own left alignment inside the justified column. */
+.blog-prose blockquote {
+  text-align: left;
+}
+
+.blog-prose blockquote p {
+  text-align: left !important;
+  margin: 0;
 }
