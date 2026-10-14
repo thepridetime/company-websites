@@ -96,14 +96,22 @@ function AdSenseUnit({
           Advertisement
         </p>
 
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block", minHeight: "250px" }}
-          data-ad-client="ca-pub-2331501617441941"
-          data-ad-slot={slot}
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
+        {/* Fixed width and minimum height so the ad slot never collapses */}
+        <div className="flex w-full justify-center">
+          <ins
+            className="adsbygoogle"
+            style={{
+              display: "block",
+              width: "100%",
+              minWidth: "250px",
+              minHeight: "250px",
+            }}
+            data-ad-client="ca-pub-2331501617441941"
+            data-ad-slot={slot}
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+        </div>
       </div>
     );
   }
@@ -117,7 +125,7 @@ function AdSenseUnit({
 
         <ins
           className="adsbygoogle"
-          style={{ display: "block", minHeight: "90px" }}
+          style={{ display: "block", width: "100%", minHeight: "90px" }}
           data-ad-client="ca-pub-2331501617441941"
           data-ad-slot={slot}
           {...(inArticle
@@ -711,6 +719,9 @@ function ShareAndBack({
 
 /* =========================================================
    RELATED POSTS
+   Single left-aligned column, matching the article body.
+   Each story is a row separated by a rule, so any number of
+   items (1, 2, 3...) lays out evenly with no empty grid cells.
 ========================================================= */
 
 function RelatedPosts<
@@ -735,52 +746,53 @@ function RelatedPosts<
   if (!items.length) return null;
 
   return (
-    <section className="mt-8 border-t border-slate-200 pt-6">
-      <p className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+    <section className="mt-10 border-t border-slate-200 pt-8">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
         Keep exploring
       </p>
 
-      <h2 className="mt-2 text-center font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+      <h2 className="mt-2 font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
         More ideas to explore
       </h2>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+      <ul className="mt-5 divide-y divide-slate-200 border-y border-slate-200">
         {items.map((item, index) => (
-          <Link
-            key={item.id ?? item.slug ?? index}
-            to={getHref(item)}
-            className={`group flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-1 hover:border-red-200 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${focusRing}`}
-          >
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-              {item.category ?? "The Pride Times"}
-            </p>
+          <li key={item.id ?? item.slug ?? index}>
+            <Link
+              to={getHref(item)}
+              className={`group block py-5 transition-colors duration-200 hover:bg-slate-50/70 ${focusRing}`}
+            >
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                {item.category ?? "The Pride Times"}
+              </p>
 
-            <h3 className="mt-3 break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
-              {plainTitles
-                ? item.title
-                : formatBlogTitle(
-                    item.title,
-                    item.category ?? "Business"
-                  )}
-            </h3>
+              <h3 className="mt-2 break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700 sm:text-xl">
+                {plainTitles
+                  ? item.title
+                  : formatBlogTitle(
+                      item.title,
+                      item.category ?? "Business"
+                    )}
+              </h3>
 
-            <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-500">
-              {item.dek ??
-                item.excerpt ??
-                "Explore the context, developments and ideas shaping this topic."}
-            </p>
+              <p className="mt-2 line-clamp-2 break-words text-sm leading-6 text-slate-500">
+                {item.dek ??
+                  item.excerpt ??
+                  "Explore the context, developments and ideas shaping this topic."}
+              </p>
 
-            <span className="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:text-red-700">
-              Read the post
+              <span className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:text-red-700">
+                Read the post
 
-              <ArrowRight
-                size={13}
-                className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-              />
-            </span>
-          </Link>
+                <ArrowRight
+                  size={13}
+                  className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+                />
+              </span>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
