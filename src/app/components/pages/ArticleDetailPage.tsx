@@ -74,7 +74,7 @@ function AdSenseUnit({
     | "5608262547"
     | "6810700989";
   inArticle?: boolean;
-  /** Compact variant used for the ad units in the right-hand column. */
+  /** Compact 300×250 rectangle used in the right-hand column. */
   side?: boolean;
 }) {
   const insRef = useRef<HTMLModElement>(null);
@@ -100,26 +100,27 @@ function AdSenseUnit({
 
   if (side) {
     return (
-      <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-3">
+      <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-2">
         <p className="mb-2 select-none text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
           Advertisement
         </p>
 
-        {/* Sized to the 300px sidebar column; minHeight keeps the slot visible */}
-        <ins
-          ref={insRef}
-          className="adsbygoogle"
-          style={{
-            display: "block",
-            width: "100%",
-            minWidth: "250px",
-            minHeight: "250px",
-          }}
-          data-ad-client="ca-pub-2331501617441941"
-          data-ad-slot={slot}
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
+        {/* 300×250 rectangle: fits the 300px side column exactly */}
+        <div className="flex w-full justify-center">
+          <ins
+            ref={insRef}
+            className="adsbygoogle"
+            style={{
+              display: "inline-block",
+              width: "300px",
+              height: "250px",
+              maxWidth: "100%",
+            }}
+            data-ad-client="ca-pub-2331501617441941"
+            data-ad-slot={slot}
+            data-ad-format="rectangle"
+          />
+        </div>
       </div>
     );
   }
@@ -479,10 +480,10 @@ function BlogMeta({
    SHARED ARTICLE SHELL
    One layout for every article template.
    - Header (kicker, title, dek, meta) is centred.
-   - Article body is centred under the header; ads sit on the right
-     beside it on desktop and drop below it on mobile.
-   - Related posts keep their original card layout, directly under
-     the article.
+   - Body sits in the left column directly under the header.
+   - Ads sit in a fixed 300px right column beside the body on
+     desktop, and drop below the body on mobile.
+   - Related posts keep their original card layout.
 ========================================================= */
 
 function ArticleShell({
@@ -563,8 +564,8 @@ function ArticleShell({
         </header>
 
         <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10">
-          {/* Body column: centred under the header */}
-          <main className="mx-auto w-full min-w-0 max-w-2xl">
+          {/* Body column: directly under the header */}
+          <main className="w-full min-w-0">
             {children}
 
             <ShareAndBack
@@ -575,8 +576,10 @@ function ArticleShell({
             />
           </main>
 
-          {/* Ads: right side on desktop, below the body on mobile */}
-          <aside className="w-full lg:sticky lg:top-6">{sidebar}</aside>
+          {/* Ads: 300px right column on desktop, below the body on mobile */}
+          <aside className="w-full lg:sticky lg:top-6 lg:w-[300px]">
+            {sidebar}
+          </aside>
         </div>
 
         {related}
