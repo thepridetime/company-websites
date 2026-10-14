@@ -522,8 +522,10 @@ function ArticleShell({
             {title}
           </h1>
 
+          {/* Dek: wraps on mobile, stays on one line on desktop
+              (cut with "..." if it is longer than the header width). */}
           {dek && (
-            <p className="mx-auto mt-3 max-w-2xl break-words text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+            <p className="mx-auto mt-3 max-w-3xl break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
               {dek}
             </p>
           )}
@@ -556,6 +558,7 @@ function ArticleShell({
 
 /* =========================================================
    BLOG BODY
+   Text styling lives in src/styles/article.css (.blog-prose).
 ========================================================= */
 
 function BlogBody({
@@ -571,26 +574,18 @@ function BlogBody({
      sections. Those live in the sidebar. */
   return (
     <div className="blog-prose">
-      {intro && (
-        <p className="mx-auto mb-6 max-w-2xl border-y-[3px] border-red-600 py-4 text-center text-lg font-medium leading-8 text-slate-800 sm:text-xl">
-          {intro}
-        </p>
-      )}
+      {intro && <p className="break-words">{intro}</p>}
 
       {sections.map((section, index) => (
         <section
           key={`${section.heading}-${index}`}
-          className="mb-7 scroll-mt-24"
+          className="scroll-mt-24"
         >
-          <h2 className="mx-auto max-w-3xl break-words text-center font-serif text-lg font-bold leading-tight tracking-[-0.02em] text-slate-950 sm:text-xl">
+          <h2 className="break-words">
             {formatSectionHeading(section.heading, category)}
           </h2>
 
-          <p
-            className={`mt-2.5 break-words text-center text-[15px] leading-[1.75] text-slate-700 sm:text-[16px]${
-              index === 0 ? " drop-cap" : ""
-            }`}
-          >
+          <p className={`break-words${index === 0 ? " drop-cap" : ""}`}>
             {section.body}
           </p>
         </section>
@@ -1033,11 +1028,7 @@ function DigestBlog({
       <div className="blog-prose">
         {digest.body.map((paragraph, index) => (
           <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
-            <p
-              className={`mb-5 break-words text-center text-[15px] leading-[1.75] text-slate-700 sm:text-[16px]${
-                index === 0 ? " drop-cap" : ""
-              }`}
-            >
+            <p className={`break-words${index === 0 ? " drop-cap" : ""}`}>
               {paragraph}
             </p>
 
