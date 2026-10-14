@@ -55,6 +55,10 @@ type BlogSection = {
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2";
 
+/* One width shared by the back bar, header, body, ads and related posts,
+   so everything lines up on the same centre axis. */
+const columnClass = "mx-auto w-full max-w-3xl px-4 sm:px-6";
+
 /* =========================================================
    ADSENSE
 ========================================================= */
@@ -71,7 +75,7 @@ function AdSenseUnit({
     | "5608262547"
     | "6810700989";
   inArticle?: boolean;
-  /** Compact variant used inside the article sidebar. */
+  /** Compact variant used for the ad units under the article body. */
   side?: boolean;
 }) {
   useEffect(() => {
@@ -456,9 +460,9 @@ function BlogMeta({
 
 /* =========================================================
    SHARED ARTICLE SHELL
-   One layout for every article template so all article pages
-   look and space the same way. Header, body, ads and related
-   posts all sit in one centered column.
+   One layout for every article template. The back bar, header,
+   body, ads, share bar and related posts all use the same
+   centred column (columnClass), so everything lines up.
 ========================================================= */
 
 function ArticleShell({
@@ -497,7 +501,9 @@ function ArticleShell({
   return (
     <article className="min-h-screen bg-white text-slate-900 antialiased">
       <div className="border-b border-slate-200 bg-slate-50/70">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <div
+          className={`${columnClass} flex flex-wrap items-center justify-between gap-3 py-3`}
+        >
           <Link
             to={backTo}
             className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
@@ -513,8 +519,7 @@ function ArticleShell({
         </div>
       </div>
 
-      {/* Header, body, ads and related posts all share one centered column */}
-      <div className="mx-auto max-w-3xl px-4 pb-12 pt-7 sm:px-6 sm:pt-9 lg:px-8">
+      <div className={`${columnClass} pb-12 pt-7 sm:pt-9`}>
         <header className="text-center">
           <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             {kicker}
@@ -525,7 +530,7 @@ function ArticleShell({
           </h1>
 
           {/* Dek: wraps on mobile, stays on one line on desktop
-              (cut with "..." if it is longer than the header width). */}
+              (cut with "..." if it is longer than the column). */}
           {dek && (
             <p className="mx-auto mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
               {dek}
@@ -537,10 +542,10 @@ function ArticleShell({
           {meta}
         </header>
 
-        <main className="mt-7 min-w-0">
+        <main className="mt-8 min-w-0">
           {children}
 
-          <div className="mt-10">{sidebar}</div>
+          {sidebar}
 
           <ShareAndBack
             to={share.to}
@@ -559,23 +564,20 @@ function ArticleShell({
 /* =========================================================
    BLOG BODY
    Text styling lives in src/styles/article.css (.blog-prose).
+   The dek is shown once, in the header, so it is not repeated here.
 ========================================================= */
 
 function BlogBody({
   sections,
   category,
-  intro,
 }: {
   sections: BlogSection[];
   category: string;
+  /** Kept for compatibility; the dek is already shown in the header. */
   intro?: string;
 }) {
-  /* Reading column only: no ads, pull-quotes or extras between
-     sections. Those live in the sidebar. */
   return (
     <div className="blog-prose">
-      {intro && <p className="break-words">{intro}</p>}
-
       {sections.map((section, index) => (
         <section
           key={`${section.heading}-${index}`}
@@ -615,7 +617,7 @@ function ArticleQuote({ text, by }: { text: string; by: string }) {
 }
 
 /* =========================================================
-   BLOG SIDEBAR (ads only, shown below the body)
+   ARTICLE ADS (under the body, same column)
 ========================================================= */
 
 type SideAdSlots = {
@@ -631,8 +633,8 @@ const defaultSideAdSlots: SideAdSlots = {
 function BlogSidebar({
   adSlots = defaultSideAdSlots,
 }: {
-  /* Kept optional so existing call sites still compile; the sidebar
-     now only holds ads (no coloured info boxes). */
+  /* Kept optional so existing call sites still compile; the block
+     now only holds ads. */
   highlights?: string[];
   category?: string;
   section?: string;
@@ -641,10 +643,9 @@ function BlogSidebar({
   adSlots?: SideAdSlots;
 }) {
   return (
-    <aside className="grid gap-5 sm:grid-cols-2">
-      <AdSenseUnit slot={adSlots.top} side />
-
-      <div>
+    <aside className="mt-10 border-t border-slate-200 pt-8">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <AdSenseUnit slot={adSlots.top} side />
         <AdSenseUnit slot={adSlots.bottom} side />
       </div>
     </aside>
@@ -667,7 +668,7 @@ function ShareAndBack({
   description: string;
 }) {
   return (
-    <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-4">
+    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-4">
       <Link
         to={to}
         className={`group inline-flex items-center gap-2 rounded-sm text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
@@ -735,11 +736,11 @@ function RelatedPosts<
 
   return (
     <section className="mt-8 border-t border-slate-200 pt-6">
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+      <p className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
         Keep exploring
       </p>
 
-      <h2 className="mt-2 font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+      <h2 className="mt-2 text-center font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
         More ideas to explore
       </h2>
 
@@ -862,7 +863,6 @@ function SpecialBlog({
       <BlogBody
         sections={article.sections}
         category={article.category}
-        intro={article.dek}
       />
     </ArticleShell>
   );
@@ -935,7 +935,6 @@ function HomepageBlog({
       <BlogBody
         sections={article.sections}
         category={article.category}
-        intro={article.dek}
       />
     </ArticleShell>
   );
@@ -1164,7 +1163,6 @@ function MagazineBlog({
       <BlogBody
         sections={article.sections}
         category={article.category}
-        intro={dek}
       />
     </ArticleShell>
   );
