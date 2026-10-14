@@ -74,7 +74,7 @@ function AdSenseUnit({
     | "5608262547"
     | "6810700989";
   inArticle?: boolean;
-  /** Compact 300×250 rectangle used beside / below the article body. */
+  /** Side ad box: 250px tall on mobile/tablet, fills the column height on desktop. */
   side?: boolean;
 }) {
   const insRef = useRef<HTMLModElement>(null);
@@ -100,25 +100,21 @@ function AdSenseUnit({
 
   if (side) {
     return (
-      <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-2">
+      <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-2">
         <p className="mb-2 select-none text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
           Advertisement
         </p>
 
-        {/* 300×250 rectangle */}
-        <div className="flex w-full justify-center">
+        {/* Fixed 250px on mobile/tablet; fills the available height on desktop */}
+        <div className="flex w-full flex-1 justify-center">
           <ins
             ref={insRef}
-            className="adsbygoogle"
-            style={{
-              display: "inline-block",
-              width: "300px",
-              height: "250px",
-              maxWidth: "100%",
-            }}
+            className="adsbygoogle block h-[250px] w-[300px] max-w-full lg:h-auto"
+            style={{ display: "block" }}
             data-ad-client="ca-pub-2331501617441941"
             data-ad-slot={slot}
-            data-ad-format="rectangle"
+            data-ad-format="auto"
+            data-full-width-responsive="false"
           />
         </div>
       </div>
@@ -479,13 +475,14 @@ function BlogMeta({
 /* =========================================================
    SHARED ARTICLE SHELL
    One layout for every article template.
-   - Desktop (lg+): two columns. Left = header + article body
-     (centred in its column, max-w-3xl). Right = sticky 300px
-     ad column, so ads sit beside the article, not below it.
-   - Tablet / mobile: single column; ads fall below the article
-     because there is no room beside the text.
+   - Header (kicker, title, dek, meta) is centred over the
+     article column.
+   - Desktop (lg+): article body on the left, 300px ad column
+     on the right starting just below the heading. The two ads
+     stretch to fill the full height of the article.
+   - Tablet / mobile: single column; ads fall below the article.
    - Only ONE "Back to ..." button exists (the top bar). The
-     bottom row now holds just the share button.
+     bottom row holds just the share button.
    - Related posts keep their original card layout.
 ========================================================= */
 
@@ -542,46 +539,44 @@ function ArticleShell({
       </div>
 
       <div className={`${pageClass} pb-12 pt-7 sm:pt-9`}>
-        {/* Article column + ad column */}
-        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10">
-          {/* LEFT: header + article body */}
-          <div className="min-w-0">
-            <header className="mx-auto max-w-3xl text-center">
-              <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-                {kicker}
-              </div>
+        {/* Header: centred over the article column (right padding = 300px ad column + 40px gap) */}
+        <div className="lg:pr-[340px]">
+          <header className="mx-auto max-w-3xl text-center">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+              {kicker}
+            </div>
 
-              <h1 className="mx-auto mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
-                {title}
-              </h1>
+            <h1 className="mx-auto mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
+              {title}
+            </h1>
 
-              {/* Dek: wraps on mobile, stays on one line on desktop
-                  (cut with "..." if it is longer than the column). */}
-              {dek && (
-                <p className="mx-auto mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
-                  {dek}
-                </p>
-              )}
+            {/* Dek: wraps on mobile, stays on one line on desktop
+                (cut with "..." if it is longer than the column). */}
+            {dek && (
+              <p className="mx-auto mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
+                {dek}
+              </p>
+            )}
 
-              {extra}
+            {extra}
 
-              {meta}
-            </header>
+            {meta}
+          </header>
+        </div>
 
-            <main className="mx-auto mt-8 w-full min-w-0 max-w-3xl">
-              {children}
+        {/* Article body + ads, starting just below the heading */}
+        <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10">
+          <main className="mx-auto w-full min-w-0 max-w-3xl">
+            {children}
 
-              <ShareRow
-                title={share.title}
-                description={share.description}
-              />
-            </main>
-          </div>
+            <ShareRow
+              title={share.title}
+              description={share.description}
+            />
+          </main>
 
-          {/* RIGHT: ads (sticky on desktop, below the article on mobile) */}
-          <aside className="mt-8 w-full lg:sticky lg:top-24 lg:mt-0">
-            {sidebar}
-          </aside>
+          {/* Ads: stretch to the full height of the article on desktop */}
+          <aside className="mt-8 w-full lg:mt-0">{sidebar}</aside>
         </div>
 
         {related}
@@ -647,9 +642,8 @@ function ArticleQuote({ text, by }: { text: string; by: string }) {
 
 /* =========================================================
    ARTICLE SIDEBAR (ads)
-   Stacked vertically in the right column on desktop.
-   On mobile they stack below the article; on tablets they
-   sit side by side below the article.
+   Desktop: two ads stacked, splitting the article's height.
+   Tablet: side by side below the article. Mobile: stacked.
 ========================================================= */
 
 type SideAdSlots = {
@@ -675,7 +669,7 @@ function BlogSidebar({
   adSlots?: SideAdSlots;
 }) {
   return (
-    <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-1">
+    <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-2 lg:justify-items-stretch">
       <AdSenseUnit slot={adSlots.top} side />
       <AdSenseUnit slot={adSlots.bottom} side />
     </div>
