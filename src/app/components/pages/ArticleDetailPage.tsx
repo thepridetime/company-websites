@@ -368,8 +368,8 @@ function Byline({ author }: { author: string }) {
     .filter(Boolean);
 
   return (
-    <span className="inline-flex flex-wrap items-center justify-center gap-x-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-900 sm:text-sm md:text-base">
-      <span aria-hidden className="h-px w-5 bg-slate-900" />
+    <span className="inline-flex flex-wrap items-center justify-center gap-x-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-900 sm:text-[11px] md:text-xs">
+      <span aria-hidden className="h-px w-3 bg-slate-900" />
       <span className="text-slate-400">By</span>
       {names.map((name, index) => (
         <span key={`${name}-${index}`}>
@@ -412,11 +412,11 @@ function BlogMeta({
   readTime?: string;
 }) {
   return (
-    <div className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2.5 border-y border-slate-200 py-3.5 text-center text-sm text-slate-500 sm:text-base md:text-[17px]">
+    <div className="mt-4 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 border-y border-slate-200 py-2.5 text-center text-[11px] text-slate-500 sm:text-xs md:text-[13px]">
       {location && (
         <>
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.16em] text-slate-500 sm:text-sm">
-            <MapPin size={15} className="shrink-0 text-red-600" />
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 sm:text-[11px]">
+            <MapPin size={12} className="shrink-0 text-red-600" />
             {location}
           </span>
 
@@ -444,8 +444,8 @@ function BlogMeta({
       {readTime && (
         <>
           <MetaDot />
-          <span className="inline-flex items-center gap-1.5 tabular-nums text-slate-400">
-            <Clock size={12} className="shrink-0" />
+          <span className="inline-flex items-center gap-1 tabular-nums text-slate-400">
+            <Clock size={10} className="shrink-0" />
             {readTime}
           </span>
         </>
