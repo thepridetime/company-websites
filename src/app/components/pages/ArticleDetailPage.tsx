@@ -457,7 +457,8 @@ function BlogMeta({
 /* =========================================================
    SHARED ARTICLE SHELL
    One layout for every article template so all article pages
-   look and space the same way.
+   look and space the same way. Header, body, ads and related
+   posts all sit in one centered column.
 ========================================================= */
 
 function ArticleShell({
@@ -512,8 +513,9 @@ function ArticleShell({
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 pb-12 pt-7 sm:px-6 sm:pt-9 lg:px-8">
-        <header className="mx-auto max-w-3xl text-center">
+      {/* Header, body, ads and related posts all share one centered column */}
+      <div className="mx-auto max-w-3xl px-4 pb-12 pt-7 sm:px-6 sm:pt-9 lg:px-8">
+        <header className="text-center">
           <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             {kicker}
           </div>
@@ -525,7 +527,7 @@ function ArticleShell({
           {/* Dek: wraps on mobile, stays on one line on desktop
               (cut with "..." if it is longer than the header width). */}
           {dek && (
-            <p className="mx-auto mt-3 max-w-3xl break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
+            <p className="mx-auto mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
               {dek}
             </p>
           )}
@@ -535,22 +537,20 @@ function ArticleShell({
           {meta}
         </header>
 
-        <div className="mx-auto mt-7 grid max-w-5xl gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-10">
-          <main className="min-w-0">
-            {children}
+        <main className="mt-7 min-w-0">
+          {children}
 
-            <ShareAndBack
-              to={share.to}
-              label={share.label}
-              title={share.title}
-              description={share.description}
-            />
+          <div className="mt-10">{sidebar}</div>
 
-            {related}
-          </main>
+          <ShareAndBack
+            to={share.to}
+            label={share.label}
+            title={share.title}
+            description={share.description}
+          />
 
-          {sidebar}
-        </div>
+          {related}
+        </main>
       </div>
     </article>
   );
@@ -615,7 +615,7 @@ function ArticleQuote({ text, by }: { text: string; by: string }) {
 }
 
 /* =========================================================
-   BLOG SIDEBAR
+   BLOG SIDEBAR (ads only, shown below the body)
 ========================================================= */
 
 type SideAdSlots = {
@@ -641,10 +641,10 @@ function BlogSidebar({
   adSlots?: SideAdSlots;
 }) {
   return (
-    <aside className="space-y-5">
+    <aside className="grid gap-5 sm:grid-cols-2">
       <AdSenseUnit slot={adSlots.top} side />
 
-      <div className="lg:sticky lg:top-6">
+      <div>
         <AdSenseUnit slot={adSlots.bottom} side />
       </div>
     </aside>
@@ -743,7 +743,7 @@ function RelatedPosts<
         More ideas to explore
       </h2>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
         {items.map((item, index) => (
           <Link
             key={item.id ?? item.slug ?? index}
