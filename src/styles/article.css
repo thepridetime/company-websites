@@ -5,6 +5,9 @@
 
 .blog-prose {
   max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -29,12 +32,12 @@
 
 /* ---------- Drop cap: large first letter of the article ---------- */
 .blog-prose .drop-cap::first-letter {
-  float: left;
+  float: none;
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-weight: 700;
   font-size: 4.4em;
   line-height: 0.82;
-  padding: 0.07em 0.12em 0 0;
+  padding: 0;
   margin-right: 0.02em;
   color: #dc2626;
 }
