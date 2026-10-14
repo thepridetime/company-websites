@@ -55,9 +55,9 @@ type BlogSection = {
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2";
 
-/* One width shared by the back bar, header, body, ads and related posts,
-   so everything lines up on the same centre axis. */
-const columnClass = "mx-auto w-full max-w-3xl px-4 sm:px-6";
+/* Wide container used for the back bar, the header, the two-column
+   article area (body + ads) and the related posts. */
+const wideClass = "mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8";
 
 /* =========================================================
    ADSENSE
@@ -75,7 +75,7 @@ function AdSenseUnit({
     | "5608262547"
     | "6810700989";
   inArticle?: boolean;
-  /** Compact variant used for the ad units under the article body. */
+  /** Compact variant used for the ad units in the right-hand column. */
   side?: boolean;
 }) {
   useEffect(() => {
@@ -468,9 +468,11 @@ function BlogMeta({
 
 /* =========================================================
    SHARED ARTICLE SHELL
-   One layout for every article template. The back bar, header,
-   body, ads, share bar and related posts all use the same
-   centred column (columnClass), so everything lines up.
+   One layout for every article template.
+   - Header (kicker, title, dek, meta) is centred over the article.
+   - Below it, the body sits on the left and the ads on the right
+     (ads stack under the body on mobile).
+   - Related posts keep their original card layout, full width.
 ========================================================= */
 
 function ArticleShell({
@@ -510,7 +512,7 @@ function ArticleShell({
     <article className="min-h-screen bg-white text-slate-900 antialiased">
       <div className="border-b border-slate-200 bg-slate-50/70">
         <div
-          className={`${columnClass} flex flex-wrap items-center justify-between gap-3 py-3`}
+          className={`${wideClass} flex flex-wrap items-center justify-between gap-3 py-3`}
         >
           <Link
             to={backTo}
@@ -527,8 +529,8 @@ function ArticleShell({
         </div>
       </div>
 
-      <div className={`${columnClass} pb-12 pt-7 sm:pt-9`}>
-        <header className="text-center">
+      <div className={`${wideClass} pb-12 pt-7 sm:pt-9`}>
+        <header className="mx-auto max-w-3xl text-center">
           <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
             {kicker}
           </div>
@@ -550,20 +552,24 @@ function ArticleShell({
           {meta}
         </header>
 
-        <main className="mt-8 min-w-0">
-          {children}
+        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-10">
+          <main className="mx-auto w-full min-w-0 max-w-3xl lg:mx-0">
+            {children}
 
-          {sidebar}
+            <ShareAndBack
+              to={share.to}
+              label={share.label}
+              title={share.title}
+              description={share.description}
+            />
+          </main>
 
-          <ShareAndBack
-            to={share.to}
-            label={share.label}
-            title={share.title}
-            description={share.description}
-          />
+          <aside className="lg:sticky lg:top-6 lg:self-start">
+            {sidebar}
+          </aside>
+        </div>
 
-          {related}
-        </main>
+        {related}
       </div>
     </article>
   );
@@ -625,7 +631,7 @@ function ArticleQuote({ text, by }: { text: string; by: string }) {
 }
 
 /* =========================================================
-   ARTICLE ADS (under the body, same column)
+   ARTICLE SIDEBAR (ads, right-hand column)
 ========================================================= */
 
 type SideAdSlots = {
@@ -641,7 +647,7 @@ const defaultSideAdSlots: SideAdSlots = {
 function BlogSidebar({
   adSlots = defaultSideAdSlots,
 }: {
-  /* Kept optional so existing call sites still compile; the block
+  /* Kept optional so existing call sites still compile; the sidebar
      now only holds ads. */
   highlights?: string[];
   category?: string;
@@ -651,12 +657,13 @@ function BlogSidebar({
   adSlots?: SideAdSlots;
 }) {
   return (
-    <aside className="mt-10 border-t border-slate-200 pt-8">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <AdSenseUnit slot={adSlots.top} side />
+    <div className="space-y-5">
+      <AdSenseUnit slot={adSlots.top} side />
+
+      <div>
         <AdSenseUnit slot={adSlots.bottom} side />
       </div>
-    </aside>
+    </div>
   );
 }
 
@@ -719,9 +726,7 @@ function ShareAndBack({
 
 /* =========================================================
    RELATED POSTS
-   Single left-aligned column, matching the article body.
-   Each story is a row separated by a rule, so any number of
-   items (1, 2, 3...) lays out evenly with no empty grid cells.
+   Original card layout: boxed cards in a responsive grid.
 ========================================================= */
 
 function RelatedPosts<
@@ -746,7 +751,7 @@ function RelatedPosts<
   if (!items.length) return null;
 
   return (
-    <section className="mt-10 border-t border-slate-200 pt-8">
+    <section className="mt-8 border-t border-slate-200 pt-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
         Keep exploring
       </p>
@@ -755,44 +760,43 @@ function RelatedPosts<
         More ideas to explore
       </h2>
 
-      <ul className="mt-5 divide-y divide-slate-200 border-y border-slate-200">
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item, index) => (
-          <li key={item.id ?? item.slug ?? index}>
-            <Link
-              to={getHref(item)}
-              className={`group block py-5 transition-colors duration-200 hover:bg-slate-50/70 ${focusRing}`}
-            >
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-                {item.category ?? "The Pride Times"}
-              </p>
+          <Link
+            key={item.id ?? item.slug ?? index}
+            to={getHref(item)}
+            className={`group flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-1 hover:border-red-200 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${focusRing}`}
+          >
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+              {item.category ?? "The Pride Times"}
+            </p>
 
-              <h3 className="mt-2 break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700 sm:text-xl">
-                {plainTitles
-                  ? item.title
-                  : formatBlogTitle(
-                      item.title,
-                      item.category ?? "Business"
-                    )}
-              </h3>
+            <h3 className="mt-3 break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
+              {plainTitles
+                ? item.title
+                : formatBlogTitle(
+                    item.title,
+                    item.category ?? "Business"
+                  )}
+            </h3>
 
-              <p className="mt-2 line-clamp-2 break-words text-sm leading-6 text-slate-500">
-                {item.dek ??
-                  item.excerpt ??
-                  "Explore the context, developments and ideas shaping this topic."}
-              </p>
+            <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-500">
+              {item.dek ??
+                item.excerpt ??
+                "Explore the context, developments and ideas shaping this topic."}
+            </p>
 
-              <span className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:text-red-700">
-                Read the post
+            <span className="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:text-red-700">
+              Read the post
 
-                <ArrowRight
-                  size={13}
-                  className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-                />
-              </span>
-            </Link>
-          </li>
+              <ArrowRight
+                size={13}
+                className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+              />
+            </span>
+          </Link>
         ))}
-      </ul>
+      </div>
     </section>
   );
 }
