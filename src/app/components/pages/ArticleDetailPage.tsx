@@ -479,12 +479,13 @@ function BlogMeta({
 /* =========================================================
    SHARED ARTICLE SHELL
    One layout for every article template.
-   - Header (kicker, title, dek, meta) is centred.
-   - The article body sits in the SAME centred column
-     (max-w-3xl), directly under the header, so the headline,
-     header and article text all line up in the centre.
-   - Ads sit centred under the article text (two side by side
-     on tablet/desktop, stacked on mobile), above the share row.
+   - Desktop (lg+): two columns. Left = header + article body
+     (centred in its column, max-w-3xl). Right = sticky 300px
+     ad column, so ads sit beside the article, not below it.
+   - Tablet / mobile: single column; ads fall below the article
+     because there is no room beside the text.
+   - Only ONE "Back to ..." button exists (the top bar). The
+     bottom row now holds just the share button.
    - Related posts keep their original card layout.
 ========================================================= */
 
@@ -515,8 +516,6 @@ function ArticleShell({
   sidebar: ReactNode;
   related: ReactNode;
   share: {
-    to: string;
-    label: string;
     title: string;
     description: string;
   };
@@ -543,43 +542,46 @@ function ArticleShell({
       </div>
 
       <div className={`${pageClass} pb-12 pt-7 sm:pt-9`}>
-        <header className="mx-auto max-w-3xl text-center">
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-            {kicker}
+        {/* Article column + ad column */}
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10">
+          {/* LEFT: header + article body */}
+          <div className="min-w-0">
+            <header className="mx-auto max-w-3xl text-center">
+              <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+                {kicker}
+              </div>
+
+              <h1 className="mx-auto mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
+                {title}
+              </h1>
+
+              {/* Dek: wraps on mobile, stays on one line on desktop
+                  (cut with "..." if it is longer than the column). */}
+              {dek && (
+                <p className="mx-auto mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
+                  {dek}
+                </p>
+              )}
+
+              {extra}
+
+              {meta}
+            </header>
+
+            <main className="mx-auto mt-8 w-full min-w-0 max-w-3xl">
+              {children}
+
+              <ShareRow
+                title={share.title}
+                description={share.description}
+              />
+            </main>
           </div>
 
-          <h1 className="mx-auto mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
-            {title}
-          </h1>
-
-          {/* Dek: wraps on mobile, stays on one line on desktop
-              (cut with "..." if it is longer than the column). */}
-          {dek && (
-            <p className="mx-auto mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
-              {dek}
-            </p>
-          )}
-
-          {extra}
-
-          {meta}
-        </header>
-
-        {/* Article body: same centred column as the header */}
-        <div className="mx-auto mt-8 w-full max-w-3xl">
-          <main className="w-full min-w-0">
-            {children}
-
-            {/* Ads: centred under the article text */}
-            <aside className="mt-8 w-full">{sidebar}</aside>
-
-            <ShareAndBack
-              to={share.to}
-              label={share.label}
-              title={share.title}
-              description={share.description}
-            />
-          </main>
+          {/* RIGHT: ads (sticky on desktop, below the article on mobile) */}
+          <aside className="mt-8 w-full lg:sticky lg:top-24 lg:mt-0">
+            {sidebar}
+          </aside>
         </div>
 
         {related}
@@ -644,7 +646,10 @@ function ArticleQuote({ text, by }: { text: string; by: string }) {
 }
 
 /* =========================================================
-   ARTICLE SIDEBAR (ads, centred under the article text)
+   ARTICLE SIDEBAR (ads)
+   Stacked vertically in the right column on desktop.
+   On mobile they stack below the article; on tablets they
+   sit side by side below the article.
 ========================================================= */
 
 type SideAdSlots = {
@@ -670,7 +675,7 @@ function BlogSidebar({
   adSlots?: SideAdSlots;
 }) {
   return (
-    <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2">
+    <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-1">
       <AdSenseUnit slot={adSlots.top} side />
       <AdSenseUnit slot={adSlots.bottom} side />
     </div>
@@ -678,34 +683,20 @@ function BlogSidebar({
 }
 
 /* =========================================================
-   SHARE AND BACK NAVIGATION
+   SHARE ROW
+   The extra "Back to ..." button was removed: the top bar
+   already has one. Only the share button remains.
 ========================================================= */
 
-function ShareAndBack({
-  to,
-  label,
+function ShareRow({
   title,
   description,
 }: {
-  to: string;
-  label: string;
   title: string;
   description: string;
 }) {
   return (
-    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-4">
-      <Link
-        to={to}
-        className={`group inline-flex items-center gap-2 rounded-sm text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
-      >
-        <ArrowLeft
-          size={15}
-          className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-        />
-
-        Back to {label}
-      </Link>
-
+    <div className="mt-8 flex items-center justify-end border-y border-slate-200 py-4">
       <button
         type="button"
         onClick={() => {
@@ -867,8 +858,6 @@ function SpecialBlog({
         />
       }
       share={{
-        to: sectionPath,
-        label: sectionName,
         title,
         description: article.dek,
       }}
@@ -936,8 +925,6 @@ function HomepageBlog({
         />
       }
       share={{
-        to: "/",
-        label: "Home",
         title,
         description: article.dek,
       }}
@@ -1029,8 +1016,6 @@ function DigestBlog({
         />
       }
       share={{
-        to: "/",
-        label: "Home",
         title: article.title,
         description: digest.lede,
       }}
@@ -1167,8 +1152,6 @@ function MagazineBlog({
         />
       }
       share={{
-        to: backTo,
-        label: sectionLabel,
         title,
         description: dek,
       }}
