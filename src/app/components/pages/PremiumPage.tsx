@@ -108,32 +108,84 @@ const faqs = [
 ========================================================= */
 
 export function PremiumPage() {
-  const { user, isSignedIn, isLoading, upgradeToPremoium } = useAuth();
+  const { user, isSignedIn, isLoading } = useAuth();
+const [busy, setBusy] = useState(false);
+const [error, setError] = useState("");
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "annual">("annual");
 
   const isPremium = user?.tier === "premium";
 
-  /** Kicks off the upgrade flow for the selected plan. Real checkout
-   *  (Razorpay order creation + server-side verification) should be
-   *  wired in here; until then this reflects the same optimistic-only
-   *  flip the rest of the app uses, and always defers to refreshProfile
-   *  / the server as the source of truth on next load. */
-  const handleChoosePlan = (plan: "monthly" | "annual") => {
-    setSelectedPlan(plan);
+    const loadRazorpay = () =>
+    new Promise<boolean>((resolve) => {
+      if ((window as any).Razorpay) return resolve(true);
+      const s = document.createElement("script");
+      s.src = "https://checkout.razorpay.com/v1/checkout.js";
+      s.onload = () => resolve(true);
+      s.onerror = () => resolve(false);
+      document.body.appendChild(s);
+    });
 
-    if (!isSignedIn) {
-      navigate("/signup");
-      return;
+  const handleChoosePlan = async (plan: "monthly" | "annual") => {
+    setSelectedPlan(plan);
+    setError("");
+    if (!isSignedIn || !user) { navigate("/signup"); return; }
+    if (isPremium) { navigate("/dashboard"); return; }
+
+    setBusy(true);
+    try {
+      if (!(await loadRazorpay())) throw new Error("Could not load the payment window. Please try again.");
+
+      const { data, error: fnError } = await supabase.functions.invoke("create-order", { body: { plan } });
+      if (fnError || !data?.order_id) throw new Error("Could not start the payment. Please try again.");
+
+      const rzp = new (window as any).Razorpay({
+        key: data.key_id,
+        order_id: data.order_id,
+        amount: data.amount,
+        currency: data.currency,
+        name: "The Pride Times",
+        description: `Premium, ${plan}`,
+        prefill: { name: user.name, email: user.email },
+        theme: { color: "#dc2626" },
+        handler: async (response: any) => {
+          const { error: verifyError } = await supabase.functions.invoke("verify-payment", { body: response });
+          if (verifyError) {
+            setError("Payment received but not confirmed yet. If Premium is not active soon, contact us with payment ID " + response.razorpay_payment_id);
+            setBusy(false);
+            return;
+          }
+          window.location.assign("/dashboard");
+        },
+        modal: { ondismiss: () => setBusy(false) },
+      });
+      rzp.on("payment.failed", () => {
+        setError("Payment failed. You have not been charged.");
+        setBusy(false);
+      });
+      rzp.open();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong.");
+      setBusy(false);
     }
-    if (isPremium) {
-      navigate("/dashboard");
-      return;
-    }
-    upgradeToPremoium();
-    navigate("/dashboard");
   };
 
+  const handleTrial = async () => {
+    setError("");
+    if (!isSignedIn) { navigate("/signup"); return; }
+    setBusy(true);
+    const { error: rpcError } = await supabase.rpc("start_trial");
+    if (rpcError) {
+      setError(
+        rpcError.message.includes("already")
+          ? "You have already used your free trial."
+          : "Could not start your trial. Please try again."
+      );
+      setBusy(false);
+      return;
+    }
+    window.location.assign("/dashboard");
+  };
   return (
     <div className="w-full bg-white text-gray-900 antialiased">
 
@@ -176,7 +228,8 @@ export function PremiumPage() {
             ) : (
               <div className="flex flex-wrap items-center gap-4 mt-9">
                 <button
-                  onClick={() => handleChoosePlan("annual")}
+                  onClick={handleTrial}
+disabled={busy}
                   className="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-7 py-3.5 rounded-[2px] transition-colors flex items-center gap-2"
                 >
                   Start your free 30-day trial
@@ -323,7 +376,7 @@ export function PremiumPage() {
 
                 <button
                   onClick={() => handleChoosePlan(plan.id)}
-                  disabled={isPremium}
+                  disabled={isPremium || busy}
                   className={`w-full py-3 rounded-[2px] text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                     plan.badge
                       ? "bg-red-600 hover:bg-red-700 text-white"
@@ -403,7 +456,7 @@ export function PremiumPage() {
               </p>
             </div>
             <button
-              onClick={() => handleChoosePlan("annual")}
+              onClick={handleTrial} disabled={busy}
               className="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-8 py-3.5 rounded-[2px] transition-colors flex items-center gap-2 shrink-0"
             >
               Get Premium <ChevronRight size={15} />
