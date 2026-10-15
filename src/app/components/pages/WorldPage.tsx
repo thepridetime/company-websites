@@ -15,7 +15,7 @@ const SECTION_LABEL = "World";
 /* =========================================================
    WORLD ITEMS
    Articles from src/app/data/specialArticleData.ts whose
-   section is "World & Geopolitics".
+   section is "World and Geopolitics".
 ========================================================= */
 
 type WorldItem = {
@@ -30,7 +30,7 @@ type WorldItem = {
 };
 
 const worldItems: WorldItem[] = specialArticles
-  .filter((article) => article.section === "World & Geopolitics")
+  .filter((article) => article.section === "World and Geopolitics")
   .map((article) => ({
     id: article.id,
     href: specialArticlePath(article.id),
