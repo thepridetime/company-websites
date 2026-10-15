@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "../../../lib/supabase";
 import { Link, useNavigate } from "react-router";
 import {
   Crown, Check, X, Shield, Newspaper, BarChart2, Mail, Globe, Star,

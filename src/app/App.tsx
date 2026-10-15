@@ -7,6 +7,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { MarketsTicker } from "./components/MarketsTicker";
 import { PageLayout } from "./components/PageLayout";
+import { PremiumPage } from "./components/pages/PremiumPage";
 
 // ============================================================
 // MAIN PAGES
@@ -126,6 +127,7 @@ export default function App() {
           <Route path="/signup" element={<SignUpPage />} />
 
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/premium" element={<MagazineLayout><PremiumPage /></MagazineLayout>} />
 
           <Route
             path="/reset-password"
