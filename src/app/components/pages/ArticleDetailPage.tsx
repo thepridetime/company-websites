@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { Link, Navigate, useParams } from "react-router";
-import { ArrowLeft, ArrowRight, Bookmark, Clock, MapPin, Quote, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
 import {
   TimeAgo,
   estimateReadTime,
@@ -517,6 +517,7 @@ function ArticleShell({
   backTo,
   backLabel,
   topRight,
+  crumbs,
   kicker,
   title,
   dek,
@@ -530,6 +531,8 @@ function ArticleShell({
   backTo: string;
   backLabel: string;
   topRight?: ReactNode;
+  /** Breadcrumb trail (Home › Section › Article). Replaces the back link when set. */
+  crumbs?: { label: string; to?: string }[];
   kicker: ReactNode;
   title: string;
   dek?: ReactNode;
@@ -550,16 +553,45 @@ function ArticleShell({
         <div
           className={`${pageClass} flex flex-wrap items-center justify-between gap-3 py-3`}
         >
-          <Link
-            to={backTo}
-            className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
-          >
-            <ArrowLeft
-              size={14}
-              className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            />
-            Back to {backLabel}
-          </Link>
+          {crumbs ? (
+            <nav
+              aria-label="Breadcrumb"
+              className="flex min-w-0 flex-wrap items-center gap-1.5 text-xs font-semibold text-slate-500"
+            >
+              {crumbs.map((crumb, index) => (
+                <Fragment key={`${index}-${crumb.label}`}>
+                  {index > 0 && (
+                    <span aria-hidden="true" className="text-slate-300">
+                      ›
+                    </span>
+                  )}
+                  {crumb.to ? (
+                    <Link
+                      to={crumb.to}
+                      className={`rounded-sm transition-colors duration-200 hover:text-red-600 ${focusRing}`}
+                    >
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <span className="min-w-0 truncate text-slate-700">
+                      {crumb.label}
+                    </span>
+                  )}
+                </Fragment>
+              ))}
+            </nav>
+          ) : (
+            <Link
+              to={backTo}
+              className={`group inline-flex items-center gap-2 rounded-sm text-xs font-semibold text-slate-500 transition-colors duration-200 hover:text-red-600 ${focusRing}`}
+            >
+              <ArrowLeft
+                size={14}
+                className="transition-transform duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+              />
+              Back to {backLabel}
+            </Link>
+          )}
 
           {topRight}
         </div>
@@ -692,6 +724,7 @@ const defaultSideAdSlots: SideAdSlots = {
 
 function BlogSidebar({
   adSlots = defaultSideAdSlots,
+  relatedItems,
 }: {
   /* Kept optional so existing call sites still compile; the sidebar
      now only holds ads. */
@@ -701,7 +734,65 @@ function BlogSidebar({
   facts?: { label: string; value: string }[];
   quote?: { text: string; by: string };
   adSlots?: SideAdSlots;
+  relatedItems?: {
+    title: string;
+    category: string;
+    image?: string;
+    href: string;
+    date: string;
+  }[];
 }) {
+  if (relatedItems?.length) {
+    return (
+      <div className="flex flex-col gap-8">
+        <AdSenseUnit slot={adSlots.top} side />
+
+        <section aria-label="Related articles">
+          <div className="mb-4 flex items-center gap-2">
+            <span aria-hidden="true" className="h-4 w-1 bg-red-600" />
+            <h2 className="font-serif text-lg font-bold text-slate-950">
+              Related Articles
+            </h2>
+          </div>
+
+          <ul className="divide-y divide-slate-200">
+            {relatedItems.map((item) => (
+              <li key={item.href} className="py-3 first:pt-0">
+                <Link
+                  to={item.href}
+                  className={`group flex gap-3 rounded-sm ${focusRing}`}
+                >
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt=""
+                      loading="lazy"
+                      className="h-16 w-20 shrink-0 rounded-md object-cover"
+                    />
+                  )}
+
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
+                      {item.category}
+                    </p>
+                    <h3 className="mt-1 line-clamp-3 break-words font-serif text-sm font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-[10px] text-slate-400">
+                      {formatIsoDate(item.date)}
+                    </p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <AdSenseUnit slot={adSlots.bottom} side />
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:justify-items-stretch">
       <AdSenseUnit slot={adSlots.top} side />
@@ -724,7 +815,7 @@ function ShareRow({
   description: string;
 }) {
   return (
-    <div className="mt-8 flex items-center justify-end border-y border-slate-200 py-4">
+    <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-y border-slate-200 py-4">
       <button
         type="button"
         onClick={() => {
@@ -749,6 +840,35 @@ function ShareRow({
         <Share2 size={14} />
         Share this post
       </button>
+
+      <div className="flex items-center gap-1 text-slate-500">
+        <a
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share on X"
+          className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
+        >
+          X
+        </a>
+        <a
+          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share on LinkedIn"
+          className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
+        >
+          in
+        </a>
+        <button
+          type="button"
+          aria-label="Copy link"
+          onClick={() => navigator.clipboard?.writeText(window.location.href)}
+          className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
+        >
+          <Link2 size={14} />
+        </button>
+      </div>
     </div>
   );
 }
@@ -1002,6 +1122,11 @@ function DigestBlog({
     <ArticleShell
       backTo="/"
       backLabel="Home"
+      crumbs={[
+        { label: "Home", to: "/" },
+        { label: digest.sectionName, to: digest.sectionPath },
+        { label: article.title },
+      ]}
       topRight={
         <Link
           to={digest.sectionPath}
@@ -1054,6 +1179,13 @@ function DigestBlog({
           section={article.category}
           facts={digest.keyFacts}
           quote={digest.quote}
+          relatedItems={related.map((item) => ({
+            title: item.title,
+            category: item.category,
+            image: item.image,
+            href: `/article/${item.slug}`,
+            date: item.publishedAt,
+          }))}
         />
       }
       related={
