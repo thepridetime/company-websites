@@ -64,8 +64,24 @@ function NewsletterCTA() {
 }
 
 /* ============================================================
-   SECTION HEADER
+   EDITORIAL SECTION HEADER (MATCHING REFERENCE DESIGN)
 ============================================================ */
+
+function EditorialSectionHeader({
+  title,
+}: {
+  title: string;
+}) {
+  return (
+    <div className="mb-7 flex items-center gap-3">
+      <h2 className="flex items-center font-serif text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
+        <span className="mr-3 inline-block h-[4px] w-6 shrink-0 bg-red-600 self-center" />
+        {title}
+      </h2>
+      <div className="h-px flex-1 bg-gray-200" />
+    </div>
+  );
+}
 
 function SectionHeader({
   eyebrow,
@@ -110,96 +126,82 @@ function SectionHeader({
 
 const featuredLeader = {
   rank: "#1 LEADER 2026",
-  edition: "Q3 2026 — AI Infrastructure Edition",
+  edition: "Q3 2026 — AI INFRASTRUCTURE EDITION",
   name: "Jensen Huang",
   title: "President & CEO, NVIDIA Corporation · United States",
-  bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company. His vision of the AI-first computing paradigm has reshaped industries from autonomous vehicles to drug discovery. Under his leadership, NVIDIA's market capitalization has grown into one of the defining stories of the AI infrastructure era.",
+  bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company. His vision of the AI-first computing paradigm has reshaped industries from autonomous vehicles to drug discovery.",
+  quote: "The next era of computing will amplify human creativity in ways we've never seen before.",
+  quoteAuthor: "JENSEN HUANG",
   image: ceoJensen,
 };
 
 /* ============================================================
-   PRIDE TIMES 30
+   LEADERS TO WATCH (8 LEADERS IN 2 ROWS OF 4)
 ============================================================ */
 
 const leadersToWatch = [
   {
     rank: 1,
+    number: "01",
     name: "Jensen Huang",
-    title: "President and CEO",
-    company: "NVIDIA Corporation",
-    bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company.",
-    edition: "Q3 2026 — AI Infrastructure Edition",
-    initials: "JH",
+    title: "President and CEO, NVIDIA",
+    bio: "On AI, accelerated computing and the next era of innovation.",
     image: ceoJensen,
   },
   {
     rank: 2,
+    number: "02",
     name: "Sam Altman",
-    title: "CEO",
-    company: "OpenAI",
-    bio: "Sam Altman leads OpenAI, the company at the forefront of developing artificial general intelligence and bringing it into everyday products.",
-    edition: "Q2 2026 — AGI Edition",
-    initials: "SA",
+    title: "CEO, OpenAI",
+    bio: "On artificial general intelligence and the future of human potential.",
     image: ceoSam,
   },
   {
     rank: 3,
+    number: "03",
     name: "Mukesh Ambani",
-    title: "Chairman and MD",
-    company: "Reliance Industries",
-    bio: "Asia's richest man has transformed Reliance Industries from a petrochemicals and refining conglomerate into a diversified force in telecom and retail.",
-    edition: "Q1 2026 — Green Energy Edition",
-    initials: "MA",
+    title: "Chairman and MD, Reliance Industries",
+    bio: "On India's digital transformation and global ambitions.",
     image: ceoMukesh,
   },
   {
     rank: 4,
+    number: "04",
     name: "Sundar Pichai",
-    title: "CEO",
-    company: "Alphabet / Google",
-    bio: "Sundar Pichai leads Alphabet through its most transformative period since the founding of Google, weaving AI across search, cloud and devices.",
-    edition: "Q2 2026 — Search & AI Edition",
-    initials: "SP",
+    title: "CEO, Google",
+    bio: "On AI, search and building a more helpful internet.",
     image: ceoSundar,
   },
   {
     rank: 5,
+    number: "05",
     name: "Satya Nadella",
-    title: "Chairman and CEO",
-    company: "Microsoft",
-    bio: "Satya Nadella's decade at Microsoft's helm has been defined by a relentless cloud-first, AI-first transformation of the company's product line.",
-    edition: "Q1 2026 — Cloud & Copilot Edition",
-    initials: "SN",
+    title: "Chairman and CEO, Microsoft",
+    bio: "On cloud-first, AI-first transformation and the next decade of software.",
     image: ceoSatya,
   },
   {
     rank: 6,
+    number: "06",
     name: "Elon Musk",
-    title: "CEO",
-    company: "Tesla / SpaceX / xAI",
-    bio: "Elon Musk remains the most consequential entrepreneur of his generation, simultaneously running Tesla, SpaceX and xAI's rapid model development.",
-    edition: "Q3 2026 — Space & EV Edition",
-    initials: "EM",
+    title: "CEO, Tesla / SpaceX / xAI",
+    bio: "On space exploration, autonomous mobility and frontier artificial intelligence.",
     image: ceoElon,
   },
   {
     rank: 7,
+    number: "07",
     name: "Tim Cook",
-    title: "CEO",
-    company: "Apple Inc.",
-    bio: "Tim Cook has stewarded Apple through its most profitable era, guiding its journey to becoming one of the world's most valuable companies.",
-    edition: "Q2 2026 — Apple Intelligence Edition",
-    initials: "TC",
+    title: "CEO, Apple",
+    bio: "On Apple Intelligence, privacy-first computing and hardware excellence.",
     image: ceoTim,
   },
   {
     rank: 8,
+    number: "08",
     name: "Larry Fink",
-    title: "Chairman and CEO",
-    company: "BlackRock",
-    bio: "Larry Fink manages more money than any other person in history, directing BlackRock's roughly $11.6 trillion in assets under management.",
-    edition: "Q1 2026 — Asset Management Edition",
-    initials: "LF",
+    title: "Chairman and CEO, BlackRock",
+    bio: "On global capital allocation, infrastructure investing and energy transition.",
     image: ceoLarry,
   },
 ];
@@ -213,34 +215,31 @@ const ceoInterviews = [
     id: 1,
     name: "Satya Nadella",
     title: "CEO, Microsoft",
-    topic: "AI Strategy",
+    topic: "IN CONVERSATION",
     quote:
       "The next decade will be defined by how organizations use AI to augment human capability.",
     duration: "35 min read",
-    image:
-      ceoSatya,
+    image: ceoSatya,
   },
   {
     id: 2,
     name: "Indra Nooyi",
     title: "Former CEO, PepsiCo",
-    topic: "Leadership",
+    topic: "LEADERSHIP",
     quote:
       "The companies that will win in the next 20 years are those that embed purpose into their P&L.",
     duration: "28 min read",
-    image:
-      ceoIndra,
+    image: ceoIndra,
   },
   {
     id: 3,
     name: "Jensen Huang",
     title: "CEO, NVIDIA",
-    topic: "AI Infrastructure",
+    topic: "THE BIG PICTURE",
     quote:
       "We are not a chip company. We are the engine of the AI industrial revolution.",
     duration: "42 min read",
-    image:
-      ceoJensen,
+    image: ceoJensen,
   },
 ];
 
@@ -431,168 +430,206 @@ function CompanyCoverage({
 export function CeoSpotlightPage() {
   return (
     <main className="min-h-screen bg-white text-black">
-      <div className="mx-auto w-full max-w-[1240px] px-4 py-7 sm:px-6 md:py-9 lg:px-8">
+      <div className="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-6 md:py-10 lg:px-8">
 
         {/* ====================================================
-            MASTHEAD
+            1. CEO SPOTLIGHT SECTION (WIDE EDITORIAL COMPOSITION)
         ==================================================== */}
 
-        <header className="mb-8 border-b-4 border-black pb-5">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-black text-white">
-                <Users size={23} strokeWidth={1.7} />
-              </div>
-
-              <div>
-                <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.25em] text-red-600">
-                  Executive Intelligence
-                </p>
-
-                <h1 className="font-serif text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                  CEO Spotlight
-                </h1>
-              </div>
+        <section className="mb-16 border-b border-gray-200 pb-14 pt-2">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[250px_290px_1fr_270px] lg:gap-10 items-start">
+            {/* Column 1: Introduction */}
+            <div className="flex flex-col">
+              <div className="w-8 h-[3px] bg-red-600 mb-2.5" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+                EXECUTIVE PROFILE
+              </span>
+              <h1 className="mt-2 font-serif text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-[44px] leading-[1.05]">
+                CEO<br />Spotlight
+              </h1>
+              <p className="mt-4 text-xs sm:text-sm leading-relaxed text-gray-600">
+                In-depth conversations with the world&apos;s most influential business leaders, innovators and change-makers who are shaping the future.
+              </p>
             </div>
 
-            <div className="max-w-sm text-left sm:text-right">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400">
-                The Pride Times
+            {/* Column 2: Jensen Huang Portrait */}
+            <div className="aspect-[3.6/4] w-full max-w-[290px] overflow-hidden bg-gray-100 shadow-sm">
+              <ImageWithFallback
+                src={featuredLeader.image}
+                alt={featuredLeader.name}
+                className="h-full w-full object-cover object-top"
+              />
+            </div>
+
+            {/* Column 3: Name, Title, Bio & Profile Link */}
+            <div className="flex flex-col justify-center">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">
+                {featuredLeader.edition}
+              </span>
+
+              <h2 className="mt-1 font-serif text-3xl sm:text-4xl lg:text-[40px] font-bold text-gray-900 leading-tight">
+                {featuredLeader.name}
+              </h2>
+
+              <p className="mt-1.5 text-xs sm:text-[13px] font-semibold text-gray-600">
+                {featuredLeader.title}
               </p>
 
-              <p className="mt-1 text-xs leading-relaxed text-gray-500">
-                Profiles, interviews and ideas from the people shaping global
-                business.
+              <p className="mt-3.5 text-xs sm:text-sm leading-relaxed text-gray-700">
+                {featuredLeader.bio}
               </p>
+
+              <div className="mt-5 flex items-center gap-4">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                  EXECUTIVE PROFILE
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.14em] text-gray-400">
+                  AI INFRASTRUCTURE
+                </span>
+              </div>
+
+              <Link
+                to="/article/ceo-jensen-huang"
+                className="mt-4 inline-flex w-fit items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-black transition-colors hover:text-red-600"
+              >
+                READ FULL PROFILE
+                <ArrowUpRight size={13} strokeWidth={2.5} />
+              </Link>
+            </div>
+
+            {/* Column 4: Quote Panel */}
+            <div className="pt-2">
+              <span className="font-serif text-3xl sm:text-4xl font-bold leading-none text-red-600 select-none">
+                “
+              </span>
+
+              <blockquote className="mt-3 font-serif text-base sm:text-lg italic font-normal leading-snug text-gray-900">
+                &ldquo;{featuredLeader.quote}&rdquo;
+              </blockquote>
+
+              <span className="mt-4 block text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500">
+                — {featuredLeader.quoteAuthor}
+              </span>
             </div>
           </div>
-        </header>
+        </section>
 
         {/* ====================================================
             ADVERTISEMENT
         ==================================================== */}
 
-        <PrideTimesAd variant="fifth" />
+        <PrideTimesAd variant="first" className="mb-14" />
 
         {/* ====================================================
-            TOP STORIES / LEAD PROFILE
+            2. LEADERS TO WATCH (8 HORIZONTAL CARDS IN 2 ROWS OF 4)
         ==================================================== */}
 
-        <section className="mb-14">
-          <SectionHeader
-            eyebrow="Top Executive Story"
-            title="Lead Profile"
-            icon={Users}
-          />
-
-          <article className="group grid grid-cols-1 overflow-hidden border-y border-black md:grid-cols-[1.15fr_0.85fr]">
-
-            <div className="relative overflow-hidden bg-gray-100">
-              <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-sm bg-red-600 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
-                {featuredLeader.rank}
-              </span>
-
-              <ImageWithFallback
-                src={featuredLeader.image}
-                alt={featuredLeader.name}
-                className="h-[300px] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03] md:h-full md:min-h-[430px]"
-              />
-
-              <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/10" />
-            </div>
-
-            <div className="flex flex-col justify-center bg-white p-6 sm:p-8 md:p-10">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                {featuredLeader.edition}
-              </p>
-
-              <h2 className="font-serif text-3xl font-bold leading-tight text-gray-900 sm:text-4xl md:text-5xl">
-                {featuredLeader.name}
-              </h2>
-
-              <p className="mt-2 text-sm font-medium text-gray-500">
-                {featuredLeader.title}
-              </p>
-
-              <div className="my-5 h-px bg-gray-200" />
-
-              <p className="text-sm leading-7 text-gray-600">
-                {featuredLeader.bio}
-              </p>
-
-              <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-                <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-red-600">
-                  Executive Profile
-                </span>
-
-                <span className="text-[9px] uppercase tracking-[0.12em] text-gray-400">
-                  AI Infrastructure
-                </span>
-              </div>
-
-              <Link to="/article/ceo-jensen-huang" className="mt-6 inline-flex w-fit items-center gap-2 border-b-2 border-black pb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors hover:border-red-600 hover:text-red-600">
-                Read Full Profile
-                <ArrowUpRight size={13} />
-              </Link>
-            </div>
-          </article>
-        </section>
-
-        {/* ====================================================
-            MAJOR STORIES
-        ==================================================== */}
-
-        <section className="mb-14">
-          <SectionHeader
-            eyebrow="Major Executive Coverage"
+        <section className="mb-14 border-b border-gray-200 pb-12">
+          <EditorialSectionHeader
             title="Leaders to Watch"
-            icon={TrendingUp}
           />
 
-          <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-x-7 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {leadersToWatch.map((leader) => (
               <Link
                 to={`/article/ceo-leader-${leader.rank}`}
                 key={leader.rank}
-                className="group flex cursor-pointer flex-col border-b border-gray-200 py-5 sm:odd:border-r sm:sm:pr-5 lg:nth-[4n+1]:pr-5 lg:nth-[4n+2]:pr-5 lg:nth-[4n+3]:border-r lg:nth-[4n+3]:pr-5 lg:nth-[4n+4]:border-r-0 lg:nth-[4n+4]:pr-5"
+                className="group flex flex-col border-b border-gray-200 pb-6 transition-colors"
               >
-                <div className="mb-4 flex items-start justify-between gap-3">
-                  <span className="font-serif text-3xl text-gray-300 transition-colors group-hover:text-red-600">
-                    {String(leader.rank).padStart(2, "0")}
+                {/* Numbered Row */}
+                <div className="mb-3.5 flex items-center justify-between border-b border-gray-100 pb-2">
+                  <span className="text-sm font-bold text-red-600 tracking-wider">
+                    {leader.number}
                   </span>
-
-                  <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-red-600">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-red-600">
                     Leader
                   </span>
                 </div>
 
-                <div className="mb-4 aspect-[4/5] w-full overflow-hidden bg-gray-100">
+                {/* Horizontal card: thumbnail left, details right */}
+                <div className="flex gap-4">
+                  <div className="aspect-[4/5] w-[95px] sm:w-[105px] shrink-0 overflow-hidden bg-gray-100 shadow-sm">
+                    <ImageWithFallback
+                      src={leader.image}
+                      alt={leader.name}
+                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="flex min-w-0 flex-col">
+                    <h3 className="font-serif text-base sm:text-[17px] font-bold leading-snug text-gray-900 transition-colors group-hover:text-red-600">
+                      {leader.name}
+                    </h3>
+
+                    <p className="mt-1 text-xs font-medium text-gray-500 line-clamp-1">
+                      {leader.title}
+                    </p>
+
+                    <p className="mt-2 text-xs leading-relaxed text-gray-600 line-clamp-3">
+                      {leader.bio}
+                    </p>
+
+                    <span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-black group-hover:text-red-600 transition-colors">
+                      Read Profile
+                      <ArrowUpRight size={13} />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ====================================================
+            3. INSIDE THE CEO MIND (3 EQUAL-HEIGHT HORIZONTAL CARDS)
+        ==================================================== */}
+
+        <section className="mb-16">
+          <EditorialSectionHeader
+            title="Inside the CEO Mind"
+          />
+
+          <div className="grid grid-cols-1 gap-7 md:grid-cols-3">
+            {ceoInterviews.map((ceo) => (
+              <Link
+                to={`/article/ceo-interview-${ceo.id}`}
+                key={ceo.id}
+                className="group flex gap-5 border border-gray-200 bg-white p-5 sm:p-6 transition-all hover:border-gray-300 hover:shadow-md"
+              >
+                <div className="aspect-[4/5] w-[115px] sm:w-[130px] shrink-0 overflow-hidden bg-gray-100 shadow-sm">
                   <ImageWithFallback
-                    src={leader.image}
-                    alt={leader.name}
-                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                    src={ceo.image}
+                    alt={ceo.name}
+                    className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
 
-                <h3 className="font-serif text-xl font-bold leading-tight transition-colors group-hover:text-red-600">
-                  {leader.name}
-                </h3>
+                <div className="flex min-w-0 flex-1 flex-col justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                      {ceo.topic}
+                    </span>
 
-                <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400">
-                  {leader.title}
-                </p>
+                    <h3 className="mt-1.5 font-serif text-lg sm:text-xl font-bold text-gray-900 leading-snug transition-colors group-hover:text-red-600">
+                      {ceo.name}
+                    </h3>
 
-                <p className="mt-1 text-xs font-bold text-gray-900">
-                  {leader.company}
-                </p>
+                    <p className="mt-2 text-xs sm:text-[13px] leading-relaxed text-gray-600 line-clamp-4">
+                      &ldquo;{ceo.quote}&rdquo;
+                    </p>
+                  </div>
 
-                <p className="mt-3 line-clamp-3 text-[11px] leading-5 text-gray-600">
-                  {leader.bio}
-                </p>
+                  <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                    <span className="text-[10px] text-gray-400 font-medium">
+                      {ceo.duration}
+                    </span>
 
-                <p className="mt-3 text-[9px] font-bold uppercase tracking-[0.1em] text-red-600">
-                  {leader.edition}
-                </p>
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-black group-hover:text-red-600 transition-colors">
+                      Read Interview
+                      <ArrowUpRight size={13} />
+                    </span>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
@@ -602,80 +639,7 @@ export function CeoSpotlightPage() {
             ADVERTISEMENT
         ==================================================== */}
 
-        <PrideTimesAd variant="second" className="mb-10" />
-
-        {/* ====================================================
-            INTERVIEW DESK
-        ==================================================== */}
-
-        <section className="mb-14">
-          <SectionHeader
-            eyebrow="The Interview"
-            title="Inside the CEO Mind"
-            icon={Quote}
-          />
-
-          <div className="grid grid-cols-1 gap-0 border-y border-black lg:grid-cols-3">
-
-            {ceoInterviews.map((ceo, index) => (
-              <Link
-                to={`/article/ceo-interview-${ceo.id}`}
-                key={ceo.id}
-                className={`group border-b border-gray-200 py-6 lg:border-b-0 lg:px-6 lg:py-6 ${
-                  index !== 0 ? "lg:border-l lg:border-gray-200" : ""
-                }`}
-              >
-                <div className="relative mb-5 aspect-square w-full overflow-hidden bg-gray-100">
-                  <ImageWithFallback
-                    src={ceo.image}
-                    alt={ceo.name}
-                    className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-
-                  <span className="absolute left-3 top-3 rounded-sm bg-black px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-white">
-                    {ceo.topic}
-                  </span>
-                </div>
-
-                <p className="text-[10px] uppercase tracking-[0.12em] text-gray-400">
-                  {ceo.title}
-                </p>
-
-                <h3
-                  className={`mt-1 font-serif font-bold leading-tight ${
-                    index === 0 ? "text-2xl md:text-3xl" : "text-xl"
-                  }`}
-                >
-                  {ceo.name}
-                </h3>
-
-                <div className="my-4 h-px bg-gray-200" />
-
-                <div className="relative">
-                  <Quote
-                    size={18}
-                    className="absolute -left-1 -top-2 text-red-600 opacity-30"
-                  />
-
-                  <p className="pl-4 font-serif text-sm italic leading-6 text-gray-600">
-                    {ceo.quote}
-                  </p>
-                </div>
-
-                <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
-                  <span className="text-[10px] text-gray-400">
-                    {ceo.duration}
-                  </span>
-
-                  <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-red-600 transition-all group-hover:gap-2">
-                    Read Interview
-                    <ChevronRight size={11} />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <PrideTimesAd variant="fifth" className="mb-16" />
 
         {/* ====================================================
             EDITORIAL DESK
