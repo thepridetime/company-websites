@@ -172,11 +172,11 @@ function legacyImage(story: BusinessArticle, index: number): string {
    Climate, Healthcare & Pharma, Sustainability & ESG and the Regional
    Roundup have their own section pages and are left out. */
 const BUSINESS_SECTIONS = new Set([
-  "Markets & Finance",
-  "Mergers & Acquisitions",
-  "Consumer & Retail",
-  "Industry & Supply Chain",
-  "Leadership & Governance",
+  "Markets and Finance",
+  "Mergers and Acquisitions",
+  "Consumer and Retail",
+  "Industry and Supply Chain",
+  "Leadership and Governance",
 ]);
 
 const octCards: NewsCard[] = octEditionArticles
