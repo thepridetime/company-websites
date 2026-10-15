@@ -125,7 +125,7 @@ const leadersToWatch = [
   {
     rank: 1,
     name: "Jensen Huang",
-    title: "President & CEO",
+    title: "President and CEO",
     company: "NVIDIA Corporation",
     bio: "Jensen Huang co-founded NVIDIA in 1993 and has led the company from a gaming graphics specialist to the world's most valuable semiconductor company.",
     edition: "Q3 2026 — AI Infrastructure Edition",
@@ -145,7 +145,7 @@ const leadersToWatch = [
   {
     rank: 3,
     name: "Mukesh Ambani",
-    title: "Chairman & MD",
+    title: "Chairman and MD",
     company: "Reliance Industries",
     bio: "Asia's richest man has transformed Reliance Industries from a petrochemicals and refining conglomerate into a diversified force in telecom and retail.",
     edition: "Q1 2026 — Green Energy Edition",
@@ -165,7 +165,7 @@ const leadersToWatch = [
   {
     rank: 5,
     name: "Satya Nadella",
-    title: "Chairman & CEO",
+    title: "Chairman and CEO",
     company: "Microsoft",
     bio: "Satya Nadella's decade at Microsoft's helm has been defined by a relentless cloud-first, AI-first transformation of the company's product line.",
     edition: "Q1 2026 — Cloud & Copilot Edition",
@@ -195,7 +195,7 @@ const leadersToWatch = [
   {
     rank: 8,
     name: "Larry Fink",
-    title: "Chairman & CEO",
+    title: "Chairman and CEO",
     company: "BlackRock",
     bio: "Larry Fink manages more money than any other person in history, directing BlackRock's roughly $11.6 trillion in assets under management.",
     edition: "Q1 2026 — Asset Management Edition",
