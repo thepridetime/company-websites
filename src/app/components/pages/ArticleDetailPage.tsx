@@ -533,7 +533,7 @@ function ArticleShell({
   topRight?: ReactNode;
   /** Breadcrumb trail (Home › Section › Article). Replaces the back link when set. */
   crumbs?: { label: string; to?: string }[];
-  kicker?: ReactNode;
+  kicker: ReactNode;
   title: string;
   dek?: ReactNode;
   /** Optional line shown between the dek and the meta row. */
@@ -563,8 +563,7 @@ function ArticleShell({
         .pt-magazine .max-w-6xl.pb-12 { padding-top:14px !important; }
         .pt-magazine header { max-width:none !important; }
         .pt-magazine header > div:first-child { color:#d71920 !important; font-size:9px !important; letter-spacing:.13em !important; line-height:1.5 !important; }
-        .pt-magazine header > div:first-child + h1 { margin-top:8px !important; }
-        .pt-magazine header h1 { font-family:Georgia,'Times New Roman',serif !important; font-size:clamp(30px,3.5vw,47px) !important; line-height:1.02 !important; font-weight:700 !important; letter-spacing:-.045em !important; color:#17191c !important; margin-left:0 !important; max-width:850px !important; }
+        .pt-magazine header h1 { font-family:Georgia,'Times New Roman',serif !important; font-size:clamp(30px,3.5vw,47px) !important; line-height:1.02 !important; font-weight:700 !important; letter-spacing:-.045em !important; color:#17191c !important; margin-top:8px !important; margin-left:0 !important; max-width:850px !important; }
         .pt-magazine header > p { margin-top:10px !important; color:#60656c !important; font-family:Georgia,'Times New Roman',serif !important; font-size:16px !important; line-height:1.42 !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
         .pt-magazine header .border-y { border-color:#e4e7eb !important; margin-top:12px !important; padding:8px 0 !important; }
         .pt-magazine header .border-y button { border:1px solid #e2e5e8 !important; border-radius:50% !important; width:27px !important; height:27px !important; }
@@ -667,13 +666,11 @@ function ArticleShell({
         <div className="pt-article-grid mt-2 lg:mt-4">
           <div className="pt-article-col">
             <header className="w-full text-left">
-              {kicker && (
-                <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-                  {kicker}
-                </div>
-              )}
+              <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+                {kicker}
+              </div>
 
-              <h1 className={`${kicker ? "mt-3" : "mt-0"} break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]`}>
+              <h1 className="mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
                 {title}
               </h1>
 
@@ -1271,6 +1268,23 @@ function DigestBlog({
           More in {digest.sectionName}
         </Link>
       }
+      kicker={
+        <>
+          <span>
+            {article.tags.includes(
+              "Global and India Tech, Innovation and Unicorn Edition"
+            )
+              ? "The Pride Times News · Global and India Tech, Innovation and Unicorn Edition"
+              : article.tags.includes("Global Industry Edition")
+                ? "The Pride Times News · Global Industry Edition"
+                : "Global Corporate News Digest"}
+          </span>
+          <span className="text-slate-300">/</span>
+          <Link to={digest.sectionPath} className="hover:underline">
+            {digest.sectionName}
+          </Link>
+        </>
+      }
       title={article.title}
       dek={
         <span className="font-medium text-slate-700">{digest.lede}</span>
@@ -1319,7 +1333,7 @@ function DigestBlog({
         {digest.body.map((paragraph, index) => (
           <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
             <p className={`break-words${index === 0 ? " drop-cap" : ""}`}>
-              {emphasize(paragraph)}
+              {paragraph}
             </p>
 
             {digest.quote && index === digest.quoteAfter && (
