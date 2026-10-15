@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { Link, Navigate, useParams } from "react-router";
-import { ArrowLeft, ArrowRight, Clock, MapPin, Quote, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Clock, MapPin, Quote, Share2 } from "lucide-react";
 import {
   TimeAgo,
   estimateReadTime,
@@ -430,7 +430,8 @@ function BlogMeta({
   readTime?: string;
 }) {
   return (
-    <div className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-y border-slate-200 py-2 text-center text-[9px] text-slate-500 sm:text-[10px] md:text-[11px]">
+    <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-y border-slate-200 py-2 text-left text-[9px] text-slate-500 sm:text-[10px] md:text-[11px]">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1.5">
       {location && (
         <>
           <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-slate-500 sm:text-[9px] md:text-[10px]">
@@ -468,6 +469,31 @@ function BlogMeta({
           </span>
         </>
       )}
+      </div>
+
+      <div className="flex shrink-0 items-center gap-1 text-slate-500">
+        <button
+          type="button"
+          aria-label="Save article"
+          className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
+        >
+          <Bookmark size={13} />
+        </button>
+        <button
+          type="button"
+          aria-label="Adjust text size"
+          className={`inline-flex h-7 w-7 items-center justify-center rounded-md text-[11px] font-semibold transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
+        >
+          Aa
+        </button>
+        <button
+          type="button"
+          aria-label="Share article"
+          className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
+        >
+          <Share2 size={13} />
+        </button>
+      </div>
     </div>
   );
 }
