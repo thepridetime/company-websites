@@ -1,7 +1,7 @@
 /* =========================================================
    HEALTHCARE & PHARMA NEWS — SHARED DATA
    THE PRIDE TIMES
-   Source: Global Corporate News Digest — "Healthcare & Pharma"
+   Source: Global Corporate News Digest — "Healthcare and Pharma"
 ======================================================== */
 
 import HC1Img from "../../imports/HC1.png";
