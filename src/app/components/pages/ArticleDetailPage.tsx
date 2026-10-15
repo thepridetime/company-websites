@@ -658,7 +658,7 @@ function ArticleShell({
         </div>
       </div>
 
-      <div className={`${pageClass} pb-12 pt-4 sm:pt-5`}>
+      <div className={`${pageClass} pb-8 pt-4 sm:pt-5`}>
         {/* Ad 1: just below the header bar, above the article */}
         <AdSenseUnit slot={adSlots.top} />
 
@@ -697,11 +697,11 @@ function ArticleShell({
           </div>
 
           {/* Related news with images */}
-          <aside className="mt-10 w-full lg:mt-0">{sidebar}</aside>
+          <aside className="mt-8 w-full lg:mt-0">{sidebar}</aside>
         </div>
 
-        {/* Ad 2: bottom of the page, above the footer */}
-        <div className="mt-10">
+        {/* Ad 2: bottom of the page, above the footer (no extra gap above it) */}
+        <div className="mt-4 [&>div]:!my-0">
           <AdSenseUnit slot={adSlots.bottom} />
         </div>
       </div>
@@ -715,14 +715,69 @@ function ArticleShell({
    The dek is shown once, in the header, so it is not repeated here.
 ========================================================= */
 
-/* Make key figures (money, percentages, big numbers) a little bolder. */
-const KEY_FACT_RE =
-  /((?:[$€£₹]\s?\d[\d,.]*(?:\s?(?:trillion|billion|million|crore|lakh|bn|m|k)\b)?)|(?:\b\d[\d,.]*\s?(?:%|percent\b|trillion\b|billion\b|million\b|crore\b|lakh\b)))/gi;
+/* Make the important words in a paragraph a little bolder:
+   key figures, names (people, companies, places) and strong news words.
+   Each term is bolded once per paragraph, at most MAX_BOLD per paragraph. */
+const MAX_BOLD = 7;
+
+const EMPHASIS_RE = new RegExp(
+  [
+    // money, percentages, big numbers
+    String.raw`[$€£₹]\s?\d[\d,.]*(?:\s?(?:trillion|billion|million|crore|lakh|bn|m|k)\b)?`,
+    String.raw`\b\d[\d,.]*\s?(?:%|percent\b|trillion\b|billion\b|million\b|crore\b|lakh\b)`,
+    // names: two or more capitalised words (Bank of America, Tim Cook)
+    String.raw`\b[A-Z][a-zA-Z&'’-]+(?:\s+(?:of\s+)?[A-Z][a-zA-Z&'’-]+)+`,
+    // single capitalised word (Nvidia, India) - skipped at sentence start
+    String.raw`\b[A-Z][a-z]{2,}\b`,
+    // strong news words
+    String.raw`\b(?:record(?:-high|-low)?|unprecedented|largest|biggest|first-ever|surged?|plunged?|soared?|slumped?|acquisitions?|mergers?|breakthrough|crisis|layoffs?)\b`,
+  ].join("|"),
+  "g"
+);
+
+const SKIP_WORDS = new Set([
+  "The", "This", "That", "These", "Those", "There", "They", "Their", "However",
+  "While", "When", "With", "Within", "Meanwhile", "Still", "Even", "Many", "Some",
+  "Most", "Such", "Another", "Several", "Each", "Both", "Over", "Across", "After",
+  "Before", "During", "For", "From", "Into", "Its", "And", "But", "Yet", "Also",
+]);
 
 function emphasize(text: string): ReactNode[] {
-  return text.split(KEY_FACT_RE).map((part, i) =>
-    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-  );
+  const out: ReactNode[] = [];
+  const seen = new Set<string>();
+  let last = 0;
+  let count = 0;
+
+  for (const m of text.matchAll(EMPHASIS_RE)) {
+    let term = m[0];
+    let start = m.index ?? 0;
+
+    // drop a leading "The " etc. from a multi-word name
+    const first = term.split(/\s+/)[0];
+    if (SKIP_WORDS.has(first)) {
+      const rest = term.slice(first.length).trimStart();
+      if (!rest) continue;
+      start += term.length - rest.length;
+      term = rest;
+    }
+
+    const before = text.slice(0, start).trimEnd();
+    const atSentenceStart = before === "" || /[.!?:]["”’)]?$/.test(before);
+    const isSingleCapital = /^[A-Z][a-z]+$/.test(term);
+    if (isSingleCapital && atSentenceStart) continue;
+
+    const key = term.toLowerCase();
+    if (seen.has(key) || count >= MAX_BOLD || start < last) continue;
+
+    seen.add(key);
+    count += 1;
+    if (start > last) out.push(text.slice(last, start));
+    out.push(<strong key={start}>{term}</strong>);
+    last = start + term.length;
+  }
+
+  if (last < text.length) out.push(text.slice(last));
+  return out;
 }
 
 function BlogBody({
