@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Bookmark, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
 import {
@@ -499,6 +499,68 @@ function BlogMeta({
 }
 
 /* =========================================================
+   FIT SIDEBAR TO ARTICLE HEIGHT
+   On desktop the sidebar must never be taller than the article,
+   otherwise the grid grows and leaves a blank gap above the bottom ad.
+   The sidebar is clipped to the article column's height and any
+   related item that does not fully fit is hidden.
+========================================================= */
+
+function useFitSidebar(
+  columnRef: RefObject<HTMLElement | null>,
+  asideRef: RefObject<HTMLElement | null>
+) {
+  useLayoutEffect(() => {
+    const column = columnRef.current;
+    const aside = asideRef.current;
+    if (!column || !aside) return;
+
+    const desktop = window.matchMedia("(min-width: 1024px)");
+
+    const fit = () => {
+      const items: HTMLElement[] = Array.from(
+        aside.querySelectorAll<HTMLElement>("section[aria-label='Related articles'] > ul > li")
+      );
+      items.forEach((li) => (li.style.display = ""));
+
+      if (!desktop.matches || items.length === 0) return;
+
+      const limit = aside.getBoundingClientRect().height;
+      const top = aside.getBoundingClientRect().top;
+
+      let hide = false;
+      items.forEach((li, index) => {
+        if (hide) {
+          li.style.display = "none";
+          return;
+        }
+        const bottom = li.getBoundingClientRect().bottom - top;
+        if (bottom > limit && index > 0) {
+          hide = true;
+          li.style.display = "none";
+        }
+      });
+    };
+
+    fit();
+
+    const observer = new ResizeObserver(fit);
+    observer.observe(column);
+    window.addEventListener("resize", fit);
+    /* images inside the sidebar change item heights when they load */
+    aside.addEventListener("load", fit, true);
+    desktop.addEventListener("change", fit);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", fit);
+      aside.removeEventListener("load", fit, true);
+      desktop.removeEventListener("change", fit);
+    };
+  }, [columnRef, asideRef]);
+}
+
+/* =========================================================
    SHARED ARTICLE SHELL
    One layout for every article template.
    - Header (kicker, title, dek, meta) is centred over the
@@ -533,7 +595,7 @@ function ArticleShell({
   topRight?: ReactNode;
   /** Breadcrumb trail (Home › Section › Article). Replaces the back link when set. */
   crumbs?: { label: string; to?: string }[];
-  kicker: ReactNode;
+  kicker?: ReactNode;
   title: string;
   dek?: ReactNode;
   /** Optional line shown between the dek and the meta row. */
@@ -550,6 +612,10 @@ function ArticleShell({
     description: string;
   };
 }) {
+  const columnRef = useRef<HTMLDivElement>(null);
+  const asideRef = useRef<HTMLElement>(null);
+  useFitSidebar(columnRef, asideRef);
+
   return (
     <article className="pt-magazine min-h-screen bg-white text-slate-900 antialiased">
 
@@ -563,7 +629,8 @@ function ArticleShell({
         .pt-magazine .max-w-6xl.pb-12 { padding-top:14px !important; }
         .pt-magazine header { max-width:none !important; }
         .pt-magazine header > div:first-child { color:#d71920 !important; font-size:9px !important; letter-spacing:.13em !important; line-height:1.5 !important; }
-        .pt-magazine header h1 { font-family:Georgia,'Times New Roman',serif !important; font-size:clamp(30px,3.5vw,47px) !important; line-height:1.02 !important; font-weight:700 !important; letter-spacing:-.045em !important; color:#17191c !important; margin-top:8px !important; margin-left:0 !important; max-width:850px !important; }
+        .pt-magazine header > div:first-child + h1 { margin-top:8px !important; }
+        .pt-magazine header h1 { font-family:Georgia,'Times New Roman',serif !important; font-size:clamp(30px,3.5vw,47px) !important; line-height:1.02 !important; font-weight:700 !important; letter-spacing:-.045em !important; color:#17191c !important; margin-left:0 !important; max-width:850px !important; }
         .pt-magazine header > p { margin-top:10px !important; color:#60656c !important; font-family:Georgia,'Times New Roman',serif !important; font-size:16px !important; line-height:1.42 !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
         .pt-magazine header .border-y { border-color:#e4e7eb !important; margin-top:12px !important; padding:8px 0 !important; }
         .pt-magazine header .border-y button { border:1px solid #e2e5e8 !important; border-radius:50% !important; width:27px !important; height:27px !important; }
@@ -600,7 +667,9 @@ function ArticleShell({
           .pt-magazine .max-w-6xl.pb-12 { padding-top:12px !important; }
           .pt-magazine .pt-article-grid { display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; gap:40px !important; align-items:start !important; }
           .pt-magazine main { max-width:none !important; }
-          .pt-magazine aside { margin-top:0 !important; position:sticky !important; top:88px !important; }
+          .pt-magazine .pt-article-grid { align-items:stretch !important; }
+          .pt-magazine aside { margin-top:0 !important; position:relative !important; }
+          .pt-magazine .pt-aside-inner { position:absolute !important; inset:0 !important; overflow:hidden !important; }
         }
         @media (max-width:767px) {
           .pt-magazine header h1 { font-size:31px !important; line-height:1.04 !important; }
@@ -664,13 +733,15 @@ function ArticleShell({
 
         {/* One column for header + body (same left edge), related news beside it */}
         <div className="pt-article-grid mt-2 lg:mt-4">
-          <div className="pt-article-col">
+          <div ref={columnRef} className="pt-article-col">
             <header className="w-full text-left">
-              <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-                {kicker}
-              </div>
+              {kicker && (
+                <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+                  {kicker}
+                </div>
+              )}
 
-              <h1 className="mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
+              <h1 className={`${kicker ? "mt-3" : "mt-0"} break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]`}>
                 {title}
               </h1>
 
@@ -697,7 +768,9 @@ function ArticleShell({
           </div>
 
           {/* Related news with images */}
-          <aside className="mt-8 w-full lg:mt-0">{sidebar}</aside>
+          <aside ref={asideRef} className="pt-aside mt-8 w-full lg:mt-0">
+            <div className="pt-aside-inner">{sidebar}</div>
+          </aside>
         </div>
 
         {/* Ad 2: bottom of the page, above the footer (no extra gap above it) */}
@@ -1067,20 +1140,6 @@ function RelatedPosts<
 }
 
 /* =========================================================
-   KICKER HELPERS
-========================================================= */
-
-function BlogKicker({ category }: { category: string }) {
-  return (
-    <>
-      <span>The Pride Times Blog</span>
-      <span className="text-slate-300">/</span>
-      <span>{category}</span>
-    </>
-  );
-}
-
-/* =========================================================
    SPECIAL BLOGS
 ========================================================= */
 
@@ -1106,7 +1165,6 @@ function SpecialBlog({
     <ArticleShell
       backTo={sectionPath}
       backLabel={sectionName}
-      kicker={<BlogKicker category={article.category} />}
       title={title}
       dek={article.dek}
       meta={
@@ -1184,7 +1242,6 @@ function HomepageBlog({
         top: isExpandedAdCategory ? "5608262547" : "5373718974",
         bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
       }}
-      kicker={<BlogKicker category={article.category} />}
       title={title}
       dek={article.dek}
       meta={
@@ -1268,23 +1325,6 @@ function DigestBlog({
           More in {digest.sectionName}
         </Link>
       }
-      kicker={
-        <>
-          <span>
-            {article.tags.includes(
-              "Global and India Tech, Innovation and Unicorn Edition"
-            )
-              ? "The Pride Times News · Global and India Tech, Innovation and Unicorn Edition"
-              : article.tags.includes("Global Industry Edition")
-                ? "The Pride Times News · Global Industry Edition"
-                : "Global Corporate News Digest"}
-          </span>
-          <span className="text-slate-300">/</span>
-          <Link to={digest.sectionPath} className="hover:underline">
-            {digest.sectionName}
-          </Link>
-        </>
-      }
       title={article.title}
       dek={
         <span className="font-medium text-slate-700">{digest.lede}</span>
@@ -1333,7 +1373,7 @@ function DigestBlog({
         {digest.body.map((paragraph, index) => (
           <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
             <p className={`break-words${index === 0 ? " drop-cap" : ""}`}>
-              {paragraph}
+              {emphasize(paragraph)}
             </p>
 
             {digest.quote && index === digest.quoteAfter && (
@@ -1433,7 +1473,6 @@ function MagazineBlog({
     <ArticleShell
       backTo={backTo}
       backLabel={sectionLabel}
-      kicker={<BlogKicker category={article.category} />}
       title={title}
       dek={dek || undefined}
       meta={
