@@ -69,7 +69,7 @@ const megaMenuColumns = [
       { label: "Magazines", path: "/magazine" },
       { label: "Innovation", path: "/innovation" },
       { label: "White House Watch", path: "/white-house-watch" },
-      { label: "World & Geopolitics", path: "/world" },
+      { label: "World and Geopolitics", path: "/world" },
     ],
   },
   {
@@ -432,9 +432,9 @@ export function MarketsTicker() {
 ========================================================= */
 
 const MARKET_INDUSTRIES = [
-  "Global Economy & Finance",
+  "Global Economy and Finance",
   "Energy",
-  "AI & Cloud Infrastructure",
+  "AI and Cloud Infrastructure",
   "Corporate",
 ];
 
