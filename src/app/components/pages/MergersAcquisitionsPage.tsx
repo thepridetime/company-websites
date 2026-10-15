@@ -22,7 +22,7 @@ const SECTION_LABEL = "Mergers and Acquisitions";
    - Deal stories from the M&A Edition 1 (maEdition1Data.ts)
    - "Deals and Moves Roundup" from the October 2026 Global
      Industry Edition (octEditionData.ts, section
-     "Mergers & Acquisitions")
+     "Mergers and Acquisitions")
 ========================================================= */
 
 type MAItem = {
@@ -52,7 +52,7 @@ const editionItems: MAItem[] = maEdition1Articles.map(
 );
 
 const octMAItems: MAItem[] = octEditionArticles
-  .filter((article: OctEditionArticle) => article.section === "Mergers & Acquisitions")
+  .filter((article: OctEditionArticle) => article.section === "Mergers and Acquisitions")
   .map((article) => ({
     id: article.id,
     href: octEditionArticlePath(article),
