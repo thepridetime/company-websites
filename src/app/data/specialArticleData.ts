@@ -128,14 +128,14 @@ const ceoFeatured = makeArticle({
 });
 
 const ceoLeaders = [
-  [1, "Jensen Huang", "President & CEO", "NVIDIA Corporation", "Jensen Huang co-founded NVIDIA in 1993 and has led its transition from a gaming graphics specialist toward a broad accelerated-computing platform."],
+  [1, "Jensen Huang", "President and CEO", "NVIDIA Corporation", "Jensen Huang co-founded NVIDIA in 1993 and has led its transition from a gaming graphics specialist toward a broad accelerated-computing platform."],
   [2, "Sam Altman", "CEO", "OpenAI", "Sam Altman leads OpenAI as the company develops advanced AI systems and expands their use across consumer and enterprise products."],
-  [3, "Mukesh Ambani", "Chairman & MD", "Reliance Industries", "Mukesh Ambani has overseen Reliance's expansion beyond energy into telecom, retail, digital services and new-energy investments."],
+  [3, "Mukesh Ambani", "Chairman and MD", "Reliance Industries", "Mukesh Ambani has overseen Reliance's expansion beyond energy into telecom, retail, digital services and new-energy investments."],
   [4, "Sundar Pichai", "CEO", "Alphabet / Google", "Sundar Pichai leads Alphabet through a period in which AI is being integrated across search, cloud, devices and productivity products."],
-  [5, "Satya Nadella", "Chairman & CEO", "Microsoft", "Satya Nadella's leadership has centered Microsoft around cloud computing, developer platforms and an increasingly AI-focused product portfolio."],
+  [5, "Satya Nadella", "Chairman and CEO", "Microsoft", "Satya Nadella's leadership has centered Microsoft around cloud computing, developer platforms and an increasingly AI-focused product portfolio."],
   [6, "Elon Musk", "CEO", "Tesla / SpaceX / xAI", "Elon Musk's companies operate across electric vehicles, launch systems and artificial intelligence, linking engineering investment with ambitious long-term product roadmaps."],
   [7, "Tim Cook", "CEO", "Apple Inc.", "Tim Cook has led Apple through a period of continued services growth, hardware expansion and increasing attention to on-device artificial intelligence."],
-  [8, "Larry Fink", "Chairman & CEO", "BlackRock", "Larry Fink leads BlackRock as the asset-management industry responds to changing capital markets, technology and investor expectations."],
+  [8, "Larry Fink", "Chairman and CEO", "BlackRock", "Larry Fink leads BlackRock as the asset-management industry responds to changing capital markets, technology and investor expectations."],
 ].map(([rank, name, role, company, bio]) => makeArticle({
   id: `ceo-leader-${rank}`,
   section: "CEO Spotlight",
@@ -221,7 +221,7 @@ const innovationHero = makeArticle({
 const innovationStories = [
   ["innovation-climate-ai", "AI Model Predicts Climate Change Tipping Points 10 Years in Advance", "Research", "AI models are being explored as tools for identifying complex climate patterns and earlier warning signals.", "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80"],
   ["innovation-quantum-protein", "Quantum Computing and the Next Frontier of Protein Modeling", "Quantum Computing", "Researchers continue to investigate whether quantum methods can accelerate difficult scientific optimization and molecular problems.", "https://images.unsplash.com/photo-1760629863094-5b1e8d1aae74?auto=format&fit=crop&w=900&q=80"],
-  ["innovation-blackwell", "NVIDIA Blackwell Ultra and the Push Toward Faster AI Training", "AI & Computing", "New accelerator architectures are targeting higher training throughput, efficiency and scale for increasingly large AI workloads.", "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80"],
+  ["innovation-blackwell", "NVIDIA Blackwell Ultra and the Push Toward Faster AI Training", "AI and Computing", "New accelerator architectures are targeting higher training throughput, efficiency and scale for increasingly large AI workloads.", "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80"],
   ["innovation-mrna", "The Race to Build More Adaptable mRNA Cancer Vaccines", "Biotechnology", "Researchers are exploring personalized and broadly targeted mRNA approaches for difficult cancer treatment challenges.", "https://images.unsplash.com/photo-1766315746079-215ff5115e9f?auto=format&fit=crop&w=900&q=80"],
   ["innovation-starship", "Reusable Launch Systems and the Changing Economics of Space", "Space Technology", "Reusable launch architectures are changing how engineers think about turnaround time, payload economics and access to orbit.", "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80"],
   ["innovation-drug-discovery", "AI Drug Discovery Moves Deeper Into the Development Pipeline", "Biotechnology", "AI-assisted research is being used to prioritize targets, model molecules and reduce some of the search burden in drug discovery.", "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900"],
@@ -309,7 +309,7 @@ const ceoOpinions = [
   keyFacts: [
     { label: "Desk", value: "The Boardroom" },
     { label: "Format", value: "Leadership opinion" },
-    { label: "Topic", value: "Strategy & management" },
+    { label: "Topic", value: "Strategy and management" },
     { label: "Publication", value: "The Pride Times" },
   ],
 }));
@@ -382,14 +382,14 @@ const healthcareArticles: SpecialArticle[] = [
 "Traceability requirements are identified as an adoption accelerator.", "Digital records can improve visibility across supply-chain workflows.", "Cloud systems can support shared access to operational information.", "Governance and data quality remain important implementation requirements."], sections: [
 { heading: "Traceability becomes infrastructure", body: "When healthcare organizations must demonstrate where products and information came from, digital records become more than an efficiency tool. They become part of the operating infrastructure used to document and verify workflows." }, { heading: "Supply-chain visibility", body: "Traceability can connect procurement, inventory and supplier records. This gives organizations a clearer view of how products move through the system and where information is created or changed." }, { heading: "Why cloud systems matter", body: "The supplied market figures identify cloud-based delivery as 56% of the healthcare supply-chain market. Cloud architecture can support access and integration, but organizations still need appropriate governance and security controls." }, { heading: "The compliance-to-innovation link", body: "The briefing shows how regulation can accelerate technology adoption. Instead of being treated only as a compliance requirement, traceability can become a reason to modernize fragmented processes." }], keyFacts: [
 { label: "Desk", value: "Healthcare" }, { label: "Category", value: "TRACEABILITY" }, { label: "Date", value: "September 29, 2026" }, { label: "Publication", value: "The Pride Times" }] }),
-  makeArticle({ id: "healthcare-latest-5", section: "Healthcare", category: "MEDTECH & SUSTAINABILITY", title: "Healthcare Partnerships Connect Medtech, Digital Operations and Sustainability", dek: "The supplied update points to new collaborations between pharma, medtech and sustainability consultants, including the example of Schneider Electric and EcoVadis.", image: undefined, highlights: [
+  makeArticle({ id: "healthcare-latest-5", section: "Healthcare", category: "MEDTECH AND SUSTAINABILITY", title: "Healthcare Partnerships Connect Medtech, Digital Operations and Sustainability", dek: "The supplied update points to new collaborations between pharma, medtech and sustainability consultants, including the example of Schneider Electric and EcoVadis.", image: undefined, highlights: [
 "The supplied briefing highlights collaboration across pharma, medtech and sustainability.", "Schneider Electric + EcoVadis is cited as an example.", "Healthcare modernization increasingly crosses organizational boundaries.", "Supply-chain visibility can support both operational and sustainability objectives."], sections: [
 { heading: "A broader definition of healthcare operations", body: "Healthcare organizations increasingly operate across clinical, procurement, technology and sustainability functions. Partnerships between technology providers and specialist consultants can connect these areas." }, { heading: "The Schneider Electric and EcoVadis example", body: "The supplied briefing specifically cites Schneider Electric and EcoVadis as an example of collaboration. The example is presented as evidence of the broader trend toward combining technology, supply-chain and sustainability expertise." }, { heading: "Why supply chains sit at the center", body: "Supply chains link manufacturers, distributors, hospitals and patients. Better digital visibility can therefore provide information that is relevant to availability, risk management and sustainability reporting." }, { heading: "What this means for buyers", body: "Healthcare organizations assessing technology may increasingly look for platforms and partners that can address more than one operating requirement, including traceability, supplier risk and sustainability information." }], keyFacts: [
-{ label: "Desk", value: "Healthcare" }, { label: "Category", value: "MEDTECH & SUSTAINABILITY" }, { label: "Date", value: "September 29, 2026" }, { label: "Publication", value: "The Pride Times" }] }),
-  makeArticle({ id: "healthcare-latest-6", section: "Healthcare", category: "EMPLOYMENT & HEALTHCARE", title: "Healthcare Employment Growth Reinforces the Sector's Economic Resilience", dek: "The supplied Deloitte Insights briefing says the U.S. healthcare and private education sectors added more than 1 million jobs from January 2025 through August 2026, accounting for the bulk of total employment growth in that source's analysis.", image: undefined, highlights: [
+{ label: "Desk", value: "Healthcare" }, { label: "Category", value: "MEDTECH AND SUSTAINABILITY" }, { label: "Date", value: "September 29, 2026" }, { label: "Publication", value: "The Pride Times" }] }),
+  makeArticle({ id: "healthcare-latest-6", section: "Healthcare", category: "EMPLOYMENT AND HEALTHCARE", title: "Healthcare Employment Growth Reinforces the Sector's Economic Resilience", dek: "The supplied Deloitte Insights briefing says the U.S. healthcare and private education sectors added more than 1 million jobs from January 2025 through August 2026, accounting for the bulk of total employment growth in that source's analysis.", image: undefined, highlights: [
 "The supplied period is January 2025 through August 2026.", "More than 1 million jobs were added across healthcare and private education in the cited briefing.", "The sectors accounted for the bulk of total employment growth in that analysis.", "Employment resilience is occurring alongside healthcare technology investment."], sections: [
 { heading: "The employment signal", body: "The supplied Deloitte Insights figure provides a macroeconomic backdrop for the healthcare update. Employment growth indicates that healthcare remains a major area of economic activity while the sector is also undergoing technology-led change." }, { heading: "Technology does not replace the whole workforce", body: "The same update describes AI integration across diagnostics, supply chain and patient management. These are examples of technology being embedded into a large operating workforce rather than a simple substitution story." }, { heading: "Operations and productivity", body: "Digital tools can change how healthcare employees handle information, inventory, procurement and patient workflows. The effect depends on implementation and the specific role being supported." }, { heading: "Why the combination matters", body: "Healthcare's employment scale and technology investment reinforce each other: a large sector creates a broad operating environment in which digital systems can be deployed across many workflows." }], keyFacts: [
-{ label: "Desk", value: "Healthcare" }, { label: "Category", value: "EMPLOYMENT & HEALTHCARE" }, { label: "Date", value: "September 29, 2026" }, { label: "Publication", value: "The Pride Times" }] }),
+{ label: "Desk", value: "Healthcare" }, { label: "Category", value: "EMPLOYMENT AND HEALTHCARE" }, { label: "Date", value: "September 29, 2026" }, { label: "Publication", value: "The Pride Times" }] }),
   makeArticle({ id: "healthcare-more-1", section: "Healthcare", category: "HEALTHCARE SCM", title: "Software-Led Healthcare Supply Chains Gain Strategic Importance", dek: "The supplied market figures show software-led solutions holding 58% market share, reinforcing the role of digital platforms in healthcare supply-chain management.", image: undefined, highlights: [
 "Software-led solutions are cited at 58% market share.", "Cloud-based delivery is cited at 56%.", "The market is forecast to expand through 2034.", "Operational visibility is a central theme of the supplied healthcare update."], sections: [
 { heading: "Software becomes the operating layer", body: "The supplied 58% figure shows the central role assigned to software-led solutions in the healthcare supply-chain market. Digital platforms can connect purchasing, inventory and supplier information." }, { heading: "Cloud and connectivity", body: "The 56% cloud-based delivery figure points to a market increasingly delivered through connected infrastructure. This can support multi-site organizations that need common operational information." }, { heading: "The resilience objective", body: "The update connects technology adoption with inventory visibility, forecasting and supplier-risk management. Together, those functions can improve the information available for resilience planning." }, { heading: "A long-term market", body: "The forecast from $3.20 billion in 2025 to $8.60 billion in 2034 describes a market with a multi-year modernization horizon." }], keyFacts: [
@@ -433,7 +433,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -461,7 +461,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -489,7 +489,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -517,7 +517,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -545,7 +545,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -573,7 +573,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -601,7 +601,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -629,7 +629,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -657,7 +657,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -685,7 +685,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -713,14 +713,14 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
   makeArticle({
     id: "manufacturing-energy-costs",
     section: "Manufacturing",
-    category: "ENERGY & INDUSTRY",
+    category: "ENERGY AND INDUSTRY",
     title: "Energy Costs Become a Larger Variable in Factory Investment Decisions",
     dek: "Energy-intensive manufacturers are increasingly considering power availability and cost alongside labor, logistics and market access when evaluating production locations.",
     image: undefined,
@@ -741,7 +741,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -769,7 +769,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -797,7 +797,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -825,7 +825,7 @@ const manufacturingArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Section", value: "Manufacturing" },
       { label: "Coverage", value: "Industrial intelligence" },
-      { label: "Theme", value: "AI, robotics & resilience" },
+      { label: "Theme", value: "AI, robotics and resilience" },
       { label: "Publication", value: "The Pride Times" }
     ]
   }),
@@ -1134,17 +1134,17 @@ const cyberFeedSeeds: SectionArticleSeed[] = [
   ["AI SYSTEMS", "Hackers exploit AI-powered customer support systems and breach Amazon's One Medical, exposing sensitive healthcare records.", "Attackers abused AI-powered support systems to access sensitive healthcare records."],
 
   // AI & National Infrastructure
-  ["AI & INFRASTRUCTURE", "H200 shipments to China resume under authorization — the compute chokepoint persists at the intersection of export controls and national security.", "Authorized H200 shipments resume while export controls keep compute a national-security chokepoint."],
-  ["AI & INFRASTRUCTURE", "U.S. announces restrictions on Chinese humanoid and quadruped robots plus certain power inverters, extending export policy to physical AI.", "New U.S. restrictions extend export policy to physical AI and power equipment."],
-  ["AI & INFRASTRUCTURE", "AI agents as cyber operators: August disclosures show models taking unauthorized cyber actions under test conditions, raising new enterprise control questions.", "Disclosures show AI models taking unauthorized cyber actions in tests."],
-  ["AI & INFRASTRUCTURE", "100+ tech firms publicly urge governments to strengthen defenses against AI-driven hacking, reframing cybersecurity as infrastructure-level risk.", "Over 100 tech firms urge stronger government defenses against AI-driven hacking."],
-  ["AI & INFRASTRUCTURE", "IBM and Together AI sign a $240M agreement pairing IBM Cloud with thousands of Nvidia Blackwell processors for an AI inference cluster.", "IBM and Together AI sign a $240M AI inference cluster agreement."],
+  ["AI AND INFRASTRUCTURE", "H200 shipments to China resume under authorization — the compute chokepoint persists at the intersection of export controls and national security.", "Authorized H200 shipments resume while export controls keep compute a national-security chokepoint."],
+  ["AI AND INFRASTRUCTURE", "U.S. announces restrictions on Chinese humanoid and quadruped robots plus certain power inverters, extending export policy to physical AI.", "New U.S. restrictions extend export policy to physical AI and power equipment."],
+  ["AI AND INFRASTRUCTURE", "AI agents as cyber operators: August disclosures show models taking unauthorized cyber actions under test conditions, raising new enterprise control questions.", "Disclosures show AI models taking unauthorized cyber actions in tests."],
+  ["AI AND INFRASTRUCTURE", "100+ tech firms publicly urge governments to strengthen defenses against AI-driven hacking, reframing cybersecurity as infrastructure-level risk.", "Over 100 tech firms urge stronger government defenses against AI-driven hacking."],
+  ["AI AND INFRASTRUCTURE", "IBM and Together AI sign a $240M agreement pairing IBM Cloud with thousands of Nvidia Blackwell processors for an AI inference cluster.", "IBM and Together AI sign a $240M AI inference cluster agreement."],
 
   // Policy & Defense
-  ["POLICY & DEFENSE", "Pentagon's Cyber Command Gets $8.7B Budget Increase for FY2027", "Cyber Command receives a major budget increase for FY2027."],
-  ["POLICY & DEFENSE", "NATO Expands Joint Cyber Defense Initiative Across Member States", "NATO is expanding its joint cyber defense initiative."],
-  ["POLICY & DEFENSE", "CISA Issues Emergency Directive on Critical Infrastructure Security", "CISA issues an emergency directive on critical infrastructure security."],
-  ["POLICY & DEFENSE", "European Union Approves New Cybersecurity Framework for AI Systems", "The EU approves a new cybersecurity framework for AI systems."],
+  ["POLICY AND DEFENSE", "Pentagon's Cyber Command Gets $8.7B Budget Increase for FY2027", "Cyber Command receives a major budget increase for FY2027."],
+  ["POLICY AND DEFENSE", "NATO Expands Joint Cyber Defense Initiative Across Member States", "NATO is expanding its joint cyber defense initiative."],
+  ["POLICY AND DEFENSE", "CISA Issues Emergency Directive on Critical Infrastructure Security", "CISA issues an emergency directive on critical infrastructure security."],
+  ["POLICY AND DEFENSE", "European Union Approves New Cybersecurity Framework for AI Systems", "The EU approves a new cybersecurity framework for AI systems."],
 ].map(([category, title, dek]) => ({
   id: slugifyTitle(title),
   section: "Cybersecurity",
@@ -1245,10 +1245,10 @@ const internationalSeeds: SectionArticleSeed[] = [
   { id: "international-mexico-nearshoring", section: "International Business", category: "AMERICAS", title: "Mexico's peso strengthens on record nearshoring investment inflows from US manufacturers.", dek: "Manufacturing investment linked to nearshoring is increasing Mexico's role in North American supply chains." },
   { id: "international-brazil-brics-expansion", section: "International Business", category: "AMERICAS", title: "Brazil hosts first-ever BRICS+ summit expansion talks, weighing new membership bids.", dek: "Brazil is hosting discussions around the future membership and economic agenda of the expanded BRICS grouping." },
   { id: "international-canada-us-lumber", section: "International Business", category: "AMERICAS", title: "Canada and US resolve softwood lumber dispute after a decade of intermittent tariffs.", dek: "The two North American economies are addressing a long-running dispute affecting lumber trade and producers." },
-  { id: "international-afcfta-trade-h1-2026", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "African Continental Free Trade Area reports record intra-African trade volumes for H1 2026.", dek: "The continental trade framework is reporting stronger internal trade flows as African markets deepen regional commercial links." },
-  { id: "international-gulf-africa-renewables", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "Gulf sovereign wealth funds pledge $40B toward African renewable-energy infrastructure.", dek: "Gulf investors are directing capital toward African renewable-energy projects, linking infrastructure needs with international investment." },
-  { id: "international-egypt-ethiopia-nile", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "Egypt and Ethiopia reach preliminary agreement on Nile water-sharing after decade-long dispute.", dek: "The preliminary understanding addresses one of the region's most closely watched water and development issues." },
-  { id: "international-uae-india-investment", section: "International Business", category: "MIDDLE EAST & AFRICA", title: "UAE and India expand investment corridor across logistics, technology and clean energy.", dek: "The two economies are broadening commercial cooperation across infrastructure, technology and energy." },
+  { id: "international-afcfta-trade-h1-2026", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "African Continental Free Trade Area reports record intra-African trade volumes for H1 2026.", dek: "The continental trade framework is reporting stronger internal trade flows as African markets deepen regional commercial links." },
+  { id: "international-gulf-africa-renewables", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "Gulf sovereign wealth funds pledge $40B toward African renewable-energy infrastructure.", dek: "Gulf investors are directing capital toward African renewable-energy projects, linking infrastructure needs with international investment." },
+  { id: "international-egypt-ethiopia-nile", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "Egypt and Ethiopia reach preliminary agreement on Nile water-sharing after decade-long dispute.", dek: "The preliminary understanding addresses one of the region's most closely watched water and development issues." },
+  { id: "international-uae-india-investment", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "UAE and India expand investment corridor across logistics, technology and clean energy.", dek: "The two economies are broadening commercial cooperation across infrastructure, technology and energy." },
 ];
 
 const startupSeeds: SectionArticleSeed[] = [
@@ -1341,7 +1341,7 @@ const smartCitiesArticles: SpecialArticle[] = [
     id: "smart-cities-tomorrow-urban-ecosystems",
     section: "Smart Cities",
     category: "SMART CITIES",
-    title: "Cities of Tomorrow: Building Smarter & Greener Urban Ecosystems",
+    title: "Cities of Tomorrow: Building Smarter and Greener Urban Ecosystems",
     dek: "From Singapore's data-driven governance to Copenhagen's carbon-neutral neighborhoods, the blueprint for the 21st century city is taking shape.",
     image: Smartc1Img,
     highlights: [
@@ -1359,7 +1359,7 @@ const smartCitiesArticles: SpecialArticle[] = [
     keyFacts: [
       { label: "Desk", value: "Smart Cities" },
       { label: "Focus", value: "Urban technology" },
-      { label: "Priority", value: "Sustainability & resilience" },
+      { label: "Priority", value: "Sustainability and resilience" },
       { label: "Publication", value: "The Pride Times" },
     ],
   }),
@@ -1433,7 +1433,7 @@ const smartCitiesArticles: SpecialArticle[] = [
     ],
     keyFacts: [
       { label: "Focus", value: "Urban planning" },
-      { label: "Tools", value: "Digital twins & analytics" },
+      { label: "Tools", value: "Digital twins and analytics" },
       { label: "Sector", value: "Smart cities" },
       { label: "Desk", value: "Urban Futures" },
     ],
@@ -1441,7 +1441,7 @@ const smartCitiesArticles: SpecialArticle[] = [
   makeArticle({
     id: "smart-cities-ai-platforms-public-safety",
     section: "Smart Cities",
-    category: "AI & URBAN INTELLIGENCE",
+    category: "AI AND URBAN INTELLIGENCE",
     title: "AI Platforms Expand Into Smart-City Functions From Retail to Public Safety",
     dek: "Smart-city development is accelerating as AI, IoT, grid modernization, autonomous mobility and connected logistics converge around the needs of modern urban infrastructure.",
     image: Smartc2Img,
@@ -1452,12 +1452,12 @@ const smartCitiesArticles: SpecialArticle[] = [
       { heading: "Why flexibility matters", body: "Cities and large operators usually run a mix of cameras, sensors and software from many suppliers. Systems designed to work across that mix can reduce replacement costs and speed up deployment, but they also raise questions about data retention, access controls and independent oversight." },
       { heading: "What to watch next", body: "Procurement rules, privacy safeguards and measurable outcomes will determine whether these platforms become standard urban infrastructure. Clear public rules on how footage and analytics are used will matter as much as the technology itself." },
     ],
-    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "AI & urban intelligence" }, { label: "Key issue", value: "Governance and privacy" }, { label: "Format", value: "Industry report" }],
+    keyFacts: [{ label: "Desk", value: "Smart Cities" }, { label: "Focus", value: "AI and urban intelligence" }, { label: "Key issue", value: "Governance and privacy" }, { label: "Format", value: "Industry report" }],
   }),
   makeArticle({
     id: "smart-cities-grid-modernization-ev-data-centers",
     section: "Smart Cities",
-    category: "ENERGY & INFRASTRUCTURE",
+    category: "ENERGY AND INFRASTRUCTURE",
     title: "Grid Modernization Becomes Critical as EVs, Data Centers and Clean Energy Expand",
     dek: "Urban power networks are under growing pressure to support EV charging, data centers and increasingly variable clean-energy generation.",
     image: Smartc3Img,
@@ -1489,7 +1489,7 @@ const smartCitiesArticles: SpecialArticle[] = [
   makeArticle({
     id: "smart-cities-dp-world-southeast-asia-logistics",
     section: "Smart Cities",
-    category: "LOGISTICS & CONNECTIVITY",
+    category: "LOGISTICS AND CONNECTIVITY",
     title: "DP World Expands Southeast Asia Logistics Network With New Cross-Border Storage Capacity",
     dek: "New logistics capacity near Singapore highlights the growing connection between smart-city infrastructure, regional trade and cross-border supply chains.",
     image: Smartc1Img,
@@ -1665,7 +1665,7 @@ const supplyChainArticles: SpecialArticle[] = [
     ],
     keyFacts: [
       { label: "Sector", value: "Logistics" },
-      { label: "Technology", value: "Automation & analytics" },
+      { label: "Technology", value: "Automation and analytics" },
       { label: "Focus", value: "Visibility" },
       { label: "Desk", value: "Supply Chain" },
     ],
@@ -1676,7 +1676,7 @@ const energyArticles: SpecialArticle[] = [
   {
     id: "energy-global-disruption-2026",
     section: "Energy",
-    category: "ENERGY & GEOPOLITICS",
+    category: "ENERGY AND GEOPOLITICS",
     title: "Energy Sector Faces a Three-Way Disruption From Geopolitics, AI Power Demand and the Clean Energy Transition",
     dek: "The global energy sector is navigating simultaneous disruption from geopolitical conflict, the AI power demand surge, and the clean energy transition. CERAWeek 2026 framed the moment as \"Convergence and Competition: Energy, Technology and Geopolitics,\" highlighting the increasingly connected forces reshaping oil, gas, power and renewables.",
     image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1400&q=80",
@@ -1705,7 +1705,7 @@ const energyArticles: SpecialArticle[] = [
   {
     id: "energy-oil-gas-supply-disruption",
     section: "Energy",
-    category: "OIL & GAS",
+    category: "OIL AND GAS",
     title: "Global Oil Supply Falls 5.7 mb/d as Gulf Output Faces Heightened Security Risks",
     dek: "The supplied briefing reports a 5.7 mb/d decline in global oil supply during 2026, with Gulf output disrupted amid heightened security risks.",
     image: "https://images.unsplash.com/photo-1516939884455-1445c8652f83?auto=format&fit=crop&w=1200&q=80",
@@ -1723,7 +1723,7 @@ const energyArticles: SpecialArticle[] = [
   {
     id: "energy-us-iran-negotiations",
     section: "Energy",
-    category: "OIL & GAS",
+    category: "OIL AND GAS",
     title: "U.S.-Iran Negotiations Impasse Delays Flow Normalization Into 2027",
     dek: "The supplied energy briefing identifies the U.S.-Iran negotiations impasse as a factor delaying the normalization of disrupted flows into 2027.",
     image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
@@ -1741,7 +1741,7 @@ const energyArticles: SpecialArticle[] = [
   {
     id: "energy-americas-nonopec-growth",
     section: "Energy",
-    category: "OIL & GAS",
+    category: "OIL AND GAS",
     title: "Americas Drive Non-OPEC+ Oil Growth With 1.4 mb/d Added in 2026",
     dek: "The supplied briefing identifies the U.S., Canada, Brazil, Guyana and Argentina as the leading sources of non-OPEC+ growth in 2026, adding 1.4 mb/d.",
     image: "https://images.unsplash.com/photo-1581093458791-9d42e3c0c0d5?auto=format&fit=crop&w=1200&q=80",
@@ -1777,7 +1777,7 @@ const energyArticles: SpecialArticle[] = [
   {
     id: "energy-solar-wind-geothermal-investment",
     section: "Energy",
-    category: "RENEWABLES & POWER",
+    category: "RENEWABLES AND POWER",
     title: "Solar, Wind and Advanced Geothermal Investment Reaches Record Levels",
     dek: "The supplied briefing describes record investment across solar, wind and advanced geothermal as the clean-energy transition continues alongside rising electricity demand.",
     image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=80",
@@ -1795,7 +1795,7 @@ const energyArticles: SpecialArticle[] = [
   {
     id: "energy-grid-ai-data-centers",
     section: "Energy",
-    category: "RENEWABLES & POWER",
+    category: "RENEWABLES AND POWER",
     title: "Grid Bottlenecks Increasingly Constrain New AI Data-Center Capacity",
     dek: "The supplied briefing says grid bottlenecks are increasingly limiting new AI data-center capacity as electricity demand rises faster than some power infrastructure can be delivered.",
     image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
@@ -1889,7 +1889,7 @@ const energyArticles: SpecialArticle[] = [
 /* =========================================================
    MARKETS — BLOG-STYLE ARTICLES
    Source: Global Corporate News Digest (Oct 2026),
-   "1 Markets & Finance" section only.
+   "1 Markets and Finance" section only.
 ========================================================= */
 
 const marketAuthor = "Sagar Kumar";
@@ -1945,7 +1945,7 @@ const marketArticles: SpecialArticle[] = [
       { label: "India Rank", value: "4th" },
       { label: "India Unicorns", value: "61" },
       { label: "Gap to UK", value: "9 companies" },
-      { label: "Sector", value: "Startups & Venture Capital" },
+      { label: "Sector", value: "Startups and Venture Capital" },
     ],
   },
 
@@ -2229,7 +2229,7 @@ const marketArticles: SpecialArticle[] = [
       "Verdant Motors began trading on the São Paulo exchange.",
       "The listing widens access for institutional investors in the region.",
       "Shares moved 4.6% in early trading while peers were broadly flat.",
-      "Calder & Voss Research says to watch closely.",
+      "Calder and Voss Research says to watch closely.",
     ],
     sections: [
       {
@@ -2246,7 +2246,7 @@ const marketArticles: SpecialArticle[] = [
       },
       {
         heading: "Risks and what to watch",
-        body: "Calder & Voss Research frames the listing as consistent with broader trends in capital markets and advises watching closely. Authorities in several jurisdictions, including Japan, will need to review aspects of the plan, and approvals there have been slower in recent years. Skeptics such as Toronto-based portfolio manager Fatima Duarte say delivery will matter more than ambition, and Helix Materials is reportedly reviewing its own strategy.",
+        body: "Calder and Voss Research frames the listing as consistent with broader trends in capital markets and advises watching closely. Authorities in several jurisdictions, including Japan, will need to review aspects of the plan, and approvals there have been slower in recent years. Skeptics such as Toronto-based portfolio manager Fatima Duarte say delivery will matter more than ambition, and Helix Materials is reportedly reviewing its own strategy.",
       },
     ],
     keyFacts: [
@@ -2254,7 +2254,7 @@ const marketArticles: SpecialArticle[] = [
       { label: "HQ / Focus", value: "São Paulo / Japan" },
       { label: "Est. Value", value: "US$ 25.1 billion" },
       { label: "Sector", value: "Technology" },
-      { label: "Analyst View", value: "Calder & Voss Research: Watch closely" },
+      { label: "Analyst View", value: "Calder and Voss Research: Watch closely" },
     ],
   },
 ];
@@ -2273,11 +2273,11 @@ const whiteHouseWatchSeeds = [
 ];
 
 const worldWatchSeeds = [
-  { id: "world-saudi-crown-prince-paris", category: "WORLD & GEOPOLITICS", title: "Saudi Crown Prince to Meet French Premier in Paris on Monday", dek: "The talks are expected to cover energy cooperation, defense contracts and investment links connected to Saudi Arabia's Vision 2030 agenda.", image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1400&auto=format&fit=crop&q=85" },
-  { id: "world-nato-eastern-flank", category: "WORLD & GEOPOLITICS", title: "NATO Deploys 50,000 Additional Troops Along Eastern Flank", dek: "The reported deployment reflects continuing changes in European security planning and the alliance's approach to its eastern members.", image: "https://images.unsplash.com/photo-1521292270410-a8c4d716d518?w=900&auto=format&fit=crop&q=85" },
-  { id: "world-south-china-sea-patrols", category: "WORLD & GEOPOLITICS", title: "South China Sea: Philippines and US Begin Joint Naval Patrols", dek: "The patrols add another layer to the security relationship between Manila and Washington amid continuing maritime tensions in the region.", image: "https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=900&auto=format&fit=crop&q=85" },
-  { id: "world-un-ai-governance-resolution", category: "WORLD & GEOPOLITICS", title: "UN Security Council Passes Historic AI Governance Resolution", dek: "The resolution places artificial intelligence governance within a wider international discussion about security, accountability and responsible technology development.", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=900&auto=format&fit=crop&q=85" },
-  { id: "world-iran-nuclear-talks-vienna", category: "WORLD & GEOPOLITICS", title: "Iran Nuclear Talks Resume in Vienna: Deal Framework Emerging", dek: "Diplomatic discussions in Vienna are focused on the parameters of a possible framework and the verification mechanisms that could support it.", image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-saudi-crown-prince-paris", category: "WORLD AND GEOPOLITICS", title: "Saudi Crown Prince to Meet French Premier in Paris on Monday", dek: "The talks are expected to cover energy cooperation, defense contracts and investment links connected to Saudi Arabia's Vision 2030 agenda.", image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1400&auto=format&fit=crop&q=85" },
+  { id: "world-nato-eastern-flank", category: "WORLD AND GEOPOLITICS", title: "NATO Deploys 50,000 Additional Troops Along Eastern Flank", dek: "The reported deployment reflects continuing changes in European security planning and the alliance's approach to its eastern members.", image: "https://images.unsplash.com/photo-1521292270410-a8c4d716d518?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-south-china-sea-patrols", category: "WORLD AND GEOPOLITICS", title: "South China Sea: Philippines and US Begin Joint Naval Patrols", dek: "The patrols add another layer to the security relationship between Manila and Washington amid continuing maritime tensions in the region.", image: "https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-un-ai-governance-resolution", category: "WORLD AND GEOPOLITICS", title: "UN Security Council Passes Historic AI Governance Resolution", dek: "The resolution places artificial intelligence governance within a wider international discussion about security, accountability and responsible technology development.", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=900&auto=format&fit=crop&q=85" },
+  { id: "world-iran-nuclear-talks-vienna", category: "WORLD AND GEOPOLITICS", title: "Iran Nuclear Talks Resume in Vienna: Deal Framework Emerging", dek: "Diplomatic discussions in Vienna are focused on the parameters of a possible framework and the verification mechanisms that could support it.", image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=900&auto=format&fit=crop&q=85" },
   { id: "world-nvidia-humanoid-robots", category: "TECHNOLOGY", title: "Nvidia Leads AI Infrastructure Revolution with Humanoid Robot Push", dek: "Nvidia is expanding its role in the robotics ecosystem as manufacturers look to combine advanced AI models with increasingly capable machines.", image: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=900&auto=format&fit=crop&q=85" },
   { id: "world-alphabet-ai-data-centers", category: "TECHNOLOGY", title: "Alphabet Plans $80B Stock Offering to Fund AI Data-Center Expansion", dek: "The proposed financing comes as hyperscalers increase spending on data centers, power capacity and the infrastructure required for AI workloads.", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&auto=format&fit=crop&q=85" },
   { id: "world-quantum-1000-qubit", category: "TECHNOLOGY", title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved", dek: "A reported 1,000-qubit milestone highlights the rapid development of quantum hardware and the continuing challenge of making systems commercially useful.", image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=900&auto=format&fit=crop&q=85" },
@@ -2307,7 +2307,7 @@ const buildStandaloneArticle = (seed: typeof whiteHouseWatchSeeds[number], secti
 });
 
 const whiteHouseWatchArticles = whiteHouseWatchSeeds.map((seed) => buildStandaloneArticle(seed, "White House Watch"));
-const worldWatchArticles = worldWatchSeeds.map((seed) => buildStandaloneArticle(seed, "World & Geopolitics"));
+const worldWatchArticles = worldWatchSeeds.map((seed) => buildStandaloneArticle(seed, "World and Geopolitics"));
 
 function refreshedSectionArticleToSpecial(
   article:
@@ -2327,12 +2327,12 @@ function refreshedSectionArticleToSpecial(
     section: isHealthcare
       ? "Healthcare"
       : isIndustry
-        ? "Industry & Supply Chain"
+        ? "Industry and Supply Chain"
         : isLeadership
-        ? "Leadership & Governance"
+        ? "Leadership and Governance"
           : isSustainability
-            ? "Sustainability & ESG"
-            : "Consumer & Retail",
+            ? "Sustainability and ESG"
+            : "Consumer and Retail",
     category: article.category,
     title: article.title,
     dek: article.excerpt,
