@@ -2,7 +2,7 @@
    TECHNOLOGY NEWS — SHARED DATA
    THE PRIDE TIMES
    Updated: October 2026
-   Source: Global Corporate News Digest — "Technology & AI"
+   Source: Global Corporate News Digest — "Technology and AI"
    Format: blog-style posts. The `image` field is used ONLY by
    the Technology listing page (hero + cards). Inner article
    pages never render it.
@@ -53,7 +53,7 @@ const granitePeakArticle: TechnologyArticle = {
     "Granite Peak Materials has launched an AI platform aimed at banks, insurers and healthcare providers.",
     "The platform is designed around strict data-residency rules, which is where many AI pilots stall.",
     "Management says this is a long-term play, not a reaction to a single quarter.",
-    "An analyst at Calder & Voss Research calls the move consistent with growth in developer ecosystems.",
+    "An analyst at Calder and Voss Research calls the move consistent with growth in developer ecosystems.",
     "Approvals in Saudi Arabia and nearby markets have been slowing down, so rollout timing is worth watching.",
   ],
   sections: [
@@ -80,7 +80,7 @@ const granitePeakArticle: TechnologyArticle = {
     {
       heading: "What the analysts are saying",
       body:
-        "Daniel Novak, a senior analyst at Calder & Voss Research, described the launch as consistent with broader trends in developer ecosystems. His view is that companies which move early tend to secure better terms and stronger partners, but that the real risk is execution, meaning how well management ties the new platform into existing operations. Calder & Voss rates the company 'cautiously positive'.",
+        "Daniel Novak, a senior analyst at Calder and Voss Research, described the launch as consistent with broader trends in developer ecosystems. His view is that companies which move early tend to secure better terms and stronger partners, but that the real risk is execution, meaning how well management ties the new platform into existing operations. Calder and Voss rates the company 'cautiously positive'.",
     },
     {
       heading: "Regulation, rivals and people",
@@ -98,7 +98,7 @@ const granitePeakArticle: TechnologyArticle = {
     { label: "Headquarters / focus market", value: "Nairobi / Saudi Arabia" },
     { label: "Launch", value: "Enterprise AI platform for regulated industries" },
     { label: "Workforce growth", value: "31% over two years (Saudi Arabia)" },
-    { label: "Analyst view", value: "Calder & Voss Research: Cautiously positive" },
+    { label: "Analyst view", value: "Calder and Voss Research: Cautiously positive" },
   ],
 };
 
@@ -448,7 +448,7 @@ export const technologyCompanies = [
     company: "Granite Peak Materials",
     location: "Nairobi",
     headline: "AI platform launch",
-    detail: "Calder & Voss: Cautiously positive",
+    detail: "Calder and Voss: Cautiously positive",
     articleId: "tech-granite-peak-ai-platform",
   },
   {
@@ -501,7 +501,7 @@ export const regionalSnapshot = [
   { region: "Europe", dealValue: "48.5", earnings: "13.8%", hiring: "Mixed" },
   { region: "Asia-Pacific", dealValue: "4.4", earnings: "3.6%", hiring: "Stable" },
   { region: "Latin America", dealValue: "38.5", earnings: "17.7%", hiring: "Mixed" },
-  { region: "Middle East & Africa", dealValue: "15.7", earnings: "7.8%", hiring: "Stable" },
+  { region: "Middle East and Africa", dealValue: "15.7", earnings: "7.8%", hiring: "Stable" },
 ];
 
 /* =========================================================
