@@ -1,7 +1,7 @@
 /* =========================================================
    CONSUMER & RETAIL NEWS — SHARED DATA
    THE PRIDE TIMES
-   Source: Global Corporate News Digest — "Consumer & Retail"
+   Source: Global Corporate News Digest — "Consumer and Retail"
 ========================================================= */
 
 export type ConsumerRetailKeyFact = {
@@ -23,9 +23,9 @@ export type ConsumerRetailArticle = {
 };
 
 export const consumerRetailSectionGlance = [
-  { theme: "Shoppers & brands", momentum: "Building", outlook: "Positive" },
+  { theme: "Shoppers and brands", momentum: "Building", outlook: "Positive" },
   { theme: "E-commerce penetration", momentum: "Accelerating", outlook: "Positive" },
-  { theme: "Freight & logistics", momentum: "Uneven", outlook: "Neutral" },
+  { theme: "Freight and logistics", momentum: "Uneven", outlook: "Neutral" },
   { theme: "Product safety", momentum: "Under review", outlook: "Watch closely" },
 ];
 
