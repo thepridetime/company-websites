@@ -13,11 +13,11 @@ import {
    SUPPLY CHAIN STORIES
    Stories from the October 2026 Global Industry Edition
    (src/app/data/octEditionData.ts) in the
-   "Industry & Supply Chain" section.
+   "Industry and Supply Chain" section.
 ========================================================= */
 
 const supplyChainStories: OctEditionArticle[] = octEditionArticles.filter(
-  (article) => article.section === "Industry & Supply Chain"
+  (article) => article.section === "Industry and Supply Chain"
 );
 
 const leadStory = supplyChainStories[0];
