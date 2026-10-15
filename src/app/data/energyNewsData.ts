@@ -2,7 +2,7 @@
    ENERGY NEWS — SHARED DATA
    THE PRIDE TIMES
    Updated: October 2026
-   Source: Global Corporate News Digest — "Energy & Climate"
+   Source: Global Corporate News Digest — "Energy and Climate"
    Format: blog-style posts. The `image` field is used ONLY by
    the Energy listing page (hero + cards). Inner article pages
    (SpecialBlog) never render it.
@@ -145,8 +145,8 @@ export const energyArticles: SpecialArticle[] = [
       "Helix Retail moved its net-zero target forward by five years.",
       "New renewable power purchase agreements support the change.",
       "Shares moved 18.9% in early trading while peers were broadly flat.",
-      "Calder & Voss Research says announcements in grid investment rose 15% year on year.",
-      "Calder & Voss's view is 'neutral'.",
+      "Calder and Voss Research says announcements in grid investment rose 15% year on year.",
+      "Calder and Voss's view is 'neutral'.",
     ],
     sections: [
       {
@@ -159,11 +159,11 @@ export const energyArticles: SpecialArticle[] = [
       },
       {
         heading: "How the market responded",
-        body: "Investors responded cautiously but positively, with Helix's shares moving 18.9% in early trading while peers stayed broadly flat. Market participants said attention now turns to commodity prices. Calder & Voss Research's Priya Okafor said the move is consistent with broader trends in transition finance, and that early movers tend to get better terms and partners, though execution is the risk.",
+        body: "Investors responded cautiously but positively, with Helix's shares moving 18.9% in early trading while peers stayed broadly flat. Market participants said attention now turns to commodity prices. Calder and Voss Research's Priya Okafor said the move is consistent with broader trends in transition finance, and that early movers tend to get better terms and partners, though execution is the risk.",
       },
       {
         heading: "The wider pattern",
-        body: "According to Calder & Voss, aggregate announcements in grid investment rose 15% year on year, led by companies in North America, Europe and East Asia. Calder & Voss rates the Helix situation as 'neutral', which we read as a polite way of saying the plan looks sensible but still needs to be delivered.",
+        body: "According to Calder and Voss, aggregate announcements in grid investment rose 15% year on year, led by companies in North America, Europe and East Asia. Calder and Voss rates the Helix situation as 'neutral', which we read as a polite way of saying the plan looks sensible but still needs to be delivered.",
       },
       {
         heading: "The skeptics' corner",
@@ -179,7 +179,7 @@ export const energyArticles: SpecialArticle[] = [
       { label: "Headquarters / focus market", value: "Zurich / Indonesia" },
       { label: "Change", value: "Net-zero target brought forward by five years" },
       { label: "Share move (early trading)", value: "18.9%" },
-      { label: "Analyst view", value: "Calder & Voss Research: Neutral" },
+      { label: "Analyst view", value: "Calder and Voss Research: Neutral" },
     ],
   },
 
@@ -238,7 +238,7 @@ export const energyArticles: SpecialArticle[] = [
   {
     id: "energy-meridian-foods-upstream-cuts",
     section: "Energy",
-    category: "OIL & GAS",
+    category: "OIL AND GAS",
     title:
       "Why Meridian Foods Is Trimming Exploration Budgets as Prices Soften",
     dek: "Meridian Foods has trimmed its planned exploration budgets, putting returns to shareholders ahead of volume growth. Here is what that shift means for the upstream business.",
@@ -293,7 +293,7 @@ export const energyArticles: SpecialArticle[] = [
   {
     id: "energy-meridian-partners-upstream-cuts",
     section: "Energy",
-    category: "OIL & GAS",
+    category: "OIL AND GAS",
     title:
       "What Meridian Partners' Spending Cut Says About Returns Versus Growth",
     dek: "Meridian Partners has also trimmed exploration budgets, choosing shareholder returns over volume growth. Two upstream companies making the same call is a signal worth reading carefully.",
@@ -376,7 +376,7 @@ export const energyCompanies = [
     company: "Helix Retail",
     location: "Zurich",
     headline: "Net zero, five years earlier",
-    detail: "Calder & Voss: Neutral",
+    detail: "Calder and Voss: Neutral",
     articleId: "energy-helix-retail-net-zero",
   },
   {
@@ -403,11 +403,11 @@ export const energyCompanies = [
 ];
 
 export const energyOutlookNote = {
-  kicker: "Energy & Climate",
+  kicker: "Energy and Climate",
   title: "Energy Outlook: Returns, Reliability and the Transition",
   body: "This week's stories share a theme: discipline. Oil and gas companies are trimming spending and favouring shareholder returns, buyers are locking in long-term gas supply, and others are pulling net-zero dates forward by signing clean-power contracts. At the same time, green hydrogen has made its first commercial delivery. Transition finance looks strong, while power markets, grid investment and commodity prices remain mixed.",
   tiles: [
-    { label: "Oil & Gas", text: "Spending discipline and long-term supply deals" },
+    { label: "Oil and Gas", text: "Spending discipline and long-term supply deals" },
     { label: "Transition", text: "Net-zero dates move forward on clean-power contracts" },
   ],
 };
