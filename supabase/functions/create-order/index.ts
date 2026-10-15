@@ -63,8 +63,10 @@ Deno.serve(async (req) => {
 
     const order = await rzpRes.json();
     if (!rzpRes.ok) {
+      console.error("RAZORPAY_ERROR", rzpRes.status, JSON.stringify(order));
+      console.log("KEY_ID_PREFIX", keyId.slice(0, 9), "SECRET_LENGTH", keySecret.length);
       return new Response(
-        JSON.stringify({ error: order?.error?.description ?? "Razorpay rejected the order" }),
+        JSON.stringify({ error: `Razorpay: ${order?.error?.description ?? "rejected the order"} (key ${keyId.slice(0, 9)}...)` }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
