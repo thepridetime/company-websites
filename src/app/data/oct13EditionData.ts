@@ -2,7 +2,7 @@
    THE PRIDE TIMES NEWS — GLOBAL & INDIA TECH, INNOVATION AND
    UNICORN EDITION
    Edition of Tuesday, 13 October 2026
-   Source: "Global & India Tech, Innovation and Unicorn Report"
+   Source: "Global and India Tech, Innovation and Unicorn Report"
    (Corporate briefing, all industries, edition 13 October 2026).
 
    This file is ADDITIVE. It does not change the 7 October Global
@@ -35,14 +35,14 @@ import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
 
 export const oct13EditionMeta = {
   title: "The Pride Times News",
-  edition: "Global & India Tech, Innovation and Unicorn Edition",
+  edition: "Global and India Tech, Innovation and Unicorn Edition",
   date: "13 October 2026",
   subtitle:
     "Global venture funding, the unicorn club, AI and deep-tech building blocks, industry impact, and India's funding, IPO, AI, semiconductor and policy picture.",
 };
 
 const OCT13_NOTE =
-  "The Pride Times News, Global & India Tech, Innovation and Unicorn Edition, 13 October 2026. Source: Global & India Tech, Innovation and Unicorn Report (corporate briefing, all industries). Figures come from the trackers named in each story (Crunchbase, PitchBook, BestBrokers, Tracxn, ET, Xpheno). Unicorn counts differ between trackers and dates, so treat them as indicative and compare only within the same source. Check exchange filings for the current status of any IPO. This edition is a summary and not investment advice.";
+  "The Pride Times News, Global and India Tech, Innovation and Unicorn Edition, 13 October 2026. Source: Global and India Tech, Innovation and Unicorn Report (corporate briefing, all industries). Figures come from the trackers named in each story (Crunchbase, PitchBook, BestBrokers, Tracxn, ET, Xpheno). Unicorn counts differ between trackers and dates, so treat them as indicative and compare only within the same source. Check exchange filings for the current status of any IPO. This edition is a summary and not investment advice.";
 
 const base = {
   author: "The Pride Times Newsroom",
@@ -61,9 +61,9 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "ai-absorbs-most-venture-capital-as-the-unicorn-club-hits-a-record",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
-    industry: "Venture Capital & AI",
+    industry: "Venture Capital and AI",
     title: "AI Absorbs Most Venture Capital as the Unicorn Club Hits a Record",
     lede: "About 1,830 private companies are now valued at $1 billion or more, together worth roughly $8.41 trillion, and capital is concentrating in a handful of AI labs.",
     location: "Global",
@@ -97,7 +97,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "the-ai-capital-wave-is-both-the-biggest-boom-and-the-first-real-shakeout",
     sectionNumber: 1,
-    section: "Markets & Finance",
+    section: "Markets and Finance",
     sectionPath: "/markets",
     industry: "Global Venture Funding",
     title: "The AI Capital Wave Is Both the Biggest Boom and the First Real Shakeout",
@@ -131,7 +131,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "india-ranks-third-globally-with-89-unicorns-ahead-of-the-uk-and-germany",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
     industry: "Unicorns",
     title: "India Ranks Third Globally With 89 Unicorns, Ahead of the UK and Germany",
@@ -164,7 +164,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "the-class-of-2026-us-takes-102-of-173-new-unicorns-while-europe-bets-on-deep-tech",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
     industry: "Unicorns",
     title: "The Class of 2026: US Takes 102 of 173 New Unicorns While Europe Bets on Deep Tech",
@@ -198,7 +198,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "defence-space-and-semiconductors-replace-apps-and-fintech-in-the-unicorn-mix",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
     industry: "Deep Technology",
     title: "Defence, Space and Semiconductors Replace Apps and Fintech in the Unicorn Mix",
@@ -231,9 +231,9 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "eight-technology-building-blocks-are-reshaping-every-industry",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
-    industry: "AI & Deep Technology",
+    industry: "AI and Deep Technology",
     title: "Eight Technology Building Blocks Are Reshaping Every Industry",
     lede: "From AI agents and compute to quantum and robotics, value is moving from model access to workflow integration and governance.",
     location: "Global",
@@ -269,7 +269,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "industry-by-industry-what-ai-and-deep-tech-mean-for-banking-healthcare-manufacturing-and-retail",
     sectionNumber: 7,
-    section: "Industry & Supply Chain",
+    section: "Industry and Supply Chain",
     sectionPath: "/supply-chain",
     industry: "Industry Impact",
     title: "Industry by Industry: What AI and Deep Tech Mean for Banking, Healthcare, Manufacturing and Retail",
@@ -309,7 +309,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "india-tech-funding-rises-7-to-10-3-billion-as-deal-count-falls-38",
     sectionNumber: 1,
-    section: "Markets & Finance",
+    section: "Markets and Finance",
     sectionPath: "/markets",
     industry: "India Startups",
     title: "India Tech Funding Rises 7% to $10.3 Billion as Deal Count Falls 38%",
@@ -343,7 +343,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "indias-ipo-boom-61-issues-worth-about-rs-88000-crore-in-three-months",
     sectionNumber: 1,
-    section: "Markets & Finance",
+    section: "Markets and Finance",
     sectionPath: "/markets",
     industry: "India IPO Market",
     title: "India's IPO Boom: 61 Issues Worth About ₹88,000 Crore in Three Months",
@@ -377,9 +377,9 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "indiaai-mission-backs-12-startups-as-utho-cloud-adds-10000-gpus",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
-    industry: "India AI & Compute",
+    industry: "India AI and Compute",
     title: "IndiaAI Mission Backs 12 Startups as Utho Cloud Adds 10,000 GPUs",
     lede: "A roughly $30 billion infrastructure commitment reported in June 2026 is described as a turning point for India's AI infrastructure story.",
     location: "India",
@@ -410,7 +410,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "indias-chip-push-rs-1-27-lakh-crore-investment-and-at-least-six-startup-tape-outs",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
     industry: "Semiconductors",
     title: "India's Chip Push: ₹1.27 Lakh Crore Investment and at Least Six Startup Tape-Outs",
@@ -443,9 +443,9 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "budget-2026-transition-vcs-rs-1500-crore-fund-and-record-upi-volumes",
     sectionNumber: 1,
-    section: "Markets & Finance",
+    section: "Markets and Finance",
     sectionPath: "/markets",
-    industry: "India Policy & Fintech",
+    industry: "India Policy and Fintech",
     title: "Budget 2026, Transition VC's ₹1,500 Crore Fund and Record UPI Volumes",
     lede: "Policy support, new deep-tech funds and payments growth continue even as tech startup hiring is expected to stay subdued.",
     location: "India",
@@ -477,7 +477,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "six-risks-on-the-watch-list-concentration-compute-regulation-ipo-saturation-talent-and-geopolitics",
     sectionNumber: 1,
-    section: "Markets & Finance",
+    section: "Markets and Finance",
     sectionPath: "/markets",
     industry: "Risk Watch",
     title: "Six Risks on the Watch-List: Concentration, Compute, Regulation, IPO Saturation, Talent and Geopolitics",
@@ -512,7 +512,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     ...base,
     id: "six-moves-for-corporate-leaders-tie-ai-to-pl-secure-compute-and-engage-startups",
     sectionNumber: 2,
-    section: "Technology & AI",
+    section: "Technology and AI",
     sectionPath: "/technology",
     industry: "Corporate Strategy",
     title: "Six Moves for Corporate Leaders: Tie AI to P&L, Secure Compute and Engage Startups",
