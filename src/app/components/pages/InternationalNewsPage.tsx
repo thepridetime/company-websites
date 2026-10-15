@@ -128,7 +128,7 @@ const REGION_NAMES: Record<string, string> = {
   EUROPE: "Europe",
   "ASIA-PACIFIC": "Asia-Pacific",
   AMERICAS: "Americas",
-  "MIDDLE EAST & AFRICA": "Middle East & Africa",
+  "MIDDLE EAST AND AFRICA": "Middle East and Africa",
 };
 
 const ROUNDUP_TAB = "Regional Roundup";
@@ -211,7 +211,7 @@ const tabOrder = [
   "Europe",
   "Asia-Pacific",
   "Americas",
-  "Middle East & Africa",
+  "Middle East and Africa",
   ROUNDUP_TAB,
 ];
 
