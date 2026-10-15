@@ -30,7 +30,7 @@ import {
 ========================================================= */
 
 const INNOVATION_INDUSTRIES = [
-  "AI & Cloud Infrastructure",
+  "AI and Cloud Infrastructure",
   "Semiconductors",
   "Deep Technology",
 ];
