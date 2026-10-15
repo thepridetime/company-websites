@@ -1,7 +1,7 @@
 /* =========================================================
    LEADERSHIP & GOVERNANCE NEWS — SHARED DATA
    THE PRIDE TIMES
-   Source: Global Corporate News Digest — "Leadership & Governance"
+   Source: Global Corporate News Digest — "Leadership and Governance"
    Sample publication — all companies, people and figures are fictional.
 ========================================================= */
 
@@ -28,7 +28,7 @@ export const leadershipGovernanceSectionGlance = [
   { theme: "Board succession", momentum: "Active", outlook: "Watch closely" },
   { theme: "Shareholder activism", momentum: "Rising", outlook: "Uneven" },
   { theme: "Executive pay", momentum: "Under scrutiny", outlook: "Watch closely" },
-  { theme: "Conduct & compliance", momentum: "Tightening", outlook: "Positive" },
+  { theme: "Conduct and compliance", momentum: "Tightening", outlook: "Positive" },
 ];
 
 const AUTHOR = "Sagar Kumar";
@@ -174,7 +174,7 @@ export const leadershipGovernanceArticles: LeadershipGovernanceArticle[] = [
   },
   {
     id: "leadership-kite-whistleblower-framework",
-    category: "CONDUCT & COMPLIANCE",
+    category: "CONDUCT AND COMPLIANCE",
     title: "Kite Logistics rolls out independent whistleblower framework",
     excerpt: "Kite Logistics introduced an externally run reporting line and committed to publishing annual case statistics.",
     location: "Mumbai",
