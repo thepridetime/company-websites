@@ -575,8 +575,12 @@ function ArticleShell({
             />
           </main>
 
-          {/* Ads: stretch to the full height of the article on desktop */}
-          <aside className="mt-8 w-full lg:mt-0">{sidebar}</aside>
+          {/* Ads: stretch to the full height of the article on desktop.
+              The aside holds no in-flow height on lg+, so short articles
+              don't get extra space pushed under them by tall ads. */}
+          <aside className="mt-8 w-full lg:relative lg:mt-0">
+            <div className="lg:absolute lg:inset-0">{sidebar}</div>
+          </aside>
         </div>
 
         {related}
