@@ -100,16 +100,16 @@ function AdSenseUnit({
 
   if (side) {
     return (
-      <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-2">
+      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-2">
         <p className="mb-2 select-none text-center text-[9px] font-semibold uppercase tracking-[0.22em] text-slate-400">
           Advertisement
         </p>
 
         {/* Fixed 250px on mobile/tablet; fills the available height on desktop */}
-        <div className="flex w-full flex-1 justify-center">
+        <div className="flex min-h-0 w-full flex-1 justify-center overflow-hidden">
           <ins
             ref={insRef}
-            className="adsbygoogle block h-[250px] w-[300px] max-w-full lg:h-auto"
+            className="adsbygoogle block h-[250px] w-[300px] max-w-full lg:h-full"
             style={{ display: "block" }}
             data-ad-client="ca-pub-2331501617441941"
             data-ad-slot={slot}
@@ -478,8 +478,9 @@ function BlogMeta({
    - Header (kicker, title, dek, meta) is centred over the
      article column.
    - Desktop (lg+): article body on the left, 300px ad column
-     on the right starting just below the heading. The two ads
-     stretch to fill the full height of the article.
+     on the right starting just below the heading. The ads
+     are clipped to the height of the article body, so they
+     never push into or overlap the related posts.
    - Tablet / mobile: single column; ads fall below the article.
    - Only ONE "Back to ..." button exists (the top bar). The
      bottom row holds just the share button.
@@ -575,11 +576,14 @@ function ArticleShell({
             />
           </main>
 
-          {/* Ads: stretch to the full height of the article on desktop.
-              The aside holds no in-flow height on lg+, so short articles
-              don't get extra space pushed under them by tall ads. */}
+          {/* Ads: on desktop the aside takes no in-flow height, and its
+              content is absolutely positioned to the article's height.
+              overflow-hidden clips any ad that is taller than that space,
+              so the ads can never run into the related posts below. */}
           <aside className="mt-8 w-full lg:relative lg:mt-0">
-            <div className="lg:absolute lg:inset-0">{sidebar}</div>
+            <div className="lg:absolute lg:inset-0 lg:overflow-hidden">
+              {sidebar}
+            </div>
           </aside>
         </div>
 
@@ -673,7 +677,7 @@ function BlogSidebar({
   adSlots?: SideAdSlots;
 }) {
   return (
-    <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-2 lg:justify-items-stretch">
+    <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:justify-items-stretch">
       <AdSenseUnit slot={adSlots.top} side />
       <AdSenseUnit slot={adSlots.bottom} side />
     </div>
