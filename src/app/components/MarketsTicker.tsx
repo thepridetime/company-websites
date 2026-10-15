@@ -35,9 +35,9 @@ const megaMenuColumns = [
   {
     title: "Markets",
     links: [
-      { label: "Global Economy & Finance", path: marketTab("Global Economy & Finance") },
+      { label: "Global Economy and Finance", path: marketTab("Global Economy and Finance") },
       { label: "Energy", path: marketTab("Energy") },
-      { label: "AI & Cloud Infrastructure", path: marketTab("AI & Cloud Infrastructure") },
+      { label: "AI and Cloud Infrastructure", path: marketTab("AI and Cloud Infrastructure") },
       { label: "Corporate", path: marketTab("Corporate") },
     ],
   },
@@ -51,7 +51,7 @@ const megaMenuColumns = [
       { label: "Manufacturing", path: "/manufacturing" },
       { label: "Smart Cities", path: "/smart-cities" },
       { label: "Supply Chain", path: "/supply-chain" },
-      { label: "Consumer & Retail", path: "/consumer-retail" },
+      { label: "Consumer and Retail", path: "/consumer-retail" },
     ],
   },
   {
@@ -61,14 +61,14 @@ const megaMenuColumns = [
       { label: "International Business", path: "/international-news" },
       { label: "Startup Success", path: "/startup-success" },
       { label: "CEO Spotlight", path: "/ceospotlight" },
-      { label: "Leadership & Governance", path: "/leadership-governance" },
-      { label: "Sustainability & ESG", path: "/sustainability-esg" },
+      { label: "Leadership and Governance", path: "/leadership-governance" },
+      { label: "Sustainability and ESG", path: "/sustainability-esg" },
       { label: "Magazines", path: "/magazine" },
       { label: "Innovation", path: "/innovation" },
       { label: "White House Watch", path: "/white-house-watch" },
-      { label: "World & Geopolitics", path: "/world" },
+      { label: "World and Geopolitics", path: "/world" },
       {
-        label: "Mergers & Acquisitions",
+        label: "Mergers and Acquisitions",
         path: "/mergers-acquisitions",
       },
     ],
@@ -409,7 +409,7 @@ export function MarketsTicker() {
 /* =========================================================
    MARKETS PAGE
    Data source: Global Corporate News Digest (Oct 2026)
-   — "Market Snapshot" + "1 Markets & Finance" section only.
+   — "Market Snapshot" + "1 Markets and Finance" section only.
 ========================================================= */
 
 type MarketTab =
@@ -460,7 +460,7 @@ const regionalSnapshot: RegionRow[] = [
     hiringOutlook: "Mixed",
   },
   {
-    region: "Middle East & Africa",
+    region: "Middle East and Africa",
     dealValue: 15.7,
     earningsGrowth: 7.8,
     hiringOutlook: "Stable",
