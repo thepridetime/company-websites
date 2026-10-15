@@ -37,7 +37,7 @@ type HealthItem = {
 };
 
 const octHealthItems: HealthItem[] = octEditionArticles
-  .filter((article) => article.section === "Healthcare & Pharma")
+  .filter((article) => article.section === "Healthcare and Pharma")
   .map((article) => ({
     id: article.id,
     href: octEditionArticlePath(article),
