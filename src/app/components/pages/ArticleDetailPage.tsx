@@ -575,6 +575,15 @@ function ArticleShell({
         .pt-magazine aside ul li { padding-top:9px !important; padding-bottom:9px !important; }
         .pt-magazine aside ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:13px !important; line-height:1.2 !important; }
         .pt-magazine aside .adsbygoogle { border-radius:0 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] { margin:0 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] > div { margin-bottom:8px !important; padding-bottom:7px !important; border-bottom:1px solid #dfe3e7 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:18px !important; line-height:1.15 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul { margin:0 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul li { padding:9px 0 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul li:first-child { padding-top:0 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul li:last-child { padding-bottom:0 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:12px !important; line-height:1.22 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul p { margin:0 !important; }
         .pt-magazine blockquote { border-radius:0 !important; background:#f7f8f9 !important; }
         .pt-magazine .mt-6.border-t { margin-top:24px !important; border-color:#e3e7eb !important; }
         .pt-magazine .mt-6.border-t > p { font-size:9px !important; letter-spacing:.14em !important; }
@@ -791,7 +800,7 @@ function BlogSidebar({
 }) {
   if (relatedItems?.length) {
     return (
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-5">
         <AdSenseUnit slot={adSlots.top} side />
 
         <section aria-label="Related articles">
@@ -814,7 +823,7 @@ function BlogSidebar({
                       src={item.image}
                       alt=""
                       loading="lazy"
-                      className="h-16 w-20 shrink-0 rounded-md object-cover"
+                      className="h-[66px] w-[78px] shrink-0 object-cover"
                     />
                   )}
 
@@ -1062,6 +1071,13 @@ function SpecialBlog({
           category={article.category}
           section={article.section}
           facts={article.keyFacts}
+          relatedItems={related.map((item) => ({
+            title: item.title,
+            category: item.category,
+            image: (item as { image?: string }).image,
+            href: specialArticlePath(item.id),
+            date: item.publishedAt,
+          }))}
         />
       }
       related={
@@ -1132,6 +1148,13 @@ function HomepageBlog({
             top: isExpandedAdCategory ? "5608262547" : "5373718974",
             bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
           }}
+          relatedItems={related.map((item) => ({
+            title: item.title,
+            category: item.category,
+            image: item.image,
+            href: articlePath(item.title),
+            date: item.publishedAt,
+          }))}
         />
       }
       related={
@@ -1368,6 +1391,13 @@ function MagazineBlog({
           category={article.category}
           section={sectionLabel}
           facts={keyFacts}
+          relatedItems={related.map((story) => ({
+            title: story.title,
+            category: story.category,
+            image: (story as { image?: string }).image,
+            href: relatedPath(story),
+            date: "time" in story ? story.time : story.publishedAt,
+          }))}
         />
       }
       related={
