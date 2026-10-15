@@ -186,10 +186,10 @@ function getSectionPath(section: string) {
     case "Technology":
       return "/technology";
 
-    case "Leadership & Governance":
+    case "Leadership and Governance":
       return "/leadership-governance";
 
-    case "Sustainability & ESG":
+    case "Sustainability and ESG":
       return "/sustainability-esg";
 
     case "Smart Cities":
@@ -232,11 +232,11 @@ function getSectionName(section: string) {
     case "Energy":
       return "Energy";
 
-    case "Leadership & Governance":
-      return "Leadership & Governance";
+    case "Leadership and Governance":
+      return "Leadership and Governance";
 
-    case "Sustainability & ESG":
-      return "Sustainability & ESG";
+    case "Sustainability and ESG":
+      return "Sustainability and ESG";
 
     case "Markets":
       return "Markets";
@@ -378,7 +378,7 @@ function relatedHomepageArticles(
    BLOG META (one line: byline • date • read time)
 ========================================================= */
 
-/* "By A & B" in one compact, uppercase line with a short accent rule. */
+/* "By A and B" in one compact, uppercase line with a short accent rule. */
 function Byline({ author }: { author: string }) {
   const names = author
     .split(/\s*(?:,|&|\band\b)\s*/i)
@@ -391,7 +391,7 @@ function Byline({ author }: { author: string }) {
       <span className="text-slate-400">By</span>
       {names.map((name, index) => (
         <span key={`${name}-${index}`}>
-          {index > 0 && (index === names.length - 1 ? " & " : ", ")}
+          {index > 0 && (index === names.length - 1 ? " and " : ", ")}
           {name}
         </span>
       ))}
@@ -988,9 +988,9 @@ function DigestBlog({
         <>
           <span>
             {article.tags.includes(
-              "Global & India Tech, Innovation and Unicorn Edition"
+              "Global and India Tech, Innovation and Unicorn Edition"
             )
-              ? "The Pride Times News · Global & India Tech, Innovation and Unicorn Edition"
+              ? "The Pride Times News · Global and India Tech, Innovation and Unicorn Edition"
               : article.tags.includes("Global Industry Edition")
                 ? "The Pride Times News · Global Industry Edition"
                 : "Global Corporate News Digest"}
