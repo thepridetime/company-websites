@@ -1,4 +1,3 @@
-
 /* =========================================================
    MERGERS & ACQUISITIONS
    Dedicated editorial data — The Pride Times
@@ -82,7 +81,7 @@ export const maDeals: MADeal[] = [
     acquirer: "Reliance",
     target: "Disney India",
     value: "$8.5B",
-    sector: "Media & Entertainment",
+    sector: "Media and Entertainment",
     status: "Closed",
     note: "Carried over from the previous project dataset; verify the transaction and terms.",
   },
@@ -201,7 +200,7 @@ export const maArticles: MAArticle[] = [
 
   {
     slug: "how-ma-deals-are-valued",
-    category: "VALUATION & FINANCE",
+    category: "VALUATION AND FINANCE",
     title:
       "What Is a Company Really Worth? Understanding the Valuation Behind an M&A Deal",
     subtitle:
@@ -313,7 +312,7 @@ export const maArticles: MAArticle[] = [
     subtitle:
       "After completion, management must turn a strategic rationale into an operating business. That means aligning people, systems, customers and priorities without losing what made the target valuable.",
     author: "The Pride Times Business Desk",
-    publishedAt: "Management & Strategy",
+    publishedAt: "Management and Strategy",
     readTime: "9 min read",
     highlights: [
       "Integration planning should begin before closing, within applicable legal limits.",
