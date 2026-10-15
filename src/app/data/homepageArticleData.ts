@@ -199,7 +199,7 @@ const globalSectorItemArticles: HomepageArticle[] = globalSectorItems.map(
    (M&A), and the Global Sector News Report 2026 article. */
 export const homepageArticles: HomepageArticle[] = [
   ...oct13EditionArticles.map((article) =>
-    toHomepageArticle(article, "Global & India Tech, Innovation and Unicorn Edition")
+    toHomepageArticle(article, "Global and India Tech, Innovation and Unicorn Edition")
   ),
   ...octEditionArticles.map((article) =>
     toHomepageArticle(article, "Global Industry Edition")
