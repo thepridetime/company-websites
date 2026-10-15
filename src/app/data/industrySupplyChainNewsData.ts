@@ -1,7 +1,7 @@
 /* =========================================================
    INDUSTRY & SUPPLY CHAIN NEWS — SHARED DATA
    THE PRIDE TIMES
-   Source: Global Corporate News Digest — "Industry & Supply Chain"
+   Source: Global Corporate News Digest — "Industry and Supply Chain"
    Sample publication — all companies, people and figures are fictional.
 ========================================================= */
 
@@ -36,7 +36,7 @@ const AUTHOR = "Sagar Kumar";
 export const industrySupplyChainArticles: IndustrySupplyChainArticle[] = [
   {
     id: "industry-redwood-port-automation",
-    category: "PORTS & SHIPPING",
+    category: "PORTS AND SHIPPING",
     title: "Redwood Terminals invests in port automation to ease container backlogs",
     excerpt: "Redwood Terminals approved a multi-year automation programme aimed at cutting vessel turnaround times.",
     location: "Rotterdam",
@@ -197,7 +197,7 @@ export const industrySupplyChainArticles: IndustrySupplyChainArticle[] = [
   },
   {
     id: "industry-horizon-customs-digital",
-    category: "TRADE & CUSTOMS",
+    category: "TRADE AND CUSTOMS",
     title: "Horizon Trade Group pilots digital customs clearance to cut border delays",
     excerpt: "Horizon Trade Group is testing paperless customs processes with partner agencies at two key crossings.",
     location: "Nairobi",
