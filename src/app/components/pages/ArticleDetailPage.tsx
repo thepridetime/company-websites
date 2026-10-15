@@ -548,7 +548,54 @@ function ArticleShell({
   };
 }) {
   return (
-    <article className="min-h-screen bg-white text-slate-900 antialiased">
+    <article className="pt-magazine min-h-screen bg-white text-slate-900 antialiased">
+
+      <style>{`
+        .pt-magazine { background:#fff !important; color:#202124 !important; font-family:Arial,Helvetica,sans-serif !important; }
+        .pt-magazine * { box-sizing:border-box; }
+        .pt-magazine .max-w-6xl { max-width:1240px !important; padding-left:clamp(16px,3vw,42px) !important; padding-right:clamp(16px,3vw,42px) !important; }
+        .pt-magazine > .border-b { background:#fff !important; border-color:#e4e7eb !important; }
+        .pt-magazine nav[aria-label="Breadcrumb"] { font-size:10px !important; font-weight:500 !important; gap:7px !important; color:#7b8188 !important; }
+        .pt-magazine nav[aria-label="Breadcrumb"] a { color:#777e86 !important; }
+        .pt-magazine .max-w-6xl.pb-12 { padding-top:14px !important; }
+        .pt-magazine header { max-width:none !important; }
+        .pt-magazine header > div:first-child { color:#d71920 !important; font-size:9px !important; letter-spacing:.13em !important; line-height:1.5 !important; }
+        .pt-magazine header h1 { font-family:Georgia,'Times New Roman',serif !important; font-size:clamp(30px,3.5vw,47px) !important; line-height:1.02 !important; font-weight:700 !important; letter-spacing:-.045em !important; color:#17191c !important; margin-top:8px !important; margin-left:0 !important; max-width:850px !important; }
+        .pt-magazine header > p { margin-top:10px !important; color:#60656c !important; font-family:Georgia,'Times New Roman',serif !important; font-size:16px !important; line-height:1.42 !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
+        .pt-magazine header .border-y { border-color:#e4e7eb !important; margin-top:12px !important; padding:8px 0 !important; }
+        .pt-magazine header .border-y button { border:1px solid #e2e5e8 !important; border-radius:50% !important; width:27px !important; height:27px !important; }
+        .pt-magazine .blog-prose { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.55 !important; color:#30343a !important; }
+        .pt-magazine .blog-prose section { border-bottom:1px solid #edf0f2 !important; padding:0 0 12px !important; margin:0 0 14px !important; }
+        .pt-magazine .blog-prose h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:21px !important; line-height:1.2 !important; color:#202124 !important; margin:22px 0 9px !important; }
+        .pt-magazine .blog-prose p { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.48 !important; margin:0 0 14px !important; color:#34383d !important; }
+        .pt-magazine .blog-prose .drop-cap:first-letter { float:left; font-family:Georgia,'Times New Roman',serif; font-size:62px; line-height:.78; padding:5px 8px 0 0; color:#ed1c24; }
+        .pt-magazine aside .rounded-xl { border-radius:0 !important; box-shadow:none !important; border-color:#e3e7eb !important; }
+        .pt-magazine aside img { border-radius:0 !important; }
+        .pt-magazine aside h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:18px !important; }
+        .pt-magazine aside ul li { padding-top:9px !important; padding-bottom:9px !important; }
+        .pt-magazine aside ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:13px !important; line-height:1.2 !important; }
+        .pt-magazine aside .adsbygoogle { border-radius:0 !important; }
+        .pt-magazine blockquote { border-radius:0 !important; background:#f7f8f9 !important; }
+        .pt-magazine .mt-6.border-t { margin-top:24px !important; border-color:#e3e7eb !important; }
+        .pt-magazine .mt-6.border-t > p { font-size:9px !important; letter-spacing:.14em !important; }
+        .pt-magazine .mt-6.border-t > h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:24px !important; }
+        .pt-magazine .mt-5.grid > a { border-radius:0 !important; box-shadow:none !important; padding:16px !important; }
+        .pt-magazine .mt-8.flex.flex-wrap.items-center.justify-between { border-color:#e3e7eb !important; border-radius:0 !important; }
+        @media (min-width:1024px) {
+          .pt-magazine .max-w-6xl.pb-12 { padding-top:12px !important; }
+          .pt-magazine .lg\\:pr-\\[340px\\] { padding-right:330px !important; }
+          .pt-magazine .mt-8.lg\\:grid { margin-top:18px !important; grid-template-columns:minmax(0,1fr) 300px !important; gap:28px !important; align-items:start !important; }
+          .pt-magazine main { max-width:none !important; }
+          .pt-magazine aside { margin-top:0 !important; }
+        }
+        @media (max-width:767px) {
+          .pt-magazine header h1 { font-size:31px !important; line-height:1.04 !important; }
+          .pt-magazine header > p { font-size:15px !important; }
+          .pt-magazine .blog-prose p { font-size:16px !important; line-height:1.55 !important; }
+          .pt-magazine .max-w-6xl.pb-12 { padding-bottom:28px !important; }
+        }
+      `}</style>
+
       <div className="border-b border-slate-200 bg-slate-50/70">
         <div
           className={`${pageClass} flex flex-wrap items-center justify-between gap-3 py-3`}
