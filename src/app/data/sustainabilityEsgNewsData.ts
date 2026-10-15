@@ -1,7 +1,7 @@
 /* =========================================================
    SUSTAINABILITY & ESG NEWS — SHARED DATA
    THE PRIDE TIMES
-   Source: Global Corporate News Digest — "Sustainability & ESG"
+   Source: Global Corporate News Digest — "Sustainability and ESG"
    Sample publication — all companies, people and figures are fictional.
 ========================================================= */
 
