@@ -542,8 +542,8 @@ function ArticleShell({
       <div className={`${pageClass} pb-12 pt-7 sm:pt-9`}>
         {/* Header: centred over the article column (right padding = 300px ad column + 40px gap) */}
         <div className="lg:pr-[340px]">
-          <header className="mx-auto max-w-3xl text-center">
-            <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+          <header className="mx-auto max-w-3xl text-left">
+            <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
               {kicker}
             </div>
 
