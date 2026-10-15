@@ -525,7 +525,7 @@ function ArticleShell({
   meta,
   children,
   sidebar,
-  related,
+  adSlots = defaultSideAdSlots,
   share,
 }: {
   backTo: string;
@@ -541,7 +541,10 @@ function ArticleShell({
   meta: ReactNode;
   children: ReactNode;
   sidebar: ReactNode;
-  related: ReactNode;
+  /** Kept so existing call sites compile; related posts now live in the sidebar. */
+  related?: ReactNode;
+  /** AdSense slots for the banner under the header and the banner above the footer. */
+  adSlots?: SideAdSlots;
   share: {
     title: string;
     description: string;
@@ -564,6 +567,9 @@ function ArticleShell({
         .pt-magazine header > p { margin-top:10px !important; color:#60656c !important; font-family:Georgia,'Times New Roman',serif !important; font-size:16px !important; line-height:1.42 !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
         .pt-magazine header .border-y { border-color:#e4e7eb !important; margin-top:12px !important; padding:8px 0 !important; }
         .pt-magazine header .border-y button { border:1px solid #e2e5e8 !important; border-radius:50% !important; width:27px !important; height:27px !important; }
+        .pt-magazine .pt-article-col { min-width:0; }
+        .pt-magazine .blog-prose { max-width:none !important; margin-left:0 !important; margin-right:0 !important; }
+        .pt-magazine .blog-prose strong { font-weight:600 !important; color:#17191c !important; }
         .pt-magazine .blog-prose { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.55 !important; color:#30343a !important; }
         .pt-magazine .blog-prose section { border-bottom:1px solid #edf0f2 !important; padding:0 0 12px !important; margin:0 0 14px !important; }
         .pt-magazine .blog-prose h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:21px !important; line-height:1.2 !important; color:#202124 !important; margin:22px 0 9px !important; }
@@ -572,17 +578,17 @@ function ArticleShell({
         .pt-magazine aside .rounded-xl { border-radius:0 !important; box-shadow:none !important; border-color:#e3e7eb !important; }
         .pt-magazine aside img { border-radius:0 !important; }
         .pt-magazine aside h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:18px !important; }
-        .pt-magazine aside ul li { padding-top:9px !important; padding-bottom:9px !important; }
-        .pt-magazine aside ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:13px !important; line-height:1.2 !important; }
+        .pt-magazine aside ul li { padding-top:14px !important; padding-bottom:14px !important; }
+        .pt-magazine aside ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.25 !important; }
         .pt-magazine aside .adsbygoogle { border-radius:0 !important; }
         .pt-magazine aside section[aria-label="Related articles"] { margin:0 !important; }
         .pt-magazine aside section[aria-label="Related articles"] > div { margin-bottom:8px !important; padding-bottom:7px !important; border-bottom:1px solid #dfe3e7 !important; }
         .pt-magazine aside section[aria-label="Related articles"] h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:18px !important; line-height:1.15 !important; }
         .pt-magazine aside section[aria-label="Related articles"] ul { margin:0 !important; }
-        .pt-magazine aside section[aria-label="Related articles"] ul li { padding:9px 0 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul li { padding:14px 0 !important; }
         .pt-magazine aside section[aria-label="Related articles"] ul li:first-child { padding-top:0 !important; }
         .pt-magazine aside section[aria-label="Related articles"] ul li:last-child { padding-bottom:0 !important; }
-        .pt-magazine aside section[aria-label="Related articles"] ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:12px !important; line-height:1.22 !important; }
+        .pt-magazine aside section[aria-label="Related articles"] ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.25 !important; }
         .pt-magazine aside section[aria-label="Related articles"] ul p { margin:0 !important; }
         .pt-magazine blockquote { border-radius:0 !important; background:#f7f8f9 !important; }
         .pt-magazine .mt-6.border-t { margin-top:24px !important; border-color:#e3e7eb !important; }
@@ -592,10 +598,9 @@ function ArticleShell({
         .pt-magazine .mt-8.flex.flex-wrap.items-center.justify-between { border-color:#e3e7eb !important; border-radius:0 !important; }
         @media (min-width:1024px) {
           .pt-magazine .max-w-6xl.pb-12 { padding-top:12px !important; }
-          .pt-magazine .lg\\:pr-\\[340px\\] { padding-right:330px !important; }
-          .pt-magazine .mt-8.lg\\:grid { margin-top:18px !important; grid-template-columns:minmax(0,1fr) 300px !important; gap:28px !important; align-items:start !important; }
+          .pt-magazine .pt-article-grid { display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; gap:40px !important; align-items:start !important; }
           .pt-magazine main { max-width:none !important; }
-          .pt-magazine aside { margin-top:0 !important; }
+          .pt-magazine aside { margin-top:0 !important; position:sticky !important; top:88px !important; }
         }
         @media (max-width:767px) {
           .pt-magazine header h1 { font-size:31px !important; line-height:1.04 !important; }
@@ -653,55 +658,52 @@ function ArticleShell({
         </div>
       </div>
 
-      <div className={`${pageClass} pb-12 pt-7 sm:pt-9`}>
-        {/* Header: centred over the article column (right padding = 300px ad column + 40px gap) */}
-        <div className="lg:pr-[340px]">
-          <header className="mx-auto max-w-3xl text-left">
-            <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-              {kicker}
-            </div>
+      <div className={`${pageClass} pb-12 pt-4 sm:pt-5`}>
+        {/* Ad 1: just below the header bar, above the article */}
+        <AdSenseUnit slot={adSlots.top} />
 
-            <h1 className="mx-auto mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
-              {title}
-            </h1>
+        {/* One column for header + body (same left edge), related news beside it */}
+        <div className="pt-article-grid mt-2 lg:mt-4">
+          <div className="pt-article-col">
+            <header className="w-full text-left">
+              <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
+                {kicker}
+              </div>
 
-            {/* Dek: wraps on mobile, stays on one line on desktop
-                (cut with "..." if it is longer than the column). */}
-            {dek && (
-              <p className="mx-auto mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
-                {dek}
-              </p>
-            )}
+              <h1 className="mt-3 break-words font-serif text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-slate-950 sm:text-3xl md:text-[34px]">
+                {title}
+              </h1>
 
-            {extra}
+              {/* Dek: wraps on mobile, one line on desktop (cut with "..." if too long). */}
+              {dek && (
+                <p className="mt-3 break-words text-base leading-7 text-slate-600 sm:truncate sm:whitespace-nowrap sm:text-lg">
+                  {dek}
+                </p>
+              )}
 
-            {meta}
-          </header>
+              {extra}
+
+              {meta}
+            </header>
+
+            <main className="mt-8 w-full min-w-0">
+              {children}
+
+              <ShareRow
+                title={share.title}
+                description={share.description}
+              />
+            </main>
+          </div>
+
+          {/* Related news with images */}
+          <aside className="mt-10 w-full lg:mt-0">{sidebar}</aside>
         </div>
 
-        {/* Article body + ads, starting just below the heading */}
-        <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10">
-          <main className="mx-auto w-full min-w-0 max-w-3xl">
-            {children}
-
-            <ShareRow
-              title={share.title}
-              description={share.description}
-            />
-          </main>
-
-          {/* Ads: on desktop the aside takes no in-flow height, and its
-              content is absolutely positioned to the article's height.
-              overflow-hidden clips any ad that is taller than that space,
-              so the ads can never run into the related posts below. */}
-          <aside className="mt-8 w-full lg:relative lg:mt-0">
-            <div className="lg:absolute lg:inset-0 lg:overflow-hidden">
-              {sidebar}
-            </div>
-          </aside>
+        {/* Ad 2: bottom of the page, above the footer */}
+        <div className="mt-10">
+          <AdSenseUnit slot={adSlots.bottom} />
         </div>
-
-        {related}
       </div>
     </article>
   );
@@ -712,6 +714,16 @@ function ArticleShell({
    Text styling lives in src/styles/article.css (.blog-prose).
    The dek is shown once, in the header, so it is not repeated here.
 ========================================================= */
+
+/* Make key figures (money, percentages, big numbers) a little bolder. */
+const KEY_FACT_RE =
+  /((?:[$€£₹]\s?\d[\d,.]*(?:\s?(?:trillion|billion|million|crore|lakh|bn|m|k)\b)?)|(?:\b\d[\d,.]*\s?(?:%|percent\b|trillion\b|billion\b|million\b|crore\b|lakh\b)))/gi;
+
+function emphasize(text: string): ReactNode[] {
+  return text.split(KEY_FACT_RE).map((part, i) =>
+    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+  );
+}
 
 function BlogBody({
   sections,
@@ -734,7 +746,7 @@ function BlogBody({
           </h2>
 
           <p className={`break-words${index === 0 ? " drop-cap" : ""}`}>
-            {section.body}
+            {emphasize(section.body)}
           </p>
         </section>
       ))}
@@ -800,52 +812,44 @@ function BlogSidebar({
 }) {
   if (relatedItems?.length) {
     return (
-      <div className="flex flex-col gap-5">
-        <AdSenseUnit slot={adSlots.top} side />
+      <section aria-label="Related articles">
+        <div className="mb-4 flex items-center gap-2">
+          <span aria-hidden="true" className="h-4 w-1 bg-red-600" />
+          <h2 className="font-serif text-lg font-bold text-slate-950">
+            Related News
+          </h2>
+        </div>
 
-        <section aria-label="Related articles">
-          <div className="mb-4 flex items-center gap-2">
-            <span aria-hidden="true" className="h-4 w-1 bg-red-600" />
-            <h2 className="font-serif text-lg font-bold text-slate-950">
-              Related Articles
-            </h2>
-          </div>
+        <ul className="divide-y divide-slate-200">
+          {relatedItems.map((item) => (
+            <li key={item.href} className="py-3 first:pt-0">
+              <Link
+                to={item.href}
+                className={`group block rounded-sm ${focusRing}`}
+              >
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt=""
+                    loading="lazy"
+                    className="mb-2.5 aspect-[16/9] w-full object-cover"
+                  />
+                )}
 
-          <ul className="divide-y divide-slate-200">
-            {relatedItems.map((item) => (
-              <li key={item.href} className="py-3 first:pt-0">
-                <Link
-                  to={item.href}
-                  className={`group flex gap-3 rounded-sm ${focusRing}`}
-                >
-                  {item.image && (
-                    <img
-                      src={item.image}
-                      alt=""
-                      loading="lazy"
-                      className="h-[66px] w-[78px] shrink-0 object-cover"
-                    />
-                  )}
-
-                  <div className="min-w-0">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
-                      {item.category}
-                    </p>
-                    <h3 className="mt-1 line-clamp-3 break-words font-serif text-sm font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
-                      {item.title}
-                    </h3>
-                    <p className="mt-1 text-[10px] text-slate-400">
-                      {formatIsoDate(item.date)}
-                    </p>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <AdSenseUnit slot={adSlots.bottom} side />
-      </div>
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
+                  {item.category}
+                </p>
+                <h3 className="mt-1 break-words font-serif text-[15px] font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
+                  {item.title}
+                </h3>
+                <p className="mt-1 text-[10px] text-slate-400">
+                  {formatIsoDate(item.date)}
+                </p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
     );
   }
 
@@ -1121,6 +1125,10 @@ function HomepageBlog({
     <ArticleShell
       backTo="/"
       backLabel="Home"
+      adSlots={{
+        top: isExpandedAdCategory ? "5608262547" : "5373718974",
+        bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
+      }}
       kicker={<BlogKicker category={article.category} />}
       title={title}
       dek={article.dek}
