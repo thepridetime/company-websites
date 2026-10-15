@@ -127,6 +127,7 @@ const [error, setError] = useState("");
     });
 
   const handleChoosePlan = async (plan: "monthly" | "annual") => {
+    console.log("CLICK", { plan, isLoading, isSignedIn, user });
     setSelectedPlan(plan);
     setError("");
     if (!isSignedIn || !user) { navigate("/signup"); return; }
