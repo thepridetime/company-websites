@@ -1,327 +1,569 @@
 /* =========================================================
-   THE PRIDE TIMES NEWS — GLOBAL INDUSTRY EDITION
-   Edition of Wednesday, 7 October 2026
-   Source: "The Pride Times News — Global Industry Edition"
-   (The_Pride_Times_News_Oct_2026.docx).
+   THE PRIDE TIMES NEWS — GLOBAL & INDIA TECH, INNOVATION AND
+   UNICORN EDITION
+   Edition of Tuesday, 13 October 2026
+   Source: "Global and India Tech, Innovation and Unicorn Report"
+   (Corporate briefing, all industries, edition 13 October 2026).
 
-   This file is ADDITIVE. It does not change the September digest
+   This file is ADDITIVE. It does not change the 7 October Global
+   Industry Edition (octEditionData.ts), the September digest
    (digestArticleData.ts) or Edition 1 (maEdition1Data.ts). The
-   homepage leads with these stories; the older stories stay in
-   the Latest News feed ("Read more articles") and in the older
-   homepage blocks behind the "More articles" toggle.
+   homepage leads with these stories; every older story stays in
+   the Latest News feed ("Show more stories") and in its own
+   section pages.
+
+   All figures are quoted from the report. Unicorn counts differ
+   between trackers and dates, so figures are indicative and
+   should be compared only within the same source.
 ========================================================= */
 
-import type { DigestArticle } from "./digestArticleData";
+import type { OctEditionArticle } from "./octEditionData";
 
 import img_FIN4 from "../../imports/FIN4.png";
-import img_HC1 from "../../imports/HC1.png";
+import img_FIN5 from "../../imports/FIN5.png";
 import img_Insightimage from "../../imports/Insightimage.png";
 import img_Manu3 from "../../imports/Manu3.png";
-import img_business_aviation_jet from "../../imports/business-aviation-jet.png";
+import img_Techheroimage from "../../imports/Techheroimage.png";
+import img_business_jio_digital from "../../imports/business-jio-digital.png";
 import img_cyber_ops from "../../imports/cyber-ops.png";
 import img_data_centre from "../../imports/data-centre.png";
-import img_energy_tanks from "../../imports/energy-tanks.png";
 import img_heroimage from "../../imports/heroimage.png";
+import img_pt_digital_economy from "../../imports/pt-digital-economy.png";
+import img_pt_global_markets from "../../imports/pt-global-markets.png";
+import img_supply_chain_map from "../../imports/supply-chain-map.png";
 import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
+import img_tech16_unicorns from "../../imports/tech16-unicorns.png";
+import img_tech16_global_funding from "../../imports/tech16-global-funding.png";
+import img_tech16_india_chips from "../../imports/tech16-india-chips.png";
+import img_LN4image from "../../imports/LN4image.png";
+import img_CS3 from "../../imports/CS3.png";
+import img_CS2 from "../../imports/CS2.png";
+import img_SC2 from "../../imports/SC2.png";
+import img_Smartc2 from "../../imports/Smartc2.png";
+import img_HC4 from "../../imports/HC4.png";
+import img_Ln1 from "../../imports/Ln1.png";
+import img_FIN3 from "../../imports/FIN3.png";
 
-export type OctEditionArticle = DigestArticle & {
-  editorNote: string;
-  /* Category label from the edition (shown above the headline). */
-  industry: string;
-};
-
-export const octEditionMeta = {
+export const oct13EditionMeta = {
   title: "The Pride Times News",
-  edition: "Global Industry Edition",
-  date: "7 October 2026",
+  edition: "Global and India Tech, Innovation and Unicorn Edition",
+  date: "13 October 2026",
   subtitle:
-    "Global economy, energy, AI, semiconductors, deep technology, cybersecurity, healthcare, automotive and aerospace.",
+    "Global venture funding, the unicorn club, AI and deep-tech building blocks, industry impact, and India's funding, IPO, AI, semiconductor and policy picture.",
 };
 
-const EDITION_NOTE =
-  "The Pride Times News, Global Industry Edition, 7 October 2026. Compiled by Claude (AI) from published reports. Figures come from the sources named in each story; items flagged as unconfirmed in the text have not been verified against primary sources. This edition is a summary and not investment or medical advice.";
+const OCT13_NOTE =
+  "The Pride Times News, Global and India Tech, Innovation and Unicorn Edition, 13 October 2026. Source: Global and India Tech, Innovation and Unicorn Report (corporate briefing, all industries). Figures come from the trackers named in each story (Crunchbase, PitchBook, BestBrokers, Tracxn, ET, Xpheno). Unicorn counts differ between trackers and dates, so treat them as indicative and compare only within the same source. Check exchange filings for the current status of any IPO. This edition is a summary and not investment advice.";
 
 const base = {
   author: "The Pride Times Newsroom",
-  publishedAt: "7 October 2026",
+  publishedAt: "13 October 2026",
   quote: { text: "", by: "" },
   /* -1 = no pull quote is rendered. */
   quoteAfter: -1,
-  editorNote: EDITION_NOTE,
+  editorNote: OCT13_NOTE,
 };
 
-export const octEditionArticles: OctEditionArticle[] = [
+export const oct13EditionArticles: OctEditionArticle[] = [
+  /* ---------------------------------------------------------
+     1. EXECUTIVE SUMMARY — LEAD STORY
+  --------------------------------------------------------- */
   {
     ...base,
-    id: "growth-holds-near-3-as-the-wars-inflation-shock-lingers",
+    id: "ai-absorbs-most-venture-capital-as-the-unicorn-club-hits-a-record",
+    sectionNumber: 2,
+    section: "Technology and AI",
+    sectionPath: "/technology",
+    industry: "Venture Capital and AI",
+    title: "AI Absorbs Most Venture Capital as the Unicorn Club Hits a Record",
+    lede: "About 1,830 private companies are now valued at $1 billion or more, together worth roughly $8.41 trillion, and capital is concentrating in a handful of AI labs.",
+    location: "Global",
+    readTime: "4 min read",
+    image: img_tech16_unicorns,
+    body: [
+      "AI is absorbing most venture capital. Global equity funding for AI companies was on track for a record of about $387.5 billion in the first half of 2026, and one analysis estimates AI took roughly 80% of all venture dollars in the first quarter.",
+      "The unicorn club is at an all-time high. About 1,830 private companies are valued at $1 billion or more, together worth roughly $8.41 trillion, according to Crunchbase and PitchBook data as of August 2026. Of those, 173 became unicorns in 2026 alone.",
+      "Capital is concentrated. The United States produced 102 of the 173 new unicorns, China 25 and the United Kingdom 13. One analysis reports that three labs, OpenAI, Anthropic and xAI, took about two-thirds of first-quarter AI funding.",
+      "India is maturing rather than slowing. Funding rose 7% to $10.3 billion in January to September 2026 while deal count fell 38%, which means fewer, larger and more selective bets. Six new Indian unicorns appeared in nine months, and the IPO market is the busiest in years.",
+      "The unicorn mix has also shifted from apps to infrastructure: AI, defence tech, space, semiconductors, energy and robotics.",
+      "A reading note from the report: unicorn counts differ between trackers and dates. One count has 47 by March and 98 by mid-year, while another has 173 by August. Treat the figures as indicative and compare only within the same source.",
+      "Why it matters: the strongest startups are capital-heavy and can afford to compete for enterprise talent and data-centre capacity, so suppliers, partners and competitors are changing.",
+    ],
+    keyFacts: [
+      { label: "AI equity funding, H1 2026", value: "About $387.5 billion (record pace)" },
+      { label: "Unicorns worldwide", value: "About 1,830, worth roughly $8.41 trillion" },
+      { label: "New unicorns in 2026", value: "173 (US 102, China 25, UK 13)" },
+    ],
+    highlights: [
+      "AI equity funding, H1 2026: About $387.5 billion (record pace)",
+      "Unicorns worldwide: About 1,830, worth roughly $8.41 trillion",
+      "New unicorns in 2026: 173 (US 102, China 25, UK 13)",
+    ],
+  },
+
+  /* ---------------------------------------------------------
+     2. GLOBAL FUNDING LANDSCAPE — AI CAPITAL WAVE
+  --------------------------------------------------------- */
+  {
+    ...base,
+    id: "the-ai-capital-wave-is-both-the-biggest-boom-and-the-first-real-shakeout",
     sectionNumber: 1,
     section: "Markets and Finance",
     sectionPath: "/markets",
-    industry: "Global Economy and Finance",
-    title: "Growth Holds Near 3% as the War's Inflation Shock Lingers",
-    lede: "The IMF expects a V-shaped recovery, but price pressures are proving stubborn and the Fed's latest move still needs confirming.",
+    industry: "Global Venture Funding",
+    title: "The AI Capital Wave Is Both the Biggest Boom and the First Real Shakeout",
+    lede: "Very large rounds into a handful of frontier AI companies sit on top of a wide base of application and infrastructure startups, with compute, data centres and power as the new bottlenecks.",
     location: "Global",
     readTime: "3 min read",
-    image: img_Insightimage,
+    image: img_tech16_global_funding,
     body: [
-      "The world economy is getting through 2026 more steadily than many forecasters feared in the spring, but inflation is proving harder to tame. In its July World Economic Outlook update, the International Monetary Fund projected global growth of 3.0% this year, a tenth of a point below its April estimate, and 3.4% in 2027. Growth was 3.5% in both 2024 and 2025.",
-      "The Fund framed the outlook as a contest between two forces: a negative supply shock from the Middle East conflict that began at the end of February, and a positive technology cycle fuelled by investment in artificial intelligence and related tools. IMF economist Petya Koeva Brooks said the Fund expects a V-shaped path, with weaker growth this year than before the war and a rebound next year.",
-      "Inflation is the weak spot. The IMF raised its 2026 global headline inflation forecast to 4.7%, up 0.3 points from April and above the 4.1% recorded in 2025, before easing to 3.9% in 2027. It said the disinflation trend that began in early 2024 has stalled, even though its core inflation forecast is broadly unchanged. Global trade growth is projected to slow to 3.5% this year from 5% in 2025.",
-      "The regional picture is uneven. The US forecast was left at 2.3% for 2026, with 2.2% pencilled in for 2027. The euro area was cut to 0.9% and Japan to 0.6%. Emerging economies are expected to grow 3.8% this year and 4.5% next. China's 2026 outlook was raised to 4.6%, while India's was trimmed to 6.4% for 2026 and lifted to 6.7% for 2027. IMF officials said the energy shock was cushioned by releases from strategic petroleum reserves, drawdowns of commercial inventories, efficiency gains and the private sector's ability to find alternative supply routes.",
-      "Central banks are caught between those pressures. The US Federal Reserve met on 15 to 16 September. Several secondary sources, including a data-feed site and a real-estate analysis blog, report that it raised its target range by a quarter point to 3.75%-4.00%, after holding at 3.50%-3.75% in July, and that the median projection points to one more increase before year-end. We could not retrieve the Fed's own statement, and some pre-meeting market pricing had favoured a hold, so readers should confirm the decision at federalreserve.gov before relying on it.",
-      "The main downside risk the IMF has flagged this year sits in the technology sector itself. In January it warned that a reassessment of AI productivity gains could weaken investment and trigger a sharp market correction that spreads beyond AI-related firms. With AI spending now propping up growth in North America and Asia, that risk and the energy and inflation story are linked, which is why the technology and energy reports in this edition are best read together.",
-      "Why it matters: Growth is holding, but global inflation is forecast at 4.7%.",
+      "Venture funding in 2026 is shaped by very large rounds into a handful of frontier AI companies, plus a wide base of application and infrastructure startups.",
+      "Commentators describe the moment as both the biggest boom and the first real shakeout. It is capital-intensive, with compute, data centres and power as the new bottlenecks.",
+      "The concentration is stark. One analysis reports that OpenAI, Anthropic and xAI took about two-thirds of first-quarter AI funding, and another estimates AI took roughly 80% of all venture dollars in the first quarter.",
+      "The report lists concentration risk first among the items to watch: a few AI labs absorb most capital, and a valuation reset would ripple through suppliers and investors.",
+      "Why it matters: when a few companies absorb most of the money, the health of the wider startup ecosystem depends on how long that capital keeps flowing.",
     ],
-    keyFacts: [{"label": "Global growth forecast, 2026 / 2027", "value": "3.0% / 3.4% (IMF, July 2026)"}, {"label": "Global headline inflation forecast, 2026", "value": "4.7% (IMF, July 2026)"}, {"label": "Global trade growth, 2026", "value": "3.5%, down from 5% in 2025"}],
-    highlights: ["Global growth forecast, 2026 / 2027: 3.0% / 3.4% (IMF, July 2026)", "Global headline inflation forecast, 2026: 4.7% (IMF, July 2026)", "Global trade growth, 2026: 3.5%, down from 5% in 2025"],
+    keyFacts: [
+      { label: "AI share of VC dollars, Q1 2026", value: "Roughly 80% (one analysis)" },
+      { label: "Three labs' share of Q1 AI funding", value: "About two-thirds (OpenAI, Anthropic, xAI)" },
+      { label: "New bottlenecks", value: "Compute, data centres and power" },
+    ],
+    highlights: [
+      "AI share of VC dollars, Q1 2026: Roughly 80% (one analysis)",
+      "Three labs' share of Q1 AI funding: About two-thirds (OpenAI, Anthropic, xAI)",
+      "New bottlenecks: Compute, data centres and power",
+    ],
   },
+
+  /* ---------------------------------------------------------
+     3. GEOGRAPHY OF UNICORNS
+  --------------------------------------------------------- */
   {
     ...base,
-    id: "hormuz-fades-from-the-headlines-not-from-the-balance-sheets",
-    sectionNumber: 3,
-    section: "Energy and Climate",
-    sectionPath: "/energy",
-    industry: "Energy",
-    title: "Hormuz Fades From the Headlines, Not From the Balance Sheets",
-    lede: "The largest oil supply disruption on record is easing, but forecasters still disagree on how quickly markets return to surplus.",
-    location: "Strait of Hormuz",
-    readTime: "3 min read",
-    image: img_energy_tanks,
-    body: [
-      "No industry has been reshaped this year like energy. The war that began at the end of February, and the near-total disruption of shipping through the Strait of Hormuz, a channel that carries roughly a fifth of the world's oil and LNG, produced what the World Bank described as the largest oil market disruption in history. Global oil supply fell by 10.1 million barrels per day in March alone as energy infrastructure was attacked and tanker traffic restricted.",
-      "Forecasts swung wildly. Brent touched about $109 a barrel at one point, according to a Bloomberg report on a Goldman Sachs note. In May, Moody's said it expected prices to stay in a $90-110 range through 2026 and called the disruption a structural constraint rather than a passing shock. On 20 May, Wood Mackenzie warned that Brent could approach $200 by year-end if the disruption lasted beyond September without a US-Iran settlement, with more than 11 million barrels per day of Gulf crude and condensate shut in and about a fifth of global LNG supply cut off.",
-      "Since then the picture has improved. A Reuters poll relayed by IDN Financials reports that shipping through the strait has resumed and that analysts cut their 2026 price forecasts by more than 6% from May. Frank Schallenberger of LBBW said that if traffic returns fully to normal the market is likely to swing back into surplus, adding downward pressure on prices in the second half. HSBC's Kim Fustier still expects a deficit of about 2 million barrels per day this year. The International Energy Agency's preliminary 2027 outlook points to significant oversupply, and respondents expect OPEC+ to keep raising output gradually to regain market share.",
-      "The timeline is not fully settled in our sources. Video news digests from June described a US-Iran peace agreement as expected to be signed in Switzerland, while a late-July digest referred to a Gulf-backed proposal for voluntary fees for Hormuz transit and to the interception of Iranian missiles. These are low-reliability sources, and we have not confirmed the current status of the strait with a primary source. Tanker-tracking data and official statements are the places to check.",
-      "For companies, the shock has had three lasting effects. Importers and energy-intensive manufacturers have faced higher costs: Moody's warned that energy scarcity would feed headline and core inflation, raise production costs and tighten financing for exposed borrowers. Producers outside the Gulf have gained pricing power, even as Saudi and Emirati efforts to raise pipeline throughput could not offset lost exports through the strait. And energy security has moved up boardroom agendas, with Goldman Sachs analysts noting that the crisis exposes the risk of concentrating production and spare capacity in the Middle East.",
-      "Energy is also a technology story. South Korea and the United States are advancing a $22 billion, 6.47-gigawatt gas-fired power project in Texas, part of a broader Korea-US investment package of up to $350 billion, aimed at meeting rising power demand from chip plants and AI data centres. Samsung's $1 billion commitment to Helix Digital Infrastructure likewise bundles data centres with power generation and transmission.",
-      "Why it matters: Even with shipping resuming, inventories were drawn down and forecasts remain wide. Companies exposed to fuel, freight or petrochemical inputs should plan for volatility rather than a clean return to 2025 prices.",
-    ],
-    keyFacts: [{"label": "Global oil supply loss, March 2026", "value": "10.1 million bpd (World Bank)"}, {"label": "Brent peak cited", "value": "About $109 a barrel"}, {"label": "Korea-US Texas gas project", "value": "$22 billion, 6.47 GW"}],
-    highlights: ["Global oil supply loss, March 2026: 10.1 million bpd (World Bank)", "Brent peak cited: About $109 a barrel", "Korea-US Texas gas project: $22 billion, 6.47 GW"],
-  },
-  {
-    ...base,
-    id: "ais-spending-boom-meets-the-funding-question",
+    id: "india-ranks-third-globally-with-89-unicorns-ahead-of-the-uk-and-germany",
     sectionNumber: 2,
     section: "Technology and AI",
     sectionPath: "/technology",
-    industry: "AI and Cloud Infrastructure",
-    title: "AI's Spending Boom Meets the Funding Question",
-    lede: "Hyperscalers are committing hundreds of billions of dollars and Nvidia is booking record revenue, while the debate shifts to who pays and whether it lasts.",
+    industry: "Unicorns",
+    title: "India Ranks Third Globally With 89 Unicorns, Ahead of the UK and Germany",
+    lede: "The United States leads with 938 unicorns worth $5.04 trillion, followed by China with 310, in Crunchbase and PitchBook data compiled by BestBrokers in August 2026.",
     location: "Global",
     readTime: "3 min read",
-    image: img_data_centre,
+    image: img_tech16_india_chips,
     body: [
-      "AI's capital cycle is the defining corporate story of 2026. According to a RexShares analysis of company filings, the four largest hyperscalers spent $130.6 billion on capital expenditure in the first quarter alone, up 193% in nine quarters. After first-quarter earnings calls, the Motley Fool put the group's planned 2026 spending at about $725 billion, while a July article from the same publisher used a figure nearer $650 billion, so estimates vary by source and date. Alphabet has guided to $180-190 billion for 2026 and told investors to expect significantly more in 2027.",
-      "Nvidia sits at the receiving end. For its first quarter of fiscal 2027, it reported total revenue of $81.6 billion, up 85%, with data-center revenue of $75.2 billion, up 92%. It guided to about $91 billion for the next quarter, a forecast that excludes any data-center compute revenue from China. Networking was the fastest-growing piece, at $14.8 billion, up 199% year on year.",
-      "Nvidia has argued that annual global data-center capital spending could reach $3 trillion to $4 trillion by 2030, and expects hyperscalers to spend around $1 trillion next year. Bank of America earlier raised its 2030 estimate for the AI data-center systems market to about $1.4 trillion. These are forecasts from interested parties and analysts, not results.",
-      "The harder question is funding. Writer Tarry Singh argues in a June essay that capex is now rising faster than operating cash flow, and says more than $120 billion of AI data-center spending has moved off corporate balance sheets through special-purpose vehicles backed by investors including Pimco, BlackRock and Apollo. That is commentary rather than reporting. A related data point surfaced on 1 October: Anthropic's IPO filing revealed it as the customer behind Broadcom's previously disclosed arrangement to lend up to $42 billion to lease its chips, according to Reuters. Disclosure: Anthropic makes Claude, the AI system used to compile this edition.",
-      "Skeptics are vocal. Investor Michael Burry has bet against the chip trade, arguing that the companies spending the most are not performing as well as the semiconductor firms they fund. A UBS survey cited by Gotrade indicated that roughly 60% of businesses are reducing AI expenditure, though we found this figure in only one secondary source and treat it cautiously. The IMF has separately warned that a reassessment of AI productivity gains could trigger a sharp market correction.",
-      "Meanwhile the technology stack keeps shifting. Synopsys signed a multi-year agreement with OpenAI to build GPT-Synopsys for chip design and expanded its custom-silicon IP work with Amazon. Nvidia launched an Open Agent Safety Platform for securing AI agents. In China, DeepSeek was reported by Reuters in July to be developing its own inference chip, and on 30 September to be building programming tools optimised for Huawei's AI processors, reducing reliance on Nvidia.",
-      "Why it matters: Demand signals are strong, but the build-out increasingly depends on external financing. Watch disclosures on off-balance-sheet structures and any slowdown in enterprise AI budgets.",
+      "The United States has 938 unicorns with a combined value of $5.04 trillion, according to Crunchbase and PitchBook data compiled by BestBrokers in August 2026. China is second with 310 unicorns worth $1.51 trillion.",
+      "India ranks third globally with 89 unicorns worth a combined $499 billion. That puts it ahead of the United Kingdom, which has 80 unicorns worth $299 billion, and Germany, which has 47 worth $142.2 billion.",
+      "The rest of the top ten: Canada has 38 unicorns worth $97 billion, France 34 worth $88.5 billion, Israel 23 worth $47 billion, Singapore 23 worth $38 billion and South Korea 21 worth $61.1 billion.",
+      "Why it matters: India's third place is a measure of how far its startup ecosystem has come, even as the US and China remain far larger in both count and combined value.",
     ],
-    keyFacts: [{"label": "Big-4 hyperscaler capex, Q1 2026", "value": "$130.6 billion"}, {"label": "Nvidia data-center revenue, fiscal Q1 FY27", "value": "$75.2 billion, +92%"}, {"label": "Alphabet 2026 capex guidance", "value": "$180-190 billion"}],
-    highlights: ["Big-4 hyperscaler capex, Q1 2026: $130.6 billion", "Nvidia data-center revenue, fiscal Q1 FY27: $75.2 billion, +92%", "Alphabet 2026 capex guidance: $180-190 billion"],
+    keyFacts: [
+      { label: "United States", value: "938 unicorns, $5.04 trillion" },
+      { label: "China", value: "310 unicorns, $1.51 trillion" },
+      { label: "India", value: "89 unicorns, $499 billion (third globally)" },
+    ],
+    highlights: [
+      "United States: 938 unicorns, $5.04 trillion",
+      "China: 310 unicorns, $1.51 trillion",
+      "India: 89 unicorns, $499 billion (third globally)",
+    ],
   },
+
+  /* ---------------------------------------------------------
+     4. CLASS OF 2026
+  --------------------------------------------------------- */
   {
     ...base,
-    id: "memory-becomes-the-chip-industrys-bottleneck-and-bonanza",
+    id: "the-class-of-2026-us-takes-102-of-173-new-unicorns-while-europe-bets-on-deep-tech",
     sectionNumber: 2,
     section: "Technology and AI",
     sectionPath: "/technology",
-    industry: "Semiconductors",
-    title: "Memory Becomes the Chip Industry's Bottleneck and Bonanza",
-    lede: "Tight supply, rising prices and record exports are reshaping capacity plans from Texas to Singapore.",
-    location: "South Korea",
+    industry: "Unicorns",
+    title: "The Class of 2026: US Takes 102 of 173 New Unicorns While Europe Bets on Deep Tech",
+    lede: "The UK's 13 new unicorns are worth $21 billion combined, led by AI lab Ineffable Intelligence at a $5.1 billion valuation.",
+    location: "Global",
     readTime: "3 min read",
-    image: img_heroimage,
+    image: img_LN4image,
     body: [
-      "If GPUs defined the first phase of the AI build-out, memory is defining the second. Micron told investors that memory supply will stay tight through 2028, that more than 75% of its 2027 output is already committed, and that 2027 high-bandwidth memory pricing will be significantly higher than in 2026. Semiconductor Engineering reports that Micron's record fiscal fourth-quarter revenue reached $54 billion, up from $11 billion a year earlier.",
-      "A Samsung executive told Reuters that HBM will take nearly 30% of DRAM makers' wafer capacity in 2027, up from about 20% now. That squeezes conventional memory: TrendForce expects DRAM contract prices to rise 10-15% in the fourth quarter and NAND flash prices 15-20%, with enterprise SSD bit demand projected to grow more than 80% in 2026. South Korea's semiconductor exports surged more than 262% year on year to a record $60 billion in September on higher volumes and prices.",
-      "The wider manufacturing ecosystem is booming. Counterpoint Research says revenue across foundries, integrated device makers, packaging and test reached a record $96.6 billion in the second quarter, up 25%. Bain's 2026 technology report argues AI has reversed the long-running advantage of software over hardware, with semiconductor and hardware stocks compounding at 24% a year from 2020 to 2026 against 6% for software.",
-      "Capacity is following the money. TSMC is reportedly weighing a multibillion-dollar Texas campus that would extend its US footprint beyond the $265 billion Arizona build-out, according to Bloomberg. Samsung Electro-Mechanics plans to invest about $4.9 billion in package-substrate capacity in South Korea and Vietnam for AI servers, and Toppan opened its first overseas FC-BGA substrate site in Singapore. Infineon opened the first phase of a back-end hub in Bangkok, and VSMC, the VIS-NXP joint venture, opened a 300mm fab in Singapore and is reportedly considering a second.",
-      "Deals continue. onsemi revised its planned acquisition of Synaptics to a $5.7 billion all-cash offer at $123 a share after an unsolicited rival proposal, down from the roughly $7 billion value of the June agreement. Applied Materials added Kioxia and Besi as partners at its $5 billion EPIC Center, and SK hynix's US unit Solidigm is reportedly weighing an IPO that could value it at up to $150 billion, though SK says nothing has been decided.",
-      "Technology is moving too. Lam Research proposed a self-aligned CFET architecture that its digital-twin modelling suggests could extend CMOS scaling below 10 angstroms, with a six-transistor SRAM bit cell 52.7% smaller than on N3. The constraint now is people: Stanton Chase estimates the US could need 88,000 new semiconductor engineers by 2029, and nearly 30% of Europe's semiconductor workforce is expected to retire by 2030. A second federal court ruling blocking enforcement of the $100,000 H-1B fee adds uncertainty to hiring plans.",
-      "Why it matters: Memory makers have pricing power and multi-year commitments, but conventional DRAM and NAND buyers face higher costs. Device makers outside AI should budget for memory inflation through 2027.",
+      "The United States produced 102 new unicorns, 59% of the year's total of 173.",
+      "The United Kingdom produced 13 new unicorns worth $21 billion combined. The largest is AI lab Ineffable Intelligence at a $5.1 billion valuation after a $700 million Series A, the second most valuable new unicorn globally this year.",
+      "Continental Europe is betting on specialist technology. Belgium produced two cybersecurity unicorns, Keyrock and Aikido Security. Spain produced two deep-tech names, aerospace firm Xoople and quantum computing startup Multiverse Computing. France added defence AI startup Harmattan AI.",
+      "Space and aviation tech were among the most heavily funded new entrants: Varda Space Industries has raised over $578 million and Skyryse about $543 million. A Bahrain-based crypto platform, Rain, reached a $1.9 billion valuation.",
+      "Why it matters: new unicorns are being minted far from the consumer-app model of earlier cycles, in cybersecurity, aerospace, quantum and defence.",
     ],
-    keyFacts: [{"label": "South Korea chip exports, September 2026", "value": "$60 billion record, +262% y/y"}, {"label": "Chip manufacturing revenue, Q2 2026", "value": "$96.6 billion record (Counterpoint Research)"}, {"label": "onsemi / Synaptics revised offer", "value": "$5.7 billion cash"}],
-    highlights: ["South Korea chip exports, September 2026: $60 billion record, +262% y/y", "Chip manufacturing revenue, Q2 2026: $96.6 billion record (Counterpoint Research)", "onsemi / Synaptics revised offer: $5.7 billion cash"],
+    keyFacts: [
+      { label: "US new unicorns", value: "102 (59% of the year's total)" },
+      { label: "UK new unicorns", value: "13, worth $21 billion combined" },
+      { label: "Ineffable Intelligence", value: "$5.1 billion valuation after $700 million Series A" },
+    ],
+    highlights: [
+      "US new unicorns: 102 (59% of the year's total)",
+      "UK new unicorns: 13, worth $21 billion combined",
+      "Ineffable Intelligence: $5.1 billion valuation after $700 million Series A",
+    ],
   },
+
+  /* ---------------------------------------------------------
+     5. UNICORN MIX — APPS TO INFRASTRUCTURE
+  --------------------------------------------------------- */
   {
     ...base,
-    id: "photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+    id: "defence-space-and-semiconductors-replace-apps-and-fintech-in-the-unicorn-mix",
     sectionNumber: 2,
     section: "Technology and AI",
     sectionPath: "/technology",
     industry: "Deep Technology",
-    title: "Photonics, Physical AI and Quantum Move From Labs Toward Deals",
-    lede: "Light-based interconnects and robot-ready AI are attracting real money, while quantum computing remains earlier-stage.",
+    title: "Defence, Space and Semiconductors Replace Apps and Fintech in the Unicorn Mix",
+    lede: "Unlike earlier cycles, this wave centres on strategic infrastructure, which means suppliers, partners and competitors are increasingly capital-heavy.",
     location: "Global",
     readTime: "3 min read",
-    image: img_warehouse_robotics,
+    image: img_CS3,
     body: [
-      "Beyond today's chips, three frontiers drew money and milestones in the past week. The first is light. Counterpoint Research says network bottlenecks are becoming a larger constraint on AI accelerators, with GPUs spending roughly 12.5% of their time waiting on the network in some workloads, and expects near-packaged optics to begin sampling in late 2026 or early 2027, followed by co-packaged optics. JEDEC published the industry's first silicon photonics reliability standard, giving suppliers common qualification requirements as optical interconnects scale.",
-      "Investors are backing the shift. CScale emerged from stealth with $145 million for an optical interconnect designed to contain optical failures without interrupting compute, and Volantis raised $88 million for a photonic approach that links large numbers of memory chips into a single pool for AI inference. Efficient Computer raised $97 million for an energy-efficient general-purpose processor. In chip-design software, Synopsys launched long-horizon engineering agents and signed a multi-year deal with OpenAI to build GPT-Synopsys, a model tuned to its tools.",
-      "The second frontier is physical AI, which puts intelligence into robots, vehicles and edge devices. AMD plans to buy World Labs, a developer of spatial-intelligence models that simulate interactive 3D environments for robotics, in an all-stock deal valued at $8.2 billion and expected to close by the end of 2026. SiMa.ai raised $150 million for silicon exceeding 1,000 TOPS aimed at humanoids, automotive and drones. Semiconductor Engineering notes that edge AI raises demands for compute, memory, connectivity, power efficiency and security all at once.",
-      "The third is quantum computing, where this week's announcements were incremental rather than breakthroughs. Quantum Computing Inc. introduced its Dirac-3S photonic system, demonstrated with up to 9,980 variables versus 949 for the current Dirac-3. Alice and Bob proposed a faster way to stabilise cat qubits, and Xanadu and Bluefors are developing a modular cryogenic system for photonic quantum computers. New Mexico opened the Roadrunner Quantum Lab, California announced $30 million for quantum and deep-space research, and Fairfax County Public Schools plans to host a 4-qubit room-temperature quantum computer in a high school in December.",
-      "Materials research continues underneath. A team from the University of Tokyo, NTU and others reported boron carbon nitride as a high-performance p-type semiconductor, with hole mobility up to 100 cm²/V·s and on/off ratios up to 10⁸, published in Nature. Stockholm University researchers developed an electrically tunable superconducting diode that works without an applied magnetic field. These are laboratory results, not products, and commercial relevance is years away.",
-      "The pattern is consistent. AI's bandwidth and power limits are creating markets for optics, memory and packaging, while physical AI is attracting acquisitions. Quantum remains earlier-stage, with funding and facilities growing faster than demonstrated commercial advantage. That reading is our analysis rather than a claim from any single source.",
-      "Why it matters: Optical interconnects now have a reliability standard and venture funding, a sign the technology is nearing qualification. Physical AI is the area most likely to see further acquisitions.",
+      "The unicorn mix has shifted from apps to infrastructure: AI, defence tech, space, semiconductors, energy and robotics.",
+      "Defence and security tech and aerospace and space each produced about six unicorns in the 98-company cohort tracked mid-year.",
+      "Unlike earlier cycles dominated by consumer apps and fintech, this wave centres on strategic infrastructure. For corporates, that means suppliers, partners and competitors are increasingly capital-heavy, and the strongest startups can afford to compete for enterprise talent and data-centre capacity.",
+      "Why it matters: a startup with a large funding round can bid for the same engineers and data-centre capacity as an established company.",
     ],
-    keyFacts: [{"label": "AMD / World Labs", "value": "$8.2 billion all-stock"}, {"label": "CScale funding", "value": "$145 million"}, {"label": "SiMa.ai funding", "value": "$150 million"}],
-    highlights: ["AMD / World Labs: $8.2 billion all-stock", "CScale funding: $145 million", "SiMa.ai funding: $150 million"],
+    keyFacts: [
+      { label: "Defence and security tech unicorns", value: "About six (98-company mid-year cohort)" },
+      { label: "Aerospace and space unicorns", value: "About six (98-company mid-year cohort)" },
+      { label: "Shift", value: "From apps and fintech to infrastructure" },
+    ],
+    highlights: [
+      "Defence and security tech unicorns: About six (98-company mid-year cohort)",
+      "Aerospace and space unicorns: About six (98-company mid-year cohort)",
+      "Shift: From apps and fintech to infrastructure",
+    ],
   },
+
+  /* ---------------------------------------------------------
+     6. TECHNOLOGY BUILDING BLOCKS
+  --------------------------------------------------------- */
   {
     ...base,
-    id: "zero-days-a-pentagon-breach-and-the-post-quantum-deadline",
+    id: "eight-technology-building-blocks-are-reshaping-every-industry",
     sectionNumber: 2,
     section: "Technology and AI",
     sectionPath: "/technology",
-    industry: "Cybersecurity",
-    title: "Zero-Days, a Pentagon Breach and the Post-Quantum Deadline",
-    lede: "Internet-facing systems remain the weak point, while policymakers set long-range encryption deadlines.",
-    location: "United States",
-    readTime: "3 min read",
-    image: img_cyber_ops,
-    body: [
-      "A data breach at the Pentagon's Defense Manpower Data Center exposed unencrypted personal information on more than 3 million people, ABC News reported. The breach stemmed from a vulnerability in the agency's file-sharing system.",
-      "In the enterprise, CISA reported that Citrix disclosed eight new vulnerabilities in NetScaler ADC and NetScaler Gateway, including two critical zero-days that are being actively exploited and can enable remote code execution. Organisations running affected products should consult CISA's advisories and apply vendor fixes without delay.",
-      "On the hardware side, researchers at VUSec and SSSA disclosed Branch Target Reuse, a new Spectre-v2-class attack aimed at just-in-time compilers. They demonstrated an end-to-end Linux attack that can leak arbitrary memory, including a root password hash, even with existing Spectre defences enabled. Hardware vendors said existing mitigation mechanisms can address it, with protections deployed through software.",
-      "AI agents are creating a new security category. Nvidia launched an Open Agent Safety Platform combining open-source software with hardware-based controls. Its Sentry reference design runs on BlueField-4 DPUs to monitor agent behaviour independently in silicon and quarantine agents that move outside defined boundaries. Cadence is integrating the platform with its AI Super Agents to add runtime controls around autonomous chip-design workflows.",
-      "Policy is setting long deadlines. The NSA announced post-quantum cryptography requirements for National Security Systems, including quantum-resistant support for new commercial systems from 2027 and the phase-out of incompatible legacy systems by 2030. NIST released a draft white paper on false base stations, finding that 5G standards have reduced privacy and location-tracking risks, although devices can still be vulnerable to denial-of-service attacks.",
-      "Spending is rising to match. A PwC report found that 84% of security and finance leaders expect cyber budgets to increase over the next year amid growing AI-driven threats. Separately, a security researcher said an access-control flaw in Flock Safety's infrastructure exposed ArcGIS location data that let him map more than 300,000 Flock-associated surveillance devices across the United States. That finding comes from the researcher's own paper, and we have not seen a response from the company.",
-      "Taken together, the Pentagon incident and the NetScaler zero-days both involve internet-facing file-transfer or gateway systems, a recurring weak point. The Spectre finding shows how hardware defences are layered and patched in software, and the NSA timetable is a reminder that encryption migration takes years. Organisations that have not inventoried their cryptography and exposed gateways are starting late.",
-      "Why it matters: Patch speed on internet-facing gateways is the clearest lever. The 2027 and 2030 post-quantum milestones are worth putting into procurement plans now.",
-    ],
-    keyFacts: [{"label": "Pentagon DMDC breach", "value": "More than 3 million people (ABC News)"}, {"label": "Citrix NetScaler", "value": "8 new vulnerabilities, 2 critical zero-days"}, {"label": "NSA post-quantum milestones", "value": "2027 (new systems) and 2030 (legacy phase-out)"}],
-    highlights: ["Pentagon DMDC breach: More than 3 million people (ABC News)", "Citrix NetScaler: 8 new vulnerabilities, 2 critical zero-days", "NSA post-quantum milestones: 2027 (new systems) and 2030 (legacy phase-out)"],
-  },
-  {
-    ...base,
-    id: "obesity-drugs-keep-driving-pharmas-profits-as-pills-go-mainstream",
-    sectionNumber: 6,
-    section: "Healthcare and Pharma",
-    sectionPath: "/healthcare",
-    industry: "Healthcare and Pharma",
-    title: "Obesity Drugs Keep Driving Pharma's Profits as Pills Go Mainstream",
-    lede: "Lilly and Novo both raised forecasts in August, but pricing deals and new entrants are changing the economics.",
+    industry: "AI and Deep Technology",
+    title: "Eight Technology Building Blocks Are Reshaping Every Industry",
+    lede: "From AI agents and compute to quantum and robotics, value is moving from model access to workflow integration and governance.",
     location: "Global",
-    readTime: "3 min read",
-    image: img_HC1,
+    readTime: "4 min read",
+    image: img_Smartc2,
     body: [
-      "The obesity-drug race remains the engine of pharma growth. IQVIA data cited by BNN Bloomberg put the global obesity drug market at $66 billion in 2025. In early August, Eli Lilly beat quarterly expectations and raised its full-year revenue forecast, sending shares up about 5% in premarket trading. Novo Nordisk raised its own profit and sales forecasts less than a day earlier.",
-      "Lilly's Mounjaro and Zepbound together accounted for 64.7% of revenue in the latest reported quarter. The company's newly launched once-daily obesity pill, Foundayo, generated $98 million, short of analysts' average estimate of $105.6 million. Lilly's valuation passed $1 trillion in 2025.",
-      "Novo's answer is its oral Wegovy pill. After the FDA approved the first oral GLP-1 for obesity at the end of 2025, Novo launched it in January at $149 a month out of pocket for lower doses, and the company is using it to try to claw back ground. Novo's shares fell by almost half in 2025, according to The Pharma Letter.",
-      "Pricing is the backdrop. Both companies struck deals with the White House for lower prices through TrumpRx, including an initial $150 price point for future pills, and BioSpace reported at the start of the year that only about half of big pharmas had signed most-favoured-nation pricing agreements. PitchBook argues the deals have cleared a runway for new entrants by smoothing insurance coverage, though they also entrench the incumbents, whose manufacturing logistics are already resolved.",
-      "Challengers are circling. In earlier readouts tracked by BioSpace, Pfizer licensed a new GLP-1 from YaoPharma after its contest with Novo for Metsera, and Structure Therapeutics' oral aleniglipron produced more than 11% weight loss in a Phase II trial, sending its shares up nearly 103% in a day. In a Phase III study, participants who switched to Lilly's orforglipron after 72 weeks on Wegovy or Zepbound largely maintained their weight loss for up to a year, suggesting a possible maintenance role for pills.",
-      "Outside obesity, big pharma has been buying into CAR-T cell therapy, antibody-drug conjugates and small molecules, according to PitchBook, with larger deals such as Cidara, Verona Pharma and Avidity lifting exit values even as deal counts stayed muted. Analysts also said the failure of semaglutide to slow Alzheimer's progression removed an overhang on Biogen and Lilly's anti-amyloid drugs. Readers should note that several of these items date from late 2025 and early 2026, and we did not find fresher October-specific pharma coverage. Nothing here is medical advice.",
-      "Why it matters: Volume is rising as prices fall. The winners will be the companies that can manufacture oral and injectable drugs at scale and live with lower per-patient pricing.",
+      "Foundation models and AI agents: the shift is from chat to systems that execute multi-step work such as coding, support, procurement and finance operations. Value is moving from model access to workflow integration and governance.",
+      "Compute and AI infrastructure: GPUs, data centres, networking, power and cooling are strategic assets. Expect long-term capacity contracts and sovereign compute programmes.",
+      "Semiconductors and advanced packaging: supply-chain resilience and domestic chip ecosystems in the US, EU, India and Japan are policy priorities.",
+      "Defence, space and aerospace tech: dual-use drones, satellites, launch and autonomy attract government and venture money together.",
+      "Cybersecurity: AI raises both attack speed and defence automation, while identity, cloud and supply-chain security remain high-growth categories.",
+      "Quantum and frontier compute: still early commercially, but funding and unicorn formation, such as Multiverse Computing, show investor appetite.",
+      "Robotics and physical AI: warehousing, manufacturing and eventually service robotics move from pilots to deployments.",
+      "Energy and climate tech: power demand from AI is pulling investment into grid, storage, biogas and nuclear-adjacent technologies.",
+      "The report presents this section as analytical framing based on the trends above, not a news log.",
     ],
-    keyFacts: [{"label": "Global obesity drug market, 2025", "value": "$66 billion (IQVIA via BNN Bloomberg)"}, {"label": "Mounjaro and Zepbound share of Lilly revenue", "value": "64.7%"}, {"label": "Foundayo launch-quarter revenue", "value": "$98 million"}],
-    highlights: ["Global obesity drug market, 2025: $66 billion (IQVIA via BNN Bloomberg)", "Mounjaro and Zepbound share of Lilly revenue: 64.7%", "Foundayo launch-quarter revenue: $98 million"],
+    keyFacts: [
+      { label: "AI agents", value: "From chat to multi-step execution" },
+      { label: "Compute", value: "Long-term capacity contracts, sovereign compute" },
+      { label: "Energy", value: "AI power demand pulls investment into grid and storage" },
+    ],
+    highlights: [
+      "AI agents: From chat to multi-step execution",
+      "Compute: Long-term capacity contracts, sovereign compute",
+      "Energy: AI power demand pulls investment into grid and storage",
+    ],
   },
+
+  /* ---------------------------------------------------------
+     7. INDUSTRY-BY-INDUSTRY IMPACT
+  --------------------------------------------------------- */
   {
     ...base,
-    id: "tariffs-and-the-end-of-ev-credits-reshape-the-product-plan",
+    id: "industry-by-industry-what-ai-and-deep-tech-mean-for-banking-healthcare-manufacturing-and-retail",
     sectionNumber: 7,
     section: "Industry and Supply Chain",
     sectionPath: "/supply-chain",
-    industry: "Automotive and Mobility",
-    title: "Tariffs and the End of EV Credits Reshape the Product Plan",
-    lede: "Automakers are leaning on trucks, SUVs and hybrids while electric programmes are cut back or reworked.",
-    location: "United States",
-    readTime: "3 min read",
-    image: img_Manu3,
+    industry: "Industry Impact",
+    title: "Industry by Industry: What AI and Deep Tech Mean for Banking, Healthcare, Manufacturing and Retail",
+    lede: "Eleven industries face a different technology shift, and the corporate action the report recommends for each ranges from modernising core systems to securing power.",
+    location: "Global",
+    readTime: "4 min read",
+    image: img_HC4,
     body: [
-      "The US car market is settling rather than growing, according to a July analysis cited in Foley and Lardner's August automotive update. Ford and GM both raised full-year 2026 guidance on expectations of continued strong sales of higher-priced pickups and SUVs, even as Ford's second-quarter sales fell nearly 10% year on year during recovery from a supplier fire and EV-related charges produced a $1.3 billion net loss.",
-      "The EV reset is the biggest driver. The $7,500 federal EV credit expired on 30 September 2025, after a record third quarter in which EVs reached 9.9% of US sales, per Cox Automotive. By December, EV share had fallen to 6.6% from 11.2% a year earlier. Ford took a $19.5 billion charge after abandoning the battery-electric F-150 Lightning and planned next-generation EV trucks and vans, and GM and others scaled back programmes.",
-      "Tariffs add cost. One analysis estimates average new-vehicle prices in early 2026 were $8,000-$12,000 above late 2024, with $4,000-$6,000 of that attributable to tariffs; the Korea-built Hyundai Kona Electric was paused for 2026 and the Kia Niro EV discontinued. Cox's late-2025 forecast saw 2026 US sales falling 2.4% to 15.8 million units, and described a K-shaped market in which wealthier households keep buying while others are priced out.",
-      "Demand has shifted toward hybrids. In California, hybrids reached a record 22.1% share in the first half of 2026, with 191,000 registrations, ahead of battery EVs at 15.9%, or about 137,000, while total new-vehicle sales in the state fell 7.7%. Rivian raised its 2026 guidance to 65,000-70,000 vehicles, and also issued a software recall affecting rearview camera visibility on its R1T, R1S and R2 models.",
-      "Technology bets continue. GM and LG Energy Solution plan to produce lithium-manganese-rich prismatic cells at their Tennessee plant; GM says the cells are designed to offer 33% higher energy density than LFP at comparable cost. Delta Electronics is collaborating with Nvidia on autonomous-driving systems, and Semiconductor Engineering notes that AI-defined vehicles are pushing compute, memory bandwidth and validation requirements higher.",
-      "China looms over trade. Chinese brands took 17% of new-vehicle sales in Mexico in the first half of 2026, up from 14%, selling 137,525 vehicles against 107,712 a year earlier, according to the Mexican dealers' association as cited by Reuters. Meanwhile the used-EV market has become the value story, with prices in the mid-$20,000s and often at or below comparable gasoline cars, according to one consumer analysis. Several figures above pre-date this edition by many months, and we did not find fresh September US sales data.",
-      "Why it matters: Automakers are protecting margins with trucks, SUVs and hybrids and delaying EV volume. Expect more localisation of production and more write-downs tied to cancelled programmes.",
+      "Banking and fintech: agentic payments, AI underwriting and real-time rails in the style of UPI. Corporate action: modernise the core and pilot agent-based servicing with controls.",
+      "Insurance: AI claims triage, usage-based pricing and reinsurance tech. Corporate action: automate claims and rebuild data foundations.",
+      "Healthcare and pharma: AI drug discovery, diagnostics and clinical documentation. Corporate action: partner with AI-bio startups and validate regulatory pathways.",
+      "Manufacturing: physical AI, predictive maintenance and domestic chip supply. Corporate action: pilot robotics and secure component supply.",
+      "Retail and consumer: quick commerce, AI personalisation and retail-tech. Corporate action: tighten unit economics and use AI for forecasting.",
+      "Energy and utilities: storage, grid software and AI-driven demand forecasting. Corporate action: secure power for data and operations.",
+      "Defence and aerospace: autonomy, space systems and defence AI. Corporate action: engage the startup supply chain early.",
+      "Telecom and media: AI infrastructure and content automation. Corporate action: monetise network and data assets.",
+      "Logistics and mobility: autonomy, drones and advanced air mobility prototypes. Corporate action: test automation in hubs and last mile.",
+      "Professional services and IT: AI-led delivery is shrinking labour-based models. Corporate action: shift to outcome-based pricing and reskilling.",
+      "Agriculture and food: precision farming, biogas and supply-chain visibility. Corporate action: back data-driven sourcing.",
     ],
-    keyFacts: [{"label": "California hybrid share, H1 2026", "value": "22.1% (battery EVs 15.9%)"}, {"label": "Ford EV-related charge", "value": "$19.5 billion"}, {"label": "Chinese brands' share in Mexico, H1 2026", "value": "17%"}],
-    highlights: ["California hybrid share, H1 2026: 22.1% (battery EVs 15.9%)", "Ford EV-related charge: $19.5 billion", "Chinese brands' share in Mexico, H1 2026: 17%"],
+    keyFacts: [
+      { label: "Banking and fintech", value: "Agentic payments, AI underwriting, UPI-style rails" },
+      { label: "Manufacturing", value: "Physical AI, predictive maintenance, domestic chips" },
+      { label: "Professional services and IT", value: "Shift to outcome-based pricing and reskilling" },
+    ],
+    highlights: [
+      "Banking and fintech: Agentic payments, AI underwriting, UPI-style rails",
+      "Manufacturing: Physical AI, predictive maintenance, domestic chips",
+      "Professional services and IT: Shift to outcome-based pricing and reskilling",
+    ],
   },
+
+  /* ---------------------------------------------------------
+     8. INDIA — FUNDING
+  --------------------------------------------------------- */
   {
     ...base,
-    id: "airbus-retakes-the-delivery-lead-as-engines-remain-the-choke-point",
-    sectionNumber: 7,
-    section: "Industry and Supply Chain",
-    sectionPath: "/supply-chain",
-    industry: "Aerospace",
-    title: "Airbus Retakes the Delivery Lead as Engines Remain the Choke Point",
-    lede: "Boeing led the first quarter, but Airbus pulled ahead by mid-year even as supply chains limit both.",
-    location: "Global",
+    id: "india-tech-funding-rises-7-to-10-3-billion-as-deal-count-falls-38",
+    sectionNumber: 1,
+    section: "Markets and Finance",
+    sectionPath: "/markets",
+    industry: "India Startups",
+    title: "India Tech Funding Rises 7% to $10.3 Billion as Deal Count Falls 38%",
+    lede: "Investors are writing fewer, larger cheques, and first-time seed funding is harder to get, according to Tracxn data for January to September 2026.",
+    location: "India",
     readTime: "3 min read",
-    image: img_business_aviation_jet,
-    body: [
-      "The commercial aircraft race has swung back and forth this year. Boeing delivered 143 aircraft in the first quarter against Airbus's 114, its first quarterly lead since the 737 MAX crisis began in 2018, according to a Bangladesh Monitor report. Airbus's adjusted operating profit fell 52% to 300 million euros in the quarter, and chief executive Guillaume Faury said the company was suffering more than he could recall.",
-      "The root cause was engines. Pratt and Whitney could not supply enough Geared Turbofan engines, with some 550 grounded aircraft awaiting repairs taking priority over new deliveries, and finished Airbus jets were parked awaiting powerplants. Reuters reported on 19 March that Airbus was seeking damages over delayed Pratt and Whitney deliveries, and that cabin-panel problems also weighed on early-year output.",
-      "Airbus then recovered. According to InsideFlyer, it delivered 351 aircraft in the first half, led by 190 A320neos, against Boeing's 307, mostly 737 MAX jets. Airbus regained the lead in May after resolving administrative delays affecting 20 planes bound for China, and June deliveries of 89 were its highest month of the year. Boeing's recovery was constrained by production limits and a 2024 machinists' strike, and wiring damage on about 25 737 MAX aircraft was expected to trim first-quarter deliveries.",
-      "Airbus is still targeting about 870 deliveries in 2026 and investing to raise A320-family production to 75 aircraft a month, though after the first quarter it needed 756 more deliveries in nine months. It has also told some customers of delays affecting A320neo deliveries scheduled for 2027 and 2028. The A320neo family has more than 7,000 aircraft on order.",
-      "The constraints are structural. Both manufacturers face decade-long backlogs. Analysis by Oliver Wyman and IATA, as cited by eplaneai, says supply-chain disruption cost airlines more than $11 billion in the past year. AirInsight expects supply constraints to affect the industry through 2027 and notes Airbus cut its 2026 A220 target from 14 to 12 per month. It also expects sustainable aviation fuel to meet less than 3% of industry needs.",
-      "Fuel costs added another wrinkle. One industry analysis described a fuel-driven airline slowdown as carriers recalculated growth during the Hormuz disruption, tying aerospace to the energy story elsewhere in this edition. For airlines, the implication is longer waits for new jets and effects on lease pricing; for investors, deliveries remain the cleanest near-term gauge of how quickly production converts into cash. Delivery figures here come from trade outlets and secondary reports rather than the manufacturers' own releases.",
-      "Why it matters: Engine supply, not demand, is limiting output. Airlines planning fleet growth should assume long lead times at both manufacturers through at least 2027.",
-    ],
-    keyFacts: [{"label": "Airbus vs Boeing deliveries, H1 2026", "value": "351 vs 307 (InsideFlyer)"}, {"label": "Airbus 2026 delivery target", "value": "About 870"}, {"label": "Supply-chain cost to airlines, past year", "value": "More than $11 billion"}],
-    highlights: ["Airbus vs Boeing deliveries, H1 2026: 351 vs 307 (InsideFlyer)", "Airbus 2026 delivery target: About 870", "Supply-chain cost to airlines, past year: More than $11 billion"],
-  },
-  {
-    ...base,
-    id: "deals-and-moves-roundup",
-    sectionNumber: 4,
-    section: "Mergers and Acquisitions",
-    sectionPath: "/mergers-acquisitions",
-    industry: "Corporate",
-    title: "Deals and Moves Roundup",
-    lede: "Transactions and partnerships reported in the past few weeks, mostly via Semiconductor Engineering's 2 October review.",
-    location: "Global",
-    readTime: "1 min read",
     image: img_FIN4,
     body: [
-      "AMD / World Labs: $8.2 billion all-stock acquisition of a spatial-intelligence AI developer; close expected by end-2026.",
-      "onsemi / Synaptics: Revised to $5.7 billion cash at $123 per share after a rival proposal; the June deal was worth about $7 billion.",
-      "Broadcom / Anthropic: Anthropic's IPO filing identified it as the customer for Broadcom's financing of up to $42 billion to lease chips (Reuters).",
-      "Samsung / Helix: $1 billion into an integrated AI infrastructure company spanning data centres, power and fibre.",
-      "Synopsys / OpenAI: Multi-year agreement to develop GPT-Synopsys for chip-design workflows.",
-      "Synopsys / Amazon: Multi-year custom-silicon IP agreement, extending to cloud and AI-powered engineering.",
-      "DeepSeek / Huawei: DeepSeek to build programming tools optimised for Huawei's AI chips (Reuters).",
-      "SK hynix / Solidigm: Reportedly weighing an IPO valuing the unit at up to $150 billion; SK says nothing is decided.",
-      "Applied Materials: Kioxia and Besi join the $5 billion EPIC Center for memory and advanced packaging.",
-      "Samsung Electro-Mechanics: About $4.9 billion for FC-BGA substrate capacity in South Korea and Vietnam.",
+      "According to Tracxn data for 1 January to 21 September 2026, total tech funding in India was $10.3 billion, up 7% year on year. Funding rounds numbered 1,134, down 38%.",
+      "Early-stage funding was $4.2 billion, up 27%. Seed funding was $698 million, down 37%. Late-stage funding was $5.4 billion, roughly flat.",
+      "Six new unicorns appeared in nine months, and founders raised about $101 million on average before reaching unicorn status.",
+      "The report's interpretation: investors favour stronger fundamentals, larger cheques and clearer paths to profit. First-time seed funding is harder to get.",
+      "Why it matters: India is maturing, not slowing. The money is still arriving, but it is going to fewer and more established companies.",
     ],
-    keyFacts: [{"label": "AMD / World Labs", "value": "$8.2 billion all-stock"}, {"label": "onsemi / Synaptics", "value": "$5.7 billion cash, $123 a share"}, {"label": "Broadcom / Anthropic", "value": "Financing of up to $42 billion"}],
-    highlights: ["AMD / World Labs: $8.2 billion all-stock", "onsemi / Synaptics: $5.7 billion cash, $123 a share", "Broadcom / Anthropic: Financing of up to $42 billion"],
+    keyFacts: [
+      { label: "Total tech funding, Jan to Sep 2026", value: "$10.3 billion, up 7%" },
+      { label: "Funding rounds", value: "1,134, down 38%" },
+      { label: "Seed funding", value: "$698 million, down 37%" },
+    ],
+    highlights: [
+      "Total tech funding, Jan to Sep 2026: $10.3 billion, up 7%",
+      "Funding rounds: 1,134, down 38%",
+      "Seed funding: $698 million, down 37%",
+    ],
+  },
+
+  /* ---------------------------------------------------------
+     9. INDIA — IPO BOOM
+  --------------------------------------------------------- */
+  {
+    ...base,
+    id: "indias-ipo-boom-61-issues-worth-about-rs-88000-crore-in-three-months",
+    sectionNumber: 1,
+    section: "Markets and Finance",
+    sectionPath: "/markets",
+    industry: "India IPO Market",
+    title: "India's IPO Boom: 61 Issues Worth About ₹88,000 Crore in Three Months",
+    lede: "About 148 SEBI-approved companies worth around ₹2.8 lakh crore are waiting in the pipeline, while Zepto paused its IPO for a smaller pre-IPO raise.",
+    location: "India",
+    readTime: "3 min read",
+    image: img_pt_global_markets,
+    body: [
+      "India's IPO market is the busiest in years. There were 27 mainboard IPOs in the first half of 2026, then roughly 61 issues worth about ₹88,000 crore in July to September alone, according to ET.",
+      "About 148 companies with SEBI approval, worth around ₹2.8 lakh crore, are waiting in the pipeline. A weekly India startup newsletter counted 47 tech IPOs by late July 2026.",
+      "Names reported in IPO trackers as at various stages include Razorpay, Amagi, Fractal, boAt, Shiprocket and OYO.",
+      "Zepto paused its IPO in favour of a smaller pre-IPO raise, which the report reads as a sign that public investors now demand profitability and lower cash burn.",
+      "The report advises readers to check exchange filings for current status before relying on any single name. It also lists IPO saturation as a risk: heavy supply may pressure listing performance.",
+    ],
+    keyFacts: [
+      { label: "Mainboard IPOs, H1 2026", value: "27" },
+      { label: "Issues in July to September", value: "About 61, worth about ₹88,000 crore" },
+      { label: "SEBI-approved pipeline", value: "About 148 companies, around ₹2.8 lakh crore" },
+    ],
+    highlights: [
+      "Mainboard IPOs, H1 2026: 27",
+      "Issues in July to September: About 61, worth about ₹88,000 crore",
+      "SEBI-approved pipeline: About 148 companies, around ₹2.8 lakh crore",
+    ],
+  },
+
+  /* ---------------------------------------------------------
+     10. INDIA — AI AND COMPUTE
+  --------------------------------------------------------- */
+  {
+    ...base,
+    id: "indiaai-mission-backs-12-startups-as-utho-cloud-adds-10000-gpus",
+    sectionNumber: 2,
+    section: "Technology and AI",
+    sectionPath: "/technology",
+    industry: "India AI and Compute",
+    title: "IndiaAI Mission Backs 12 Startups as Utho Cloud Adds 10,000 GPUs",
+    lede: "A roughly $30 billion infrastructure commitment reported in June 2026 is described as a turning point for India's AI infrastructure story.",
+    location: "India",
+    readTime: "3 min read",
+    image: img_Ln1,
+    body: [
+      "Under the IndiaAI Mission, 12 startups, including Sarvam AI, are building indigenous large language and multimodal models on Indian datasets.",
+      "Domestic cloud player Utho Cloud was reported to be adding about 10,000 GPUs to India's AI stack. A roughly $30 billion infrastructure commitment reported in June 2026 is described as a turning point for India's AI infrastructure story.",
+      "On regulation, Electronics and IT Minister Ashwini Vaishnaw has spoken of a techno-legal approach to AI risk alongside semiconductor scale-up.",
+      "Why it matters: compute capacity and home-grown models are becoming part of India's national technology strategy.",
+    ],
+    keyFacts: [
+      { label: "IndiaAI Mission startups", value: "12, including Sarvam AI" },
+      { label: "Utho Cloud GPUs", value: "About 10,000 being added" },
+      { label: "Infrastructure commitment, June 2026", value: "Roughly $30 billion" },
+    ],
+    highlights: [
+      "IndiaAI Mission startups: 12, including Sarvam AI",
+      "Utho Cloud GPUs: About 10,000 being added",
+      "Infrastructure commitment, June 2026: Roughly $30 billion",
+    ],
+  },
+
+  /* ---------------------------------------------------------
+     11. INDIA — SEMICONDUCTORS
+  --------------------------------------------------------- */
+  {
+    ...base,
+    id: "indias-chip-push-rs-1-27-lakh-crore-investment-and-at-least-six-startup-tape-outs",
+    sectionNumber: 2,
+    section: "Technology and AI",
+    sectionPath: "/technology",
+    industry: "Semiconductors",
+    title: "India's Chip Push: ₹1.27 Lakh Crore Investment and at Least Six Startup Tape-Outs",
+    lede: "Indian semiconductor startups raised $61.9 million in H1 2026 alone, about 81% of the 2025 total.",
+    location: "India",
+    readTime: "3 min read",
+    image: img_Techheroimage,
+    body: [
+      "A semiconductor investment of about ₹1.27 lakh crore, roughly $13 billion, was reported in July 2026.",
+      "Indian semiconductor startups raised about $206 million across 51 rounds since 2022. Of that, $61.9 million came in the first half of 2026 alone, about 81% of the 2025 total.",
+      "At least six startups have completed chip tape-outs. Focus areas include AI inference chips, power management for AI data centres, design IP and EDA, analog and RF, and advanced packaging.",
+      "Why it matters: domestic chip ecosystems in the US, EU, India and Japan are policy priorities, and India's startups are now producing working designs.",
+    ],
+    keyFacts: [
+      { label: "Investment reported, July 2026", value: "About ₹1.27 lakh crore (~$13 billion)" },
+      { label: "Startup funding since 2022", value: "About $206 million across 51 rounds" },
+      { label: "Tape-outs completed", value: "At least six startups" },
+    ],
+    highlights: [
+      "Investment reported, July 2026: About ₹1.27 lakh crore (~$13 billion)",
+      "Startup funding since 2022: About $206 million across 51 rounds",
+      "Tape-outs completed: At least six startups",
+    ],
+  },
+
+  /* ---------------------------------------------------------
+     12. INDIA — POLICY AND CAPITAL FORMATION
+  --------------------------------------------------------- */
+  {
+    ...base,
+    id: "budget-2026-transition-vcs-rs-1500-crore-fund-and-record-upi-volumes",
+    sectionNumber: 1,
+    section: "Markets and Finance",
+    sectionPath: "/markets",
+    industry: "India Policy and Fintech",
+    title: "Budget 2026, Transition VC's ₹1,500 Crore Fund and Record UPI Volumes",
+    lede: "Policy support, new deep-tech funds and payments growth continue even as tech startup hiring is expected to stay subdued.",
+    location: "India",
+    readTime: "3 min read",
+    image: img_FIN3,
+    body: [
+      "Budget 2026 announced about ₹10,000 crore of funds and credit support for startups and MSMEs, with deep-tech and high-tech manufacturing emphasised.",
+      "Transition VC launched a ₹1,500 crore fund, roughly $155 million, for energy-focused deep-tech founders.",
+      "UPI posted record volumes and growing international reach in July 2026.",
+      "Indian fintechs are building RBI-aligned MSME credit products, for example SG Finserve and BharatPe Money.",
+      "On hiring, tech startup hiring is expected to stay subdued in 2026, according to Xpheno, even as capital flows.",
+    ],
+    keyFacts: [
+      { label: "Budget 2026 support", value: "About ₹10,000 crore for startups and MSMEs" },
+      { label: "Transition VC fund", value: "₹1,500 crore (~$155 million), energy deep-tech" },
+      { label: "UPI, July 2026", value: "Record volumes" },
+    ],
+    highlights: [
+      "Budget 2026 support: About ₹10,000 crore for startups and MSMEs",
+      "Transition VC fund: ₹1,500 crore (~$155 million), energy deep-tech",
+      "UPI, July 2026: Record volumes",
+    ],
+  },
+
+  /* ---------------------------------------------------------
+     13. RISKS AND WATCH-LIST
+  --------------------------------------------------------- */
+  {
+    ...base,
+    id: "six-risks-on-the-watch-list-concentration-compute-regulation-ipo-saturation-talent-and-geopolitics",
+    sectionNumber: 1,
+    section: "Markets and Finance",
+    sectionPath: "/markets",
+    industry: "Risk Watch",
+    title: "Six Risks on the Watch-List: Concentration, Compute, Regulation, IPO Saturation, Talent and Geopolitics",
+    lede: "A valuation reset at a few AI labs would ripple through suppliers and investors, while compute and power limit how fast AI can scale.",
+    location: "Global",
+    readTime: "3 min read",
+    image: img_CS2,
+    body: [
+      "Concentration risk: a few AI labs absorb most capital, and a valuation reset would ripple through suppliers and investors.",
+      "Compute and power constraints limit how fast AI can scale.",
+      "Regulatory divergence across the US, EU, China and India on AI, data and chips.",
+      "IPO saturation in India: heavy supply may pressure listing performance.",
+      "Talent shifts: automation is changing hiring in IT services and startups.",
+      "Geopolitics and export controls affecting AI model and chip access.",
+    ],
+    keyFacts: [
+      { label: "Concentration", value: "A few AI labs absorb most capital" },
+      { label: "India IPOs", value: "Heavy supply may pressure listings" },
+      { label: "Geopolitics", value: "Export controls on AI models and chips" },
+    ],
+    highlights: [
+      "Concentration: A few AI labs absorb most capital",
+      "India IPOs: Heavy supply may pressure listings",
+      "Geopolitics: Export controls on AI models and chips",
+    ],
+  },
+
+  /* ---------------------------------------------------------
+     14. RECOMMENDATIONS FOR CORPORATE LEADERS
+  --------------------------------------------------------- */
+  {
+    ...base,
+    id: "six-moves-for-corporate-leaders-tie-ai-to-pl-secure-compute-and-engage-startups",
+    sectionNumber: 2,
+    section: "Technology and AI",
+    sectionPath: "/technology",
+    industry: "Corporate Strategy",
+    title: "Six Moves for Corporate Leaders: Tie AI to P&L, Secure Compute and Engage Startups",
+    lede: "The report recommends measurable workflow outcomes over generic pilots, long-term capacity partnerships and governance that scales with deployment.",
+    location: "Global",
+    readTime: "3 min read",
+    image: img_SC2,
+    body: [
+      "Build an AI roadmap tied to specific workflows and measurable P&L outcomes, not generic pilots.",
+      "Secure compute, data and power capacity early through long-term partnerships.",
+      "Create a startup engagement programme, with a venture arm, pilots and a procurement fast-track, targeting infrastructure, security and vertical AI.",
+      "Stress-test vendor concentration across a few frontier model providers.",
+      "For India: track the IPO window, deep-tech incentives and the semiconductor ecosystem for partnership and M&A opportunities.",
+      "Invest in governance: AI risk, security and compliance should scale with deployment.",
+    ],
+    keyFacts: [
+      { label: "AI roadmap", value: "Tied to workflows and P&L outcomes" },
+      { label: "Capacity", value: "Secure compute, data and power early" },
+      { label: "Governance", value: "Scale AI risk, security and compliance with deployment" },
+    ],
+    highlights: [
+      "AI roadmap: Tied to workflows and P&L outcomes",
+      "Capacity: Secure compute, data and power early",
+      "Governance: Scale AI risk, security and compliance with deployment",
+    ],
   },
 ];
 
 /* "Numbers at a Glance" — headline figures from the edition. */
-export const octEditionGlance: { indicator: string; figure: string; source: string }[] = [
-  { indicator: "Global growth forecast, 2026 / 2027", figure: "3.0% / 3.4%", source: "IMF, July 2026" },
-  { indicator: "Global headline inflation forecast, 2026", figure: "4.7%", source: "IMF, July 2026" },
-  { indicator: "Global oil supply loss in March 2026", figure: "10.1 million bpd", source: "World Bank" },
-  { indicator: "Big-4 hyperscaler capex, Q1 2026", figure: "$130.6 billion", source: "RexShares (company filings)" },
-  { indicator: "Nvidia data-center revenue (fiscal Q1 FY27)", figure: "$75.2 billion, +92%", source: "Gotrade; RexShares" },
-  { indicator: "South Korea chip exports, September 2026", figure: "$60 billion record, +262% y/y", source: "Semiconductor Engineering" },
-  { indicator: "Airbus vs Boeing deliveries, H1 2026", figure: "351 vs 307", source: "InsideFlyer" },
-  { indicator: "Global obesity drug market, 2025", figure: "$66 billion", source: "IQVIA via BNN Bloomberg" },
+export const oct13EditionGlance: { indicator: string; figure: string; source: string }[] = [
+  { indicator: "AI equity funding, H1 2026", figure: "About $387.5 billion", source: "Report (record pace)" },
+  { indicator: "Unicorns worldwide", figure: "About 1,830, worth ~$8.41 trillion", source: "Crunchbase / PitchBook, Aug 2026" },
+  { indicator: "New unicorns in 2026", figure: "173 (US 102, China 25, UK 13)", source: "Crunchbase / PitchBook" },
+  { indicator: "India unicorns", figure: "89, worth $499 billion", source: "BestBrokers, Aug 2026" },
+  { indicator: "India tech funding, Jan to Sep 2026", figure: "$10.3 billion, +7%", source: "Tracxn" },
+  { indicator: "India funding rounds, Jan to Sep 2026", figure: "1,134, -38%", source: "Tracxn" },
+  { indicator: "India IPOs, July to September", figure: "About 61 issues, ~₹88,000 crore", source: "ET" },
+  { indicator: "India semiconductor investment reported", figure: "About ₹1.27 lakh crore (~$13 billion)", source: "Report, July 2026" },
 ];
 
-export function octEditionArticlePath(article: Pick<OctEditionArticle, "id">) {
+export function oct13EditionArticlePath(article: Pick<OctEditionArticle, "id">) {
   return `/article/${article.id}`;
-}
-
-/* Business-related stories of the edition. Deep Technology and Cybersecurity
-   stay on the homepage and their own sections; they are not business news. */
-const NON_BUSINESS_INDUSTRIES = ["Deep Technology", "Cybersecurity"];
-
-export const octBusinessArticles: OctEditionArticle[] =
-  octEditionArticles.filter(
-    (article) => !NON_BUSINESS_INDUSTRIES.includes(article.industry)
-  );
-
-export function isOctBusinessArticle(id?: string) {
-  return octBusinessArticles.some((article) => article.id === id);
 }
