@@ -125,6 +125,10 @@ const majorStories = [
 
 const editorsPick = octoberStories[3];
 
+/* Small headlines with images that fill the right column beside the lead.
+   They continue the same stream after Editor's Pick. */
+const sideHeadlines = octoberStories.slice(4, 8);
+
 const featuredIds = new Set(
   [leadStory, ...majorStories, editorsPick].map((article) => article.id)
 );
@@ -598,6 +602,43 @@ export function HomePage() {
                       {editorsPick.lede}
                     </p>
                   </Link>
+                </div>
+
+                {/* SMALL HEADLINES WITH IMAGES */}
+
+                <div className="pt-5">
+                  <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.15em]">
+                    More Headlines
+                  </h3>
+
+                  <ul className="divide-y divide-gray-200">
+                    {sideHeadlines.map((story) => (
+                      <li key={story.id}>
+                        <Link
+                          to={digestArticlePath(story)}
+                          className="group flex gap-3 py-3"
+                        >
+                          <div className="shrink-0 w-[92px] h-[62px] overflow-hidden rounded-md">
+                            <ImageWithFallback
+                              src={story.image}
+                              alt={story.title}
+                              className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="min-w-0 flex-1">
+                            <span className="block text-[8px] font-bold uppercase tracking-[0.14em] text-red-600">
+                              {story.industry}
+                            </span>
+
+                            <h4 className="mt-0.5 text-[12px] font-semibold leading-[1.3] text-gray-900 transition-colors group-hover:text-red-600 line-clamp-2">
+                              {story.title}
+                            </h4>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </aside>
             </div>
