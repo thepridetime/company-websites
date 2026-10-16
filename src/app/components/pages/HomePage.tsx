@@ -39,6 +39,7 @@ import {
   type OctEditionArticle,
 } from "../../data/octEditionData";
 import { oct13EditionArticles } from "../../data/oct13EditionData";
+import { techLaunchArticles } from "../../data/techLaunchReport16OctData";
 
 /* =========================================================
    TYPES
@@ -105,10 +106,11 @@ const byTitle = (prefix: string): DigestArticle =>
   digestArticles.find((article) => article.title.startsWith(prefix)) ??
   digestArticles[0];
 
-/* Newest edition (13 October 2026) leads the homepage. The 7 October
-   Global Industry Edition stories are NOT removed: they follow in the
+/* Latest Technology Launch Report (16 October 2026) leads the homepage.
+   The 13 and 7 October stories are NOT removed: they follow in the
    Latest News feed behind "Show more stories". */
 const octoberStories: OctEditionArticle[] = [
+  ...techLaunchArticles,
   ...oct13EditionArticles,
   ...octEditionArticles,
 ];
@@ -139,10 +141,13 @@ const sectionNames = Array.from(
 );
 const latestNewsTabs = ["All", ...sectionNames];
 
-/* The newest edition is shown as the headlines list at the top of the
+/* The latest report is shown as the headlines list at the top of the
    Latest News section, so the feed below carries the previous stories
-   (7 October edition) and nothing is shown twice. */
-const interleavedArticles: DigestArticle[] = octEditionArticles;
+   (13 and 7 October editions) and nothing is shown twice. */
+const interleavedArticles: DigestArticle[] = [
+  ...oct13EditionArticles,
+  ...octEditionArticles,
+];
 
 const PAGE_SIZE = 8;
 
@@ -344,7 +349,9 @@ export function HomePage() {
     () =>
       activeNewsTab === "All"
         ? interleavedArticles
-        : octEditionArticles.filter((article) => article.section === activeNewsTab),
+        : [...techLaunchArticles, ...interleavedArticles].filter(
+            (article) => article.section === activeNewsTab
+          ),
     [activeNewsTab]
   );
 
@@ -384,7 +391,7 @@ export function HomePage() {
           <section className="pb-8 mb-8 border-b border-gray-300">
             <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
 
-              {/* LEAD STORY — newest edition (13 October 2026) */}
+              {/* LEAD STORY — Latest Technology Launch Report (16 October 2026) */}
 
               <Link
                 to={digestArticlePath(leadStory)}
@@ -599,21 +606,21 @@ export function HomePage() {
 
           {/* =================================================
               LATEST NEWS — ONE section.
-              1) All headlines of the newest edition (13 October 2026)
+              1) All headlines of the latest report (16 October 2026)
               2) The latest news feed (previous stories) + Magazine
               Everything else follows below.
           ================================================= */}
 
           <section aria-label="Latest news" className="mb-12">
             <SectionHeader
-              title="Latest News · 13 October 2026"
+              title="Latest News · 16 October 2026"
               link="/business-news"
             />
 
             {/* ALL HEADLINES */}
 
             <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
-              {oct13EditionArticles.map((story, index) => (
+              {techLaunchArticles.map((story, index) => (
                 <li
                   key={story.id}
                   className="border-b border-gray-200 py-4"
