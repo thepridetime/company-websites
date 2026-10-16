@@ -32,7 +32,7 @@ import img_pt_digital_economy from "../../imports/pt-digital-economy.png";
 import img_pt_global_markets from "../../imports/pt-global-markets.png";
 import img_supply_chain_map from "../../imports/supply-chain-map.png";
 import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
-import img_tech16_unicorns from "../../imports/tech16-unicorns.png";
+import img_tech16_unicorns from "../../imports/tech16-ai-future.png.png";
 import img_tech16_global_funding from "../../imports/tech16-global-funding.png";
 import img_tech16_india_chips from "../../imports/tech16-india-chips.png";
 
