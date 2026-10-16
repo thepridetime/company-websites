@@ -32,6 +32,9 @@ import img_pt_digital_economy from "../../imports/pt-digital-economy.png";
 import img_pt_global_markets from "../../imports/pt-global-markets.png";
 import img_supply_chain_map from "../../imports/supply-chain-map.png";
 import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
+import img_tech16_unicorns from "../../imports/tech16-unicorns.png";
+import img_tech16_global_funding from "../../imports/tech16-global-funding.png";
+import img_tech16_india_chips from "../../imports/tech16-india-chips.png";
 
 export const oct13EditionMeta = {
   title: "The Pride Times News",
@@ -68,7 +71,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "About 1,830 private companies are now valued at $1 billion or more, together worth roughly $8.41 trillion, and capital is concentrating in a handful of AI labs.",
     location: "Global",
     readTime: "4 min read",
-    image: img_data_centre,
+    image: img_tech16_unicorns,
     body: [
       "AI is absorbing most venture capital. Global equity funding for AI companies was on track for a record of about $387.5 billion in the first half of 2026, and one analysis estimates AI took roughly 80% of all venture dollars in the first quarter.",
       "The unicorn club is at an all-time high. About 1,830 private companies are valued at $1 billion or more, together worth roughly $8.41 trillion, according to Crunchbase and PitchBook data as of August 2026. Of those, 173 became unicorns in 2026 alone.",
@@ -104,7 +107,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Very large rounds into a handful of frontier AI companies sit on top of a wide base of application and infrastructure startups, with compute, data centres and power as the new bottlenecks.",
     location: "Global",
     readTime: "3 min read",
-    image: img_pt_global_markets,
+    image: img_tech16_global_funding,
     body: [
       "Venture funding in 2026 is shaped by very large rounds into a handful of frontier AI companies, plus a wide base of application and infrastructure startups.",
       "Commentators describe the moment as both the biggest boom and the first real shakeout. It is capital-intensive, with compute, data centres and power as the new bottlenecks.",
@@ -417,7 +420,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Indian semiconductor startups raised $61.9 million in H1 2026 alone, about 81% of the 2025 total.",
     location: "India",
     readTime: "3 min read",
-    image: img_Manu3,
+    image: img_tech16_india_chips,
     body: [
       "A semiconductor investment of about ₹1.27 lakh crore, roughly $13 billion, was reported in July 2026.",
       "Indian semiconductor startups raised about $206 million across 51 rounds since 2022. Of that, $61.9 million came in the first half of 2026 alone, about 81% of the 2025 total.",
