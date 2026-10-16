@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Bookmark, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
 import {
@@ -499,6 +499,68 @@ function BlogMeta({
 }
 
 /* =========================================================
+   FIT SIDEBAR TO ARTICLE HEIGHT
+   On desktop the sidebar must never be taller than the article,
+   otherwise the grid grows and leaves a blank gap above the bottom ad.
+   The sidebar is clipped to the article column's height and any
+   related item that does not fully fit is hidden.
+========================================================= */
+
+function useFitSidebar(
+  columnRef: RefObject<HTMLElement | null>,
+  asideRef: RefObject<HTMLElement | null>
+) {
+  useLayoutEffect(() => {
+    const column = columnRef.current;
+    const aside = asideRef.current;
+    if (!column || !aside) return;
+
+    const desktop = window.matchMedia("(min-width: 1024px)");
+
+    const fit = () => {
+      const items: HTMLElement[] = Array.from(
+        aside.querySelectorAll<HTMLElement>("section[aria-label='Related articles'] > ul > li")
+      );
+      items.forEach((li) => (li.style.display = ""));
+
+      if (!desktop.matches || items.length === 0) return;
+
+      const limit = aside.getBoundingClientRect().height;
+      const top = aside.getBoundingClientRect().top;
+
+      let hide = false;
+      items.forEach((li, index) => {
+        if (hide) {
+          li.style.display = "none";
+          return;
+        }
+        const bottom = li.getBoundingClientRect().bottom - top;
+        if (bottom > limit && index > 0) {
+          hide = true;
+          li.style.display = "none";
+        }
+      });
+    };
+
+    fit();
+
+    const observer = new ResizeObserver(fit);
+    observer.observe(column);
+    window.addEventListener("resize", fit);
+    /* images inside the sidebar change item heights when they load */
+    aside.addEventListener("load", fit, true);
+    desktop.addEventListener("change", fit);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", fit);
+      aside.removeEventListener("load", fit, true);
+      desktop.removeEventListener("change", fit);
+    };
+  }, [columnRef, asideRef]);
+}
+
+/* =========================================================
    SHARED ARTICLE SHELL
    One layout for every article template.
    - Header (kicker, title, dek, meta) is centred over the
@@ -550,6 +612,10 @@ function ArticleShell({
     description: string;
   };
 }) {
+  const columnRef = useRef<HTMLDivElement>(null);
+  const asideRef = useRef<HTMLElement>(null);
+  useFitSidebar(columnRef, asideRef);
+
   return (
     <article className="pt-magazine min-h-screen bg-white text-slate-900 antialiased">
 
@@ -569,13 +635,16 @@ function ArticleShell({
         .pt-magazine header .border-y { border-color:#e4e7eb !important; margin-top:12px !important; padding:8px 0 !important; }
         .pt-magazine header .border-y button { border:1px solid #e2e5e8 !important; border-radius:50% !important; width:27px !important; height:27px !important; }
         .pt-magazine .pt-article-col { min-width:0; }
-        .pt-magazine .blog-prose { max-width:none !important; margin-left:0 !important; margin-right:0 !important; }
-        .pt-magazine .blog-prose strong { font-weight:600 !important; color:#17191c !important; }
-        .pt-magazine .blog-prose { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.55 !important; color:#30343a !important; }
-        .pt-magazine .blog-prose section { border-bottom:1px solid #edf0f2 !important; padding:0 0 12px !important; margin:0 0 14px !important; }
-        .pt-magazine .blog-prose h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:21px !important; line-height:1.2 !important; color:#202124 !important; margin:22px 0 9px !important; }
-        .pt-magazine .blog-prose p { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.48 !important; margin:0 0 14px !important; color:#34383d !important; }
+
+        /* Blog-style reading column */
+        .pt-magazine .blog-prose { max-width:68ch !important; margin-left:0 !important; margin-right:0 !important; font-family:Georgia,'Times New Roman',serif !important; font-size:17px !important; line-height:1.75 !important; color:#2b2f35 !important; }
+        .pt-magazine .blog-prose section { border-bottom:1px solid #edf0f2 !important; padding:0 0 22px !important; margin:0 0 30px !important; }
+        .pt-magazine .blog-prose section:last-child { border-bottom:none !important; margin-bottom:0 !important; }
+        .pt-magazine .blog-prose h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:23px !important; line-height:1.3 !important; color:#17191c !important; margin:0 0 12px !important; }
+        .pt-magazine .blog-prose p { font-family:Georgia,'Times New Roman',serif !important; font-size:17px !important; line-height:1.75 !important; margin:0 0 1.25em !important; color:#2b2f35 !important; text-align:left; }
+        .pt-magazine .blog-prose section > p:last-child { margin-bottom:0 !important; }
         .pt-magazine .blog-prose .drop-cap:first-letter { float:left; font-family:Georgia,'Times New Roman',serif; font-size:62px; line-height:.78; padding:5px 8px 0 0; color:#ed1c24; }
+
         .pt-magazine aside .rounded-xl { border-radius:0 !important; box-shadow:none !important; border-color:#e3e7eb !important; }
         .pt-magazine aside img { border-radius:0 !important; }
         .pt-magazine aside h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:18px !important; }
@@ -601,12 +670,14 @@ function ArticleShell({
           .pt-magazine .max-w-6xl.pb-12 { padding-top:12px !important; }
           .pt-magazine .pt-article-grid { display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; gap:40px !important; align-items:start !important; }
           .pt-magazine main { max-width:none !important; }
-          .pt-magazine aside { margin-top:0 !important; position:sticky !important; top:88px !important; }
+          .pt-magazine .pt-article-grid { align-items:stretch !important; }
+          .pt-magazine aside { margin-top:0 !important; position:relative !important; }
+          .pt-magazine .pt-aside-inner { position:absolute !important; inset:0 !important; overflow:hidden !important; }
         }
         @media (max-width:767px) {
           .pt-magazine header h1 { font-size:31px !important; line-height:1.04 !important; }
           .pt-magazine header > p { font-size:15px !important; }
-          .pt-magazine .blog-prose p { font-size:16px !important; line-height:1.55 !important; }
+          .pt-magazine .blog-prose p { font-size:16px !important; line-height:1.7 !important; }
           .pt-magazine .max-w-6xl.pb-12 { padding-bottom:28px !important; }
         }
       `}</style>
@@ -665,7 +736,7 @@ function ArticleShell({
 
         {/* One column for header + body (same left edge), related news beside it */}
         <div className="pt-article-grid mt-2 lg:mt-4">
-          <div className="pt-article-col">
+          <div ref={columnRef} className="pt-article-col">
             <header className="w-full text-left">
               {kicker && (
                 <div className="flex flex-wrap items-center justify-start gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
@@ -700,7 +771,9 @@ function ArticleShell({
           </div>
 
           {/* Related news with images */}
-          <aside className="mt-8 w-full lg:mt-0">{sidebar}</aside>
+          <aside ref={asideRef} className="pt-aside mt-8 w-full lg:mt-0">
+            <div className="pt-aside-inner">{sidebar}</div>
+          </aside>
         </div>
 
         {/* Ad 2: bottom of the page, above the footer (no extra gap above it) */}
@@ -713,75 +786,43 @@ function ArticleShell({
 }
 
 /* =========================================================
-   BLOG BODY
-   Text styling lives in src/styles/article.css (.blog-prose).
-   The dek is shown once, in the header, so it is not repeated here.
+   PARAGRAPH HELPERS
+   - A blank line starts a new paragraph.
+   - Single line breaks inside a paragraph become spaces.
+   - If a long block has no blank lines, it is split into
+     paragraphs of about three sentences each.
 ========================================================= */
 
-/* Make the important words in a paragraph a little bolder:
-   key figures, names (people, companies, places) and strong news words.
-   Each term is bolded once per paragraph, at most MAX_BOLD per paragraph. */
-const MAX_BOLD = 7;
+function toParagraphs(text: string): string[] {
+  const explicit = text
+    .split(/\n\s*\n/)
+    .map((p) => p.replace(/\s*\n\s*/g, " ").trim())
+    .filter(Boolean);
 
-const EMPHASIS_RE = new RegExp(
-  [
-    // money, percentages, big numbers
-    String.raw`[$€£₹]\s?\d[\d,.]*(?:\s?(?:trillion|billion|million|crore|lakh|bn|m|k)\b)?`,
-    String.raw`\b\d[\d,.]*\s?(?:%|percent\b|trillion\b|billion\b|million\b|crore\b|lakh\b)`,
-    // names: two or more capitalised words (Bank of America, Tim Cook)
-    String.raw`\b[A-Z][a-zA-Z&'’-]+(?:\s+(?:of\s+)?[A-Z][a-zA-Z&'’-]+)+`,
-    // single capitalised word (Nvidia, India) - skipped at sentence start
-    String.raw`\b[A-Z][a-z]{2,}\b`,
-    // strong news words
-    String.raw`\b(?:record(?:-high|-low)?|unprecedented|largest|biggest|first-ever|surged?|plunged?|soared?|slumped?|acquisitions?|mergers?|breakthrough|crisis|layoffs?)\b`,
-  ].join("|"),
-  "g"
-);
+  if (explicit.length > 1) return explicit;
 
-const SKIP_WORDS = new Set([
-  "The", "This", "That", "These", "Those", "There", "They", "Their", "However",
-  "While", "When", "With", "Within", "Meanwhile", "Still", "Even", "Many", "Some",
-  "Most", "Such", "Another", "Several", "Each", "Both", "Over", "Across", "After",
-  "Before", "During", "For", "From", "Into", "Its", "And", "But", "Yet", "Also",
-]);
+  const block = explicit[0] ?? "";
+  const sentences =
+    block.match(/[^.!?]+[.!?]+["”’)]?\s*|[^.!?]+$/g)
+      ?.map((s) => s.trim())
+      .filter(Boolean) ?? [];
 
-function emphasize(text: string): ReactNode[] {
-  const out: ReactNode[] = [];
-  const seen = new Set<string>();
-  let last = 0;
-  let count = 0;
-
-  for (const m of text.matchAll(EMPHASIS_RE)) {
-    let term = m[0];
-    let start = m.index ?? 0;
-
-    // drop a leading "The " etc. from a multi-word name
-    const first = term.split(/\s+/)[0];
-    if (SKIP_WORDS.has(first)) {
-      const rest = term.slice(first.length).trimStart();
-      if (!rest) continue;
-      start += term.length - rest.length;
-      term = rest;
-    }
-
-    const before = text.slice(0, start).trimEnd();
-    const atSentenceStart = before === "" || /[.!?:]["”’)]?$/.test(before);
-    const isSingleCapital = /^[A-Z][a-z]+$/.test(term);
-    if (isSingleCapital && atSentenceStart) continue;
-
-    const key = term.toLowerCase();
-    if (seen.has(key) || count >= MAX_BOLD || start < last) continue;
-
-    seen.add(key);
-    count += 1;
-    if (start > last) out.push(text.slice(last, start));
-    out.push(<strong key={start}>{term}</strong>);
-    last = start + term.length;
+  if (sentences.length <= 4) {
+    return sentences.length ? [sentences.join(" ")] : [];
   }
 
-  if (last < text.length) out.push(text.slice(last));
-  return out;
+  const paragraphs: string[] = [];
+  for (let i = 0; i < sentences.length; i += 3) {
+    paragraphs.push(sentences.slice(i, i + 3).join(" "));
+  }
+  return paragraphs;
 }
+
+/* =========================================================
+   BLOG BODY
+   Text styling lives in the <style> block of ArticleShell
+   (.blog-prose). The dek is shown once, in the header.
+========================================================= */
 
 function BlogBody({
   sections,
@@ -795,17 +836,21 @@ function BlogBody({
   return (
     <div className="blog-prose">
       {sections.map((section, index) => (
-        <section
-          key={`${section.heading}-${index}`}
-          className="scroll-mt-24"
-        >
+        <section key={`${section.heading}-${index}`} className="scroll-mt-24">
           <h2 className="break-words">
             {formatSectionHeading(section.heading, category)}
           </h2>
 
-          <p className={`break-words${index === 0 ? " drop-cap" : ""}`}>
-            {emphasize(section.body)}
-          </p>
+          {toParagraphs(section.body).map((paragraph, pIndex) => (
+            <p
+              key={pIndex}
+              className={`break-words${
+                index === 0 && pIndex === 0 ? " drop-cap" : ""
+              }`}
+            >
+              {paragraph}
+            </p>
+          ))}
         </section>
       ))}
     </div>
@@ -1070,20 +1115,6 @@ function RelatedPosts<
 }
 
 /* =========================================================
-   KICKER HELPERS
-========================================================= */
-
-function BlogKicker({ category }: { category: string }) {
-  return (
-    <>
-      <span>The Pride Times Blog</span>
-      <span className="text-slate-300">/</span>
-      <span>{category}</span>
-    </>
-  );
-}
-
-/* =========================================================
    SPECIAL BLOGS
 ========================================================= */
 
@@ -1109,7 +1140,6 @@ function SpecialBlog({
     <ArticleShell
       backTo={sectionPath}
       backLabel={sectionName}
-      kicker={<BlogKicker category={article.category} />}
       title={title}
       dek={article.dek}
       meta={
@@ -1187,7 +1217,6 @@ function HomepageBlog({
         top: isExpandedAdCategory ? "5608262547" : "5373718974",
         bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
       }}
-      kicker={<BlogKicker category={article.category} />}
       title={title}
       dek={article.dek}
       meta={
@@ -1319,7 +1348,7 @@ function DigestBlog({
         {digest.body.map((paragraph, index) => (
           <Fragment key={`${index}-${paragraph.slice(0, 24)}`}>
             <p className={`break-words${index === 0 ? " drop-cap" : ""}`}>
-              {emphasize(paragraph)}
+              {paragraph.replace(/\s*\n\s*/g, " ").trim()}
             </p>
 
             {digest.quote && index === digest.quoteAfter && (
@@ -1419,7 +1448,6 @@ function MagazineBlog({
     <ArticleShell
       backTo={backTo}
       backLabel={sectionLabel}
-      kicker={<BlogKicker category={article.category} />}
       title={title}
       dek={dek || undefined}
       meta={
