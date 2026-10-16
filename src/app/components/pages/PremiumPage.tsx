@@ -258,8 +258,9 @@ export function PremiumPage() {
             body: response,
           });
           if (verifyError) {
+            const detail = await readFnError(verifyError, "Could not confirm the payment");
             setError(
-              "Payment received but not confirmed yet. If Premium is not active soon, contact us with payment ID " +
+              `Payment received but not confirmed yet: ${detail}. Contact us with payment ID ` +
                 response.razorpay_payment_id
             );
             setBusy(false);
