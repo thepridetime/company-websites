@@ -18,12 +18,12 @@
 
 import type { OctEditionArticle } from "./octEditionData";
 
-import img_Techheroimage from "../../imports/Techheroimage.png";
-import img_Smartc1 from "../../imports/Smartc1.png";
-import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
-import img_Manu3 from "../../imports/Manu3.png";
 import img_data_centre from "../../imports/data-centre.png";
-import img_pt_digital_economy from "../../imports/pt-digital-economy.png";
+import img_tech16_tesla_roadster from "../../imports/tech16-tesla-roadster.png";
+import img_tech16_apple_homeview from "../../imports/tech16-apple-homeview.png";
+import img_tech16_lantronix_robot from "../../imports/tech16-lantronix-robot.png";
+import img_tech16_inner_sky_labs from "../../imports/tech16-inner-sky-labs.png";
+import img_tech16_ai_future from "../../imports/tech16-ai-future.png";
 
 export const techLaunchMeta = {
   title: "The Pride Times News",
@@ -82,7 +82,7 @@ export const techLaunchArticles: OctEditionArticle[] = [
     lede: "A redesigned next-generation Roadster performed brief aerial manoeuvres and a controlled landing in Texas, but production is not expected until 2028.",
     location: "Texas, USA",
     readTime: "4 min read",
-    image: img_Techheroimage,
+    image: img_tech16_tesla_roadster,
     body: [
       "Tesla revealed a redesigned, next-generation Roadster at a demonstration in Texas on 15 October 2026. News reports describe a vehicle that used SpaceX-designed thrusters to perform brief aerial manoeuvres, including a flip and a controlled landing.",
       "The vehicle is an all-electric, two-seat Roadster, with special thruster-equipped configurations. Some of the manoeuvres were shown in a controlled test setting. The demonstration is extraordinary, but it does not show that an everyday road-legal flying car is ready for customers.",
@@ -109,7 +109,7 @@ export const techLaunchArticles: OctEditionArticle[] = [
     lede: "The 7-inch device controls locks, thermostats and doorbells, and adds an upgraded Siri experience and facial recognition.",
     location: "Global",
     readTime: "3 min read",
-    image: img_Smartc1,
+    image: img_tech16_apple_homeview,
     body: [
       "Reuters reported on 13 October 2026 that Apple had introduced HomeView, a 7-inch smart-home screen priced from $299.",
       "The device is designed to control connected home devices such as locks, thermostats and doorbells. It comes with an upgraded Siri experience and facial recognition.",
@@ -134,7 +134,7 @@ export const techLaunchArticles: OctEditionArticle[] = [
     lede: "A compact computing platform for autonomous drones and robots combines AI, sensing and vehicle control, with availability planned for Q4 2026.",
     location: "Global",
     readTime: "3 min read",
-    image: img_warehouse_robotics,
+    image: img_tech16_lantronix_robot,
     body: [
       "Lantronix has announced Spotter, a compact computing and control platform for autonomous drones and robots.",
       "The platform combines AI processing, sensing and vehicle-control functions in one unit. According to the report, availability is planned for the fourth quarter of 2026.",
@@ -158,7 +158,7 @@ export const techLaunchArticles: OctEditionArticle[] = [
     lede: "The system pairs vision, audio and touch perception with action planning and a separate safety layer, and access is partner-based for now.",
     location: "India",
     readTime: "3 min read",
-    image: img_Manu3,
+    image: img_tech16_inner_sky_labs,
     body: [
       "A report dated 12 October 2026 described a physical-AI system developed in India by Inner Sky Labs.",
       "The system combines perception models for vision, audio and touch with action-planning models. A separate safety layer is designed to keep the system's actions within defined rules.",
@@ -207,7 +207,7 @@ export const techLaunchArticles: OctEditionArticle[] = [
     lede: "The systems pair a Blackwell GPU with a Grace CPU, part of a wider shift toward AI workloads running on the device itself.",
     location: "Global",
     readTime: "3 min read",
-    image: img_pt_digital_economy,
+    image: img_tech16_ai_future,
     body: [
       "Reuters reported that PC makers Lenovo and Acer planned to release systems in October 2026 using Nvidia's RTX Spark platform.",
       "The platform combines a Blackwell GPU with a Grace CPU, bringing advanced AI chip designs into personal computers.",
