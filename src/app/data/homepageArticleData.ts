@@ -16,6 +16,7 @@ import {
 import { maEdition1Articles, type EditionArticle } from "./maEdition1Data";
 import { octEditionArticles, type OctEditionArticle } from "./octEditionData";
 import { oct13EditionArticles } from "./oct13EditionData";
+import { techLaunchArticles } from "./techLaunchReport16OctData";
 import {
   globalSectorReport,
   globalSectorItems,
@@ -193,11 +194,15 @@ const globalSectorItemArticles: HomepageArticle[] = globalSectorItems.map(
   }
 );
 
-/* Newest edition first (Global & India Tech, Innovation and Unicorn
-   Edition, 13 October 2026), then the Global Industry Edition of
+/* Newest first: the Latest Technology Launch Report (16 October 2026),
+   then the Global & India Tech, Innovation and Unicorn Edition (13 October
+   2026), then the Global Industry Edition of
    7 October 2026, the existing September digest (unchanged), Edition 1
    (M&A), and the Global Sector News Report 2026 article. */
 export const homepageArticles: HomepageArticle[] = [
+  ...techLaunchArticles.map((article) =>
+    toHomepageArticle(article, "Latest Technology Launch Report")
+  ),
   ...oct13EditionArticles.map((article) =>
     toHomepageArticle(article, "Global and India Tech, Innovation and Unicorn Edition")
   ),
