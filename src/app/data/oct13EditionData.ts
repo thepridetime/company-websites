@@ -35,6 +35,14 @@ import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
 import img_tech16_unicorns from "../../imports/tech16-unicorns.png";
 import img_tech16_global_funding from "../../imports/tech16-global-funding.png";
 import img_tech16_india_chips from "../../imports/tech16-india-chips.png";
+import img_LN4image from "../../imports/LN4image.png";
+import img_CS3 from "../../imports/CS3.png";
+import img_CS2 from "../../imports/CS2.png";
+import img_SC2 from "../../imports/SC2.png";
+import img_Smartc2 from "../../imports/Smartc2.png";
+import img_HC4 from "../../imports/HC4.png";
+import img_Ln1 from "../../imports/Ln1.png";
+import img_FIN3 from "../../imports/FIN3.png";
 
 export const oct13EditionMeta = {
   title: "The Pride Times News",
@@ -141,7 +149,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "The United States leads with 938 unicorns worth $5.04 trillion, followed by China with 310, in Crunchbase and PitchBook data compiled by BestBrokers in August 2026.",
     location: "Global",
     readTime: "3 min read",
-    image: img_pt_digital_economy,
+    image: img_tech16_india_chips,
     body: [
       "The United States has 938 unicorns with a combined value of $5.04 trillion, according to Crunchbase and PitchBook data compiled by BestBrokers in August 2026. China is second with 310 unicorns worth $1.51 trillion.",
       "India ranks third globally with 89 unicorns worth a combined $499 billion. That puts it ahead of the United Kingdom, which has 80 unicorns worth $299 billion, and Germany, which has 47 worth $142.2 billion.",
@@ -174,7 +182,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "The UK's 13 new unicorns are worth $21 billion combined, led by AI lab Ineffable Intelligence at a $5.1 billion valuation.",
     location: "Global",
     readTime: "3 min read",
-    image: img_Techheroimage,
+    image: img_LN4image,
     body: [
       "The United States produced 102 new unicorns, 59% of the year's total of 173.",
       "The United Kingdom produced 13 new unicorns worth $21 billion combined. The largest is AI lab Ineffable Intelligence at a $5.1 billion valuation after a $700 million Series A, the second most valuable new unicorn globally this year.",
@@ -208,7 +216,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Unlike earlier cycles, this wave centres on strategic infrastructure, which means suppliers, partners and competitors are increasingly capital-heavy.",
     location: "Global",
     readTime: "3 min read",
-    image: img_heroimage,
+    image: img_CS3,
     body: [
       "The unicorn mix has shifted from apps to infrastructure: AI, defence tech, space, semiconductors, energy and robotics.",
       "Defence and security tech and aerospace and space each produced about six unicorns in the 98-company cohort tracked mid-year.",
@@ -241,7 +249,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "From AI agents and compute to quantum and robotics, value is moving from model access to workflow integration and governance.",
     location: "Global",
     readTime: "4 min read",
-    image: img_Insightimage,
+    image: img_Smartc2,
     body: [
       "Foundation models and AI agents: the shift is from chat to systems that execute multi-step work such as coding, support, procurement and finance operations. Value is moving from model access to workflow integration and governance.",
       "Compute and AI infrastructure: GPUs, data centres, networking, power and cooling are strategic assets. Expect long-term capacity contracts and sovereign compute programmes.",
@@ -279,7 +287,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Eleven industries face a different technology shift, and the corporate action the report recommends for each ranges from modernising core systems to securing power.",
     location: "Global",
     readTime: "4 min read",
-    image: img_warehouse_robotics,
+    image: img_HC4,
     body: [
       "Banking and fintech: agentic payments, AI underwriting and real-time rails in the style of UPI. Corporate action: modernise the core and pilot agent-based servicing with controls.",
       "Insurance: AI claims triage, usage-based pricing and reinsurance tech. Corporate action: automate claims and rebuild data foundations.",
@@ -319,7 +327,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Investors are writing fewer, larger cheques, and first-time seed funding is harder to get, according to Tracxn data for January to September 2026.",
     location: "India",
     readTime: "3 min read",
-    image: img_business_jio_digital,
+    image: img_FIN4,
     body: [
       "According to Tracxn data for 1 January to 21 September 2026, total tech funding in India was $10.3 billion, up 7% year on year. Funding rounds numbered 1,134, down 38%.",
       "Early-stage funding was $4.2 billion, up 27%. Seed funding was $698 million, down 37%. Late-stage funding was $5.4 billion, roughly flat.",
@@ -353,7 +361,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "About 148 SEBI-approved companies worth around ₹2.8 lakh crore are waiting in the pipeline, while Zepto paused its IPO for a smaller pre-IPO raise.",
     location: "India",
     readTime: "3 min read",
-    image: img_FIN4,
+    image: img_pt_global_markets,
     body: [
       "India's IPO market is the busiest in years. There were 27 mainboard IPOs in the first half of 2026, then roughly 61 issues worth about ₹88,000 crore in July to September alone, according to ET.",
       "About 148 companies with SEBI approval, worth around ₹2.8 lakh crore, are waiting in the pipeline. A weekly India startup newsletter counted 47 tech IPOs by late July 2026.",
@@ -387,7 +395,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "A roughly $30 billion infrastructure commitment reported in June 2026 is described as a turning point for India's AI infrastructure story.",
     location: "India",
     readTime: "3 min read",
-    image: img_Techheroimage,
+    image: img_Ln1,
     body: [
       "Under the IndiaAI Mission, 12 startups, including Sarvam AI, are building indigenous large language and multimodal models on Indian datasets.",
       "Domestic cloud player Utho Cloud was reported to be adding about 10,000 GPUs to India's AI stack. A roughly $30 billion infrastructure commitment reported in June 2026 is described as a turning point for India's AI infrastructure story.",
@@ -420,7 +428,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Indian semiconductor startups raised $61.9 million in H1 2026 alone, about 81% of the 2025 total.",
     location: "India",
     readTime: "3 min read",
-    image: img_tech16_india_chips,
+    image: img_Techheroimage,
     body: [
       "A semiconductor investment of about ₹1.27 lakh crore, roughly $13 billion, was reported in July 2026.",
       "Indian semiconductor startups raised about $206 million across 51 rounds since 2022. Of that, $61.9 million came in the first half of 2026 alone, about 81% of the 2025 total.",
@@ -453,7 +461,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Policy support, new deep-tech funds and payments growth continue even as tech startup hiring is expected to stay subdued.",
     location: "India",
     readTime: "3 min read",
-    image: img_FIN5,
+    image: img_FIN3,
     body: [
       "Budget 2026 announced about ₹10,000 crore of funds and credit support for startups and MSMEs, with deep-tech and high-tech manufacturing emphasised.",
       "Transition VC launched a ₹1,500 crore fund, roughly $155 million, for energy-focused deep-tech founders.",
@@ -487,7 +495,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "A valuation reset at a few AI labs would ripple through suppliers and investors, while compute and power limit how fast AI can scale.",
     location: "Global",
     readTime: "3 min read",
-    image: img_cyber_ops,
+    image: img_CS2,
     body: [
       "Concentration risk: a few AI labs absorb most capital, and a valuation reset would ripple through suppliers and investors.",
       "Compute and power constraints limit how fast AI can scale.",
@@ -522,7 +530,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "The report recommends measurable workflow outcomes over generic pilots, long-term capacity partnerships and governance that scales with deployment.",
     location: "Global",
     readTime: "3 min read",
-    image: img_supply_chain_map,
+    image: img_SC2,
     body: [
       "Build an AI roadmap tied to specific workflows and measurable P&L outcomes, not generic pilots.",
       "Secure compute, data and power capacity early through long-term partnerships.",
