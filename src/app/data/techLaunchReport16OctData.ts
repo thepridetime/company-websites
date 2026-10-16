@@ -22,7 +22,8 @@ import img_data_centre from "../../imports/data-centre.png";
 import img_tech16_tesla_roadster from "../../imports/tech16-tesla-roadster.png";
 import img_tech16_apple_homeview from "../../imports/tech16-apple-homeview.png";
 import img_tech16_lantronix_robot from "../../imports/tech16-lantronix-robot.png";
-import img_tech16_inner_sky_labs from "../../imports/tech16-inner-sky-labs.png";
+//import img_tech16_inner_sky_labs from "../../imports/tech16-inner-sky-labs.png";
+import img_tech16_inner_sky_labs from "../../imports/tech16-ai-future.png";
 import img_tech16_ai_future from "../../imports/tech16-ai-future.png";
 
 export const techLaunchMeta = {
