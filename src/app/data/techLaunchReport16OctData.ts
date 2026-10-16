@@ -22,8 +22,9 @@ import img_data_centre from "../../imports/data-centre.png";
 import img_tech16_tesla_roadster from "../../imports/tech16-tesla-roadster.png";
 import img_tech16_apple_homeview from "../../imports/tech16-apple-homeview.png";
 import img_tech16_lantronix_robot from "../../imports/tech16-lantronix-robot.png";
-import img_tech16_inner_sky_labs from "../../imports/tech16-inner-sky-labs.png";
 import img_tech16_ai_future from "../../imports/tech16-ai-future.png";
+import img_tech16_inner_sky_labs from "../../imports/inner-sky-labs.png";
+import img_Smartc3 from "../../imports/Smartc3.png";
 
 export const techLaunchMeta = {
   title: "The Pride Times News",
@@ -183,7 +184,7 @@ export const techLaunchArticles: OctEditionArticle[] = [
     lede: "An experimental satellite effort carrying Google TPU accelerators is testing whether AI computing can work in space. It is still research, not a replacement for data centres.",
     location: "Global",
     readTime: "3 min read",
-    image: img_data_centre,
+    image: img_Smartc3,
     body: [
       "Google's Project Suncatcher is an experimental effort to study AI computing in orbit, using satellites that carry Google TPU accelerators.",
       "Reporting ahead of a planned early-October test described a small prototype and short initial computing runs. The effort remains research, and it is not a deployed replacement for terrestrial data centres.",
