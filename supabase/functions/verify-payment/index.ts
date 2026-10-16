@@ -12,7 +12,6 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-// HMAC-SHA256 hex, used to check Razorpay's signature
 async function hmacHex(secret: string, message: string) {
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -35,12 +34,13 @@ Deno.serve(async (req) => {
     const { data: { user } } = await userClient.auth.getUser();
     if (!user) return json({ error: "Not signed in" }, 401);
 
-    // 2. Check Razorpay's signature so nobody can fake a payment
+    // 2. Check Razorpay's signature
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await req.json();
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return json({ error: "Missing payment details" }, 400);
     }
 
+    const keyId = Deno.env.get("RAZORPAY_KEY_ID")!;
     const keySecret = Deno.env.get("RAZORPAY_KEY_SECRET")!;
     const expected = await hmacHex(keySecret, `${razorpay_order_id}|${razorpay_payment_id}`);
     if (expected !== razorpay_signature) {
@@ -48,25 +48,80 @@ Deno.serve(async (req) => {
       return json({ error: "Payment signature did not match" }, 400);
     }
 
-    // 3. Mark the user as Premium (admin client, bypasses row rules)
+    // 3. Ask Razorpay which plan this order was for, and who owns it
+    const orderRes = await fetch(`https://api.razorpay.com/v1/orders/${razorpay_order_id}`, {
+      headers: { Authorization: "Basic " + btoa(`${keyId}:${keySecret}`) },
+    });
+    const order = await orderRes.json();
+    if (!orderRes.ok) {
+      console.error("ORDER_LOOKUP_FAILED", JSON.stringify(order));
+      return json({ error: "Could not read the order from Razorpay" }, 502);
+    }
+    if (order.notes?.user_id !== user.id) {
+      console.error("WRONG_USER", user.id, order.notes?.user_id);
+      return json({ error: "This payment belongs to another account" }, 403);
+    }
+    const plan = order.notes?.plan === "annual" ? "annual" : "monthly";
+
+    // 4. Database work with the admin client
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // ASSUMPTION: your users live in a "profiles" table with an "id" matching
-    // the auth user id and a "tier" column. Change these names if yours differ.
-    const { error: updateError } = await admin
-      .from("profiles")
-      .update({ tier: "premium" })
-      .eq("id", user.id);
+    // Already processed? (the browser may retry)
+    const { data: already } = await admin
+      .from("payments")
+      .select("id")
+      .eq("razorpay_payment_id", razorpay_payment_id)
+      .maybeSingle();
+    if (already) return json({ ok: true, already: true });
 
-    if (updateError) {
-      console.error("PROFILE_UPDATE_FAILED", JSON.stringify(updateError));
-      return json({ error: "Could not activate Premium: " + updateError.message }, 500);
+    // Subscription window
+    const start = new Date();
+    const end = new Date(start);
+    if (plan === "annual") end.setFullYear(end.getFullYear() + 1);
+    else end.setMonth(end.getMonth() + 1);
+
+    const subRow = {
+      user_id: user.id,
+      plan,
+      status: "active", // ASSUMPTION: the site treats status "active" as Premium
+      start_date: start.toISOString(),
+      end_date: end.toISOString(),
+      razorpay_payment_id,
+    };
+
+    // Update the user's latest subscription if there is one (e.g. a trial), else create one
+    const { data: existingSub } = await admin
+      .from("subscriptions")
+      .select("id")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const { error: subError } = existingSub
+      ? await admin.from("subscriptions").update(subRow).eq("id", existingSub.id)
+      : await admin.from("subscriptions").insert(subRow);
+
+    if (subError) {
+      console.error("SUBSCRIPTION_FAILED", JSON.stringify(subError));
+      return json({ error: "Could not activate Premium: " + subError.message }, 500);
     }
 
-    console.log("PREMIUM_ACTIVATED", user.id, razorpay_payment_id);
+    // Record the payment (a failure here should not undo Premium)
+    const { error: payError } = await admin.from("payments").insert({
+      user_id: user.id,
+      plan,
+      razorpay_order_id,
+      razorpay_payment_id,
+      amount: order.amount,
+      status: "paid",
+    });
+    if (payError) console.error("PAYMENT_INSERT_FAILED", JSON.stringify(payError));
+
+    console.log("PREMIUM_ACTIVATED", user.id, plan, razorpay_payment_id);
     return json({ ok: true });
   } catch (e) {
     console.error("VERIFY_ERROR", String(e));
