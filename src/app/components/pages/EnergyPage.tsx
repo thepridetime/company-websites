@@ -23,8 +23,7 @@ import {
 /* =========================================================
    DATA
    Only real Energy stories from octEditionData.ts are shown.
-   trendSeries is intentionally empty until verified figures
-   are supplied; the chart shows a placeholder until then.
+   trendSeries stays empty until verified figures are supplied.
    Expected shape: [{ year: "2024", supply: 12, demand: 10 }, ...]
 ========================================================= */
 
@@ -213,7 +212,6 @@ export function EnergyPage() {
                   {leadStory.industry} | {leadStory.location}
                 </span>
 
-                {/* Real figures from the lead story, shown as floating tags */}
                 <div className="absolute right-4 top-4 hidden flex-col gap-2 sm:flex">
                   {leadStory.keyFacts.slice(0, 2).map((fact) => (
                     <span
@@ -254,10 +252,7 @@ export function EnergyPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     {leadStory.keyFacts.map((fact) => (
-                      <div
-                        key={fact.label}
-                        className="rounded-sm border border-gray-200 bg-white p-3 shadow-sm"
-                      >
+                      <div key={fact.label} className="rounded-sm border border-gray-200 bg-white p-3 shadow-sm">
                         <p className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
                           {fact.label}
                         </p>
