@@ -9,11 +9,9 @@ import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
 import { supabase } from "../../../lib/supabase";
 
-/* ---------- Types for data that now comes from Supabase ---------- */
 type ReadItem = { title: string; category: string; path: string; read_at: string };
 type SavedItem = { title: string; category: string; path: string; saved_at: string };
 
-/* ---------- Static catalogue (not personal data) ---------- */
 const CATEGORY_COLORS: Record<string, string> = {
   Finance: "#dc2626",
   Technology: "#2563eb",
@@ -23,7 +21,6 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 const colorFor = (category: string) => CATEGORY_COLORS[category] ?? "#6b7280";
 
-// The list of newsletters you offer. Whether a user is subscribed is stored per user.
 const NEWSLETTER_CATALOG = [
   { key: "daily-brief", name: "The Daily Brief", freq: "Every morning" },
   { key: "markets-morning", name: "Markets Morning", freq: "Weekdays 7am IST" },
@@ -31,6 +28,8 @@ const NEWSLETTER_CATALOG = [
   { key: "billionaires-tracker", name: "Billionaires Tracker", freq: "Every Friday" },
   { key: "india-business-digest", name: "India Business Digest", freq: "Daily" },
 ];
+
+const TRENDING_TAGS = ["AI", "Fed Policy", "India Markets", "Billionaires", "EV", "Cybersecurity", "NVIDIA", "OpenAI", "Clean Energy", "Supply Chain"];
 
 const premiumFeatures = [
   { icon: Shield, title: "Ad-free reading", desc: "No ads on any page" },
@@ -41,7 +40,6 @@ const premiumFeatures = [
   { icon: BookOpen, title: "Analyst reports", desc: "Market deep-dives" },
 ];
 
-/* ---------- Helpers ---------- */
 function timeAgo(iso: string): string {
   const diffMs = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diffMs / 60000);
@@ -61,7 +59,6 @@ function shortDate(iso: string): string {
 const dayKey = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
-/** Consecutive days with at least one read, counting back from today (or yesterday if nothing today yet). */
 function calcStreak(readDates: string[]): number {
   const days = new Set(readDates.map((iso) => dayKey(new Date(iso))));
   const cursor = new Date();
@@ -92,7 +89,6 @@ export function DashboardPage() {
     }
   }, [isLoading, isSignedIn, navigate]);
 
-  /* Load this user's real data */
   useEffect(() => {
     if (!user?.id) return;
     let cancelled = false;
@@ -140,7 +136,6 @@ export function DashboardPage() {
         );
       }
 
-      // Continue reading: latest 5 distinct articles
       if (recentRes.error) console.error("RECENT_FETCH_FAILED", recentRes.error);
       const seen = new Set<string>();
       const distinct: ReadItem[] = [];
@@ -153,7 +148,6 @@ export function DashboardPage() {
       }
       setRecentlyRead(distinct);
 
-      // Stats: articles this month + streak
       if (datesRes.error) console.error("READ_DATES_FETCH_FAILED", datesRes.error);
       const dates = (datesRes.data ?? []).map((r) => r.read_at as string);
       setArticlesThisMonth(dates.filter((d) => new Date(d) >= monthStart).length);
@@ -179,7 +173,7 @@ export function DashboardPage() {
   const toggleNewsletter = async (key: string) => {
     if (!user?.id) return;
     const next = !subscribed[key];
-    setSubscribed((prev) => ({ ...prev, [key]: next })); // update screen immediately
+    setSubscribed((prev) => ({ ...prev, [key]: next }));
 
     const { error } = await supabase
       .from("newsletter_subscriptions")
@@ -190,9 +184,12 @@ export function DashboardPage() {
 
     if (error) {
       console.error("NEWSLETTER_SAVE_FAILED", error);
-      setSubscribed((prev) => ({ ...prev, [key]: !next })); // put it back if saving failed
+      setSubscribed((prev) => ({ ...prev, [key]: !next }));
     }
   };
+
+  const scrollToNewsletters = () =>
+    document.getElementById("newsletters")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   if (isLoading) {
     return (
@@ -212,9 +209,16 @@ export function DashboardPage() {
     { icon: Globe, label: "Edition", value: user.country || "Global", sub: "your region" },
   ];
 
+  const accountItems: any[] = [
+    { icon: CreditCard, label: isPremium ? "Manage subscription" : "Upgrade to Premium", to: "/premium" },
+    { icon: Mail, label: "Newsletter preferences", onClick: scrollToNewsletters },
+    { icon: User, label: "Edit profile", soon: true },
+    { icon: Bell, label: "Notification settings", soon: true },
+    { icon: Shield, label: "Privacy & data", soon: true },
+  ];
+
   return (
     <div className="min-h-screen bg-[#faf9f6]">
-      {/* Masthead */}
       <div className="bg-black text-white border-b-2 border-red-600">
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
@@ -238,7 +242,6 @@ export function DashboardPage() {
       </div>
 
       <div className="max-w-screen-xl mx-auto px-4 py-10">
-        {/* Welcome / byline block */}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-8 pb-8 border-b border-gray-200">
           <div className="flex items-center gap-5">
             <div
@@ -287,7 +290,6 @@ export function DashboardPage() {
           )}
         </div>
 
-        {/* Stat strip — one bordered strip, not four separate cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-200 border border-gray-200 rounded-sm mb-10 bg-white">
           {stats.map(({ icon: Icon, label, value, sub }) => (
             <div key={label} className="p-5">
@@ -302,9 +304,7 @@ export function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left — Recently Read + Saved */}
           <div className="lg:col-span-2 flex flex-col gap-10">
-            {/* Continue reading */}
             <div>
               <div className="flex items-center justify-between mb-1">
                 <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>Continue reading</h2>
@@ -312,9 +312,7 @@ export function DashboardPage() {
               </div>
               <div className="divide-y divide-gray-200 border-t border-gray-200 mt-3">
                 {!dataLoading && recentlyRead.length === 0 && (
-                  <p className="py-6 text-sm text-gray-500">
-                    Articles you read will show up here.
-                  </p>
+                  <p className="py-6 text-sm text-gray-500">Articles you read will show up here.</p>
                 )}
                 {recentlyRead.map((a) => {
                   const color = colorFor(a.category);
@@ -347,7 +345,6 @@ export function DashboardPage() {
               </div>
             </div>
 
-            {/* Saved articles */}
             <div>
               <div className="flex items-center justify-between mb-1">
                 <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>Saved articles</h2>
@@ -355,9 +352,7 @@ export function DashboardPage() {
               </div>
               <div className="divide-y divide-gray-200 border-t border-gray-200 mt-3">
                 {!dataLoading && savedArticles.length === 0 && (
-                  <p className="py-6 text-sm text-gray-500">
-                    You haven’t saved any articles yet.
-                  </p>
+                  <p className="py-6 text-sm text-gray-500">You haven’t saved any articles yet.</p>
                 )}
                 {savedArticles.map((a) => (
                   <Link
@@ -375,7 +370,6 @@ export function DashboardPage() {
               </div>
             </div>
 
-            {/* Premium panel */}
             {!isPremium && (
               <div className="relative overflow-hidden rounded-sm bg-black text-white p-7">
                 <div
@@ -387,7 +381,7 @@ export function DashboardPage() {
                   <h2 className="text-2xl leading-snug max-w-sm" style={{ fontFamily: "Georgia, serif" }}>
                     Read The Pride Times without limits.
                   </h2>
-                  <p className="text-gray-400 text-sm mt-2 mb-6">$4.99/month — cancel anytime.</p>
+                  <p className="text-gray-400 text-sm mt-2 mb-6">From ₹299/month — cancel anytime.</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 mb-7 max-w-lg">
                     {premiumFeatures.map(({ icon: Icon, title, desc }) => (
                       <div key={title} className="flex items-start gap-2.5 py-2 border-t border-white/10">
@@ -410,32 +404,46 @@ export function DashboardPage() {
             )}
           </div>
 
-          {/* Right — Profile + Newsletters */}
           <div className="flex flex-col gap-8">
-            {/* Account */}
             <div className="bg-white border border-gray-200 rounded-sm p-5">
               <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
                 <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Account</h2>
                 <Settings size={14} className="text-gray-400" />
               </div>
               <div className="flex flex-col">
-                {[
-                  { icon: User, label: "Edit profile", to: "#" },
-                  { icon: CreditCard, label: isPremium ? "Manage subscription" : "Upgrade to Premium", to: "/premium" },
-                  { icon: Bell, label: "Notification settings", to: "#" },
-                  { icon: Shield, label: "Privacy & data", to: "#" },
-                  { icon: Mail, label: "Newsletter preferences", to: "#" },
-                ].map(({ icon: Icon, label, to }) => (
-                  <Link
-                    key={label}
-                    to={to}
-                    className="flex items-center gap-3 text-sm text-gray-700 hover:text-red-600 transition-colors group py-2.5"
-                  >
-                    <Icon size={14} className="text-gray-400 group-hover:text-red-600 transition-colors" />
-                    {label}
-                    <ChevronRight size={12} className="text-gray-300 ml-auto group-hover:text-red-600 transition-colors" />
-                  </Link>
-                ))}
+                {accountItems.map(({ icon: Icon, label, to, onClick, soon }) => {
+                  const inner = (
+                    <>
+                      <Icon size={14} className={soon ? "text-gray-300" : "text-gray-400 group-hover:text-red-600 transition-colors"} />
+                      {label}
+                      {soon ? (
+                        <span className="ml-auto text-[10px] uppercase tracking-wider text-gray-400">Soon</span>
+                      ) : (
+                        <ChevronRight size={12} className="text-gray-300 ml-auto group-hover:text-red-600 transition-colors" />
+                      )}
+                    </>
+                  );
+                  const cls = "flex items-center gap-3 text-sm text-gray-700 hover:text-red-600 transition-colors group py-2.5 w-full text-left";
+                  if (soon) {
+                    return (
+                      <div key={label} className="flex items-center gap-3 text-sm text-gray-400 py-2.5">
+                        {inner}
+                      </div>
+                    );
+                  }
+                  if (onClick) {
+                    return (
+                      <button key={label} type="button" onClick={onClick} className={cls}>
+                        {inner}
+                      </button>
+                    );
+                  }
+                  return (
+                    <Link key={label} to={to} className={cls}>
+                      {inner}
+                    </Link>
+                  );
+                })}
                 <button
                   onClick={() => { signOut(); navigate("/"); }}
                   className="flex items-center gap-3 text-sm text-gray-500 hover:text-red-600 transition-colors group mt-1 pt-3 border-t border-gray-200"
@@ -446,8 +454,7 @@ export function DashboardPage() {
               </div>
             </div>
 
-            {/* Newsletters */}
-            <div className="bg-white border border-gray-200 rounded-sm p-5">
+            <div id="newsletters" className="bg-white border border-gray-200 rounded-sm p-5 scroll-mt-6">
               <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
                 <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Newsletters</h2>
                 <Mail size={14} className="text-gray-400" />
@@ -477,20 +484,20 @@ export function DashboardPage() {
               </div>
             </div>
 
-            {/* Trending topics */}
             <div className="bg-white border border-gray-200 rounded-sm p-5">
               <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
                 <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Trending for you</h2>
                 <TrendingUp size={14} className="text-gray-400" />
               </div>
               <div className="flex flex-wrap gap-2">
-                {["AI", "Fed Policy", "India Markets", "Billionaires", "EV", "Cybersecurity", "NVIDIA", "OpenAI", "Clean Energy", "Supply Chain"].map((tag) => (
-                  <span
+                {TRENDING_TAGS.map((tag) => (
+                  <Link
                     key={tag}
-                    className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-sm hover:bg-black hover:text-white transition-colors cursor-pointer"
+                    to={`/search?q=${encodeURIComponent(tag)}`}
+                    className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-sm hover:bg-black hover:text-white transition-colors"
                   >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
