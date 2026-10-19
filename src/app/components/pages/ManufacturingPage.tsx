@@ -8,8 +8,43 @@ import {
   specialArticlePath,
 } from "../../data/specialArticleData";
 import ManuFallbackImg from "../../../imports/Manu1.png";
+import img_manu_plant from "../../../imports/Manu1.png";
+import img_manu_worker from "../../../imports/Manu2.png";
+import img_manu_robot_arm from "../../../imports/Manu3.png";
+import img_warehouse_robotics from "../../../imports/warehouse-robotics.png";
+import img_supply_chain_map from "../../../imports/supply-chain-map.png";
+import img_lantronix_robot from "../../../imports/tech16-lantronix-robot.png";
+import img_smart_city from "../../../imports/Smartc1.png";
+import img_smart_cloud from "../../../imports/Smartc2.png";
+import img_smart_globe from "../../../imports/Smartc3.png";
+import img_smart_skyline from "../../../imports/Smartc4.png";
+import img_digital_code from "../../../imports/pt-digital-economy.png";
+import img_cyber_ops from "../../../imports/cyber-ops.png";
+import img_data_centre from "../../../imports/data-centre.png";
+import img_energy_costs from "../../../imports/Energy1.png";
+import img_ai_future from "../../../imports/tech16-ai-future.png";
 
 const SECTION_LABEL = "Manufacturing";
+
+/* Each manufacturing article gets its own image, keyed by article ID.
+   Articles without a mapping fall back to their own image, then Manu1.png. */
+const imageById: Record<string, string> = {
+  "manufacturing-reshoring-2026": img_manu_plant,
+  "manufacturing-demand-output-prices": img_smart_skyline,
+  "manufacturing-hyundai-80-percent-us-suppliers": img_manu_worker,
+  "manufacturing-mind-robotics-500m": img_manu_robot_arm,
+  "manufacturing-uber-rivian-50000-robotaxis": img_smart_city,
+  "manufacturing-dhl-10-warehousing-sites": img_warehouse_robotics,
+  "manufacturing-advanced-chip-fault-tracing": img_digital_code,
+  "manufacturing-ai-robotics-digital-twins": img_smart_cloud,
+  "manufacturing-imts-2026-ai-robotics": img_lantronix_robot,
+  "manufacturing-domestic-supply-chain-partnerships": img_smart_globe,
+  "manufacturing-supply-chain-fragmentation": img_supply_chain_map,
+  "manufacturing-energy-costs": img_energy_costs,
+  "manufacturing-southeast-asia-ai-cybersecurity": img_cyber_ops,
+  "manufacturing-ai-hardware-production": img_data_centre,
+  "manufacturing-smart-factory-strategy": img_ai_future,
+};
 
 type ManuItem = {
   id: string;
@@ -30,7 +65,7 @@ const manuItems: ManuItem[] = specialArticles
     title: article.title,
     lede: article.dek,
     kicker: article.category,
-    image: article.image ?? ManuFallbackImg,
+    image: imageById[article.id] ?? article.image ?? ManuFallbackImg,
     meta: `${article.publishedAt} · ${article.readTime}`,
     keyFacts: article.keyFacts,
   }));
