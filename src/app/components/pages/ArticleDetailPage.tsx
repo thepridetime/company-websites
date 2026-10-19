@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 import { Link, Navigate, useParams } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 import { ArrowLeft, ArrowRight, Bookmark, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
 import {
   TimeAgo,
@@ -79,12 +80,15 @@ function AdSenseUnit({
 }) {
   const insRef = useRef<HTMLModElement>(null);
 
+    const { user, isLoading } = useAuth();
+  const showAds = !isLoading && user?.tier !== "premium";
   useEffect(() => {
     const el = insRef.current;
 
     /* Skip if this slot already received an ad (protects against
        StrictMode double-mounting and "already have ads" errors). */
-    if (!el || el.getAttribute("data-adsbygoogle-status") === "done") {
+    //if (!el || el.getAttribute("data-adsbygoogle-status") === "done") {
+        if (!showAds || !el || el.getAttribute("data-adsbygoogle-status") === "done") {
       return;
     }
 
@@ -96,8 +100,9 @@ function AdSenseUnit({
     } catch (error) {
       console.warn("AdSense could not initialize:", error);
     }
-  }, [slot]);
-
+  //}, [slot]);
+    }, [slot, showAds]);
+  if (!showAds) return null;
   if (side) {
     return (
       <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-2">
