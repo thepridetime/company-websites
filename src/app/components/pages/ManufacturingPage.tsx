@@ -148,7 +148,9 @@ export function ManufacturingPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <main className="pb-16 pt-4">
 
-          <PrideTimesAd variant="first" />
+          <div className="h-[150px] overflow-hidden">
+            <PrideTimesAd variant="first" />
+          </div>
 
           {heroStory && (
             <>
@@ -183,7 +185,7 @@ export function ManufacturingPage() {
 
                 {secondStory && (
                   <Link to={secondStory.href} className="group flex flex-col">
-                    <div className="h-[135px] overflow-hidden bg-gray-100">
+                    <div className="h-[140px] overflow-hidden bg-gray-100">
                       <ImageWithFallback
                         src={secondStory.image}
                         alt={secondStory.title}
@@ -220,21 +222,23 @@ export function ManufacturingPage() {
                       </li>
                     ))}
                   </ol>
-                  <AdSlot slot="5373718974" className="mt-6" minHeight={250} />
+                  <div className="mt-5 h-[112px] overflow-hidden">
+                    <AdSlot slot="5373718974" minHeight={90} />
+                  </div>
                 </aside>
               </section>
 
               {/* CARD ROW: FOUR EQUAL COLUMNS */}
 
               {cardItems.length > 0 && (
-                <section className="mt-[18px] grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-[16px]">
+                <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-[16px]">
                   {cardItems.map((item) => (
                     <Link
                       key={item.id}
                       to={item.href}
                       className="group flex flex-col"
                     >
-                      <div className="h-[130px] overflow-hidden bg-gray-100">
+                      <div className="h-[160px] overflow-hidden bg-gray-100">
                         <ImageWithFallback
                           src={item.image}
                           alt={item.title}
@@ -263,7 +267,7 @@ export function ManufacturingPage() {
             </p>
           )}
 
-          <div className="mt-12">
+          <div className="mt-8 h-[150px] overflow-hidden">
             <PrideTimesAd variant="second" />
           </div>
         </main>
