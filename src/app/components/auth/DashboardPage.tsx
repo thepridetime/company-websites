@@ -5,29 +5,31 @@ import {
   TrendingUp, Bookmark, Clock, Globe, LogOut, Crown,
   ChevronRight, Newspaper, Mail, Shield,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
+import { supabase } from "../../../lib/supabase";
 
-const recentlyRead = [
-  { title: "Global Markets Surge as Fed Signals Rate Cuts", category: "Finance", color: "#dc2626", time: "2 hrs ago", path: "/finance" },
-  { title: "OpenAI's New Model Surpasses Human Benchmarks", category: "Technology", color: "#2563eb", time: "Yesterday", path: "/technology" },
-  { title: "Elon Musk Adds $15B to Net Worth in Single Day", category: "Billionaires", color: "#ca8a04", time: "2 days ago", path: "/billionaires" },
-  { title: "India Surpasses China as Fastest Growing Economy", category: "World", color: "#0d9488", time: "3 days ago", path: "/world" },
-  { title: "CRISPR Gene Editing Achieves 98% Success Rate", category: "Healthcare", color: "#7c3aed", time: "4 days ago", path: "/healthcare" },
-];
+/* ---------- Types for data that now comes from Supabase ---------- */
+type ReadItem = { title: string; category: string; path: string; read_at: string };
+type SavedItem = { title: string; category: string; path: string; saved_at: string };
 
-const savedArticles = [
-  { title: "The AI Economy: How AI is Reshaping Global GDP", category: "Technology", saved: "May 18" },
-  { title: "Saudi Aramco's $15B Renewable Energy Transition", category: "Energy", saved: "May 15" },
-  { title: "Pride Times 30 — World's Most Powerful Business Leaders", category: "Rankings", saved: "May 12" },
-];
+/* ---------- Static catalogue (not personal data) ---------- */
+const CATEGORY_COLORS: Record<string, string> = {
+  Finance: "#dc2626",
+  Technology: "#2563eb",
+  Billionaires: "#ca8a04",
+  World: "#0d9488",
+  Healthcare: "#7c3aed",
+};
+const colorFor = (category: string) => CATEGORY_COLORS[category] ?? "#6b7280";
 
-const newsletters = [
-  { name: "The Daily Brief", freq: "Every morning", subscribed: true },
-  { name: "Markets Morning", freq: "Weekdays 7am IST", subscribed: true },
-  { name: "Technology Weekly", freq: "Every Monday", subscribed: false },
-  { name: "Billionaires Tracker", freq: "Every Friday", subscribed: true },
-  { name: "India Business Digest", freq: "Daily", subscribed: false },
+// The list of newsletters you offer. Whether a user is subscribed is stored per user.
+const NEWSLETTER_CATALOG = [
+  { key: "daily-brief", name: "The Daily Brief", freq: "Every morning" },
+  { key: "markets-morning", name: "Markets Morning", freq: "Weekdays 7am IST" },
+  { key: "technology-weekly", name: "Technology Weekly", freq: "Every Monday" },
+  { key: "billionaires-tracker", name: "Billionaires Tracker", freq: "Every Friday" },
+  { key: "india-business-digest", name: "India Business Digest", freq: "Daily" },
 ];
 
 const premiumFeatures = [
@@ -39,22 +41,158 @@ const premiumFeatures = [
   { icon: BookOpen, title: "Analyst reports", desc: "Market deep-dives" },
 ];
 
-const stats = [
-  { icon: BookOpen, label: "Articles read", value: "247", sub: "this month" },
-  { icon: Bookmark, label: "Saved", value: null, sub: "in your library" },
-  { icon: Clock, label: "Reading streak", value: null, sub: "days running" },
-  { icon: Globe, label: "Editions", value: "3", sub: "US, India, Global" },
-];
+/* ---------- Helpers ---------- */
+function timeAgo(iso: string): string {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} hr${hrs === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hrs / 24);
+  if (days === 1) return "Yesterday";
+  return `${days} days ago`;
+}
+
+function shortDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+const dayKey = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+/** Consecutive days with at least one read, counting back from today (or yesterday if nothing today yet). */
+function calcStreak(readDates: string[]): number {
+  const days = new Set(readDates.map((iso) => dayKey(new Date(iso))));
+  const cursor = new Date();
+  if (!days.has(dayKey(cursor))) cursor.setDate(cursor.getDate() - 1);
+  let streak = 0;
+  while (days.has(dayKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}
 
 export function DashboardPage() {
   const { user, isSignedIn, isLoading, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const [dataLoading, setDataLoading] = useState(true);
+  const [recentlyRead, setRecentlyRead] = useState<ReadItem[]>([]);
+  const [savedArticles, setSavedArticles] = useState<SavedItem[]>([]);
+  const [articlesThisMonth, setArticlesThisMonth] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [joinedDate, setJoinedDate] = useState("");
+  const [subscribed, setSubscribed] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (!isLoading && !isSignedIn) {
       navigate("/login");
     }
   }, [isLoading, isSignedIn, navigate]);
+
+  /* Load this user's real data */
+  useEffect(() => {
+    if (!user?.id) return;
+    let cancelled = false;
+
+    const load = async () => {
+      setDataLoading(true);
+
+      const monthStart = new Date();
+      monthStart.setDate(1);
+      monthStart.setHours(0, 0, 0, 0);
+
+      const [authRes, recentRes, datesRes, savedRes, nlRes] = await Promise.all([
+        supabase.auth.getUser(),
+        supabase
+          .from("reading_history")
+          .select("title, category, path, read_at")
+          .eq("user_id", user.id)
+          .order("read_at", { ascending: false })
+          .limit(30),
+        supabase
+          .from("reading_history")
+          .select("read_at")
+          .eq("user_id", user.id)
+          .order("read_at", { ascending: false })
+          .limit(1000),
+        supabase
+          .from("saved_articles")
+          .select("title, category, path, saved_at")
+          .eq("user_id", user.id)
+          .order("saved_at", { ascending: false }),
+        supabase
+          .from("newsletter_subscriptions")
+          .select("newsletter_key, subscribed")
+          .eq("user_id", user.id),
+      ]);
+
+      if (cancelled) return;
+
+      if (authRes.data?.user?.created_at) {
+        setJoinedDate(
+          new Date(authRes.data.user.created_at).toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+          })
+        );
+      }
+
+      // Continue reading: latest 5 distinct articles
+      if (recentRes.error) console.error("RECENT_FETCH_FAILED", recentRes.error);
+      const seen = new Set<string>();
+      const distinct: ReadItem[] = [];
+      for (const row of recentRes.data ?? []) {
+        const k = `${row.path}|${row.title}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        distinct.push(row as ReadItem);
+        if (distinct.length === 5) break;
+      }
+      setRecentlyRead(distinct);
+
+      // Stats: articles this month + streak
+      if (datesRes.error) console.error("READ_DATES_FETCH_FAILED", datesRes.error);
+      const dates = (datesRes.data ?? []).map((r) => r.read_at as string);
+      setArticlesThisMonth(dates.filter((d) => new Date(d) >= monthStart).length);
+      setStreak(calcStreak(dates));
+
+      if (savedRes.error) console.error("SAVED_FETCH_FAILED", savedRes.error);
+      setSavedArticles((savedRes.data ?? []) as SavedItem[]);
+
+      if (nlRes.error) console.error("NEWSLETTER_FETCH_FAILED", nlRes.error);
+      const map: Record<string, boolean> = {};
+      for (const row of nlRes.data ?? []) map[row.newsletter_key] = row.subscribed;
+      setSubscribed(map);
+
+      setDataLoading(false);
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id]);
+
+  const toggleNewsletter = async (key: string) => {
+    if (!user?.id) return;
+    const next = !subscribed[key];
+    setSubscribed((prev) => ({ ...prev, [key]: next })); // update screen immediately
+
+    const { error } = await supabase
+      .from("newsletter_subscriptions")
+      .upsert(
+        { user_id: user.id, newsletter_key: key, subscribed: next, updated_at: new Date().toISOString() },
+        { onConflict: "user_id,newsletter_key" }
+      );
+
+    if (error) {
+      console.error("NEWSLETTER_SAVE_FAILED", error);
+      setSubscribed((prev) => ({ ...prev, [key]: !next })); // put it back if saving failed
+    }
+  };
 
   if (isLoading) {
     return (
@@ -66,6 +204,13 @@ export function DashboardPage() {
   if (!user) return null;
 
   const isPremium = user.tier === "premium";
+
+  const stats = [
+    { icon: BookOpen, label: "Articles read", value: String(articlesThisMonth), sub: "this month" },
+    { icon: Bookmark, label: "Saved", value: String(savedArticles.length), sub: "in your library" },
+    { icon: Clock, label: "Reading streak", value: String(streak), sub: streak === 1 ? "day running" : "days running" },
+    { icon: Globe, label: "Edition", value: user.country || "Global", sub: "your region" },
+  ];
 
   return (
     <div className="min-h-screen bg-[#faf9f6]">
@@ -117,10 +262,18 @@ export function DashboardPage() {
               </div>
               <p className="text-sm text-gray-500 mt-1.5 flex items-center flex-wrap gap-x-3 gap-y-1">
                 <span>{user.email}</span>
-                <span className="text-gray-300">|</span>
-                <span>Member since {user.joinedDate}</span>
-                <span className="text-gray-300">|</span>
-                <span>Reading from {user.country}</span>
+                {joinedDate && (
+                  <>
+                    <span className="text-gray-300">|</span>
+                    <span>Member since {joinedDate}</span>
+                  </>
+                )}
+                {user.country && (
+                  <>
+                    <span className="text-gray-300">|</span>
+                    <span>Reading from {user.country}</span>
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -136,15 +289,12 @@ export function DashboardPage() {
 
         {/* Stat strip — one bordered strip, not four separate cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-200 border border-gray-200 rounded-sm mb-10 bg-white">
-          {[
-            { ...stats[0] },
-            { ...stats[1], value: String(user.savedArticles) },
-            { ...stats[2], value: `${user.readingStreak}` },
-            { ...stats[3] },
-          ].map(({ icon: Icon, label, value, sub }) => (
+          {stats.map(({ icon: Icon, label, value, sub }) => (
             <div key={label} className="p-5">
               <Icon size={15} className="text-gray-400 mb-3" />
-              <p className="text-3xl" style={{ fontFamily: "Georgia, serif" }}>{value}</p>
+              <p className="text-3xl" style={{ fontFamily: "Georgia, serif" }}>
+                {dataLoading && label !== "Edition" ? "–" : value}
+              </p>
               <p className="text-sm text-gray-700 mt-1">{label}</p>
               <p className="text-xs text-gray-400">{sub}</p>
             </div>
@@ -161,31 +311,39 @@ export function DashboardPage() {
                 <Clock size={14} className="text-gray-400" />
               </div>
               <div className="divide-y divide-gray-200 border-t border-gray-200 mt-3">
-                {recentlyRead.map((a) => (
-                  <Link
-                    key={a.title}
-                    to={a.path}
-                    className="flex items-center justify-between py-4 group relative pl-0 hover:pl-3 transition-all duration-200"
-                  >
-                    <span
-                      className="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{ backgroundColor: a.color }}
-                    />
-                    <div>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: a.color }} />
-                        {a.category}
-                      </span>
-                      <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {a.title}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                      <span className="text-xs text-gray-400 whitespace-nowrap">{a.time}</span>
-                      <ChevronRight size={13} className="text-gray-300 group-hover:text-red-600 transition-colors" />
-                    </div>
-                  </Link>
-                ))}
+                {!dataLoading && recentlyRead.length === 0 && (
+                  <p className="py-6 text-sm text-gray-500">
+                    Articles you read will show up here.
+                  </p>
+                )}
+                {recentlyRead.map((a) => {
+                  const color = colorFor(a.category);
+                  return (
+                    <Link
+                      key={`${a.path}|${a.title}`}
+                      to={a.path}
+                      className="flex items-center justify-between py-4 group relative pl-0 hover:pl-3 transition-all duration-200"
+                    >
+                      <span
+                        className="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ backgroundColor: color }}
+                      />
+                      <div>
+                        <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
+                          {a.category}
+                        </span>
+                        <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                          {a.title}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                        <span className="text-xs text-gray-400 whitespace-nowrap">{timeAgo(a.read_at)}</span>
+                        <ChevronRight size={13} className="text-gray-300 group-hover:text-red-600 transition-colors" />
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
@@ -196,14 +354,23 @@ export function DashboardPage() {
                 <Bookmark size={14} className="text-gray-400" />
               </div>
               <div className="divide-y divide-gray-200 border-t border-gray-200 mt-3">
+                {!dataLoading && savedArticles.length === 0 && (
+                  <p className="py-6 text-sm text-gray-500">
+                    You haven’t saved any articles yet.
+                  </p>
+                )}
                 {savedArticles.map((a) => (
-                  <div key={a.title} className="py-4 flex items-center justify-between">
+                  <Link
+                    key={`${a.path}|${a.title}`}
+                    to={a.path}
+                    className="py-4 flex items-center justify-between group"
+                  >
                     <div>
                       <span className="text-xs text-gray-500">{a.category}</span>
-                      <p className="text-[15px] mt-1 text-gray-900">{a.title}</p>
+                      <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">{a.title}</p>
                     </div>
-                    <span className="text-xs text-gray-400 flex-shrink-0 ml-4">{a.saved}</span>
-                  </div>
+                    <span className="text-xs text-gray-400 flex-shrink-0 ml-4">{shortDate(a.saved_at)}</span>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -286,23 +453,27 @@ export function DashboardPage() {
                 <Mail size={14} className="text-gray-400" />
               </div>
               <div className="flex flex-col divide-y divide-gray-100">
-                {newsletters.map((n) => (
-                  <div key={n.name} className="flex items-center justify-between py-2.5">
-                    <div>
-                      <p className="text-sm text-gray-900">{n.name}</p>
-                      <p className="text-xs text-gray-400">{n.freq}</p>
+                {NEWSLETTER_CATALOG.map((n) => {
+                  const isOn = !!subscribed[n.key];
+                  return (
+                    <div key={n.key} className="flex items-center justify-between py-2.5">
+                      <div>
+                        <p className="text-sm text-gray-900">{n.name}</p>
+                        <p className="text-xs text-gray-400">{n.freq}</p>
+                      </div>
+                      <button
+                        onClick={() => toggleNewsletter(n.key)}
+                        className={`text-xs px-3 py-1 rounded-sm transition-colors flex-shrink-0 ml-3 ${
+                          isOn
+                            ? "bg-black text-white hover:bg-gray-800"
+                            : "border border-gray-300 text-gray-600 hover:border-black hover:text-black"
+                        }`}
+                      >
+                        {isOn ? "Subscribed" : "Subscribe"}
+                      </button>
                     </div>
-                    <button
-                      className={`text-xs px-3 py-1 rounded-sm transition-colors flex-shrink-0 ml-3 ${
-                        n.subscribed
-                          ? "bg-black text-white hover:bg-gray-800"
-                          : "border border-gray-300 text-gray-600 hover:border-black hover:text-black"
-                      }`}
-                    >
-                      {n.subscribed ? "Subscribed" : "Subscribe"}
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
