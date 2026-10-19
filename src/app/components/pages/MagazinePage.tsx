@@ -9,6 +9,11 @@ import {
   Sparkles,
   X,
   ArrowRight,
+  Compass,
+  Users,
+  TrendingUp,
+  Clock,
+  Lock,
 } from "lucide-react";
 import { Link } from "react-router";
 import { useAuth } from "../../context/AuthContext";
@@ -23,6 +28,8 @@ import EyeslImg2 from "../../../imports/Eyesl02.png";
 import EddieImg from "../../../imports/Eddie.png";
 import TribeImg from "../../../imports/TribePay.png";
 import TribePayImg from "../../../imports/TribePay04.png";
+import ceoJensenHuang from "../../../imports/ceo-jensen-huang.png";
+import ptGlobalMarkets from "../../../imports/pt-global-markets.png";
 
 /* =========================================================
    SECTION HEADER
@@ -60,12 +67,14 @@ function SH({
 const Articles = [
   {
     id: 1,
-    month: "September 28, 2026",
+    month: "September 2026",
+    editionLabel: "SEPTEMBER 2026",
     headline:
       "The Global Business Issue 2026: The Forces Reshaping Business, Technology and the World Economy",
+    dek: "The forces transforming global business, technology and the world economy.",
     image: AxisImg,
     premium: false,
-    category: "Cover Story",
+    category: "Business",
     author: "The Pride Times Editorial Desk",
     readTime: "12 min read",
     content: `
@@ -128,8 +137,10 @@ The Pride Times September 2026 edition explores these developments through busin
   {
     id: 2,
     month: "August 2026",
+    editionLabel: "AUGUST 2026",
     headline:
       "Healthcare 2030: The Biotech Revolution Saving Millions of Lives",
+    dek: "The biotech revolution saving millions of lives.",
     image: ErikaImg,
     images: [ErikaImg, ErikaImg1, ErikaImg2],
     premium: false,
@@ -166,12 +177,14 @@ The combination of biotechnology, AI and advanced diagnostics could become one o
   {
     id: 3,
     month: "July 2026",
+    editionLabel: "JULY 2026",
     headline:
       "The Electric Future: How EVs Are Rewriting the Rules of Mobility",
+    dek: "How EVs are rewriting the rules of mobility.",
     image: EyeslImg1,
     images: [EyeslImg1, EyeslImg2],
     premium: false,
-    category: "Manufacturing",
+    category: "Technology",
     author: "The Pride Times Mobility Desk",
     readTime: "8 min read",
     content: `
@@ -208,8 +221,10 @@ Companies that adapt to these changes will operate in an industry fundamentally 
   {
     id: 4,
     month: "June 2026",
+    editionLabel: "JUNE 2026",
     headline:
       "Person of the Year: The Leaders Who Shaped the New Business Era",
+    dek: "The leaders who shaped the new business era.",
     image: EddieImg,
     images: [EddieImg, TribeImg, TribePayImg],
     premium: false,
@@ -251,14 +266,16 @@ const premiumContent = [
     duration: "2 hr read",
     type: "Interview",
     category: "Technology",
-    image: EddieImg,
+    badge: "INTERVIEW",
+    image: ceoJensenHuang,
   },
   {
     title:
-      "Pride Times Annual Investor Conference: All 40 Speaker Sessions",
+      "Pride Times Annual Investor Conference: Speaker Sessions",
     duration: "16 hrs",
     type: "Video",
     category: "Finance",
+    badge: "CONFERENCE",
     image: AxisImg,
   },
   {
@@ -267,6 +284,7 @@ const premiumContent = [
     duration: "90 min read",
     type: "Research",
     category: "India",
+    badge: "RESEARCH",
     image: TribeImg,
   },
   {
@@ -275,6 +293,7 @@ const premiumContent = [
     duration: "45 min read",
     type: "Markets",
     category: "Finance",
+    badge: "MARKET ANALYSIS",
     image: TribePayImg,
   },
 ];
@@ -289,30 +308,35 @@ const specialReports = [
     pages: 48,
     format: "PDF",
     category: "Technology",
+    premium: true,
   },
   {
     title: "World's 100 Best-Managed Companies",
     pages: 72,
     format: "PDF",
     category: "Rankings",
+    premium: false,
   },
   {
     title: "India Economic Outlook 2026–2030",
     pages: 56,
     format: "PDF",
     category: "Economy",
+    premium: true,
   },
   {
     title: "Clean Energy Investment Report Q1 2026",
     pages: 34,
     format: "PDF",
     category: "Energy",
+    premium: false,
   },
   {
     title: "Global Cybersecurity Threat Report 2026",
-    pages: 62,
+    pages: 61,
     format: "PDF",
     category: "Security",
+    premium: true,
   },
 ];
 
@@ -332,6 +356,8 @@ export function MagazinePage() {
 
   const [zoom, setZoom] = useState(1);
 
+  const [activeFilter, setActiveFilter] = useState("All Editions");
+
   const heroArticle = Articles[0];
 
   const openArticle = (article: any) => {
@@ -340,6 +366,11 @@ export function MagazinePage() {
     setZoom(1);
   };
 
+  const filteredIssues =
+    activeFilter === "All Editions"
+      ? Articles
+      : Articles.filter((issue) => issue.category === activeFilter);
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
 
@@ -347,468 +378,484 @@ export function MagazinePage() {
           MAGAZINE HEADER
          ===================================================== */}
 
-      <div className="mb-10 flex items-center gap-3 border-b-4 border-black pb-3">
-        <BookOpen size={22} />
+      <div className="mb-8 border-b-2 border-black pb-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <BookOpen size={16} className="text-gray-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-gray-500">
+                Digital &amp; Print
+              </span>
+            </div>
 
-        <div>
-          <span className="text-xs uppercase tracking-[0.25em] text-gray-500">
-            Digital &amp; Print
-          </span>
+            <h1 className="mt-1 font-serif text-3xl font-medium tracking-tight text-gray-900 md:text-4xl">
+              The Pride Times Magazine
+            </h1>
 
-          <h1 className="mt-0.5 font-serif text-3xl md:text-4xl">
-            The Pride Times Magazine
-          </h1>
+            <p className="mt-1 text-xs text-gray-500 md:text-sm">
+              In-depth stories, exclusive interviews and global insights for tomorrow's leaders.
+            </p>
+          </div>
+
+          <Link
+            to="/archive"
+            className="group flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:text-red-600"
+          >
+            <span>Explore Magazine</span>
+            <ArrowRight size={13} className="text-red-600 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
 
       {/* =====================================================
-          LATEST ISSUE
+          1. LATEST ISSUE
          ===================================================== */}
 
       <section className="mb-14">
 
-        <div className="mb-5 flex items-end justify-between">
-          <div>
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.25em] text-red-600">
-              September 2026 Edition
-            </p>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-red-600">
+            September 2026 Edition
+          </p>
 
-            <h2 className="font-serif text-2xl md:text-3xl">
-              Latest Issue
-            </h2>
-          </div>
-
-          <span className="hidden text-xs uppercase tracking-widest text-gray-400 sm:block">
+          <span className="hidden text-[11px] font-semibold uppercase tracking-widest text-gray-400 sm:block">
             The Global Business Issue
           </span>
         </div>
 
-        <div
-          onClick={() => openArticle(heroArticle)}
-          className="group cursor-pointer overflow-hidden border border-gray-900"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2">
+        {/* Hero Magazine Card */}
+        <div className="overflow-hidden border border-zinc-800 bg-[#0c0d0e] text-white">
+          <div className="grid grid-cols-1 items-stretch lg:grid-cols-12">
 
-            {/* COVER */}
-            <div className="relative overflow-hidden bg-black">
-
-              <span className="absolute left-3 top-3 z-10 bg-red-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                September 2026
-              </span>
-
-              <ImageWithFallback
-                src={heroArticle.image}
-                alt={heroArticle.headline}
-                className="h-72 w-full object-cover opacity-90 transition-transform duration-700 ease-out group-hover:scale-[1.04] md:h-[460px]"
-              />
-
-              <div className="absolute bottom-4 left-4">
-                <div className="border border-white/40 bg-black/70 px-3 py-2 backdrop-blur-sm">
-                  <p className="text-[9px] uppercase tracking-[0.2em] text-gray-300">
-                    THE PRIDE TIMES
-                  </p>
-
-                  <p className="mt-1 font-serif text-lg text-white">
-                    GLOBAL BUSINESS
-                  </p>
-                </div>
+            {/* Left: Magazine Cover */}
+            <div className="flex items-center justify-center p-6 sm:p-8 lg:col-span-5 lg:p-10">
+              <div
+                onClick={() => openArticle(heroArticle)}
+                className="group relative aspect-[3/4] w-full max-w-[320px] cursor-pointer overflow-hidden border border-zinc-700/60 shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 transition-transform duration-500 ease-out hover:scale-105 hover:shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
+              >
+                <ImageWithFallback
+                  src={heroArticle.image}
+                  alt={heroArticle.headline}
+                  className="h-full w-full object-cover"
+                />
               </div>
             </div>
 
-            {/* COVER STORY */}
-            <div className="flex flex-col justify-center bg-black p-8 text-white md:p-10">
-
-              <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.2em] text-red-500">
-                {heroArticle.category}
+            {/* Right: Issue Details */}
+            <div className="flex flex-col justify-center p-6 sm:p-8 lg:col-span-7 lg:p-10 lg:pl-4">
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-red-500">
+                COVER STORY
               </p>
 
-              <h2 className="mb-4 font-serif text-2xl leading-[1.15] md:text-[36px]">
-                {heroArticle.headline}
+              <h2 className="font-serif text-3xl leading-[1.15] text-white md:text-4xl">
+                The Global Business Issue 2026
               </h2>
 
-              <p className="mb-2 text-sm leading-6 text-gray-400">
-                The September 2026 edition examines the forces
-                transforming global business, technology, energy
-                and the world economy.
+              <p className="mt-2 text-base font-normal text-gray-300 md:text-lg">
+                The Forces Reshaping Business, Technology and the World Economy
               </p>
 
-              <p className="mb-7 text-sm text-gray-500">
-                {heroArticle.author} · {heroArticle.readTime}
+              <p className="mt-4 text-xs leading-6 text-gray-400 md:text-sm">
+                The September 2026 edition examines the forces transforming global business, technology, energy and the world economy, with exclusive interviews, data-driven insights and expert analysis.
               </p>
 
-              <div className="flex flex-wrap gap-3">
-
-                <span className="bg-red-600 px-5 py-2.5 text-sm font-semibold transition-colors group-hover:bg-red-700">
-                  Read Digital Edition →
+              <div className="mt-5 flex items-center gap-3 text-xs text-gray-400">
+                <span className="flex items-center gap-1.5 text-gray-300">
+                  <Clock size={13} className="text-red-500" />
+                  12 min read
                 </span>
+                <span>•</span>
+                <span>The Pride Times Editorial Desk</span>
+              </div>
 
-                <span className="border border-gray-600 px-5 py-2.5 text-sm font-semibold transition-colors group-hover:border-gray-400">
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => openArticle(heroArticle)}
+                  className="flex items-center gap-2 bg-red-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-700 cursor-pointer"
+                >
+                  Read Digital Edition
+                  <ArrowRight size={14} />
+                </button>
+
+                <button
+                  type="button"
+                  className="border border-zinc-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-zinc-400 hover:bg-white/5 cursor-pointer"
+                >
                   Subscribe for Print
-                </span>
-
+                </button>
               </div>
             </div>
 
           </div>
         </div>
+
+        {/* 3 Highlight Cards */}
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="flex items-start gap-3.5 border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-200/60">
+              <Compass size={18} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-900">Global Insights</h3>
+              <p className="mt-0.5 text-xs text-gray-500">
+                In-depth analysis from industry leaders
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3.5 border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-200/60">
+              <Users size={18} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-900">Exclusive Interviews</h3>
+              <p className="mt-0.5 text-xs text-gray-500">
+                Conversations with global CEOs
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3.5 border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-200/60">
+              <TrendingUp size={18} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-900">Future Trends</h3>
+              <p className="mt-0.5 text-xs text-gray-500">
+                Technology, markets and the next decade
+              </p>
+            </div>
+          </div>
+        </div>
+
       </section>
 
       {/* =====================================================
-          ALL EDITIONS
+          2. ALL EDITIONS
          ===================================================== */}
 
       <section className="mb-16">
 
-        <div className="mb-6">
-          <SH
-            title="All Editions"
-            icon={BookOpen}
-          />
+        <div className="mb-4 flex items-center justify-between border-b-2 border-black pb-2">
+          <div className="flex items-center gap-2">
+            <BookOpen size={16} className="text-gray-700" />
+            <h2 className="font-serif text-2xl font-normal text-gray-900 md:text-3xl">
+              All Editions
+            </h2>
+          </div>
 
-          <p className="max-w-2xl text-sm leading-6 text-gray-500">
-            Explore the regular Pride Times magazine editions.
-            These issues cover business, healthcare, manufacturing,
-            leadership and other major themes.
-          </p>
+          <button
+            type="button"
+            onClick={() => setActiveFilter("All Editions")}
+            className="group flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-red-600 transition-colors hover:text-red-700 cursor-pointer"
+          >
+            <span>View All Editions</span>
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+          </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-5 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+        <p className="mb-5 max-w-2xl text-xs text-gray-500 md:text-sm">
+          Explore our magazine archive featuring business, technology, healthcare, manufacturing, leadership and more.
+        </p>
 
-          {Articles.map((issue) => (
+        {/* Filter Row */}
+        <div className="mb-7 flex flex-wrap items-center gap-2">
+          {["All Editions", "Business", "Technology", "Healthcare", "Leadership"].map((filter) => {
+            const isActive = activeFilter === filter;
+            return (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => setActiveFilter(filter)}
+                className={`px-4 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
+                  isActive
+                    ? "bg-black text-white shadow-sm"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {filter}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 4-Column Grid */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {filteredIssues.map((issue) => (
             <div
               key={issue.id}
               className="group flex cursor-pointer flex-col"
               onClick={() => openArticle(issue)}
             >
-
-              <div className="relative mb-3 aspect-[3/4] overflow-hidden bg-gray-100 shadow-md transition-transform duration-300 group-hover:-translate-y-0.5">
-
+              {/* Magazine Cover */}
+              <div className="relative aspect-[3/4] overflow-hidden border border-gray-200 bg-gray-100 shadow-md transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03] group-hover:shadow-xl">
                 <ImageWithFallback
                   src={issue.image}
                   alt={issue.headline}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover"
                 />
-
-                <div className="absolute left-2 top-2 bg-black/75 px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-white">
-                  {issue.category}
-                </div>
-
               </div>
 
-              <p className="text-[11px] uppercase tracking-wider text-gray-500">
-                {issue.month}
+              {/* Information below cover */}
+              <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-red-600">
+                {issue.editionLabel}
               </p>
 
-              <p className="mt-1 line-clamp-3 font-serif text-sm leading-snug transition-colors group-hover:text-red-600">
+              <h3 className="mt-1 line-clamp-3 font-serif text-sm font-medium leading-snug text-gray-900 transition-colors group-hover:text-red-600">
                 {issue.headline}
-              </p>
+              </h3>
 
-              <div className="mt-1.5 flex items-center gap-1 text-red-600">
-
-                <span className="text-[9px] font-semibold uppercase tracking-wider">
+              <div className="mt-2.5 flex items-center gap-1 text-red-600">
+                <span className="text-[10px] font-bold uppercase tracking-wider">
                   Read Issue
                 </span>
-
-                <ChevronRight
+                <ArrowRight
                   size={12}
                   className="transition-transform group-hover:translate-x-1"
                 />
-
               </div>
             </div>
           ))}
-
         </div>
+
       </section>
 
       {/* =====================================================
-          SEPARATOR
-         ===================================================== */}
-
-      <div className="mb-16 border-t-4 border-black pt-2">
-        <div className="flex justify-between text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">
-          <span>The Pride Times</span>
-          <span>Premium Desk</span>
-        </div>
-      </div>
-
-      {/* =====================================================
-          PREMIUM CONTENT
+          3. PREMIUM EXCLUSIVE CONTENT
          ===================================================== */}
 
       <section className="mb-16">
 
-        <div className="mb-6 flex items-center gap-3 border-b-2 border-black pb-3">
+        <div className="mb-4 flex items-center justify-between border-b-2 border-black pb-2">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 ring-1 ring-amber-300">
+              <Crown size={14} className="text-amber-600" />
+            </div>
 
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
-            <Crown size={15} className="text-yellow-600" />
-          </div>
-
-          <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-yellow-600">
-              Members Only
-            </p>
-
-            <h2 className="font-serif text-2xl">
+            <h2 className="font-serif text-2xl font-normal text-gray-900 md:text-3xl">
               Premium Exclusive Content
             </h2>
           </div>
 
-          {!isPremium && (
-            <span className="ml-auto hidden bg-yellow-100 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-yellow-700 sm:block">
-              Premium Only
-            </span>
-          )}
-
+          <Link
+            to={isSignedIn ? "/dashboard" : "/login"}
+            className="group flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-red-600 transition-colors hover:text-red-700"
+          >
+            <span>View All Premium</span>
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
 
-        <div className="mb-7 max-w-3xl">
+        <p className="mb-6 max-w-3xl text-xs text-gray-500 md:text-sm">
+          Go beyond the headlines with exclusive interviews, research, conference sessions and market intelligence.
+        </p>
 
-          <p className="text-sm leading-7 text-gray-600">
-            Premium Exclusive Content is separate from the regular
-            magazine editions. It includes long-form interviews,
-            professional research, conference sessions and
-            in-depth market intelligence available to subscribers.
-          </p>
-
-        </div>
-
+        {/* 4 Equal-sized Cards */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
           {premiumContent.map((content) => (
-
             <div
               key={content.title}
-              className={`group relative overflow-hidden border border-gray-200 bg-black ${
-                !isPremium ? "cursor-pointer" : "cursor-pointer"
-              }`}
+              className="group relative cursor-pointer overflow-hidden border border-zinc-800 bg-[#0c0d0e] transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:border-zinc-700 hover:shadow-xl"
             >
-
               <div className="relative aspect-[4/5] overflow-hidden">
-
                 <ImageWithFallback
                   src={content.image}
                   alt={content.title}
-                  className="absolute inset-0 h-full w-full object-cover opacity-75 transition-transform duration-700 group-hover:scale-105"
+                  className="h-full w-full object-cover opacity-85"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20" />
 
-                <span className="absolute left-2.5 top-2.5 bg-black/70 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white">
-                  {content.category}
+                {/* Content Category Badge */}
+                <span className="absolute left-3 top-3 bg-amber-500 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-black">
+                  {content.badge}
                 </span>
 
-                <span className="absolute right-2.5 top-2.5 rounded-full bg-yellow-400 p-1.5">
-                  <Crown size={12} className="text-black" />
+                {/* Subtle Gold Lock Badge */}
+                <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border border-amber-400/50 bg-black/80 text-amber-400">
+                  <Lock size={11} />
                 </span>
 
-                <div className="absolute bottom-4 left-3 right-3">
-
-                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/15">
-                    {content.type === "Video" ? (
-                      <Play size={14} className="text-white" />
-                    ) : (
-                      <BookOpen size={14} className="text-white" />
-                    )}
-                  </div>
-
-                  <p className="line-clamp-3 text-sm font-semibold leading-snug text-white">
+                {/* Content Details */}
+                <div className="absolute bottom-3 left-3 right-3">
+                  <h3 className="line-clamp-3 font-serif text-sm font-medium leading-snug text-white">
                     {content.title}
-                  </p>
-
-                  <p className="mt-1 text-[11px] text-gray-300">
-                    {content.type} · {content.duration}
-                  </p>
-
-                </div>
-
-              </div>
-
-              {!isPremium && (
-                <div className="border-t border-white/10 bg-black px-3 py-2.5">
-
-                  <div className="flex items-center justify-between">
-
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-yellow-400">
-                      Premium Access
-                    </span>
-
-                    <ArrowRight
-                      size={12}
-                      className="text-gray-400"
-                    />
-
-                  </div>
-
-                </div>
-              )}
-
-            </div>
-
-          ))}
-
-        </div>
-
-        {/* Premium CTA */}
-
-        {!isPremium && (
-          <div className="mt-7 border border-yellow-200 bg-yellow-50 p-5">
-
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-
-              <div className="flex items-start gap-3">
-
-                <Crown
-                  size={20}
-                  className="mt-0.5 flex-shrink-0 text-yellow-600"
-                />
-
-                <div>
-
-                  <h3 className="font-serif text-lg">
-                    Unlock Premium Intelligence
                   </h3>
 
-                  <p className="mt-1 text-xs leading-5 text-gray-600">
-                    Access exclusive interviews, research,
-                    market analysis and premium conference content.
-                  </p>
-
+                  <div className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-300">
+                    <Clock size={11} className="text-amber-400" />
+                    <span>{content.duration}</span>
+                  </div>
                 </div>
-
               </div>
-
-              <Link
-                to={isSignedIn ? "/dashboard" : "/login"}
-                className="flex flex-shrink-0 items-center justify-center gap-2 bg-black px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-red-600"
-              >
-                Unlock Premium
-                <ArrowRight size={13} />
-              </Link>
-
             </div>
-
-          </div>
-        )}
-
-      </section>
-
-      {/* =====================================================
-          SPECIAL REPORTS
-         ===================================================== */}
-
-      <section className="mb-14">
-
-        <SH
-          title="Special Reports & Research"
-          icon={FileText}
-        />
-
-        <p className="mb-6 max-w-2xl text-sm leading-6 text-gray-500">
-          Research publications and downloadable reports covering
-          technology, markets, energy, cybersecurity and the
-          global economy.
-        </p>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-
-          {specialReports.map((report) => (
-
-            <div
-              key={report.title}
-              className="group flex cursor-pointer items-center justify-between border border-gray-200 p-4 transition-colors duration-300 hover:border-black"
-            >
-
-              <div className="flex items-start gap-3">
-
-                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center bg-gray-100">
-                  <FileText
-                    size={14}
-                    className="text-gray-400"
-                  />
-                </div>
-
-                <div>
-
-                  <p className="text-sm transition-colors group-hover:text-red-600">
-                    {report.title}
-                  </p>
-
-                  <p className="mt-0.5 text-xs text-gray-400">
-                    {report.pages} pages · {report.format} ·{" "}
-                    {report.category}
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="flex flex-shrink-0 items-center gap-2">
-
-                {!isPremium && (
-                  <Crown
-                    size={14}
-                    className="text-yellow-500"
-                  />
-                )}
-
-                <Download
-                  size={14}
-                  className="text-gray-400"
-                />
-
-              </div>
-
-            </div>
-
           ))}
+        </div>
 
+        {/* Unlock Premium Strip */}
+        <div className="mt-6 flex flex-col items-start justify-between gap-4 border border-amber-300/60 bg-[#fff9ea] p-4 sm:flex-row sm:items-center sm:px-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700">
+              <Crown size={16} />
+            </div>
+
+            <div>
+              <h3 className="font-serif text-sm font-bold text-gray-900 md:text-base">
+                Unlock Premium Intelligence
+              </h3>
+
+              <p className="text-xs text-gray-600">
+                Access exclusive content, research, data and expert interviews.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to={isSignedIn ? "/dashboard" : "/login"}
+            className="flex flex-shrink-0 items-center gap-1.5 bg-amber-500 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-amber-600"
+          >
+            Start Free 30-Day Trial
+            <ArrowRight size={13} />
+          </Link>
         </div>
 
       </section>
 
       {/* =====================================================
-          SUBSCRIBE CTA
+          4. SPECIAL REPORTS & RESEARCH
+         ===================================================== */}
+
+      <section className="mb-16">
+
+        <div className="mb-4 flex items-center justify-between border-b-2 border-black pb-2">
+          <div className="flex items-center gap-2">
+            <FileText size={16} className="text-gray-700" />
+            <h2 className="font-serif text-2xl font-normal text-gray-900 md:text-3xl">
+              Special Reports &amp; Research
+            </h2>
+          </div>
+
+          <Link
+            to="/archive"
+            className="group flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-red-600 transition-colors hover:text-red-700"
+          >
+            <span>View All Reports</span>
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+
+        <p className="mb-6 max-w-2xl text-xs text-gray-500 md:text-sm">
+          Downloadable reports covering technology, markets, energy, cybersecurity and the global economy.
+        </p>
+
+        {/* 2-Column Document Rows */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {specialReports.map((report) => (
+            <div
+              key={report.title}
+              className="group flex cursor-pointer items-center justify-between border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:border-gray-400 hover:shadow-md"
+            >
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded border border-red-200 bg-red-50 text-red-600">
+                  <FileText size={18} />
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-red-600">
+                    {report.title}
+                  </h3>
+
+                  <p className="mt-0.5 text-xs text-gray-500">
+                    {report.pages} pages • {report.format} • {report.category}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-shrink-0 items-center gap-3">
+                {report.premium && (
+                  <Crown size={15} className="text-amber-500" />
+                )}
+
+                <div className="flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors group-hover:bg-gray-100 group-hover:text-black">
+                  <Download size={15} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          5. PREMIUM SUBSCRIPTION BANNER
          ===================================================== */}
 
       {!isPremium && (
 
-        <section className="mb-10 overflow-hidden bg-gradient-to-br from-black to-zinc-900 p-8 text-center text-white md:p-10">
+        <section className="relative mb-12 overflow-hidden border border-zinc-800 bg-[#0c0d0e] p-8 text-white md:p-12">
 
-          <Sparkles
-            size={24}
-            className="mx-auto mb-3 text-yellow-400"
-          />
+          {/* Subtle Globe Texture on Right */}
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-full opacity-25 md:w-1/2">
+            <ImageWithFallback
+              src={ptGlobalMarkets}
+              alt="Global Markets"
+              className="h-full w-full object-cover object-right"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0c0d0e] via-[#0c0d0e]/60 to-transparent" />
+          </div>
 
-          <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.2em] text-red-500">
-            Premium Membership
-          </p>
+          <div className="relative z-10 mx-auto max-w-2xl text-center">
 
-          <h2 className="font-serif text-2xl md:text-3xl">
-            Unlock the Complete Pride Times Experience
-          </h2>
+            <div className="mb-2 flex items-center justify-center gap-1.5 text-amber-400">
+              <Crown size={16} />
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em]">
+                Premium Membership
+              </span>
+            </div>
 
-          <p className="mx-auto mb-6 mt-3 max-w-2xl text-sm leading-6 text-gray-400">
-            Get access to premium interviews, research reports,
-            exclusive conference sessions, market intelligence
-            and subscriber-only newsletters.
-          </p>
+            <h2 className="font-serif text-2xl font-normal text-white md:text-3xl">
+              Unlock the Complete Pride Times Experience
+            </h2>
 
-          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            {/* Feature Row */}
+            <div className="my-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-300">
+              <span className="flex items-center gap-1.5">
+                <Crown size={13} className="text-amber-400" />
+                Premium Interviews
+              </span>
 
-            <Link
-              to={isSignedIn ? "/dashboard" : "/login"}
-              className="bg-red-600 px-8 py-3 text-sm transition-colors hover:bg-red-700"
-            >
-              Start Free 30-Day Trial
-            </Link>
+              <span className="flex items-center gap-1.5">
+                <FileText size={13} className="text-amber-400" />
+                Exclusive Research
+              </span>
 
-            <button
-              type="button"
-              className="border border-gray-600 px-8 py-3 text-sm transition-colors hover:border-gray-400"
-            >
-              Compare Plans
-            </button>
+              <span className="flex items-center gap-1.5">
+                <Users size={13} className="text-amber-400" />
+                Conference Access
+              </span>
+
+              <span className="flex items-center gap-1.5">
+                <Sparkles size={13} className="text-amber-400" />
+                Subscriber Newsletters
+              </span>
+            </div>
+
+            <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+              <Link
+                to={isSignedIn ? "/dashboard" : "/login"}
+                className="bg-red-600 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-700"
+              >
+                Start Free 30-Day Trial
+              </Link>
+
+              <button
+                type="button"
+                className="border border-zinc-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:border-zinc-400 hover:bg-white/5 cursor-pointer"
+              >
+                Compare Plans
+              </button>
+            </div>
 
           </div>
 

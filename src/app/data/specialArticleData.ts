@@ -1162,28 +1162,39 @@ const cyberFeedArticles = cyberFeedSeeds.map(buildSectionArticle);
 
 const internationalSeeds: SectionArticleSeed[] = [
   {
-    id: "international-china-manufacturing-pmi-542",
+    id: "international-global-trade-asia-growth",
     section: "International Business",
     category: "INTERNATIONAL BUSINESS",
-    title: "China's Manufacturing Sector Rebounds: PMI Hits 4-Year High of 54.2",
-    dek: "Factory activity surges as domestic consumption recovers and export orders from Global South nations accelerate, defying Western trade barriers.",
-    image: "https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?w=1600&h=900&fit=crop",
+    title: "Global Trade Realigns as Asia Leads the Next Growth Wave",
+    dek: "Manufacturing investment, stronger domestic demand and new trade alliances are shifting global growth momentum toward Asia.",
   },
   {
     id: "international-india-third-largest-economy",
     section: "International Business",
     category: "INTERNATIONAL BUSINESS",
     title: "India Overtakes Germany as World's 3rd Largest Economy",
-    dek: "India's expanding domestic market, services economy and investment cycle are reshaping its position in the global economic landscape.",
-    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=900&h=600&fit=crop",
+    dek: "India's expanding domestic market and investment cycle are reshaping the global economic landscape.",
   },
   {
     id: "international-eu-us-digital-trade",
     section: "International Business",
     category: "INTERNATIONAL BUSINESS",
     title: "EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce",
-    dek: "A new digital-trade framework is expected to reduce friction for cross-border technology, services and data-driven commerce.",
-    image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=900&h=600&fit=crop",
+    dek: "New framework to reduce friction across technology, services and data flows.",
+  },
+  {
+    id: "international-shipping-costs-routes",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "Shipping Costs Decline as Key Trade Routes Stabilize",
+    dek: "Easing freight rates offer relief to global manufacturers after months of volatility.",
+  },
+  {
+    id: "international-china-manufacturing-pmi-542",
+    section: "International Business",
+    category: "INTERNATIONAL BUSINESS",
+    title: "China's Manufacturing Sector Rebounds: PMI Hits 4-Year High of 54.2",
+    dek: "Factory activity surges as domestic consumption recovers and export orders from Global South nations accelerate, defying Western trade barriers.",
   },
   {
     id: "international-nvidia-humanoid-robot-push",

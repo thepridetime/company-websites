@@ -19,6 +19,18 @@ import digitalEconomy from "../../../imports/pt-digital-economy.png";
 import supplyChainMap from "../../../imports/supply-chain-map.png";
 import coverStory from "../../../imports/Coverstory.png";
 
+import globalTradePortImg from "../../../imports/global-trade-port.jpg";
+import tajMahalImg from "../../../imports/taj-mahal-india.jpg";
+import euUsFlagsImg from "../../../imports/eu-us-trade-flags.jpg";
+import shippingCostsImg from "../../../imports/shipping-costs-route.jpg";
+import euParliamentImg from "../../../imports/eu-parliament-flags.jpg";
+import europeIndustryImg from "../../../imports/europe-industry-clean.jpg";
+import ukMobilityImg from "../../../imports/uk-youth-mobility.jpg";
+import italyParliamentImg from "../../../imports/italy-parliament.jpg";
+import aseanSupplyChainImg from "../../../imports/asean-supply-chain.jpg";
+
+import { MarketSnapshot } from "../innovation/MarketSnapshot";
+
 import {
   specialArticles,
   specialArticlePath,
@@ -394,286 +406,377 @@ export function InternationalNewsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
           {/* =================================================
-              PAGE TITLE
+              PAGE HEADER (PRIDE TIMES EDITORIAL BRANDING)
           ================================================= */}
+          <header className="border-t-[3px] border-red-600 pt-4 mb-7 sm:mb-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
+              <div>
+                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight tracking-normal text-gray-900">
+                  International Business
+                </h1>
+                <p className="mt-1.5 text-[11px] md:text-[13px] text-gray-500 font-normal">
+                  Global markets, trade, economies and policy shaping the world.
+                </p>
+              </div>
 
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-gray-300 pb-4">
-            <div>
-              <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
-                The Pride Times
-              </span>
-
-              <h1 className="font-serif text-3xl font-bold tracking-tight text-gray-950 md:text-4xl">
-                International News
-              </h1>
-
-              <p className="mt-1.5 max-w-2xl text-[12px] leading-[1.6] text-gray-500">
-                Global developments, diplomacy, trade and the events shaping
-                economies in Europe, Asia-Pacific, the Americas, the Middle
-                East and Africa.
-              </p>
+              <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-gray-400 font-semibold pb-1">
+                TRADE · ECONOMY · POLICY · MARKETS
+              </div>
             </div>
-
-            <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">
-              <Globe2 size={11} />
-              Global Desk · {allCards.length} stories
-            </span>
-          </div>
-
-          <PrideTimesAd slot="5373718974" />
+          </header>
 
           {/* =================================================
-              TOP STORIES / NEWSROOM LEAD
+              TOP STORIES / NEWSROOM THREE-COLUMN LAYOUT
           ================================================= */}
+          <section className="pb-10 mb-10 border-b border-gray-200">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.12fr_1.42fr_1fr] gap-6 lg:gap-7 items-stretch">
+              {/* =============================================
+                  COLUMN 1: FEATURED INTERNATIONAL STORY
+              ============================================= */}
+              <div className="flex flex-col h-full min-h-[580px] lg:min-h-[660px]">
+                <Link
+                  to="/special-article/international-global-trade-asia-growth"
+                  className="group relative flex flex-col justify-end overflow-hidden rounded-none border border-gray-200/80 bg-black h-full"
+                >
+                  <ImageWithFallback
+                    src={globalTradePortImg}
+                    alt="Global Trade Realigns as Asia Leads the Next Growth Wave"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
 
-          <section className="pb-8 mb-8 border-b border-gray-300">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
-              {/* LEAD STORY */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
 
-              <Link
-                to={leadStory.path}
-                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
-              >
-                <ImageWithFallback
-                  src={leadStory.image}
-                  alt={leadStory.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-
-                <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                  {leadStory.label}
-                  {leadStory.location ? ` | ${leadStory.location}` : ""}
-                </span>
-
-                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                  <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
-                    {leadStory.title}
-                  </h2>
-
-                  <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
-                    {leadStory.lede}
-                  </p>
-
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
-                    Read Full Story
-                    <ArrowRight size={12} />
+                  <span className="absolute top-4 left-4 bg-red-600 text-white px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase rounded-none z-10">
+                    INTERNATIONAL BUSINESS | GLOBAL TRADE
                   </span>
-                </div>
-              </Link>
 
-              {/* MAJOR COVERAGE */}
+                  <div className="relative z-10 p-5 sm:p-6">
+                    <h2 className="font-serif text-2xl sm:text-[26px] lg:text-[28px] xl:text-[30px] font-bold leading-[1.14] text-white group-hover:text-red-400 transition-colors">
+                      Global Trade Realigns as Asia Leads the Next Growth Wave
+                    </h2>
 
-              <div className="min-w-0">
-                {majorStories[0] && (
-                  <div className="mb-4">
-                    <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.15em] mb-2">
-                      {majorStories[0].label}
-                      {majorStories[0].location
-                        ? ` | ${majorStories[0].location}`
-                        : ""}
+                    <p className="text-[12px] sm:text-[12.5px] text-gray-200 leading-[1.55] mt-2.5 line-clamp-3">
+                      Manufacturing investment, stronger domestic demand and new trade alliances are shifting global growth momentum toward Asia.
+                    </p>
+
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wider mt-4 border-b border-white/60 pb-0.5 group-hover:border-white transition-colors">
+                      READ FULL STORY →
                     </span>
+                  </div>
+                </Link>
+              </div>
 
-                    <Link to={majorStories[0].path} className="group block">
-                      <div className="overflow-hidden rounded-lg">
-                        <ImageWithFallback
-                          src={majorStories[0].image}
-                          alt={majorStories[0].title}
-                          className="w-full h-[220px] md:h-[250px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
-                        />
-                      </div>
+              {/* =============================================
+                  COLUMN 2: MAIN COVERAGE + MARKET SNAPSHOT
+              ============================================= */}
+              <div className="flex flex-col justify-between min-w-0 lg:border-x lg:border-gray-200 lg:px-6">
+                <div>
+                  {/* SECTION HEADER */}
+                  <div className="flex items-center justify-between pb-2 mb-3.5 border-b border-gray-200">
+                    <h2 className="text-[11.5px] sm:text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+                      Top International Business Stories
+                    </h2>
 
-                      <h2 className="font-serif text-xl md:text-2xl font-bold leading-[1.15] mt-3 text-gray-950 group-hover:text-red-600 transition-colors">
-                        {majorStories[0].title}
-                      </h2>
-
-                      <p className="text-[12px] text-gray-600 mt-2 leading-[1.6] line-clamp-3">
-                        {majorStories[0].lede}
-                      </p>
+                    <Link
+                      to="/world"
+                      className="text-[9.5px] font-bold uppercase tracking-wider text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                    >
+                      <span>View More</span>
+                      <ArrowRight size={10} />
                     </Link>
                   </div>
-                )}
 
-                {/* SECOND MAJOR STORY */}
-
-                {majorStories[1] && (
+                  {/* STORY 1 (TAJ MAHAL) */}
                   <Link
-                    to={majorStories[1].path}
-                    className="group flex gap-3 pt-4 border-t border-gray-200"
+                    to="/special-article/international-india-third-largest-economy"
+                    className="group flex gap-3.5 sm:gap-4 items-start"
                   >
-                    <div className="shrink-0 w-[105px] h-[75px] overflow-hidden rounded-md">
+                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
                       <ImageWithFallback
-                        src={majorStories[1].image}
-                        alt={majorStories[1].title}
-                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+                        src={tajMahalImg}
+                        alt="India Overtakes Germany as World's 3rd Largest Economy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <span className="text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                        {majorStories[1].label}
+                      <span className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.14em] text-red-600">
+                        ECONOMY | INDIA
                       </span>
 
-                      <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
-                        {majorStories[1].title}
+                      <h3 className="font-serif text-[15px] sm:text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
+                        India Overtakes Germany as World's 3rd Largest Economy
                       </h3>
 
-                      <p className="mt-1 text-[11px] leading-[1.45] text-gray-500 line-clamp-2">
-                        {majorStories[1].lede}
+                      <p className="text-[11.5px] sm:text-[12px] text-gray-500 leading-[1.45] line-clamp-2 mt-1">
+                        India's expanding domestic market and investment cycle are reshaping the global economic landscape.
                       </p>
 
-                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
+                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1">
                         <Clock size={9} />
-                        {majorStories[1].when}
+                        7 October 2026 · 4 min read
                       </span>
                     </div>
                   </Link>
-                )}
 
-                {/* MARKET CONTEXT */}
+                  {/* DIVIDER */}
+                  <div className="border-t border-gray-200/80 my-3" />
 
-                <div className="mt-5 border-t border-gray-200 pt-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
-                      Market Snapshot
-                    </h3>
-
-                    <div className="flex gap-3">
-                      {(["Indices", "Crypto"] as const).map((tab) => (
-                        <button
-                          key={tab}
-                          type="button"
-                          onClick={() => setActiveMarketTab(tab)}
-                          className={`text-[9px] font-semibold uppercase tracking-wide ${
-                            activeMarketTab === tab
-                              ? "text-red-600"
-                              : "text-gray-400 hover:text-gray-700"
-                          }`}
-                        >
-                          {tab}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="divide-y divide-gray-100">
-                    {(marketSnapshotData[activeMarketTab] || [])
-                      .slice(0, 4)
-                      .map((market) => (
-                        <div
-                          key={market.symbol}
-                          className="py-2 flex items-center justify-between"
-                        >
-                          <span className="text-[10px] font-semibold text-gray-800">
-                            {market.symbol}
-                          </span>
-
-                          <div className="flex items-center gap-3">
-                            <span className="text-[10px] text-gray-500 tabular-nums">
-                              {market.value}
-                            </span>
-
-                            <ChangeChip
-                              change={market.change}
-                              up={market.up}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-
+                  {/* STORY 2 (EU-US FLAGS) */}
                   <Link
-                    to="/markets"
-                    className="mt-2 text-[9px] font-bold text-red-600 flex items-center gap-1 uppercase tracking-wide w-fit"
+                    to="/special-article/international-eu-us-digital-trade"
+                    className="group flex gap-3.5 sm:gap-4 items-start"
                   >
-                    View All Markets
-                    <ArrowRight size={9} />
+                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                      <ImageWithFallback
+                        src={euUsFlagsImg}
+                        alt="EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.14em] text-red-600">
+                        TRADE | EU-US
+                      </span>
+
+                      <h3 className="font-serif text-[15px] sm:text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
+                        EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce
+                      </h3>
+
+                      <p className="text-[11.5px] sm:text-[12px] text-gray-500 leading-[1.45] line-clamp-2 mt-1">
+                        New framework to reduce friction across technology, services and data flows.
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1">
+                        <Clock size={9} />
+                        7 October 2026 · 3 min read
+                      </span>
+                    </div>
                   </Link>
+
+                  {/* DIVIDER */}
+                  <div className="border-t border-gray-200/80 my-3" />
+
+                  {/* STORY 3 (SHIPPING COSTS) */}
+                  <Link
+                    to="/special-article/international-shipping-costs-routes"
+                    className="group flex gap-3.5 sm:gap-4 items-start"
+                  >
+                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                      <ImageWithFallback
+                        src={shippingCostsImg}
+                        alt="Shipping Costs Decline as Key Trade Routes Stabilize"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.14em] text-red-600">
+                        SUPPLY CHAIN | GLOBAL
+                      </span>
+
+                      <h3 className="font-serif text-[15px] sm:text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
+                        Shipping Costs Decline as Key Trade Routes Stabilize
+                      </h3>
+
+                      <p className="text-[11.5px] sm:text-[12px] text-gray-500 leading-[1.45] line-clamp-2 mt-1">
+                        Easing freight rates offer relief to global manufacturers after months of volatility.
+                      </p>
+
+                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1">
+                        <Clock size={9} />
+                        7 October 2026 · 3 min read
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+
+                {/* ENHANCED MARKET SNAPSHOT */}
+                <div className="mt-4 pt-3 border-t border-gray-200">
+                  <MarketSnapshot tabs={["Indices", "Commodities", "Currencies"]} />
                 </div>
               </div>
 
-              {/* RIGHT NEWSROOM COLUMN */}
-
-              <aside className="min-w-0">
+              {/* =============================================
+                  COLUMN 3: EDITOR'S PICK + LATEST NEWS
+              ============================================= */}
+              <aside className="min-w-0 flex flex-col justify-between">
                 {/* EDITOR'S PICK */}
+                <div>
+                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-gray-200">
+                    <h2 className="font-serif text-[16px] sm:text-[17px] font-bold text-gray-950">
+                      Editor's Pick
+                    </h2>
 
-                {editorsPick && (
-                  <div className="pb-5 border-b border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <h2 className="font-serif text-lg font-bold">
-                        Editor's Pick
-                      </h2>
-
-                      <Link
-                        to="/world"
-                        className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium hover:border-gray-500 transition-colors"
-                      >
-                        Explore More
-                      </Link>
-                    </div>
-
-                    <Link to={editorsPick.path} className="group block">
-                      <div className="relative overflow-hidden rounded-lg">
-                        <ImageWithFallback
-                          src={editorsPick.image}
-                          alt={editorsPick.title}
-                          className="w-full h-[175px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
-                        />
-                      </div>
-
-                      <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.14em] mt-2.5">
-                        {editorsPick.label}
-                      </span>
-
-                      <h3 className="text-[13px] font-semibold leading-[1.4] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {editorsPick.title}
-                      </h3>
-
-                      <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-3">
-                        {editorsPick.lede}
-                      </p>
+                    <Link
+                      to="/world"
+                      className="text-[9.5px] font-bold uppercase tracking-wider text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                    >
+                      <span>Explore More</span>
+                      <ArrowRight size={10} />
                     </Link>
                   </div>
-                )}
 
-                {/* LATEST NEWS STREAM (sidebar headlines) */}
+                  <Link
+                    to="/special-article/international-europe-fiscal-buffer"
+                    className="group block"
+                  >
+                    <div className="w-full h-[160px] sm:h-[172px] overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                      <ImageWithFallback
+                        src={euParliamentImg}
+                        alt="EU finance ministers agree on joint fiscal buffer"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
 
-                <div className="pt-5">
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                    <span className="block text-[9px] sm:text-[9.5px] font-bold text-red-600 uppercase tracking-[0.14em] mt-2.5">
+                      EUROPE
+                    </span>
+
+                    <h3 className="font-serif text-[14px] sm:text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:text-red-600 transition-colors mt-1">
+                      EU finance ministers agree on joint fiscal buffer to shield eurozone from future energy-price shocks.
+                    </h3>
+
+                    <p className="mt-1 text-[11px] sm:text-[11.5px] leading-[1.45] text-gray-500 line-clamp-3">
+                      The mechanism aims to reduce the impact of future energy-price volatility and strengthen economic resilience across the bloc.
+                    </p>
+
+                    <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1.5">
+                      <Clock size={9} />
+                      7 October 2026 · 3 min read
+                    </span>
+                  </Link>
+                </div>
+
+                {/* LATEST NEWS */}
+                <div className="mt-4 pt-3.5 border-t border-gray-200">
+                  <div className="flex items-center justify-between pb-1.5 mb-2.5 border-b border-gray-200">
                     <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
                       Latest News
                     </h2>
 
-                    <span className="text-[8px] uppercase tracking-wide text-gray-400">
-                      Global Desk
-                    </span>
+                    <Link
+                      to="/all-news"
+                      className="text-[9px] font-bold uppercase tracking-wider text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                    >
+                      <span>View All</span>
+                      <ArrowRight size={9} />
+                    </Link>
                   </div>
 
                   <div className="divide-y divide-gray-100">
-                    {sidebarStories.map((item) => (
-                      <Link
-                        key={item.id}
-                        to={item.path}
-                        className="group block py-3"
-                      >
-                        <div className="flex gap-3">
-                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
-                            {item.location ?? item.label}
-                          </span>
+                    {/* ITEM 1 */}
+                    <Link
+                      to="/special-article/international-france-germany-industrial-policy"
+                      className="group flex gap-2.5 py-2.5 first:pt-1 last:pb-0 items-start"
+                    >
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                        <ImageWithFallback
+                          src={europeIndustryImg}
+                          alt="France and Germany industrial policy"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
 
-                          <div className="min-w-0">
-                            <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
-                              {item.title}
-                            </span>
+                      <div className="min-w-0 flex-1">
+                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
+                          EUROPE
+                        </span>
 
-                            <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
-                              {item.lede}
-                            </span>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
+                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
+                          France and Germany unveil joint industrial policy to counter Chinese overcapacity.
+                        </h4>
+
+                        <span className="block text-[9.5px] text-gray-400 mt-1">
+                          7 October 2026 · 3 min read
+                        </span>
+                      </div>
+                    </Link>
+
+                    {/* ITEM 2 */}
+                    <Link
+                      to="/special-article/international-uk-eu-youth-mobility"
+                      className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
+                    >
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                        <ImageWithFallback
+                          src={ukMobilityImg}
+                          alt="UK-EU youth mobility scheme"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
+                          UK & EUROPE
+                        </span>
+
+                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
+                          UK-EU youth mobility scheme enters final negotiation stage.
+                        </h4>
+
+                        <span className="block text-[9.5px] text-gray-400 mt-1">
+                          7 October 2026 · 3 min read
+                        </span>
+                      </div>
+                    </Link>
+
+                    {/* ITEM 3 */}
+                    <Link
+                      to="/special-article/international-italy-no-confidence"
+                      className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
+                    >
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                        <ImageWithFallback
+                          src={italyParliamentImg}
+                          alt="Italy government survives vote"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
+                          ITALY
+                        </span>
+
+                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
+                          Italy's government survives no-confidence vote.
+                        </h4>
+
+                        <span className="block text-[9.5px] text-gray-400 mt-1">
+                          7 October 2026 · 2 min read
+                        </span>
+                      </div>
+                    </Link>
+
+                    {/* ITEM 4 */}
+                    <Link
+                      to="/special-article/international-asean-supply-chain-pact"
+                      className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
+                    >
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                        <ImageWithFallback
+                          src={aseanSupplyChainImg}
+                          alt="ASEAN supply-chain resilience pact"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
+                          ASIA-PACIFIC
+                        </span>
+
+                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
+                          ASEAN bloc finalizes regional supply-chain resilience pact.
+                        </h4>
+
+                        <span className="block text-[9.5px] text-gray-400 mt-1">
+                          7 October 2026 · 3 min read
+                        </span>
+                      </div>
+                    </Link>
                   </div>
                 </div>
               </aside>

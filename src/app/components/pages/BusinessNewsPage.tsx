@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import {
   ArrowRight,
+  Bookmark,
   Clock,
   MapPin,
   TrendingDown,
@@ -12,6 +13,7 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { getQuotes } from "../../../services/marketApi";
 
 import MagazineImg from "../../../imports/pt30image.png";
+import businessNyseTrading from "../../../imports/business-nyse-trading.jpg";
 import businessStockDrop from "../../../imports/business-stock-drop.png";
 import businessAviationJet from "../../../imports/business-aviation-jet.png";
 import businessJioDigital from "../../../imports/business-jio-digital.png";
@@ -20,6 +22,15 @@ import energyTanks from "../../../imports/energy-tanks.png";
 import warehouseRobotics from "../../../imports/warehouse-robotics.png";
 import dataCentre from "../../../imports/data-centre.png";
 import supplyChainMap from "../../../imports/supply-chain-map.png";
+import img_FIN3 from "../../../imports/FIN3.png";
+import img_FIN4 from "../../../imports/FIN4.png";
+import img_FIN5 from "../../../imports/FIN5.png";
+import microsoftDatacenterAi from "../../../imports/microsoft-datacenter-ai.jpg";
+import hsbcBankBuilding from "../../../imports/hsbc-bank-building.jpg";
+import {
+  defaultMarketSnapshot,
+  type MarketIndexItem,
+} from "../../data/innovationData";
 
 import {
   hero,
@@ -260,15 +271,37 @@ const allCards: NewsCard[] = Array.from(
 
 const leadStory = octCards[0] ?? allCards[0];
 const majorStories = [octCards[1] ?? allCards[1], octCards[2] ?? allCards[2]];
-const editorsPick = octCards[3] ?? allCards[3];
+const editorsPick: NewsCard = {
+  id: "deals-and-moves-roundup",
+  title: "Deals and Moves Roundup",
+  lede: "Transactions and partnerships reported in the past few weeks, mostly via Semiconductor Engineering's 2 October review.",
+  image: img_FIN4,
+  label: "CORPORATE",
+  tab: "Corporate & Startups",
+  when: "7 October 2026",
+  readTime: "1 min read",
+  path: "/article/deals-and-moves-roundup",
+};
+
+const latestNewsStories: NewsCard[] = maCards.slice(0, 5).map((card) => {
+  if (card.id === "global-ma-record-pace-2026") {
+    return {
+      ...card,
+      title: "Global M&A hits a record pace in 2026 as dealmaking tops $2.8 trillion",
+      readTime: "3 min read",
+    };
+  }
+  return {
+    ...card,
+    readTime: "3 min read",
+  };
+});
 
 const featuredIds = new Set(
   [leadStory, ...majorStories, editorsPick].map((card) => card.id)
 );
 
-const sidebarStories = allCards
-  .filter((card) => !featuredIds.has(card.id))
-  .slice(0, 6);
+const sidebarStories = latestNewsStories;
 
 /* Filter tabs: department order from the digest first, then any
    other tab that appears in the data. */
@@ -379,13 +412,87 @@ function SectionHeader({
   );
 }
 
+function MarketSparkline({
+  points,
+  up,
+}: {
+  points?: number[];
+  up: boolean;
+}) {
+  if (!points || points.length === 0) return null;
+
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  const range = max - min || 1;
+  const width = 64;
+  const height = 18;
+
+  const coords = points.map((p, i) => {
+    const x = (i / (points.length - 1)) * width;
+    const y = height - ((p - min) / range) * (height - 4) - 2;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+
+  const pathD = `M ${coords.join(" L ")}`;
+  const strokeColor = up ? "#16a34a" : "#dc2626";
+
+  return (
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      className="w-14 sm:w-16 h-4 overflow-visible"
+      preserveAspectRatio="none"
+    >
+      <path
+        d={pathD}
+        fill="none"
+        stroke={strokeColor}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function EarningsMiniSparkline({ up }: { up: boolean }) {
+  return (
+    <svg className="w-10 sm:w-12 h-3.5 overflow-visible shrink-0" viewBox="0 0 48 14" fill="none">
+      <path
+        d={up ? "M 2 11 Q 14 10, 24 7 T 46 2" : "M 2 3 Q 14 4, 24 7 T 46 12"}
+        stroke={up ? "#16a34a" : "#dc2626"}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function MiniAreaSparkline({ up }: { up: boolean }) {
+  const stroke = up ? "#16a34a" : "#dc2626";
+  const fill = up ? "rgba(22, 163, 74, 0.14)" : "rgba(220, 38, 38, 0.14)";
+  const pathD = up
+    ? "M 0 13 C 14 12, 24 8, 42 7 C 56 6, 68 3, 80 1 L 80 16 L 0 16 Z"
+    : "M 0 2 C 14 3, 24 7, 42 8 C 56 9, 68 12, 80 14 L 80 16 L 0 16 Z";
+  const lineD = up
+    ? "M 0 13 C 14 12, 24 8, 42 7 C 56 6, 68 3, 80 1"
+    : "M 0 2 C 14 3, 24 7, 42 8 C 56 9, 68 12, 80 14";
+
+  return (
+    <svg className="w-full h-full overflow-hidden" viewBox="0 0 80 16" preserveAspectRatio="none">
+      <path d={pathD} fill={fill} />
+      <path d={lineD} stroke={stroke} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /* =========================================================
    BUSINESS NEWS PAGE
 ========================================================= */
 
 export function BusinessNewsPage() {
   const [activeMarketTab, setActiveMarketTab] =
-    useState<"Indices" | "Crypto">("Indices");
+    useState<"Indices" | "Commodities" | "Crypto">("Indices");
 
   const [activeNewsTab, setActiveNewsTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -396,6 +503,7 @@ export function BusinessNewsPage() {
     Record<string, MarketItem[]>
   >({
     Indices: [],
+    Commodities: [],
     Crypto: [],
   });
 
@@ -431,6 +539,24 @@ export function BusinessNewsPage() {
     loadMarketData();
   }, []);
 
+  const currentMarketItems = useMemo(() => {
+    const fallbackList = defaultMarketSnapshot[activeMarketTab] || [];
+    const liveList = marketSnapshotData[activeMarketTab] || [];
+    if (!liveList || liveList.length === 0) return fallbackList;
+    return fallbackList.map((item, idx) => {
+      const live = liveList.find(
+        (l) => l.symbol.toLowerCase() === item.symbol.toLowerCase()
+      ) ?? liveList[idx];
+      if (!live) return item;
+      return {
+        ...item,
+        value: String(live.value || item.value),
+        change: live.change || item.change,
+        up: typeof live.up === "boolean" ? live.up : item.up,
+      };
+    });
+  }, [activeMarketTab, marketSnapshotData]);
+
   /* =======================================================
      LATEST NEWS FILTERING
   ======================================================= */
@@ -465,31 +591,7 @@ export function BusinessNewsPage() {
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
-          {/* =================================================
-              PAGE TITLE
-          ================================================= */}
 
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-gray-300 pb-4">
-            <div>
-              <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
-                The Pride Times
-              </span>
-
-              <h1 className="font-serif text-3xl font-bold tracking-tight text-gray-950 md:text-4xl">
-                Business News
-              </h1>
-
-              <p className="mt-1.5 max-w-2xl text-[12px] leading-[1.6] text-gray-500">
-                Corporate strategy, earnings, deals, the startup economy and
-                the decisions shaping companies and markets around the world.
-              </p>
-            </div>
-
-            <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">
-              <TrendingUp size={11} />
-              Business Desk · {allCards.length} stories
-            </span>
-          </div>
 
           <PrideTimesAd slot="5373718974" />
 
@@ -498,193 +600,498 @@ export function BusinessNewsPage() {
           ================================================= */}
 
           <section className="pb-8 mb-8 border-b border-gray-300">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr_0.85fr] gap-5 lg:gap-6">
-              {/* LEAD STORY */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.04fr_1fr] gap-5 lg:gap-6 items-stretch">
+              {/* =======================================================
+                  1. LEFT SECTION — FEATURED BUSINESS STORY
+              ======================================================= */}
+              <div className="min-w-0 flex flex-col">
+                <Link
+                  to={leadStory.path}
+                  className="group relative flex flex-col justify-end overflow-hidden rounded-none border border-gray-200/90 bg-gray-950 h-full min-h-[500px] lg:min-h-[540px] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                >
+                  <ImageWithFallback
+                    src={businessNyseTrading}
+                    alt={leadStory.title}
+                    className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
 
-              <Link
-                to={leadStory.path}
-                className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
-              >
-                <ImageWithFallback
-                  src={leadStory.image}
-                  alt={leadStory.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                />
+                  {/* Subtle black gradient so the headline remains crisp & readable */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent pointer-events-none" />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+                  {/* Red category label at top-left with consistent padding */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="bg-red-600 text-white px-3 py-1 text-[9.5px] font-bold tracking-[0.16em] uppercase rounded-none shadow-sm">
+                      {leadStory.label}
+                      {leadStory.location ? ` | ${leadStory.location}` : ""}
+                    </span>
+                  </div>
 
-                <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                  {leadStory.label}
-                  {leadStory.location ? ` | ${leadStory.location}` : ""}
-                </span>
+                  {/* Headline, dek and read link at bottom */}
+                  <div className="relative z-10 p-5 sm:p-6 lg:p-7">
+                    <div className="w-8 h-[3px] bg-red-600 mb-2.5" />
+                    <h2 className="font-serif text-2xl sm:text-[28px] lg:text-[32px] font-bold leading-[1.12] text-white tracking-normal group-hover:text-red-100 transition-colors">
+                      {leadStory.title}
+                    </h2>
 
-                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                  <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
-                    {leadStory.title}
-                  </h2>
+                    <p className="text-[12px] sm:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
+                      {leadStory.lede}
+                    </p>
 
-                  <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
-                    {leadStory.lede}
-                  </p>
+                    <div className="mt-4 pt-1">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wider border-b border-white/60 pb-1 group-hover:text-red-400 group-hover:border-red-400 transition-colors">
+                        <span>Read Full Story</span>
+                        <ArrowRight size={12} />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
 
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
-                    Read Full Story
-                    <ArrowRight size={12} />
-                  </span>
-                </div>
-              </Link>
+              {/* =======================================================
+                  2. MIDDLE SECTION — TOP BUSINESS STORIES, CORPORATE MOVES, EARNINGS WATCH & MARKET SNAPSHOT
+              ======================================================= */}
+              <div className="min-w-0 lg:border-x lg:border-gray-200/80 lg:px-5 xl:px-6 flex flex-col justify-between">
+                <div>
+                  {/* A. TOP BUSINESS STORIES */}
+                  <div className="flex items-center justify-between border-b-2 border-black pb-1.5 mb-3">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+                      Top Business Stories
+                    </h2>
+                    <Link
+                      to="/supply-chain"
+                      className="text-[9.5px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 uppercase tracking-wider"
+                    >
+                      <span>View More</span>
+                      <ArrowRight size={10} />
+                    </Link>
+                  </div>
 
-              {/* MAJOR COVERAGE */}
-
-              <div className="min-w-0">
-                <div className="mb-4">
-                  <span className="block text-[9px] font-bold text-red-600 uppercase tracking-[0.15em] mb-2">
-                    {majorStories[0].label}
-                    {majorStories[0].location
-                      ? ` | ${majorStories[0].location}`
-                      : ""}
-                  </span>
-
-                  <Link to={majorStories[0].path} className="group block">
-                    <div className="overflow-hidden rounded-lg">
+                  {/* Story 1: Tariffs and the End of EV Credits (Horizontal Layout) */}
+                  <Link
+                    to={majorStories[0].path}
+                    className="group flex gap-3 items-start pb-3"
+                  >
+                    <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
                       <ImageWithFallback
                         src={majorStories[0].image}
                         alt={majorStories[0].title}
-                        className="w-full h-[220px] md:h-[250px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
 
-                    <h2 className="font-serif text-xl md:text-2xl font-bold leading-[1.15] mt-3 text-gray-950 group-hover:text-red-600 transition-colors">
-                      {majorStories[0].title}
-                    </h2>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1 text-[8.5px] font-bold uppercase tracking-[0.12em] text-red-600">
+                        <span>{majorStories[0].label}</span>
+                        {majorStories[0].location && (
+                          <>
+                            <span className="text-gray-300">|</span>
+                            <span className="text-gray-500 font-semibold">{majorStories[0].location}</span>
+                          </>
+                        )}
+                      </div>
 
-                    <p className="text-[12px] text-gray-600 mt-2 leading-[1.6] line-clamp-3">
-                      {majorStories[0].lede}
-                    </p>
-                  </Link>
-                </div>
+                      <h3 className="font-serif text-[13.5px] sm:text-[14px] font-bold leading-[1.25] mt-0.5 text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2">
+                        {majorStories[0].title}
+                      </h3>
 
-                {/* SECOND MAJOR STORY */}
+                      <p className="mt-0.5 text-[10.5px] leading-[1.4] text-gray-600 line-clamp-2">
+                        {majorStories[0].lede}
+                      </p>
 
-                <Link
-                  to={majorStories[1].path}
-                  className="group flex gap-3 pt-4 border-t border-gray-200"
-                >
-                  <div className="shrink-0 w-[105px] h-[75px] overflow-hidden rounded-md">
-                    <ImageWithFallback
-                      src={majorStories[1].image}
-                      alt={majorStories[1].title}
-                      className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[9px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                      {majorStories[1].label}
-                    </span>
-
-                    <h3 className="text-[13px] font-bold leading-[1.35] mt-1 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
-                      {majorStories[1].title}
-                    </h3>
-
-                    <p className="mt-1 text-[11px] leading-[1.45] text-gray-500 line-clamp-2">
-                      {majorStories[1].lede}
-                    </p>
-
-                    <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
-                      <Clock size={9} />
-                      {majorStories[1].when}
-                    </span>
-                  </div>
-                </Link>
-
-                {/* MARKET CONTEXT */}
-
-                <div className="mt-5 border-t border-gray-200 pt-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.15em]">
-                      Market Snapshot
-                    </h3>
-
-                    <div className="flex gap-3">
-                      {(["Indices", "Crypto"] as const).map((tab) => (
+                      <div className="flex items-center justify-between text-[9px] text-gray-400 mt-1.5">
+                        <div className="flex items-center gap-1.5">
+                          <Clock size={9} />
+                          <span>{majorStories[0].when}</span>
+                          {majorStories[0].readTime && (
+                            <>
+                              <span>·</span>
+                              <span>{majorStories[0].readTime}</span>
+                            </>
+                          )}
+                        </div>
                         <button
-                          key={tab}
                           type="button"
-                          onClick={() => setActiveMarketTab(tab)}
-                          className={`text-[9px] font-semibold uppercase tracking-wide ${
-                            activeMarketTab === tab
-                              ? "text-red-600"
-                              : "text-gray-400 hover:text-gray-700"
-                          }`}
+                          aria-label="Bookmark story"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          className="text-gray-400 hover:text-gray-800 transition-colors"
                         >
-                          {tab}
+                          <Bookmark size={11} strokeWidth={1.75} />
                         </button>
-                      ))}
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* Story 2: Airbus (Horizontal Layout) */}
+                  <div className="border-t border-gray-200/80 pt-2.5">
+                    <Link
+                      to={majorStories[1].path}
+                      className="group flex gap-3 items-start"
+                    >
+                      <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
+                        <ImageWithFallback
+                          src={majorStories[1].image}
+                          alt={majorStories[1].title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1 text-[8.5px] font-bold uppercase tracking-[0.12em] text-red-600">
+                          <span>{majorStories[1].label}</span>
+                          {majorStories[1].location && (
+                            <>
+                              <span className="text-gray-300">|</span>
+                              <span className="text-gray-500 font-semibold">{majorStories[1].location}</span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="font-serif text-[13.5px] sm:text-[14px] font-bold leading-[1.25] mt-0.5 text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2">
+                          {majorStories[1].title}
+                        </h3>
+
+                        <p className="mt-0.5 text-[10.5px] leading-[1.4] text-gray-600 line-clamp-2">
+                          {majorStories[1].lede}
+                        </p>
+
+                        <div className="flex items-center justify-between text-[9px] text-gray-400 mt-1.5">
+                          <div className="flex items-center gap-1.5">
+                            <Clock size={9} />
+                            <span>{majorStories[1].when}</span>
+                            {majorStories[1].readTime && (
+                              <>
+                                <span>·</span>
+                                <span>{majorStories[1].readTime}</span>
+                              </>
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            aria-label="Bookmark story"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            className="text-gray-400 hover:text-gray-800 transition-colors"
+                          >
+                            <Bookmark size={11} strokeWidth={1.75} />
+                          </button>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* B. CORPORATE MOVES */}
+                  <div className="pt-3 mt-3 border-t border-gray-200">
+                    <div className="flex items-center justify-between border-b-2 border-black pb-1.5 mb-2.5">
+                      <h3 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+                        Corporate Moves
+                      </h3>
+                      <Link
+                        to="/mergers-acquisitions"
+                        className="text-[9.5px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 uppercase tracking-wider"
+                      >
+                        <span>View More</span>
+                        <ArrowRight size={10} />
+                      </Link>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      {/* Story 1: Microsoft */}
+                      <Link
+                        to="/article/paramount-skydance-and-warner-bros-discovery-a-110-billion-deal-stuck-in-court"
+                        className="group flex gap-3 items-start"
+                      >
+                        <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
+                          <ImageWithFallback
+                            src={microsoftDatacenterAi}
+                            alt="Microsoft Expands AI Infrastructure with New Data Center Investment"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1 text-[8.5px] font-bold uppercase tracking-[0.12em] text-red-600">
+                            <span>MERGERS & ACQUISITIONS</span>
+                            <span className="text-gray-300">|</span>
+                            <span className="text-gray-500 font-semibold">GLOBAL</span>
+                          </div>
+                          <h4 className="font-serif text-[13.5px] sm:text-[14px] font-bold leading-[1.25] mt-0.5 text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2">
+                            Microsoft Expands AI Infrastructure with New Data Center Investment
+                          </h4>
+                          <p className="mt-0.5 text-[10.5px] leading-[1.4] text-gray-600 line-clamp-2">
+                            The company will invest $10 billion in new AI-ready data centers across the US and Europe.
+                          </p>
+                          <div className="flex items-center justify-between text-[9px] text-gray-400 mt-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <Clock size={9} />
+                              <span>7 October 2026</span>
+                              <span>·</span>
+                              <span>2 min read</span>
+                            </div>
+                            <button
+                              type="button"
+                              aria-label="Bookmark story"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }}
+                              className="text-gray-400 hover:text-gray-800 transition-colors"
+                            >
+                              <Bookmark size={11} strokeWidth={1.75} />
+                            </button>
+                          </div>
+                        </div>
+                      </Link>
+
+                      {/* Story 2: HSBC */}
+                      <div className="border-t border-gray-200/80 pt-2.5">
+                        <Link
+                          to="/article/deals-and-moves-roundup"
+                          className="group flex gap-3 items-start"
+                        >
+                          <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
+                            <ImageWithFallback
+                              src={hsbcBankBuilding}
+                              alt="HSBC to Restructure Operations Amid Cost-Cutting Drive"
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1 text-[8.5px] font-bold uppercase tracking-[0.12em] text-red-600">
+                              <span>BANKING</span>
+                              <span className="text-gray-300">|</span>
+                              <span className="text-gray-500 font-semibold">EUROPE</span>
+                            </div>
+                            <h4 className="font-serif text-[13.5px] sm:text-[14px] font-bold leading-[1.25] mt-0.5 text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2">
+                              HSBC to Restructure Operations Amid Cost-Cutting Drive
+                            </h4>
+                            <p className="mt-0.5 text-[10.5px] leading-[1.4] text-gray-600 line-clamp-2">
+                              HSBC announced a new restructuring plan to simplify its global operations and reduce costs.
+                            </p>
+                            <div className="flex items-center justify-between text-[9px] text-gray-400 mt-1.5">
+                              <div className="flex items-center gap-1.5">
+                                <Clock size={9} />
+                                <span>7 October 2026</span>
+                                <span>·</span>
+                                <span>2 min read</span>
+                              </div>
+                              <button
+                                type="button"
+                                aria-label="Bookmark story"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }}
+                                className="text-gray-400 hover:text-gray-800 transition-colors"
+                              >
+                                <Bookmark size={11} strokeWidth={1.75} />
+                              </button>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="divide-y divide-gray-100">
-                    {(marketSnapshotData[activeMarketTab] || [])
-                      .slice(0, 4)
-                      .map((market) => (
-                        <div
-                          key={market.symbol}
-                          className="py-2 flex items-center justify-between"
-                        >
-                          <span className="text-[10px] font-semibold text-gray-800">
-                            {market.symbol}
-                          </span>
+                  {/* C. EARNINGS WATCH */}
+                  <div className="pt-3 mt-3 border-t border-gray-200">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-1.5 mb-2.5">
+                      <h3 className="text-[11.5px] font-bold uppercase tracking-[0.16em] text-gray-950">
+                        Earnings Watch
+                      </h3>
+                      <Link
+                        to="/markets"
+                        className="text-[9px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 uppercase tracking-wider"
+                      >
+                        <span>See More</span>
+                        <ArrowRight size={9} />
+                      </Link>
+                    </div>
 
-                          <div className="flex items-center gap-3">
-                            <span className="text-[10px] text-gray-500 tabular-nums">
-                              {market.value}
+                    <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
+                      {/* Apple */}
+                      <div className="border border-gray-200/90 bg-white p-2.5 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <svg className="w-3.5 h-3.5 text-black shrink-0" viewBox="0 0 170 170" fill="currentColor">
+                              <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.69-7.79-11.97-14.24-6.3-9.52-11.19-20.4-14.67-32.64-3.48-12.24-5.22-23.77-5.22-34.59 0-14.97 3.8-27.42 11.41-37.35 7.6-9.93 17.06-15.01 28.38-15.24 4.58 0 9.8 1.25 15.66 3.76 5.86 2.5 9.77 3.8 11.73 3.91 1.74 0 5.8-1.36 12.18-4.07 6.38-2.71 11.75-3.96 16.11-3.76 12.06.63 21.72 5.09 28.98 13.38-10.45 6.32-15.56 15.23-15.34 26.74.22 9.02 3.65 16.63 10.29 22.83 6.64 6.2 14.59 9.68 23.85 10.44-2.28 6.84-4.89 13.59-7.83 20.25zM119.22 33.15c0-6.85 2.5-13.43 7.51-19.74 5.01-6.31 11.23-10.74 18.66-13.29.33 2.17.5 4.13.5 5.87 0 6.85-2.6 13.54-7.81 20.07-5.21 6.53-11.47 10.74-18.78 12.63-.08-1.85-.08-3.69-.08-5.54z" />
+                            </svg>
+                            <span className="text-[10px] font-medium text-gray-700 truncate">Apple (AAPL)</span>
+                          </div>
+                          <div className="text-[13.5px] font-bold text-gray-950 leading-tight">
+                            $189.32
+                          </div>
+                          <div className="flex items-center justify-between gap-1 mt-1">
+                            <span className="text-[10px] font-bold text-green-600 tabular-nums">
+                              +2.14%
                             </span>
-
-                            <ChangeChip
-                              change={market.change}
-                              up={market.up}
-                            />
+                            <EarningsMiniSparkline up={true} />
                           </div>
                         </div>
-                      ))}
+                        <div className="text-[8.5px] text-gray-400 mt-2 truncate">
+                          Q3 revenue beats estimates
+                        </div>
+                      </div>
+
+                      {/* Microsoft */}
+                      <div className="border border-gray-200/90 bg-white p-2.5 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+                              <path fill="#F25022" d="M1 1h10v10H1z"/>
+                              <path fill="#7FBA00" d="M13 1h10v10H13z"/>
+                              <path fill="#00A4EF" d="M1 13h10v10H1z"/>
+                              <path fill="#FFB900" d="M13 13h10v10H13z"/>
+                            </svg>
+                            <span className="text-[10px] font-medium text-gray-700 truncate">Microsoft (MSFT)</span>
+                          </div>
+                          <div className="text-[13.5px] font-bold text-gray-950 leading-tight">
+                            $410.12
+                          </div>
+                          <div className="flex items-center justify-between gap-1 mt-1">
+                            <span className="text-[10px] font-bold text-green-600 tabular-nums">
+                              +1.62%
+                            </span>
+                            <EarningsMiniSparkline up={true} />
+                          </div>
+                        </div>
+                        <div className="text-[8.5px] text-gray-400 mt-2 truncate">
+                          Cloud growth remains strong
+                        </div>
+                      </div>
+
+                      {/* Nvidia */}
+                      <div className="border border-gray-200/90 bg-white p-2.5 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <svg className="w-3.5 h-3.5 shrink-0 text-[#76B900]" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8.938 6.702c.484-.047.98-.07 1.488-.07 4.195 0 7.746 2.375 9.473 5.86-1.399 2.922-4.148 5.008-7.465 5.567v-2.02c2.258-.492 4.102-1.996 5.066-4.004-1.285-2.438-3.82-4.031-6.727-4.031-.383 0-.75.031-1.117.078l-.718-1.38zm-2.094 2.82c.477-.18.984-.32 1.516-.414l.734 1.406c-.344.07-.672.18-.984.32-.977.438-1.766 1.156-2.281 2.055.805 1.766 2.438 3.016 4.383 3.328v1.656c-2.906-.39-5.328-2.227-6.398-4.875.75-1.578 1.836-2.773 3.03-3.476zm-2.844-1.633C5.938 6.133 8.359 5.25 10.984 5.25c5.367 0 9.875 3.383 11.594 8.188-1.898 4.297-5.969 7.375-10.773 7.828v1.734c5.844-.484 10.742-4.32 12.984-9.688C22.75 7.109 17.383 3 10.984 3c-3.156 0-6.07.977-8.484 2.656l1.5 2.235z"/>
+                            </svg>
+                            <span className="text-[10px] font-medium text-gray-700 truncate">Nvidia (NVDA)</span>
+                          </div>
+                          <div className="text-[13.5px] font-bold text-gray-950 leading-tight">
+                            $1,246.90
+                          </div>
+                          <div className="flex items-center justify-between gap-1 mt-1">
+                            <span className="text-[10px] font-bold text-red-600 tabular-nums">
+                              -0.84%
+                            </span>
+                            <EarningsMiniSparkline up={false} />
+                          </div>
+                        </div>
+                        <div className="text-[8.5px] text-gray-400 mt-2 truncate">
+                          Mixed outlook after earnings
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* D. MARKET SNAPSHOT */}
+                <div className="pt-3 mt-3 border-t border-gray-200">
+                  <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-gray-200">
+                    <h3 className="text-[11.5px] font-bold uppercase tracking-[0.16em] text-gray-950">
+                      Market Snapshot
+                    </h3>
+
+                    <div className="flex items-center gap-3">
+                      {(["INDICES", "COMMODITIES", "CRYPTO"] as const).map((tab) => {
+                        const standardTab =
+                          tab === "INDICES"
+                            ? "Indices"
+                            : tab === "COMMODITIES"
+                            ? "Commodities"
+                            : "Crypto";
+                        const isActive = activeMarketTab === standardTab;
+                        return (
+                          <button
+                            key={tab}
+                            type="button"
+                            onClick={() => setActiveMarketTab(standardTab)}
+                            className={`text-[9px] font-bold uppercase tracking-wider pb-0.5 transition-colors ${
+                              isActive
+                                ? "text-red-600 border-b-2 border-red-600"
+                                : "text-gray-400 hover:text-gray-700"
+                            }`}
+                          >
+                            {tab}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
-                  <Link
-                    to="/markets"
-                    className="mt-2 text-[9px] font-bold text-red-600 flex items-center gap-1 uppercase tracking-wide w-fit"
-                  >
-                    View All Markets
-                    <ArrowRight size={9} />
-                  </Link>
+                  <div className="grid grid-cols-4 gap-2">
+                    {currentMarketItems.slice(0, 4).map((market) => (
+                      <div
+                        key={market.symbol}
+                        className="border border-gray-200/90 bg-white p-2 flex flex-col justify-between h-[86px]"
+                      >
+                        <div>
+                          <span className="block text-[8.5px] font-bold uppercase tracking-wider text-gray-500 truncate">
+                            {market.symbol}
+                          </span>
+                          <span className="block text-[13px] font-bold text-gray-950 leading-tight mt-0.5 tabular-nums">
+                            {market.value}
+                          </span>
+                          <span
+                            className={`text-[9.5px] font-bold tabular-nums flex items-center gap-0.5 mt-0.5 ${
+                              market.up ? "text-green-600" : "text-red-600"
+                            }`}
+                          >
+                            <span>{market.up ? "▲" : "▼"}</span>
+                            <span>{market.change}</span>
+                          </span>
+                        </div>
+
+                        <div className="h-4 w-full -mb-1 mt-1">
+                          <MiniAreaSparkline up={market.up} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between text-[9px] text-gray-400">
+                    <span>Delayed 15m · Global Exchanges</span>
+                    <Link
+                      to="/markets"
+                      className="text-[9.5px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 uppercase tracking-wider"
+                    >
+                      <span>View All Markets</span>
+                      <ArrowRight size={9} />
+                    </Link>
+                  </div>
                 </div>
               </div>
 
-              {/* RIGHT NEWSROOM COLUMN */}
-
-              <aside className="min-w-0">
-                {/* EDITOR'S PICK */}
-
-                <div className="pb-5 border-b border-gray-200">
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-serif text-lg font-bold">
+              {/* =======================================================
+                  3. RIGHT SECTION — EDITOR'S PICK & LATEST NEWS
+              ======================================================= */}
+              <aside className="min-w-0 flex flex-col justify-between">
+                {/* 4. EDITOR'S PICK */}
+                <div className="pb-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
                       Editor's Pick
                     </h2>
 
                     <Link
                       to="/markets"
-                      className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium hover:border-gray-500 transition-colors"
+                      className="border border-gray-300 rounded-full px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gray-700 hover:text-black hover:border-gray-500 transition-colors"
                     >
                       Explore More
                     </Link>
                   </div>
 
                   <Link to={editorsPick.path} className="group block">
-                    <div className="relative overflow-hidden rounded-lg">
+                    <div className="relative overflow-hidden rounded-none border border-gray-200/80 bg-gray-100 aspect-[16/9]">
                       <ImageWithFallback
                         src={editorsPick.image}
                         alt={editorsPick.title}
-                        className="w-full h-[175px] object-cover rounded-lg transition-transform duration-700 group-hover:scale-[1.03]"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                     </div>
 
@@ -692,49 +1099,103 @@ export function BusinessNewsPage() {
                       {editorsPick.label}
                     </span>
 
-                    <h3 className="text-[13px] font-semibold leading-[1.4] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                    <h3 className="font-serif text-[15px] font-bold leading-[1.3] mt-1 text-gray-950 group-hover:text-red-600 transition-colors">
                       {editorsPick.title}
                     </h3>
 
-                    <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-3">
+                    <p className="mt-1 text-[11px] leading-[1.5] text-gray-600 line-clamp-2">
                       {editorsPick.lede}
                     </p>
+
+                    <div className="flex items-center justify-between text-[9.5px] text-gray-400 mt-2">
+                      <div className="flex items-center gap-1.5">
+                        <Clock size={9} />
+                        <span>{editorsPick.when}</span>
+                        {editorsPick.readTime && (
+                          <>
+                            <span>·</span>
+                            <span>{editorsPick.readTime}</span>
+                          </>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        aria-label="Bookmark"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="text-gray-400 hover:text-gray-800 transition-colors"
+                      >
+                        <Bookmark size={11} strokeWidth={1.75} />
+                      </button>
+                    </div>
                   </Link>
                 </div>
 
-                {/* LATEST NEWS STREAM (sidebar headlines) */}
-
-                <div className="pt-5">
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
+                {/* 5. LATEST NEWS STREAM */}
+                <div className="pt-3.5">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-1.5 mb-1">
                     <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
                       Latest News
                     </h2>
 
-                    <span className="text-[8px] uppercase tracking-wide text-gray-400">
+                    <span className="text-[8.5px] font-bold uppercase tracking-wider text-gray-400">
                       Business Desk
                     </span>
                   </div>
 
                   <div className="divide-y divide-gray-100">
-                    {sidebarStories.map((item) => (
+                    {latestNewsStories.map((item) => (
                       <Link
                         key={item.id}
                         to={item.path}
-                        className="group block py-3"
+                        className="group block py-2.5 first:pt-2 last:pb-1"
                       >
-                        <div className="flex gap-3">
-                          <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
-                            {item.location ?? item.label}
-                          </span>
+                        <div className="flex gap-2.5 items-start">
+                          {item.image && (
+                            <div className="shrink-0 w-[58px] h-[58px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100 mt-0.5">
+                              <ImageWithFallback
+                                src={item.image}
+                                alt={item.title}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                            </div>
+                          )}
 
-                          <div className="min-w-0">
-                            <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              <span className="text-[8.5px] font-bold uppercase tracking-wider text-red-600 truncate">
+                                {item.location ?? item.label}
+                              </span>
+                              <span className="text-gray-300 text-[8.5px]">·</span>
+                              <span className="text-[8.5px] text-gray-400 font-medium shrink-0">
+                                October 2026
+                              </span>
+                            </div>
+
+                            <h4 className="text-[11.5px] font-bold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
                               {item.title}
-                            </span>
+                            </h4>
 
-                            <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
+                            <p className="mt-0.5 text-[10px] leading-[1.35] text-gray-500 line-clamp-2">
                               {item.lede}
-                            </span>
+                            </p>
+
+                            <div className="flex items-center justify-between text-[8.5px] text-gray-400 mt-1">
+                              <span>{item.readTime || "3 min read"}</span>
+                              <button
+                                type="button"
+                                aria-label="Bookmark story"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                }}
+                                className="text-gray-400 hover:text-gray-800 transition-colors"
+                              >
+                                <Bookmark size={11} strokeWidth={1.75} />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </Link>
