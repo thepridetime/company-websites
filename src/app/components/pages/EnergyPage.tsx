@@ -12,6 +12,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import {
+  energyTrendData,
+  energyTrendKeys,
+  energyTrendSource,
+} from "../../data/energyTrendData";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { PrideTimesAd } from "../AdSenseSlots";
 import {
@@ -34,11 +39,6 @@ const energyStories: OctEditionArticle[] = octEditionArticles.filter(
 const leadStory = energyStories[0];
 const otherStories = energyStories.slice(1);
 
-const trendSeries: { year: string; [series: string]: string | number }[] = [];
-const trendKeys = [
-  { key: "supply", label: "Supply", color: "#0f766e" },
-  { key: "demand", label: "Demand", color: "#b45309" },
-];
 
 const THEMES = ["Global Energy", "Markets", "Decarbonization", "Security"];
 
@@ -266,33 +266,39 @@ export function EnergyPage() {
 
                 {/* TRENDING ENERGY DATA */}
                 <div className="rounded-sm border border-gray-200 bg-white p-4 shadow-sm">
-                  <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-700">
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-700">
                     Trending Energy Data
                   </p>
+                  <p className="mb-3 text-[10px] text-gray-500">
+                    Annual average crude oil spot price, US$ per barrel
+                  </p>
 
-                  {trendSeries.length > 0 ? (
-                    <div className="h-[180px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={trendSeries}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis dataKey="year" tick={{ fontSize: 10 }} />
-                          <YAxis tick={{ fontSize: 10 }} />
-                          <Tooltip />
-                          <Legend wrapperStyle={{ fontSize: 10 }} />
-                          {trendKeys.map((s) => (
-                            <Area
-                              key={s.key}
-                              type="monotone"
-                              dataKey={s.key}
-                              name={s.label}
-                              stroke={s.color}
-                              fill={s.color}
-                              fillOpacity={0.12}
-                            />
-                          ))}
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
+                  {energyTrendData.length > 0 ? (
+                    <>
+                      <div className="h-[180px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={energyTrendData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                            <XAxis dataKey="year" tick={{ fontSize: 10 }} />
+                            <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `$${v}`} />
+                            <Tooltip formatter={(v: number) => `$${v.toFixed(2)}`} />
+                            <Legend wrapperStyle={{ fontSize: 10 }} />
+                            {energyTrendKeys.map((s) => (
+                              <Area
+                                key={s.key}
+                                type="monotone"
+                                dataKey={s.key}
+                                name={s.label}
+                                stroke={s.color}
+                                fill={s.color}
+                                fillOpacity={0.12}
+                              />
+                            ))}
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <p className="mt-2 text-[9px] text-gray-400">{energyTrendSource}</p>
+                    </>
                   ) : (
                     <div className="flex h-[180px] items-center justify-center rounded-sm border border-dashed border-gray-300 bg-gray-50 text-[11px] text-gray-400">
                       Chart data will appear here once verified figures are added.
