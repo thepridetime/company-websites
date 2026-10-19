@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 const CLIENT = "ca-pub-2331501617441941";
 const DEMO =
@@ -54,6 +55,13 @@ function Inner({ type }: { type: SlotType }) {
 
 export default function AdSlot({ type }: { type: SlotType }) {
   const { pathname } = useLocation();
+  const { user, isLoading } = useAuth();
+
+  // Premium = ad-free. While the account is still loading, show nothing so a
+  // Premium user never sees an ad flash up (and no ad request is wasted).
+  if (isLoading) return null;
+  if (user?.tier === "premium") return null;
+
   // new key on every page change, so the ad reloads on route change
   return <Inner key={pathname + type} type={type} />;
 }

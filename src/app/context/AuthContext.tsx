@@ -105,17 +105,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState("");
-  const [tier, setTier] = useState<UserTier>("free");
-  const [tierLoading, setTierLoading] = useState(false);
+  /* The tier is stored together with the user id it was loaded for, so a page
+     never sees a stale "free" for a user whose tier is still loading. */
+  const [tierState, setTierState] = useState<{ userId: string | null; tier: UserTier }>({
+    userId: null,
+    tier: "free",
+  });
+  const tierReady = !user || tierState.userId === user.id;
+  const tier: UserTier = user && tierState.userId === user.id ? tierState.tier : "free";
 
   const refreshTier = useCallback(async () => {
-    if (!user?.id) {
-      setTier("free");
-      return;
-    }
-    setTierLoading(true);
-    setTier(await fetchTier(user.id));
-    setTierLoading(false);
+    if (!user?.id) return;
+    const userId = user.id;
+    const fetched = await fetchTier(userId);
+    setTierState({ userId, tier: fetched });
   }, [user?.id]);
 
   useEffect(() => {
@@ -290,7 +293,7 @@ const signInWithGoogle = async () => {
 };
 
   const upgradeToPremoium = () => {
-    setTier("premium");
+    if (user) setTierState({ userId: user.id, tier: "premium" });
   };
 
   return (
@@ -298,7 +301,7 @@ const signInWithGoogle = async () => {
   value={{
     user: userWithTier,
     isSignedIn: !!user,
-    isLoading: isLoading || tierLoading,
+    isLoading: isLoading || !tierReady,
     signIn,
     signUp,
     signInWithGoogle,
