@@ -21,6 +21,10 @@ import img_business_aviation_jet from "../../imports/business-aviation-jet.png";
 import img_cyber_ops from "../../imports/cyber-ops.png";
 import img_data_centre from "../../imports/data-centre.png";
 import img_energy_tanks from "../../imports/energy-tanks.png";
+import img_energy_1 from "../../imports/Energy1.png";
+import img_energy_2 from "../../imports/Energy2.png";
+import img_energy_3 from "../../imports/Energy3.png";
+import img_energy_refinery from "../../imports/pt-energy-refinery.png";
 import img_heroimage from "../../imports/heroimage.png";
 import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
 import img_Techheroimage from "../../imports/Techheroimage.png";
@@ -296,6 +300,132 @@ export const octEditionArticles: OctEditionArticle[] = [
     ],
     keyFacts: [{"label": "AMD / World Labs", "value": "$8.2 billion all-stock"}, {"label": "onsemi / Synaptics", "value": "$5.7 billion cash, $123 a share"}, {"label": "Broadcom / Anthropic", "value": "Financing of up to $42 billion"}],
     highlights: ["AMD / World Labs: $8.2 billion all-stock", "onsemi / Synaptics: $5.7 billion cash, $123 a share", "Broadcom / Anthropic: Financing of up to $42 billion"],
+  },
+  {
+    ...base,
+    id: "nextera-dominion-utility-combination",
+    publishedAt: "2 October 2026",
+    editorNote: "Source: DealRoom, Recent M&A Deals 2026 tracker (updated 8 August 2026), which cites company announcements and SEC filings. Statuses and figures may have moved since that update. Summary only; not investment advice. Transaction value was not disclosed by the companies; the roughly $67 billion figure in trade press is a derived calculation.",
+    sectionNumber: 3,
+    section: "Energy and Climate",
+    sectionPath: "/energy",
+    industry: "Energy",
+    title: "NextEra and Dominion Plan the Largest Regulated Utility Combination",
+    lede: "An all-stock deal would combine two large utilities, with approvals spanning federal regulators and three state commissions. Virginia is the likeliest pressure point.",
+    location: "United States",
+    readTime: "3 min read",
+    image: img_energy_1,
+    body: [
+      "NextEra Energy will acquire Dominion Energy in an all-stock deal announced on 18 May 2026. Dominion shareholders receive 0.8138 NextEra shares each, plus a one-time aggregate cash payment of $360 million. NextEra holders would own about 74.5% of the combined company.",
+      "Neither company has disclosed a transaction value. Figures near $67 billion in trade press are derived calculations, so readers should not treat them as the price paid.",
+      "Approvals will take time. The deal needs review from the Federal Energy Regulatory Commission and the Nuclear Regulatory Commission, utility regulators in Virginia, North Carolina and South Carolina, antitrust clearance, and votes from both sets of shareholders. The deal is expected to take 12 to 18 months to complete.",
+      "Virginia is the likeliest pressure point because of the data-centre demand growing in Dominion's territory. Regulators, rather than shareholders, will largely decide how quickly the combination closes and what conditions it carries.",
+    ],
+    keyFacts: [
+      { label: "Companies", value: "NextEra Energy and Dominion Energy" },
+      { label: "Deal structure", value: "All-stock; 0.8138 NextEra shares plus $360M cash per Dominion share" },
+      { label: "Status", value: "Announced 18 May 2026; pending, 12 to 18 months" },
+    ],
+    highlights: [
+      "NextEra will acquire Dominion Energy in an all-stock deal.",
+      "No transaction value has been disclosed by the companies.",
+      "Virginia is the likeliest pressure point, due to data-centre demand.",
+    ],
+  },
+  {
+    ...base,
+    id: "devon-coterra-shale-merger-closed",
+    publishedAt: "2 October 2026",
+    editorNote: "Source: DealRoom, Recent M&A Deals 2026 tracker (updated 8 August 2026), which cites company announcements and SEC filings. Statuses and figures may have moved since that update. Summary only; not investment advice. The $58 billion figure is the combined enterprise value, not the price paid.",
+    sectionNumber: 3,
+    section: "Energy and Climate",
+    sectionPath: "/energy",
+    industry: "Energy",
+    title: "Devon and Coterra Complete Their All-Stock Shale Merger",
+    lede: "The combination closed on 7 May 2026, creating a larger shale producer that targets $1 billion in annual pre-tax synergies.",
+    location: "United States",
+    readTime: "3 min read",
+    image: img_energy_refinery,
+    body: [
+      "Devon Energy and Coterra Energy completed their all-stock merger on 7 May 2026, after announcing it on 2 February 2026. Coterra holders received 0.70 Devon shares each, and Devon holders own about 54% of the combined company.",
+      "The company keeps the Devon name and the DVN ticker, and targets $1 billion in annual pre-tax synergies.",
+      "The $58 billion figure is the combined enterprise value of the two companies, not the price paid. The consideration itself was around $25 billion, according to the tracker.",
+      "Why it matters: The deal is an example of the all-stock, scale-driven combinations that have marked 2026 dealmaking in oil and gas, where no conventional purchase price exists.",
+    ],
+    keyFacts: [
+      { label: "Companies", value: "Devon Energy and Coterra Energy" },
+      { label: "Deal structure", value: "All-stock; 0.70 Devon shares per Coterra share" },
+      { label: "Combined enterprise value", value: "About $58B (consideration about $25B)" },
+    ],
+    highlights: [
+      "Devon and Coterra closed their all-stock merger on 7 May 2026.",
+      "The company targets $1 billion in annual pre-tax synergies.",
+      "The $58 billion figure is combined enterprise value, not the price paid.",
+    ],
+  },
+  {
+    ...base,
+    id: "engie-uk-power-networks-acquisition",
+    publishedAt: "2 October 2026",
+    editorNote: "Source: DealRoom, Recent M&A Deals 2026 tracker (updated 8 August 2026), which cites company announcements and SEC filings. Statuses and figures may have moved since that update. Summary only; not investment advice. Values are in GBP as reported; the dollar equivalent is the tracker's conversion.",
+    sectionNumber: 3,
+    section: "Energy and Climate",
+    sectionPath: "/energy",
+    industry: "Energy",
+    title: "Engie Closes Its Purchase of UK Power Networks Ahead of Schedule",
+    lede: "Britain's largest electricity distributor changed hands for GBP 10.5 billion in equity, and completion arrived earlier than guidance.",
+    location: "United Kingdom",
+    readTime: "3 min read",
+    image: img_energy_2,
+    body: [
+      "Engie has completed its purchase of UK Power Networks, Britain's largest electricity distributor, from CK Infrastructure. The deal was announced on 25 February 2026 and closed on 7 May 2026.",
+      "Engie paid GBP 10.5 billion in equity, or GBP 15.8 billion including debt, about $21.4 billion. Completion came ahead of guidance.",
+      "The binding condition was independent shareholder approval at the Hong Kong-listed CK parent companies, rather than any UK regulatory hurdle.",
+      "Engie is funding the deal with roughly EUR 5 billion of debt and hybrid securities, EUR 4 billion of disposals through 2028, and up to EUR 3 billion of new equity.",
+      "Why it matters: The funding plan combines debt, asset sales and new equity, which shows how large utility acquisitions are being financed.",
+    ],
+    keyFacts: [
+      { label: "Buyer and seller", value: "Engie from CK Infrastructure" },
+      { label: "Price", value: "GBP 10.5B equity; GBP 15.8B including debt (about $21.4B)" },
+      { label: "Funding", value: "About EUR 5B debt and hybrids; EUR 4B disposals; up to EUR 3B equity" },
+    ],
+    highlights: [
+      "Engie closed its purchase of UK Power Networks on 7 May 2026.",
+      "Completion came ahead of guidance.",
+      "The binding condition was shareholder approval at the CK parent companies.",
+    ],
+  },
+  {
+    ...base,
+    id: "gip-eqt-take-aes-private",
+    publishedAt: "2 October 2026",
+    editorNote: "Source: DealRoom, Recent M&A Deals 2026 tracker (updated 8 August 2026), which cites company announcements and SEC filings. Statuses and figures may have moved since that update. Summary only; not investment advice. Premium is measured against the 30-day average price before 8 July 2025, as stated in the tracker.",
+    sectionNumber: 3,
+    section: "Energy and Climate",
+    sectionPath: "/energy",
+    industry: "Energy",
+    title: "Infrastructure Investors Agree to Take AES Private for $33.4 Billion",
+    lede: "A consortium led by Global Infrastructure Partners and EQT will pay $15.00 per share in cash. Enterprise value far exceeds equity value because of AES's debt.",
+    location: "United States",
+    readTime: "3 min read",
+    image: img_energy_3,
+    body: [
+      "A consortium led by BlackRock's Global Infrastructure Partners and EQT, with CalPERS and the Qatar Investment Authority, will acquire AES. The deal was announced on 2 March 2026 at $15.00 per share in cash.",
+      "The offer is a 40.3% premium to AES's 30-day average price before 8 July 2025, according to the tracker.",
+      "Enterprise value is $33.4 billion, but equity value is only $10.7 billion. The difference reflects AES's debt.",
+      "AES stockholders have approved the deal, which is expected to complete in late 2026.",
+      "Why it matters: The gap between enterprise value and equity value is a reminder that headline figures in utility deals can mean very different things.",
+    ],
+    keyFacts: [
+      { label: "Buyers", value: "GIP and EQT, with CalPERS and QIA" },
+      { label: "Offer", value: "$15.00 per share in cash" },
+      { label: "Value", value: "Enterprise value $33.4B; equity value $10.7B" },
+    ],
+    highlights: [
+      "The buyers include Global Infrastructure Partners, EQT, CalPERS and the Qatar Investment Authority.",
+      "The offer is a 40.3% premium to the 30-day average price.",
+      "AES stockholders have approved the deal; completion is expected in late 2026.",
+    ],
   },
 ];
 
