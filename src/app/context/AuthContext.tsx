@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from "react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { supabase } from "../../lib/supabase";
 
@@ -31,6 +31,7 @@ interface AuthContextType {
   clearAuthError: () => void;
   signOut: () => Promise<void>;
   upgradeToPremoium: () => void;
+  refreshTier: () => Promise<void>;
   resetPassword: (
   email: string
 ) => Promise<{ success: boolean; error?: string }>;
@@ -82,10 +83,49 @@ function toUser(u: SupabaseUser): User {
   };
 }
 
+/* Reads the subscriptions table and decides free vs premium.
+   Premium = at least one row with status 'active' and an end_date in the future. */
+async function fetchTier(userId: string): Promise<UserTier> {
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select("plan, status, end_date")
+    .eq("user_id", userId)
+    .eq("status", "active")
+    .gt("end_date", new Date().toISOString())
+    .limit(1);
+
+  if (error) {
+    console.error("TIER_FETCH_FAILED", error);
+    return "free";
+  }
+  return data && data.length > 0 ? "premium" : "free";
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState("");
+  const [tier, setTier] = useState<UserTier>("free");
+  const [tierLoading, setTierLoading] = useState(false);
+
+  const refreshTier = useCallback(async () => {
+    if (!user?.id) {
+      setTier("free");
+      return;
+    }
+    setTierLoading(true);
+    setTier(await fetchTier(user.id));
+    setTierLoading(false);
+  }, [user?.id]);
+
+  useEffect(() => {
+    refreshTier();
+  }, [refreshTier]);
+
+  const userWithTier = useMemo(
+    () => (user ? { ...user, tier } : null),
+    [user, tier]
+  );
 
   useEffect(() => {
     /* If Google/Supabase could not finish the sign-in, they send the user
@@ -250,15 +290,15 @@ const signInWithGoogle = async () => {
 };
 
   const upgradeToPremoium = () => {
-    if (user) setUser({ ...user, tier: "premium" });
+    setTier("premium");
   };
 
   return (
     <AuthContext.Provider
   value={{
-    user,
+    user: userWithTier,
     isSignedIn: !!user,
-    isLoading,
+    isLoading: isLoading || tierLoading,
     signIn,
     signUp,
     signInWithGoogle,
@@ -267,6 +307,7 @@ const signInWithGoogle = async () => {
     resetPassword,
     signOut,
     upgradeToPremoium,
+    refreshTier,
   }}
 >
       {children}
