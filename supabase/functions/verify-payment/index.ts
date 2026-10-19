@@ -61,7 +61,14 @@ Deno.serve(async (req) => {
       console.error("WRONG_USER", user.id, order.notes?.user_id);
       return json({ error: "This payment belongs to another account" }, 403);
     }
-    const plan = order.notes?.plan === "annual" ? "annual" : "monthly";
+    const PLAN_IDS = ["monthly", "quarterly", "annual", "professional", "executive"];
+    const PRODUCT_IDS = [
+      "single_report", "business_analysis", "monthly_magazine",
+      "industry_report", "annual_bundle", "market_research",
+    ];
+    const item = order.notes?.plan;
+    const isProduct = PRODUCT_IDS.includes(item);
+    const plan = isProduct ? item : PLAN_IDS.includes(item) ? item : "monthly";
 
     // 4. Database work with the admin client
     const admin = createClient(
@@ -77,11 +84,30 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (already) return json({ ok: true, already: true });
 
+    // One-time product: record the purchase only, no subscription
+    if (isProduct) {
+      const { error: prodPayError } = await admin.from("payments").insert({
+        user_id: user.id,
+        plan, // holds the product id
+        razorpay_order_id,
+        razorpay_payment_id,
+        amount: order.amount,
+        status: "paid",
+      });
+      if (prodPayError) {
+        console.error("PRODUCT_PAYMENT_FAILED", JSON.stringify(prodPayError));
+        return json({ error: "Could not record the purchase: " + prodPayError.message }, 500);
+      }
+      console.log("PRODUCT_PURCHASED", user.id, plan, razorpay_payment_id);
+      return json({ ok: true, product: plan });
+    }
+
     // Subscription window
     const start = new Date();
     const end = new Date(start);
-    if (plan === "annual") end.setFullYear(end.getFullYear() + 1);
-    else end.setMonth(end.getMonth() + 1);
+    if (plan === "monthly") end.setMonth(end.getMonth() + 1);
+    else if (plan === "quarterly") end.setMonth(end.getMonth() + 3);
+    else end.setFullYear(end.getFullYear() + 1); // annual, professional, executive
 
     const subRow = {
       user_id: user.id,

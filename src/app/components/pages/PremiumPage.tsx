@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router";
 import {
   Crown, Check, X, Shield, Newspaper, BarChart2, Mail, Globe, Star,
   ChevronRight, Lock, Smartphone, AlertCircle, Loader2, CreditCard,
-  UserPlus, Unlock, ShieldCheck, ArrowRight,
+  UserPlus, Unlock, ShieldCheck, ArrowRight, FileText,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -123,24 +123,84 @@ const comparison: { label: string; free: boolean; premium: boolean }[] = [
   { label: "Offline reading in the app", free: false, premium: true },
 ];
 
-const plans = [
-  {
-    id: "monthly" as const,
-    name: "Monthly",
-    price: "₹399",
-    cadence: "/ month",
-    billed: "Billed every month, cancel anytime",
-    badge: null as string | null,
-  },
-  {
-    id: "annual" as const,
-    name: "Annual",
-    price: "₹3,499",
-    cadence: "/ year",
-    billed: "Just ₹291/month — save 27%",
-    badge: "Best Value" as string | null,
-  },
+type PlanId = "monthly" | "quarterly" | "annual" | "professional" | "executive";
+type Currency = "INR" | "USD";
+
+const PLAN_META: { id: PlanId; name: string; badge: string | null }[] = [
+  { id: "monthly", name: "Monthly", badge: null },
+  { id: "quarterly", name: "Quarterly", badge: null },
+  { id: "annual", name: "Annual", badge: "Best Value" },
+  { id: "professional", name: "Professional", badge: null },
+  { id: "executive", name: "Executive / VIP", badge: null },
 ];
+
+// Display prices. The server (create-order) holds the real amounts, so keep both in sync.
+const PRICING: Record<Currency, Record<PlanId, { price: string; cadence: string; billed: string }>> = {
+  INR: {
+    monthly: { price: "₹299", cadence: "/ month", billed: "Billed every month, cancel anytime" },
+    quarterly: { price: "₹799", cadence: "/ 3 months", billed: "Just ₹266/month — save 11%" },
+    annual: { price: "₹2,999", cadence: "/ year", billed: "Just ₹250/month — save 16%" },
+    professional: { price: "₹5,999", cadence: "/ year", billed: "Billed yearly, about ₹500/month" },
+    executive: { price: "₹11,999", cadence: "/ year", billed: "Billed yearly, about ₹1,000/month" },
+  },
+  USD: {
+    monthly: { price: "$5.99", cadence: "/ month", billed: "Billed every month, cancel anytime" },
+    quarterly: { price: "$15.99", cadence: "/ 3 months", billed: "Just $5.33/month — save 11%" },
+    annual: { price: "$59.99", cadence: "/ year", billed: "Just $5.00/month — save 17%" },
+    professional: { price: "$119.99", cadence: "/ year", billed: "Billed yearly, about $10/month" },
+    executive: { price: "$249", cadence: "/ year", billed: "Billed yearly, about $20.75/month" },
+  },
+};
+
+const ANNUAL_SAVING: Record<Currency, string> = { INR: "₹589", USD: "$11.89" };
+
+/* One-time digital products (not subscriptions) */
+type ProductId =
+  | "single_report"
+  | "business_analysis"
+  | "monthly_magazine"
+  | "industry_report"
+  | "annual_bundle"
+  | "market_research";
+type ItemId = PlanId | ProductId;
+
+const PRODUCT_META: { id: ProductId; name: string }[] = [
+  { id: "single_report", name: "Single premium news report" },
+  { id: "business_analysis", name: "In-depth business analysis" },
+  { id: "monthly_magazine", name: "Monthly digital magazine" },
+  { id: "industry_report", name: "Special industry report" },
+  { id: "annual_bundle", name: "Annual special-edition bundle" },
+  { id: "market_research", name: "Premium market research report" },
+];
+
+// Display prices. The server (create-order) holds the real amounts, so keep both in sync.
+const PRODUCT_PRICING: Record<Currency, Record<ProductId, string>> = {
+  INR: {
+    single_report: "₹99",
+    business_analysis: "₹299",
+    monthly_magazine: "₹199",
+    industry_report: "₹499",
+    annual_bundle: "₹999",
+    market_research: "₹1,499",
+  },
+  USD: {
+    single_report: "$1.99",
+    business_analysis: "$5.99",
+    monthly_magazine: "$3.99",
+    industry_report: "$9.99",
+    annual_bundle: "$19.99",
+    market_research: "$29.99",
+  },
+};
+
+const detectCurrency = (): Currency => {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    return tz === "Asia/Calcutta" || tz === "Asia/Kolkata" ? "INR" : "USD";
+  } catch {
+    return "INR";
+  }
+};
 
 const planPerks = ["Unlimited premium articles", "Full archive access", "Ad-free everywhere", "Priority newsletters"];
 
@@ -182,10 +242,13 @@ export function PremiumPage() {
   const navigate = useNavigate();
 
   const [busy, setBusy] = useState(false);
-  const [busyPlan, setBusyPlan] = useState<"monthly" | "annual" | null>(null);
+  const [busyPlan, setBusyPlan] = useState<ItemId | null>(null);
   const [trialBusy, setTrialBusy] = useState(false);
   const [error, setError] = useState("");
-  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "annual">("annual");
+  const [success, setSuccess] = useState("");
+  const [area, setArea] = useState<"plans" | "products">("plans");
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>("annual");
+  const [currency, setCurrency] = useState<Currency>(detectCurrency);
 
   const heroRef = useRef<HTMLElement | null>(null);
   const pricingRef = useRef<HTMLElement | null>(null);
@@ -220,12 +283,15 @@ export function PremiumPage() {
   const buttonLabel = (name: string) =>
     isPremium ? "Current Plan" : isSignedIn ? `Choose ${name}` : "Sign up to subscribe";
 
-  const handleChoosePlan = async (plan: "monthly" | "annual") => {
-    setSelectedPlan(plan);
+  const handleChoosePlan = async (plan: ItemId) => {
+    const isProduct = PRODUCT_META.some((p) => p.id === plan);
+    if (!isProduct) setSelectedPlan(plan as PlanId);
+    setArea(isProduct ? "products" : "plans");
     setError("");
+    setSuccess("");
     if (isLoading) return;
     if (!isSignedIn || !user) { navigate("/signup"); return; }
-    if (isPremium) { navigate("/dashboard"); return; }
+    if (!isProduct && isPremium) { navigate("/dashboard"); return; }
 
     setBusy(true);
     setBusyPlan(plan);
@@ -235,7 +301,7 @@ export function PremiumPage() {
       }
 
       const { data, error: fnError } = await supabase.functions.invoke("create-order", {
-        body: { plan },
+        body: { plan, currency },
       });
       if (fnError) {
         throw new Error(await readFnError(fnError, "Could not start the payment"));
@@ -250,7 +316,7 @@ export function PremiumPage() {
         amount: data.amount,
         currency: data.currency,
         name: "The Pride Times",
-        description: `Premium, ${plan}`,
+        description: isProduct ? `Digital product: ${plan}` : `Premium, ${plan}`,
         prefill: { name: user.name, email: user.email },
         theme: { color: "#dc2626" },
         handler: async (response: any) => {
@@ -262,6 +328,14 @@ export function PremiumPage() {
             setError(
               `Payment received but not confirmed yet: ${detail}. Contact us with payment ID ` +
                 response.razorpay_payment_id
+            );
+            setBusy(false);
+            setBusyPlan(null);
+            return;
+          }
+          if (isProduct) {
+            setSuccess(
+              `Thank you! Your purchase is confirmed. Payment ID: ${response.razorpay_payment_id}`
             );
             setBusy(false);
             setBusyPlan(null);
@@ -312,7 +386,9 @@ export function PremiumPage() {
     }
   };
 
+  const plans = PLAN_META.map((m) => ({ ...m, ...PRICING[currency][m.id] }));
   const selected = plans.find((p) => p.id === selectedPlan)!;
+  const annualPlan = plans.find((p) => p.id === "annual")!;
 
   return (
     <div className={`w-full bg-white text-gray-900 antialiased ${showStickyBar ? "pb-24 md:pb-0" : ""}`}>
@@ -411,9 +487,10 @@ export function PremiumPage() {
                 </span>
               </div>
               <p className="font-serif text-4xl font-bold mt-5">
-                ₹3,499 <span className="text-sm font-sans font-normal text-gray-400">/ year</span>
+                {annualPlan.price}{" "}
+                <span className="text-sm font-sans font-normal text-gray-400">{annualPlan.cadence}</span>
               </p>
-              <p className="text-xs text-gray-400 mt-1">Just ₹291/month — save 27%</p>
+              <p className="text-xs text-gray-400 mt-1">{annualPlan.billed}</p>
               <ul className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6">
                 {planPerks.map((f) => (
                   <li key={f} className="flex items-center gap-2.5 text-sm text-gray-200">
@@ -579,13 +656,37 @@ export function PremiumPage() {
           <SH
             eyebrow="Membership"
             title="Pick the plan that fits how you read"
-            subtitle="Annual saves ₹1,289 compared with paying monthly for a year."
+            subtitle={`Annual saves ${ANNUAL_SAVING[currency]} compared with paying monthly for a year.`}
           />
+
+          {/* Region / currency switch */}
+          <div
+            role="group"
+            aria-label="Choose your region"
+            className="inline-flex rounded-[2px] border border-gray-300 bg-white p-1 mb-8"
+          >
+            {([
+              { id: "INR", label: "India (₹ INR)" },
+              { id: "USD", label: "International ($ USD)" },
+            ] as { id: Currency; label: string }[]).map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setCurrency(c.id)}
+                aria-pressed={currency === c.id}
+                className={`px-4 py-2 text-xs font-semibold rounded-[2px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 ${
+                  currency === c.id ? "bg-black text-white" : "text-gray-600 hover:text-black"
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
 
           <div
             role="radiogroup"
             aria-label="Choose a plan"
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5"
           >
             {plans.map((plan) => {
               const isSelected = selectedPlan === plan.id;
@@ -598,7 +699,7 @@ export function PremiumPage() {
                   aria-checked={isSelected}
                   tabIndex={-1}
                   onClick={() => setSelectedPlan(plan.id)}
-                  className={`relative cursor-pointer rounded-[2px] border p-7 flex flex-col transition-all ${
+                  className={`relative cursor-pointer rounded-[2px] border p-6 flex flex-col transition-all ${
                     dark
                       ? "border-black bg-black text-white"
                       : "border-gray-200 bg-white text-gray-950"
@@ -631,7 +732,7 @@ export function PremiumPage() {
                   </p>
 
                   <div className="flex items-baseline gap-1.5 mt-3">
-                    <span className="font-serif text-4xl md:text-5xl font-bold">{plan.price}</span>
+                    <span className="font-serif text-3xl xl:text-4xl font-bold">{plan.price}</span>
                     <span className={`text-sm ${dark ? "text-gray-400" : "text-gray-500"}`}>
                       {plan.cadence}
                     </span>
@@ -672,7 +773,7 @@ export function PremiumPage() {
           </div>
 
           {/* Errors from the payment flow show here, right under the cards */}
-          <ErrorBanner message={error} />
+          <ErrorBanner message={area === "plans" ? error : ""} />
 
           {/* Payment trust row */}
           <div className="mt-8 max-w-3xl flex flex-col gap-4">
@@ -687,6 +788,69 @@ export function PremiumPage() {
               <Lock size={12} /> Payments are processed securely via Razorpay. We never store your card details.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* =================================================
+          DIGITAL PRODUCTS (ONE-TIME PURCHASES)
+      ================================================= */}
+
+      <section id="reports" className="border-t border-gray-200 bg-white scroll-mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <SH
+            eyebrow="Buy Individually"
+            title="Not ready to subscribe? Buy just what you need"
+            subtitle={`One-time purchases with no subscription and no renewal. Prices shown in ${
+              currency === "INR" ? "₹ INR" : "$ USD"
+            }; switch region in the plans section above.`}
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {PRODUCT_META.map((p) => {
+              const isThisBusy = busyPlan === p.id;
+              return (
+                <div
+                  key={p.id}
+                  className="flex flex-col rounded-[2px] border border-gray-200 bg-white p-6 transition-all hover:border-gray-950 hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.25)]"
+                >
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-black text-yellow-400">
+                    <FileText size={17} strokeWidth={1.75} />
+                  </div>
+                  <h3 className="font-semibold text-[15px] text-gray-950 mt-4">{p.name}</h3>
+                  <p className="text-xs text-gray-500 mt-1">One-time purchase</p>
+                  <p className="font-serif text-3xl font-bold text-gray-950 mt-4 flex-1">
+                    {PRODUCT_PRICING[currency][p.id]}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleChoosePlan(p.id)}
+                    disabled={busy}
+                    className="mt-5 w-full py-3 rounded-[2px] bg-black hover:bg-gray-900 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                  >
+                    {isThisBusy ? (
+                      <><Loader2 size={15} className="animate-spin" /> Opening payment…</>
+                    ) : isSignedIn ? (
+                      "Buy now"
+                    ) : (
+                      "Sign up to buy"
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <ErrorBanner message={area === "products" ? error : ""} />
+          {success && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="flex items-start gap-2.5 rounded-[2px] border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 mt-5 max-w-xl"
+            >
+              <Check size={16} className="mt-0.5 shrink-0" />
+              <span>{success}</span>
+            </div>
+          )}
         </div>
       </section>
 
