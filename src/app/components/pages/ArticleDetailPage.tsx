@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { useAuth } from "../../context/AuthContext";
-import { ArrowLeft, ArrowRight, Bookmark, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
+import { SaveArticleButton } from "./SaveArticleButton";
 import {
   TimeAgo,
   estimateReadTime,
@@ -420,6 +421,7 @@ function MetaDot() {
 }
 
 function BlogMeta({
+  save,
   author,
   date,
   updatedAt,
@@ -428,6 +430,8 @@ function BlogMeta({
 }: {
   /** Shown first, on the same line as the byline, date and read time. */
   location?: string;
+  /** Enables the Save button for this article. */
+  save?: { title: string; category: string };
   author: string;
   date: string;
   /** ISO timestamp of the last edit, e.g. "2026-10-08T08:14:00Z". */
@@ -477,13 +481,7 @@ function BlogMeta({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 text-slate-500">
-        <button
-          type="button"
-          aria-label="Save article"
-          className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
-        >
-          <Bookmark size={13} />
-        </button>
+        {save ? <SaveArticleButton title={save.title} category={save.category} /> : null}
         <button
           type="button"
           aria-label="Adjust text size"
@@ -1150,6 +1148,7 @@ function SpecialBlog({
       meta={
         <BlogMeta
           author={article.author}
+          save={{ title: article.title, category: article.section }}
           date={article.publishedAt}
           updatedAt={(article as { updatedAt?: string }).updatedAt}
           readTime={estimateReadTime(
@@ -1227,6 +1226,7 @@ function HomepageBlog({
       meta={
         <BlogMeta
           author={article.author}
+          save={{ title: article.title, category: article.category }}
           date={article.publishedAt}
           updatedAt={(article as { updatedAt?: string }).updatedAt}
           readTime={estimateReadTime(
@@ -1313,6 +1313,7 @@ function DigestBlog({
         <BlogMeta
           location={digest.location}
           author={article.author}
+          save={{ title: article.title, category: article.category }}
           date={article.publishedAt}
           updatedAt={(article as { updatedAt?: string }).updatedAt}
           readTime={estimateReadTime(
@@ -1458,6 +1459,7 @@ function MagazineBlog({
       meta={
         <BlogMeta
           author={article.author}
+          save={{ title, category: (article as { category?: string }).category ?? "" }}
           date={dateLabel}
           updatedAt={updatedAt}
           readTime={readTime}
