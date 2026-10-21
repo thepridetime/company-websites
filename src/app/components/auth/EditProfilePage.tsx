@@ -6,14 +6,22 @@
 // Email and avatar are not editable here: email needs Supabase's confirmation flow,
 // and the avatar comes from Google sign-in.
 import { FormEvent, useEffect, useState } from "react";
-import { Link, Navigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../../lib/supabase";
 
 type Status = { kind: "idle" | "saving" | "ok" | "error"; message?: string };
 
+const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please sign in again.";
+
+// Matches the "invalid JWT / token is expired" family of errors from Supabase.
+function isSessionError(message: string): boolean {
+  return /jwt|expired|not authenticated|refresh token/i.test(message);
+}
+
 export function EditProfilePage() {
   const { user, isSignedIn, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -35,19 +43,38 @@ export function EditProfilePage() {
       setStatus({ kind: "error", message: "Name cannot be empty." });
       return;
     }
+
     setStatus({ kind: "saving" });
+
+    // The page can still show the user after the access token has expired,
+    // so get a fresh session before writing.
+    const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError || !refreshed.session) {
+      console.error("PROFILE_SESSION_REFRESH_FAILED", refreshError);
+      setStatus({ kind: "error", message: SESSION_EXPIRED_MESSAGE });
+      return;
+    }
+
     const { error } = await supabase.auth.updateUser({
       data: { full_name: trimmedName, name: trimmedName, country: country.trim() },
     });
-    setStatus(
-      error
-        ? { kind: "error", message: error.message }
-        : { kind: "ok", message: "Profile saved." }
-    );
+
+    if (error) {
+      console.error("PROFILE_UPDATE_FAILED", error);
+      setStatus({
+        kind: "error",
+        message: isSessionError(error.message) ? SESSION_EXPIRED_MESSAGE : error.message,
+      });
+      return;
+    }
+
+    setStatus({ kind: "ok", message: "Profile saved." });
   };
 
   const inputCls =
     "w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500";
+
+  const needsSignIn = status.kind === "error" && status.message === SESSION_EXPIRED_MESSAGE;
 
   return (
     <div className="min-h-screen bg-[#faf9f6]">
@@ -79,6 +106,16 @@ export function EditProfilePage() {
             <p className={`text-sm ${status.kind === "error" ? "text-red-600" : "text-green-700"}`}>
               {status.message}
             </p>
+          )}
+
+          {needsSignIn && (
+            <button
+              type="button"
+              onClick={() => navigate("/login", { state: { from: "/dashboard/profile" } })}
+              className="self-start border border-red-600 text-red-600 hover:bg-red-50 px-6 py-2.5 rounded-sm text-sm transition-colors"
+            >
+              Sign in again
+            </button>
           )}
 
           <button
