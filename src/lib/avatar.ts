@@ -5,7 +5,7 @@
 // which AuthContext already reads.
 import { supabase } from "./supabase";
 
-const BUCKET = "avatars";
+const BUCKET = "avatar";
 const MAX_BYTES = 2 * 1024 * 1024;
 const EXT_BY_TYPE: Record<string, string> = {
   "image/jpeg": "jpg",
