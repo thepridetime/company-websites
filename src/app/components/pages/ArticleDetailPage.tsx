@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { ArrowLeft, ArrowRight, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
 import { SaveArticleButton } from "./SaveArticleButton";
+import { ReadTracker } from "./ReadTracker";
 import {
   TimeAgo,
   estimateReadTime,
@@ -481,7 +482,12 @@ function BlogMeta({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 text-slate-500">
-        {save ? <SaveArticleButton title={save.title} category={save.category} /> : null}
+        {save ? (
+          <>
+            <SaveArticleButton title={save.title} category={save.category} />
+            <ReadTracker title={save.title} category={save.category} />
+          </>
+        ) : null}
         <button
           type="button"
           aria-label="Adjust text size"
