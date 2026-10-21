@@ -212,9 +212,9 @@ export function DashboardPage() {
   const accountItems: any[] = [
     { icon: CreditCard, label: isPremium ? "Manage subscription" : "Upgrade to Premium", to: "/premium" },
     { icon: Mail, label: "Newsletter preferences", onClick: scrollToNewsletters },
-    { icon: User, label: "Edit profile", soon: true },
-    { icon: Bell, label: "Notification settings", soon: true },
-    { icon: Shield, label: "Privacy & data", soon: true },
+    { icon: User, label: "Edit profile", to: "/dashboard/profile" },
+    { icon: Bell, label: "Notification settings", to: "/dashboard/notifications" },
+    { icon: Shield, label: "Privacy & data", to: "/dashboard/privacy" },
   ];
 
   return (
