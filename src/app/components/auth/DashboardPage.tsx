@@ -21,6 +21,7 @@ import {
 import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
 import { supabase } from "../../../lib/supabase";
+import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
 
 type ReadItem = {
   title: string;
@@ -231,18 +232,10 @@ export function DashboardPage() {
     const next = !subscribed[key];
     setSubscribed((prev) => ({ ...prev, [key]: next }));
 
-    const { error } = await supabase.from("newsletter_subscriptions").upsert(
-      {
-        user_id: user.id,
-        newsletter_key: key,
-        subscribed: next,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "user_id,newsletter_key" },
-    );
-
-    if (error) {
-      console.error("NEWSLETTER_SAVE_FAILED", error);
+    // Goes through the newsletter-notify function, which saves the change and emails the user.
+    const ok = await setNewsletterSubscribed(user.id, key, next);
+    if (!ok) {
+      console.error("NEWSLETTER_SAVE_FAILED", key);
       setSubscribed((prev) => ({ ...prev, [key]: !next }));
     }
   };
@@ -291,19 +284,11 @@ export function DashboardPage() {
   ];
 
   const accountItems: any[] = [
-    {
-      icon: CreditCard,
-      label: isPremium ? "Manage subscription" : "Upgrade to Premium",
-      to: "/premium",
-    },
-    {
-      icon: Mail,
-      label: "Newsletter preferences",
-      onClick: scrollToNewsletters,
-    },
-    { icon: User, label: "Edit profile", soon: true },
-    { icon: Bell, label: "Notification settings", soon: true },
-    { icon: Shield, label: "Privacy & data", soon: true },
+    { icon: CreditCard, label: isPremium ? "Manage subscription" : "Upgrade to Premium", to: "/premium" },
+    { icon: Mail, label: "Newsletter preferences", onClick: scrollToNewsletters },
+    { icon: User, label: "Edit profile", to: "/dashboard/profile" },
+    { icon: Bell, label: "Notification settings", to: "/dashboard/notifications" },
+    { icon: Shield, label: "Privacy & data", to: "/dashboard/privacy" },
   ];
 
   return (
@@ -374,11 +359,11 @@ export function DashboardPage() {
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-500 font-medium mt-1.5 flex items-center flex-wrap gap-x-3 gap-y-1">
+              <p className="text-sm text-white font-medium mt-1.5 flex items-center flex-wrap gap-x-3 gap-y-1">
                 <span>{user.email}</span>
                 {joinedDate && (
                   <>
-                    <span className="text-gray-300">|</span>
+                    <span className="text-white">|</span>
                     <span>Member since {joinedDate}</span>
                   </>
                 )}

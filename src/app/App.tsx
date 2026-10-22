@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 
@@ -71,6 +70,10 @@ import { ResetPasswordPage } from "./components/pages/ResetPasswordPage";
 import { LoginPage } from "./components/auth/LoginPage";
 import { SignUpPage } from "./components/auth/SignUpPage";
 import { DashboardPage } from "./components/auth/DashboardPage";
+import { EditProfilePage } from "./components/auth/EditProfilePage";
+import { NotificationSettingsPage } from "./components/auth/NotificationSettingsPage";
+import { PrivacyDataPage } from "./components/auth/PrivacyDataPage";
+import { SearchResultsPage } from "./context/SearchResultsPage";
 
 // ============================================================
 // MAGAZINE LAYOUT
@@ -127,7 +130,11 @@ export default function App() {
           <Route path="/signup" element={<SignUpPage />} />
 
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard/profile" element={<EditProfilePage />} />
+          <Route path="/dashboard/notifications" element={<NotificationSettingsPage />} />
+          <Route path="/dashboard/privacy" element={<PrivacyDataPage />} />
           <Route path="/premium" element={<MagazineLayout><PremiumPage /></MagazineLayout>} />
+          <Route path="/search" element={<MagazineLayout><SearchResultsPage /></MagazineLayout>} />
 
           <Route
             path="/reset-password"

@@ -1,0 +1,26 @@
+-- DRAFT migration. Review before running on production. Not applied.
+-- Public "avatars" bucket. Each user can write only inside their own folder: <user_id>/...
+-- Anyone can read (profile pictures are shown publicly on the site).
+
+insert into storage.buckets (id, name, public)
+values ('avatar', 'avatar', true)
+on conflict (id) do nothing;
+
+drop policy if exists "avatars_public_read" on storage.objects;
+create policy "avatars_public_read" on storage.objects
+  for select using (bucket_id = 'avatar');
+
+drop policy if exists "avatars_insert_own" on storage.objects;
+create policy "avatars_insert_own" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'avatar' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "avatars_update_own" on storage.objects;
+create policy "avatars_update_own" on storage.objects
+  for update to authenticated
+  using (bucket_id = 'avatar' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "avatars_delete_own" on storage.objects;
+create policy "avatars_delete_own" on storage.objects
+  for delete to authenticated
+  using (bucket_id = 'avatar' and (storage.foldername(name))[1] = auth.uid()::text);
