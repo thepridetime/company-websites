@@ -1,4 +1,3 @@
-// DRAFT - not wired in yet. Review before merging.
 // Target path: src/app/components/auth/EditProfilePage.tsx
 // Route: /dashboard/profile
 // Sections: profile (picture, name, country, bio), password, and security (sign out other devices).
@@ -13,6 +12,14 @@ import {
   signOutOtherSessions,
 } from "../../../lib/accountSecurity";
 import { removeAvatar, uploadAvatar, validateAvatarFile } from "../../../lib/avatar";
+import {
+  currentSessionId,
+  listDevices,
+  revokeDevice,
+  timeAgo,
+  trackCurrentDevice,
+  type DeviceSession,
+} from "../../../lib/devices";
 
 const BIO_MAX = 160;
 const SESSION_EXPIRED = "Your session has expired. Please sign in again.";
@@ -72,10 +79,15 @@ export function EditProfilePage() {
   const [confirmPwd, setConfirmPwd] = useState("");
   const [pwdMsg, setPwdMsg] = useState<Msg>(null);
   const [pwdBusy, setPwdBusy] = useState(false);
+  const [editingPassword, setEditingPassword] = useState(false);
 
   // Security
   const [secMsg, setSecMsg] = useState<Msg>(null);
   const [secBusy, setSecBusy] = useState(false);
+  const [devices, setDevices] = useState<DeviceSession[]>([]);
+  const [devicesLoading, setDevicesLoading] = useState(true);
+  const [currentSid, setCurrentSid] = useState<string | null>(null);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -89,6 +101,25 @@ export function EditProfilePage() {
       setAvatarUrl((meta.avatar_url as string) || user.avatar);
       setHasPassword((data.user?.identities ?? []).some((i) => i.provider === "email"));
     });
+  }, [user?.id]);
+
+  const refreshDevices = async () => {
+    setDevicesLoading(true);
+    try {
+      setDevices(await listDevices());
+    } catch (err) {
+      console.error("DEVICES_LOAD_FAILED", err);
+      setSecMsg({ kind: "error", text: "Could not load your devices." });
+    } finally {
+      setDevicesLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    trackCurrentDevice(user.id).catch((err) => console.error("DEVICE_TRACK_FAILED", err));
+    currentSessionId().then(setCurrentSid);
+    refreshDevices();
   }, [user?.id]);
 
   if (!isLoading && !isSignedIn) return <Navigate to="/login" replace />;
@@ -187,6 +218,7 @@ export function EditProfilePage() {
       setNewPwd("");
       setConfirmPwd("");
       setHasPassword(true);
+      setEditingPassword(false);
       return {
         kind: "ok",
         text: wasSettingFirstPassword
@@ -200,10 +232,24 @@ export function EditProfilePage() {
   const onSignOutOthers = () =>
     withFreshSession(setSecMsg, setSecBusy, async () => {
       const ok = await signOutOtherSessions();
+      if (ok) await refreshDevices();
       return ok
         ? { kind: "ok", text: "You have been signed out on all other devices." }
         : { kind: "error", text: "Could not sign out other devices. Please try again." };
     });
+
+  const onRevokeDevice = async (d: DeviceSession) => {
+    setRevokingId(d.session_id);
+    setSecMsg(null);
+    const ok = await revokeDevice(d.session_id);
+    setRevokingId(null);
+    if (ok) {
+      setDevices((list) => list.filter((x) => x.session_id !== d.session_id));
+      setSecMsg({ kind: "ok", text: `Signed out ${d.label}.` });
+    } else {
+      setSecMsg({ kind: "error", text: "Could not sign out that device. Please try again." });
+    }
+  };
 
   const initials = user.name
     .split(" ")
@@ -286,51 +332,128 @@ export function EditProfilePage() {
         {/* ---------- Password ---------- */}
         <section className={cardCls}>
           <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>
-            {hasPassword === false ? "Set a password" : "Change password"}
+            {hasPassword === false ? "Set a password" : "Password"}
           </h2>
-          {hasPassword === false && (
-            <p className="text-sm text-gray-500">
-              You signed in with Google. Set a password to also sign in with your email.
-            </p>
+
+          {hasPassword && !editingPassword ? (
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                {/* Fixed-length mask. The real password is never stored or shown in the app. */}
+                <p className="text-sm text-gray-800 tracking-widest">••••••••</p>
+                <p className="text-xs text-gray-400 mt-1">Hidden for your security.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingPassword(true);
+                  setPwdMsg(null);
+                }}
+                className={secondaryBtn}
+              >
+                Edit
+              </button>
+            </div>
+          ) : (
+            <>
+              {hasPassword === false && (
+                <p className="text-sm text-gray-500">
+                  You signed in with Google. Set a password to also sign in with your email.
+                </p>
+              )}
+
+              <form onSubmit={onChangePassword} className="flex flex-col gap-5">
+                {hasPassword && (
+                  <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+                    Current password
+                    <input type="password" autoComplete="current-password" className={inputCls} value={currentPwd} onChange={(e) => setCurrentPwd(e.target.value)} />
+                  </label>
+                )}
+                <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+                  New password
+                  <input type="password" autoComplete="new-password" className={inputCls} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} />
+                  <span className="text-xs text-gray-400">At least {MIN_PASSWORD_LENGTH} characters.</span>
+                </label>
+                <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+                  Confirm new password
+                  <input type="password" autoComplete="new-password" className={inputCls} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} />
+                </label>
+
+                <Feedback msg={pwdMsg} />
+
+                <div className="flex flex-wrap gap-3">
+                  <button type="submit" disabled={pwdBusy || hasPassword === null} className={primaryBtn}>
+                    {pwdBusy ? "Saving…" : hasPassword === false ? "Set password" : "Update password"}
+                  </button>
+                  {hasPassword && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingPassword(false);
+                        setCurrentPwd("");
+                        setNewPwd("");
+                        setConfirmPwd("");
+                        setPwdMsg(null);
+                      }}
+                      className={secondaryBtn}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </form>
+            </>
           )}
-
-          <form onSubmit={onChangePassword} className="flex flex-col gap-5">
-            {hasPassword && (
-              <label className="flex flex-col gap-1.5 text-sm text-gray-700">
-                Current password
-                <input type="password" autoComplete="current-password" className={inputCls} value={currentPwd} onChange={(e) => setCurrentPwd(e.target.value)} />
-              </label>
-            )}
-            <label className="flex flex-col gap-1.5 text-sm text-gray-700">
-              New password
-              <input type="password" autoComplete="new-password" className={inputCls} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} />
-              <span className="text-xs text-gray-400">At least {MIN_PASSWORD_LENGTH} characters.</span>
-            </label>
-            <label className="flex flex-col gap-1.5 text-sm text-gray-700">
-              Confirm new password
-              <input type="password" autoComplete="new-password" className={inputCls} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} />
-            </label>
-
-            <Feedback msg={pwdMsg} />
-
-            <button type="submit" disabled={pwdBusy || hasPassword === null} className={primaryBtn}>
-              {pwdBusy ? "Updating…" : hasPassword === false ? "Set password" : "Update password"}
-            </button>
-          </form>
         </section>
 
         {/* ---------- Security ---------- */}
         <section className={cardCls}>
-          <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Security</h2>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Signed-in devices</h2>
+
+          {devicesLoading ? (
+            <p className="text-sm text-gray-400">Loading devices…</p>
+          ) : devices.length === 0 ? (
+            <p className="text-sm text-gray-400">No devices found.</p>
+          ) : (
+            <ul className="divide-y divide-gray-200">
+              {devices.map((d) => {
+                const isCurrent = d.session_id === currentSid;
+                return (
+                  <li key={d.session_id} className="flex items-center justify-between gap-4 py-3">
+                    <div>
+                      <p className="text-sm text-gray-800 flex items-center gap-2">
+                        {d.label}
+                        {isCurrent && (
+                          <span className="text-[10px] uppercase tracking-wider text-green-700">This device</span>
+                        )}
+                      </p>
+                      <p className="text-xs text-gray-400">Last active {timeAgo(d.last_seen_at)}</p>
+                    </div>
+                    {!isCurrent && (
+                      <button
+                        type="button"
+                        onClick={() => onRevokeDevice(d)}
+                        disabled={revokingId === d.session_id}
+                        className={secondaryBtn}
+                      >
+                        {revokingId === d.session_id ? "Signing out…" : "Sign out"}
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-200 pt-5">
             <div>
-              <p className="text-sm text-gray-800">Sign out other devices</p>
+              <p className="text-sm text-gray-800">Sign out all other devices</p>
               <p className="text-xs text-gray-400">Ends every session except this one.</p>
             </div>
             <button type="button" onClick={onSignOutOthers} disabled={secBusy} className={secondaryBtn}>
               {secBusy ? "Signing out…" : "Sign out others"}
             </button>
           </div>
+
           <Feedback msg={secMsg} />
         </section>
       </div>
