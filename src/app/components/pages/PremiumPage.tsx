@@ -19,16 +19,19 @@ function SH({
   eyebrow, title, subtitle, center = false,
 }: { eyebrow: string; title: string; subtitle?: string; center?: boolean }) {
   return (
-    <div className={`mb-10 md:mb-14 text-gray-950 ${center ? "text-center mx-auto max-w-2xl" : "max-w-2xl"}`}>
+    // <div className={`mb-10 md:mb-14 text-gray-900 ${center ? "text-center mx-auto max-w-2xl" : "max-w-2xl"}`}>
+    <div className={`mb-8 md:mb-10 text-gray-900 ${center ? "text-center mx-auto max-w-2xl" : "max-w-2xl"}`}>
       <p className={`flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.24em] text-red-600 mb-3 ${center ? "justify-center" : ""}`}>
         <span className="h-1.5 w-1.5 rounded-full bg-red-600 shrink-0" />
         {eyebrow}
       </p>
-      <h2 className="font-serif text-[28px] md:text-[40px] font-bold tracking-tight leading-[1.1]">
+      {/* <h2 className="font-serif text-[28px] md:text-[40px] font-bold tracking-tight leading-[1.1]"> */}
+      <h2 className="font-serif text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-[44px] leading-[1.05]">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-gray-600 text-[15px] md:text-base leading-[1.7] mt-4">{subtitle}</p>
+        // <p className="text-gray-600 text-[15px] md:text-base leading-[1.7] mt-4">{subtitle}</p>
+        <p className="mt-4 text-sm sm:text-sm font-medium leading-relaxed text-gray-600">{subtitle}</p>
       )}
     </div>
   );
@@ -256,6 +259,7 @@ export function PremiumPage() {
   const [pricingVisible, setPricingVisible] = useState(false);
 
   const isPremium = user?.tier === "premium";
+  // const isPremium = false;
 
   // Show the mobile sticky bar only when neither hero nor pricing is on screen
   useEffect(() => {
@@ -397,32 +401,41 @@ export function PremiumPage() {
           HERO
       ================================================= */}
 
-      <section ref={heroRef} className="relative overflow-hidden bg-black text-white">
-        <div
+      <section ref={heroRef} className="relative overflow-hidden border-b border-gray-200 bg-white text-gray-900">
+        {/* <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.28),transparent_55%)]"
-        />
-        <div
+        /> */}
+        {/* <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.07] bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:48px_48px]"
-        />
+        /> */}
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="grid lg:grid-cols-[1.3fr_1fr] gap-12 lg:gap-16 items-center">
             {/* Left: copy + CTAs */}
             <div>
-              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 mb-6">
-                <Crown size={13} className="text-yellow-400" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-yellow-400">
+              <div 
+              // className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-3.5 py-1.5 mb-6"
+              className="inline-flex items-center gap-2"
+              >
+                <Crown size={13} className="text-red-600" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-red-600">
                   Pride Times Premium
                 </span>
               </div>
 
-              <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[58px] font-bold leading-[1.05] tracking-tight">
+              <h1 
+              // className="font-serif text-[38px] sm:text-[46px] md:text-[58px] font-bold leading-[1.05] tracking-tight"
+              className="mt-2 font-serif text-3xl text-gray-900 sm:text-4xl lg:text-[44px] font-bold leading-[1.05] tracking-tight"
+              >
                 Reporting worth paying attention to — and worth paying for.
               </h1>
 
-              <p className="text-gray-400 text-base md:text-lg leading-[1.7] mt-6 max-w-xl">
+              <p 
+              // className="text-gray-600 text-base md:text-lg leading-[1.7] mt-6 max-w-xl"
+              className="mt-4 max-w-xl text-sm sm:text-sm font-medium leading-relaxed text-gray-500"
+              >
                 Unlimited access to every story, report and archive Pride Times
                 publishes, with none of the ads and none of the paywall
                 guesswork. Cancel whenever you like.
@@ -437,7 +450,7 @@ export function PremiumPage() {
                   </span>
                   <Link
                     to="/dashboard"
-                    className="text-sm text-gray-300 hover:text-white underline underline-offset-4 transition-colors"
+                    className="text-sm text-gray-400 font-medium hover:text-gray-900 underline underline-offset-4 transition-colors"
                   >
                     Manage subscription
                   </Link>
@@ -460,12 +473,12 @@ export function PremiumPage() {
                     <button
                       type="button"
                       onClick={scrollToPricing}
-                      className={`text-sm text-gray-300 hover:text-white underline underline-offset-4 transition-colors ${focusRing}`}
+                      className={`text-xs text-gray-500 hover:text-black underline underline-offset-4 transition-colors ${focusRing}`}
                     >
                       See pricing
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-3">
+                  <p className="text-xs text-gray-500 font-medium mt-3">
                     No card charged until the trial ends. Cancel before then at no cost.
                   </p>
                   <ErrorBanner message={error} dark />
@@ -475,26 +488,27 @@ export function PremiumPage() {
 
             {/* Right: what-you-get card */}
             <aside
-              aria-label="What Premium includes"
-              className="relative rounded-[2px] border border-white/15 bg-white/[0.04] backdrop-blur-sm p-7"
+              // aria-label="What Premium includes"
+              // className="relative rounded-[2px] border border-white/15 bg-white/[0.04] backdrop-blur-sm p-7"
+              className="relative rounded-[2px] border border-gray-300 bg-white p-7"
             >
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-yellow-400">
+                <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-red-500">
                   <Crown size={13} /> Premium member
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.14em] bg-yellow-400 text-black px-2 py-1 rounded-[2px]">
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] bg-red-600 text-white px-2 py-1 rounded-[2px]">
                   Best Value
                 </span>
               </div>
               <p className="font-serif text-4xl font-bold mt-5">
                 {annualPlan.price}{" "}
-                <span className="text-sm font-sans font-normal text-gray-400">{annualPlan.cadence}</span>
+                <span className="text-sm font-sans font-medium text-gray-500">{annualPlan.cadence}</span>
               </p>
-              <p className="text-xs text-gray-400 mt-1">{annualPlan.billed}</p>
-              <ul className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6">
+              <p className="text-xs text-gray-500 font-medium mt-1">{annualPlan.billed}</p>
+              <ul className="mt-6 flex flex-col gap-3 border-t border-gray-300 pt-6">
                 {planPerks.map((f) => (
-                  <li key={f} className="flex items-center gap-2.5 text-sm text-gray-200">
-                    <Check size={14} className="text-yellow-400 shrink-0" strokeWidth={2.5} />
+                  <li key={f} className="flex items-center gap-2.5 text-sm font-medium text-gray-500">
+                    <Check size={14} className="text-red-600 shrink-0" strokeWidth={2.5} />
                     {f}
                   </li>
                 ))}
@@ -503,7 +517,7 @@ export function PremiumPage() {
                 <button
                   type="button"
                   onClick={scrollToPricing}
-                  className={`mt-7 w-full inline-flex items-center justify-center gap-2 border border-white/25 hover:bg-white hover:text-black text-white text-sm font-semibold py-3 rounded-[2px] transition-colors ${focusRing}`}
+                  className={`mt-7 w-full inline-flex items-center justify-center gap-2 border border-gray-900 hover:text-black text-gray-900 text-sm font-medium py-3 rounded-[2px] transition-colors ${focusRing}`}
                 >
                   Compare plans <ArrowRight size={15} />
                 </button>
@@ -513,12 +527,12 @@ export function PremiumPage() {
         </div>
 
         {/* Trust strip */}
-        <div className="relative border-t border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap gap-x-8 gap-y-3 text-xs text-gray-400">
-            <span className="inline-flex items-center gap-2"><ShieldCheck size={14} className="text-yellow-400" /> Secure payments via Razorpay</span>
-            <span className="inline-flex items-center gap-2"><Check size={14} className="text-yellow-400" /> Cancel anytime, no lock-in</span>
-            <span className="inline-flex items-center gap-2"><Smartphone size={14} className="text-yellow-400" /> Works on web and mobile</span>
-            <span className="inline-flex items-center gap-2"><Newspaper size={14} className="text-yellow-400" /> 25+ years of archive</span>
+        <div className="relative border-t border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm font-medium text-gray-500">
+            <span className="inline-flex items-center gap-2"><ShieldCheck size={16} className="text-red-600" /> Secure payments via Razorpay</span>
+            <span className="inline-flex items-center gap-2"><Check size={16} className="text-red-600" /> Cancel anytime, no lock-in</span>
+            <span className="inline-flex items-center gap-2"><Smartphone size={16} className="text-red-600" /> Works on web and mobile</span>
+            <span className="inline-flex items-center gap-2"><Newspaper size={16} className="text-red-600" /> 25+ years of archive</span>
           </div>
         </div>
       </section>
@@ -530,9 +544,9 @@ export function PremiumPage() {
       <section className="border-b border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-6">
           {stats.map((s) => (
-            <div key={s.label} className="text-center md:text-left">
-              <p className="font-serif text-3xl md:text-4xl font-bold text-gray-950">{s.value}</p>
-              <p className="text-xs uppercase tracking-[0.14em] text-gray-500 mt-1.5">{s.label}</p>
+            <div key={s.label} className="text-center md:text-center">
+              <p className="font-serif text-3xl md:text-4xl font-bold text-gray-900">{s.value}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-gray-500 mt-1.5">{s.label}</p>
             </div>
           ))}
         </div>
@@ -553,14 +567,14 @@ export function PremiumPage() {
           {features.map(({ icon: Icon, title, desc }) => (
             <div
               key={title}
-              className="group flex gap-4 rounded-[2px] border border-gray-200 bg-white p-6 transition-all hover:border-gray-950 hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.25)]"
+              className="group flex gap-4 rounded-[2px] border border-gray-200 bg-white p-6 transition-all hover:border-gray-300 hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.25)]"
             >
-              <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black text-yellow-400 shrink-0 transition-transform group-hover:scale-105">
+              <div className="flex items-center justify-center w-11 h-11 rounded-full bg-red-100 text-red-600 shrink-0 transition-transform group-hover:scale-105">
                 <Icon size={18} strokeWidth={1.75} />
               </div>
               <div>
-                <h3 className="font-semibold text-[15px] text-gray-950">{title}</h3>
-                <p className="text-sm text-gray-600 leading-[1.65] mt-1.5">{desc}</p>
+                <h3 className="font-semibold text-[16px] font-medium text-gray-900">{title}</h3>
+                <p className="text-sm sm:text-sm text-gray-600 font-medium leading-relaxed mt-1.5">{desc}</p>
               </div>
             </div>
           ))}
@@ -580,14 +594,14 @@ export function PremiumPage() {
           <ol className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {steps.map(({ icon: Icon, title, desc }, i) => (
               <li key={title} className="relative rounded-[2px] border border-gray-200 bg-white p-7">
-                <span className="absolute -top-3 left-7 bg-black text-yellow-400 text-[11px] font-bold px-2.5 py-1 rounded-[2px]">
+                <span className="absolute -top-3 left-7 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-[2px]">
                   Step {i + 1}
                 </span>
-                <div className="flex items-center justify-center w-11 h-11 rounded-full bg-red-600 text-white">
+                <div className="flex items-center justify-center w-11 h-11 rounded-full bg-red-100 text-red-600">
                   <Icon size={18} strokeWidth={1.75} />
                 </div>
-                <h3 className="font-semibold text-[16px] text-gray-950 mt-5">{title}</h3>
-                <p className="text-sm text-gray-600 leading-[1.65] mt-2">{desc}</p>
+                <h3 className="font-semibold text-[16px] text-gray-900 mt-5">{title}</h3>
+                <p className="text-sm sm:text-sm font-medium text-gray-500 leading-relaxed mt-2">{desc}</p>
               </li>
             ))}
           </ol>
@@ -599,11 +613,11 @@ export function PremiumPage() {
       ================================================= */}
 
       <section className="border-t border-gray-200 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <SH eyebrow="Compare Plans" title="What changes when you upgrade" />
 
           <div className="border border-gray-200 rounded-[2px] overflow-hidden bg-white shadow-[0_8px_30px_-16px_rgba(0,0,0,0.2)]">
-            <div className="grid grid-cols-[1fr_72px_84px] sm:grid-cols-[1fr_88px_104px] md:grid-cols-[1fr_120px_140px] bg-gray-950 text-white">
+            <div className="grid grid-cols-[1fr_72px_84px] sm:grid-cols-[1fr_88px_104px] md:grid-cols-[1fr_120px_140px] bg-gray-900 text-white">
               <div className="px-4 sm:px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
                 Feature
               </div>
@@ -618,11 +632,11 @@ export function PremiumPage() {
             {comparison.map((row, i) => (
               <div
                 key={row.label}
-                className={`grid grid-cols-[1fr_72px_84px] sm:grid-cols-[1fr_88px_104px] md:grid-cols-[1fr_120px_140px] items-center transition-colors hover:bg-gray-50 ${
+                className={`grid grid-cols-[1fr_72px_84px] sm:grid-cols-[1fr_88px_104px] md:grid-cols-[1fr_120px_140px] items-center transition-colors hover:bg-gray-100 ${
                   i !== comparison.length - 1 ? "border-b border-gray-100" : ""
                 }`}
               >
-                <div className="px-4 sm:px-5 py-3.5 text-sm text-gray-800">{row.label}</div>
+                <div className="px-4 sm:px-5 py-3.5 text-sm font-medium text-gray-800">{row.label}</div>
                 <div className="px-2 py-3.5 flex justify-center">
                   {row.free ? (
                     <Check size={16} className="text-gray-400" strokeWidth={2.5} aria-label="Included" />
@@ -732,19 +746,19 @@ export function PremiumPage() {
                   </p>
 
                   <div className="flex items-baseline gap-1.5 mt-3">
-                    <span className="font-serif text-3xl xl:text-4xl font-bold">{plan.price}</span>
-                    <span className={`text-sm ${dark ? "text-gray-400" : "text-gray-500"}`}>
+                    <span className="font-serif text-2xl xl:text-3xl font-bold">{plan.price}</span>
+                    <span className={`text-sm font-medium whitespace-nowrap ${dark ? "text-gray-400" : "text-gray-500"}`}>
                       {plan.cadence}
                     </span>
                   </div>
 
-                  <p className={`text-xs mt-2 ${dark ? "text-gray-400" : "text-gray-500"}`}>
+                  <p className={`text-sm mt-2 font-medium ${dark ? "text-gray-400" : "text-gray-500"}`}>
                     {plan.billed}
                   </p>
 
                   <ul className="flex flex-col gap-2.5 mt-6 mb-8 flex-1">
                     {planPerks.map((f) => (
-                      <li key={f} className="flex items-center gap-2.5 text-sm">
+                      <li key={f} className="flex items-center gap-2.5 text-sm font-medium">
                         <Check size={14} className={dark ? "text-yellow-400" : "text-red-600"} strokeWidth={2.5} />
                         {f}
                       </li>
@@ -755,7 +769,7 @@ export function PremiumPage() {
                     type="button"
                     onClick={(e) => { e.stopPropagation(); handleChoosePlan(plan.id); }}
                     disabled={isPremium || busy}
-                    className={`w-full py-3.5 rounded-[2px] text-sm font-semibold transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ${
+                    className={`w-full py-3.5 rounded-[2px] text-sm font-semibold transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ${
                       dark
                         ? "bg-red-600 hover:bg-red-700 text-white focus-visible:ring-offset-black"
                         : "bg-black hover:bg-gray-900 text-white"
@@ -779,13 +793,13 @@ export function PremiumPage() {
           <div className="mt-8 max-w-3xl flex flex-col gap-4">
             <div className="flex flex-wrap items-center gap-2">
               {["UPI", "Credit & debit cards", "Net banking", "International cards"].map((m) => (
-                <span key={m} className="text-xs font-medium text-gray-700 bg-white border border-gray-200 px-3 py-1.5 rounded-full">
+                <span key={m} className="text-xs font-medium text-gray-700 bg-white border border-gray-300 px-3 py-1.5 rounded-full">
                   {m}
                 </span>
               ))}
             </div>
-            <p className="flex items-center gap-2 text-xs text-gray-500">
-              <Lock size={12} /> Payments are processed securely via Razorpay. We never store your card details.
+            <p className="flex items-center gap-2 text-sm font-medium text-gray-500">
+              <Lock size={13} /> Payments are processed securely via Razorpay. We never store your card details.
             </p>
           </div>
         </div>
@@ -813,11 +827,11 @@ export function PremiumPage() {
                   key={p.id}
                   className="flex flex-col rounded-[2px] border border-gray-200 bg-white p-6 transition-all hover:border-gray-950 hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.25)]"
                 >
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-black text-yellow-400">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-100 text-red-600">
                     <FileText size={17} strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-semibold text-[15px] text-gray-950 mt-4">{p.name}</h3>
-                  <p className="text-xs text-gray-500 mt-1">One-time purchase</p>
+                  <h3 className="font-medium text-[16px] text-gray-950 mt-4">{p.name}</h3>
+                  <p className="text-sm font-medium text-gray-500 mt-1">One-time purchase</p>
                   <p className="font-serif text-3xl font-bold text-gray-950 mt-4 flex-1">
                     {PRODUCT_PRICING[currency][p.id]}
                   </p>
@@ -825,7 +839,8 @@ export function PremiumPage() {
                     type="button"
                     onClick={() => handleChoosePlan(p.id)}
                     disabled={busy}
-                    className="mt-5 w-full py-3 rounded-[2px] bg-black hover:bg-gray-900 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                    // className="mt-5 w-full py-3 rounded-[2px] bg-black hover:bg-gray-900 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                    className="mt-5 self-start inline-flex items-center justify-center gap-2 rounded-xs bg-red-100 hover:bg-red-200 text-red-600 text-sm font-semibold px-5 py-2 transition-colors disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                   >
                     {isThisBusy ? (
                       <><Loader2 size={15} className="animate-spin" /> Opening payment…</>
@@ -870,19 +885,19 @@ export function PremiumPage() {
                     <Star key={n} size={14} className="fill-current" strokeWidth={0} />
                   ))}
                 </div>
-                <blockquote className="text-[15px] text-gray-700 leading-[1.75] flex-1 mt-4">
+                <blockquote className="text-[15px] font-medium text-gray-700 leading-[1.75] flex-1 mt-4">
                   "{t.quote}"
                 </blockquote>
                 <figcaption className="mt-6 pt-5 border-t border-gray-200 flex items-center gap-3">
                   <span
                     aria-hidden="true"
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-yellow-400 text-xs font-bold shrink-0"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-red-600 text-xs font-bold shrink-0"
                   >
                     {t.name.split(" ").map((w) => w[0]).join("")}
                   </span>
                   <span>
                     <span className="block text-sm font-semibold text-gray-950">{t.name}</span>
-                    <span className="block text-xs text-gray-500 mt-0.5">{t.role}</span>
+                    <span className="block text-xs font-medium text-gray-500 mt-0.5">{t.role}</span>
                   </span>
                 </figcaption>
               </figure>
@@ -896,7 +911,7 @@ export function PremiumPage() {
       ================================================= */}
 
       <section className="border-t border-gray-200 bg-gray-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <SH eyebrow="Questions" title="Frequently asked" />
 
           <Accordion type="single" collapsible className="border-t border-gray-300">
@@ -905,7 +920,7 @@ export function PremiumPage() {
                 <AccordionTrigger className="text-[15px] font-semibold text-gray-950 hover:no-underline py-5 text-left">
                   {f.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-gray-600 leading-[1.7] pb-5">
+                <AccordionContent className="text-sm font-medium text-gray-600 leading-[1.7] pb-5">
                   {f.a}
                 </AccordionContent>
               </AccordionItem>
@@ -929,7 +944,7 @@ export function PremiumPage() {
               <h2 className="font-serif text-[28px] md:text-[36px] font-bold leading-[1.15]">
                 Start your 30-day free trial today.
               </h2>
-              <p className="text-gray-400 text-sm mt-3 flex items-center justify-center md:justify-start gap-2">
+              <p className="text-gray-400 font-medium text-sm mt-3 flex items-center justify-center md:justify-start gap-2">
                 <Smartphone size={13} /> Works on web and mobile. No card charged until the trial ends.
               </p>
             </div>
@@ -968,8 +983,8 @@ export function PremiumPage() {
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-400">
               {selected.name}
             </p>
-            <p className="text-white text-sm font-semibold truncate">
-              {selected.price} <span className="text-gray-400 font-normal">{selected.cadence}</span>
+            <p className="text-white text-sm truncate">
+              {selected.price} <span className="text-gray-400 font-bold">{selected.cadence}</span>
             </p>
           </div>
           <button
