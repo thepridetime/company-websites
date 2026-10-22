@@ -1,17 +1,40 @@
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import {
-  User, BookOpen, Star, Bell, CreditCard, Settings,
-  TrendingUp, Bookmark, Clock, Globe, LogOut, Crown,
-  ChevronRight, Newspaper, Mail, Shield,
+  User,
+  BookOpen,
+  Star,
+  Bell,
+  CreditCard,
+  Settings,
+  TrendingUp,
+  Bookmark,
+  Clock,
+  Globe,
+  LogOut,
+  Crown,
+  ChevronRight,
+  Newspaper,
+  Mail,
+  Shield,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
 import { supabase } from "../../../lib/supabase";
 import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
 
-type ReadItem = { title: string; category: string; path: string; read_at: string };
-type SavedItem = { title: string; category: string; path: string; saved_at: string };
+type ReadItem = {
+  title: string;
+  category: string;
+  path: string;
+  read_at: string;
+};
+type SavedItem = {
+  title: string;
+  category: string;
+  path: string;
+  saved_at: string;
+};
 
 const CATEGORY_COLORS: Record<string, string> = {
   Finance: "#dc2626",
@@ -26,15 +49,38 @@ const NEWSLETTER_CATALOG = [
   { key: "daily-brief", name: "The Daily Brief", freq: "Every morning" },
   { key: "markets-morning", name: "Markets Morning", freq: "Weekdays 7am IST" },
   { key: "technology-weekly", name: "Technology Weekly", freq: "Every Monday" },
-  { key: "billionaires-tracker", name: "Billionaires Tracker", freq: "Every Friday" },
-  { key: "india-business-digest", name: "India Business Digest", freq: "Daily" },
+  {
+    key: "billionaires-tracker",
+    name: "Billionaires Tracker",
+    freq: "Every Friday",
+  },
+  {
+    key: "india-business-digest",
+    name: "India Business Digest",
+    freq: "Daily",
+  },
 ];
 
-const TRENDING_TAGS = ["AI", "Fed Policy", "India Markets", "Billionaires", "EV", "Cybersecurity", "NVIDIA", "OpenAI", "Clean Energy", "Supply Chain"];
+const TRENDING_TAGS = [
+  "AI",
+  "Fed Policy",
+  "India Markets",
+  "Billionaires",
+  "EV",
+  "Cybersecurity",
+  "NVIDIA",
+  "OpenAI",
+  "Clean Energy",
+  "Supply Chain",
+];
 
 const premiumFeatures = [
   { icon: Shield, title: "Ad-free reading", desc: "No ads on any page" },
-  { icon: Newspaper, title: "Full archive access", desc: "25+ years of Pride Times" },
+  {
+    icon: Newspaper,
+    title: "Full archive access",
+    desc: "25+ years of Pride Times",
+  },
   { icon: Mail, title: "Priority newsletters", desc: "Early edition & alerts" },
   { icon: Globe, title: "Global editions", desc: "India, US, UK & Asia" },
   { icon: Star, title: "Exclusive interviews", desc: "CEO Q&As & profiles" },
@@ -54,7 +100,10 @@ function timeAgo(iso: string): string {
 }
 
 function shortDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 const dayKey = (d: Date) =>
@@ -101,30 +150,32 @@ export function DashboardPage() {
       monthStart.setDate(1);
       monthStart.setHours(0, 0, 0, 0);
 
-      const [authRes, recentRes, datesRes, savedRes, nlRes] = await Promise.all([
-        supabase.auth.getUser(),
-        supabase
-          .from("reading_history")
-          .select("title, category, path, read_at")
-          .eq("user_id", user.id)
-          .order("read_at", { ascending: false })
-          .limit(30),
-        supabase
-          .from("reading_history")
-          .select("read_at")
-          .eq("user_id", user.id)
-          .order("read_at", { ascending: false })
-          .limit(1000),
-        supabase
-          .from("saved_articles")
-          .select("title, category, path, saved_at")
-          .eq("user_id", user.id)
-          .order("saved_at", { ascending: false }),
-        supabase
-          .from("newsletter_subscriptions")
-          .select("newsletter_key, subscribed")
-          .eq("user_id", user.id),
-      ]);
+      const [authRes, recentRes, datesRes, savedRes, nlRes] = await Promise.all(
+        [
+          supabase.auth.getUser(),
+          supabase
+            .from("reading_history")
+            .select("title, category, path, read_at")
+            .eq("user_id", user.id)
+            .order("read_at", { ascending: false })
+            .limit(30),
+          supabase
+            .from("reading_history")
+            .select("read_at")
+            .eq("user_id", user.id)
+            .order("read_at", { ascending: false })
+            .limit(1000),
+          supabase
+            .from("saved_articles")
+            .select("title, category, path, saved_at")
+            .eq("user_id", user.id)
+            .order("saved_at", { ascending: false }),
+          supabase
+            .from("newsletter_subscriptions")
+            .select("newsletter_key, subscribed")
+            .eq("user_id", user.id),
+        ],
+      );
 
       if (cancelled) return;
 
@@ -133,11 +184,12 @@ export function DashboardPage() {
           new Date(authRes.data.user.created_at).toLocaleDateString("en-US", {
             month: "long",
             year: "numeric",
-          })
+          }),
         );
       }
 
-      if (recentRes.error) console.error("RECENT_FETCH_FAILED", recentRes.error);
+      if (recentRes.error)
+        console.error("RECENT_FETCH_FAILED", recentRes.error);
       const seen = new Set<string>();
       const distinct: ReadItem[] = [];
       for (const row of recentRes.data ?? []) {
@@ -149,9 +201,12 @@ export function DashboardPage() {
       }
       setRecentlyRead(distinct);
 
-      if (datesRes.error) console.error("READ_DATES_FETCH_FAILED", datesRes.error);
+      if (datesRes.error)
+        console.error("READ_DATES_FETCH_FAILED", datesRes.error);
       const dates = (datesRes.data ?? []).map((r) => r.read_at as string);
-      setArticlesThisMonth(dates.filter((d) => new Date(d) >= monthStart).length);
+      setArticlesThisMonth(
+        dates.filter((d) => new Date(d) >= monthStart).length,
+      );
       setStreak(calcStreak(dates));
 
       if (savedRes.error) console.error("SAVED_FETCH_FAILED", savedRes.error);
@@ -159,7 +214,8 @@ export function DashboardPage() {
 
       if (nlRes.error) console.error("NEWSLETTER_FETCH_FAILED", nlRes.error);
       const map: Record<string, boolean> = {};
-      for (const row of nlRes.data ?? []) map[row.newsletter_key] = row.subscribed;
+      for (const row of nlRes.data ?? [])
+        map[row.newsletter_key] = row.subscribed;
       setSubscribed(map);
 
       setDataLoading(false);
@@ -185,7 +241,9 @@ export function DashboardPage() {
   };
 
   const scrollToNewsletters = () =>
-    document.getElementById("newsletters")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById("newsletters")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   if (isLoading) {
     return (
@@ -199,10 +257,30 @@ export function DashboardPage() {
   const isPremium = user.tier === "premium";
 
   const stats = [
-    { icon: BookOpen, label: "Articles read", value: String(articlesThisMonth), sub: "this month" },
-    { icon: Bookmark, label: "Saved", value: String(savedArticles.length), sub: "in your library" },
-    { icon: Clock, label: "Reading streak", value: String(streak), sub: streak === 1 ? "day running" : "days running" },
-    { icon: Globe, label: "Edition", value: user.country || "Global", sub: "your region" },
+    {
+      icon: BookOpen,
+      label: "Articles read",
+      value: String(articlesThisMonth),
+      sub: "this month",
+    },
+    {
+      icon: Bookmark,
+      label: "Saved",
+      value: String(savedArticles.length),
+      sub: "in your library",
+    },
+    {
+      icon: Clock,
+      label: "Reading streak",
+      value: String(streak),
+      sub: streak === 1 ? "day running" : "days running",
+    },
+    {
+      icon: Globe,
+      label: "Edition",
+      value: user.country || "Global",
+      sub: "your region",
+    },
   ];
 
   const accountItems: any[] = [
@@ -218,18 +296,31 @@ export function DashboardPage() {
       <div className="bg-black text-white border-b-2 border-red-600">
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <img src={logoImg} alt="The Pride Times" className="h-9 w-auto object-contain" />
-            <span className="text-white text-sm hidden sm:inline" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+            <img
+              src={logoImg}
+              alt="The Pride Times"
+              className="h-9 w-auto object-contain"
+            />
+            <span
+              className="text-white text-sm hidden sm:inline"
+              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
               The Pride Times
             </span>
           </Link>
           <div className="flex items-center gap-5">
-            <Link to="/" className="text-xs text-gray-400 hover:text-white transition-colors">
+            <Link
+              to="/"
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
+            >
               ← Back to Home
             </Link>
             <button
-              onClick={() => { signOut(); navigate("/"); }}
-              className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+              onClick={() => {
+                signOut();
+                navigate("/");
+              }}
+              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
             >
               <LogOut size={12} /> Sign out
             </button>
@@ -237,44 +328,42 @@ export function DashboardPage() {
         </div>
       </div>
 
-      <div className="max-w-screen-xl mx-auto px-4 py-10">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-8 pb-8 border-b border-gray-200">
+      {/* --------------------------------------------
+                    welcome banner
+         -------------------------------------------- 
+   */}
+      <div className="bg-[#071a2d]">
+        <div className="max-w-screen-xl mx-auto px-4 py-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
           <div className="flex items-center gap-5">
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt=""
-                referrerPolicy="no-referrer"
-                className={`w-16 h-16 rounded-full object-cover ring-2 ring-offset-4 ring-offset-[#faf9f6] ${
-                  isPremium ? "ring-amber-400" : "ring-gray-300"
-                }`}
-              />
-            ) : (
-              <div
-                className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#faf9f6] ${
-                  isPremium ? "bg-black ring-amber-400" : "bg-gray-800 ring-gray-300"
-                }`}
-                style={{ fontFamily: "Georgia, serif" }}
-              >
-                {user.name[0]}
-              </div>
-            )}
+            <div
+              className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
+                isPremium
+                  ? "bg-black ring-amber-400"
+                  : "bg-gray-800 ring-gray-300"
+              }`}
+              style={{ fontFamily: "Georgia, serif" }}
+            >
+              {user.name[0]}
+            </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-3xl leading-tight" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+                <h1
+                  className="text-3xl leading-tight text-white"
+                  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                >
                   Welcome back, {user.name.split(" ")[0]}
                 </h1>
                 {isPremium && (
-                  <span className="flex items-center gap-1 bg-amber-400 text-black text-xs px-2 py-0.5 rounded-sm">
-                    <Crown size={10} /> Premium
+                  <span className="flex items-center gap-1 bg-amber-400 text-black text-xs font-medium px-2 py-0.5 rounded-sm">
+                    <Crown size={12} /> Premium
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-500 mt-1.5 flex items-center flex-wrap gap-x-3 gap-y-1">
+              <p className="text-sm text-white font-medium mt-1.5 flex items-center flex-wrap gap-x-3 gap-y-1">
                 <span>{user.email}</span>
                 {joinedDate && (
                   <>
-                    <span className="text-gray-300">|</span>
+                    <span className="text-white">|</span>
                     <span>Member since {joinedDate}</span>
                   </>
                 )}
@@ -296,30 +385,60 @@ export function DashboardPage() {
             </Link>
           )}
         </div>
+      </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-200 border border-gray-200 rounded-sm mb-10 bg-white">
+      {/* --------------------------------------------
+                    stats
+         -------------------------------------------- 
+   */}
+      <div className="max-w-screen-xl mx-auto px-4 py-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-300 border border-gray-300 rounded-sm mb-10 bg-white">
           {stats.map(({ icon: Icon, label, value, sub }) => (
             <div key={label} className="p-5">
-              <Icon size={15} className="text-gray-400 mb-3" />
-              <p className="text-3xl" style={{ fontFamily: "Georgia, serif" }}>
+              <Icon size={22} className="text-red-600 mb-3" />
+              <p
+                className="text-3xl text-center"
+                style={{ fontFamily: "Georgia, serif" }}
+              >
                 {dataLoading && label !== "Edition" ? "–" : value}
               </p>
-              <p className="text-sm text-gray-700 mt-1">{label}</p>
-              <p className="text-xs text-gray-400">{sub}</p>
+              <p className="text-sm font-medium text-gray-700 mt-1 text-center ">
+                {label}
+              </p>
+              <p className="text-xs font-medium text-gray-500 text-center">
+                {sub}
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 flex flex-col gap-10">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>Continue reading</h2>
-                <Clock size={14} className="text-gray-400" />
+        {/* --------------------------------------------
+                main- left column    
+    -------------------------------------------- 
+   */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-6 items-stretch mb-6">
+          <div className="flex flex-col gap-6">
+            <div className="bg-white border border-gray-300 rounded-sm p-6 flex flex-col flex-1">
+              <div className="flex items-center justify-between pb-4 border-b border-gray-300">
+                <h2
+                  className="text-xl"
+                  style={{ fontFamily: "Georgia, serif" }}
+                >
+                  Continue reading
+                </h2>
+                <Clock size={16} className="text-gray-400" />
               </div>
-              <div className="divide-y divide-gray-200 border-t border-gray-200 mt-3">
+
+              <div className="flex-1 flex flex-col divide-y divide-gray-300">
                 {!dataLoading && recentlyRead.length === 0 && (
-                  <p className="py-6 text-sm text-gray-500">Articles you read will show up here.</p>
+                  <div className="flex-1 flex flex-col items-center justify-center gap-3 py-5 text-center">
+                    <span className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                      <BookOpen size={20} className="text-gray-500" />
+                    </span>
+                    <p className="text-sm font-medium text-gray-500">
+                      Articles you read will show up here.
+                    </p>
+                  </div>
                 )}
                 {recentlyRead.map((a) => {
                   const color = colorFor(a.category);
@@ -335,7 +454,10 @@ export function DashboardPage() {
                       />
                       <div>
                         <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
+                          <span
+                            className="w-1.5 h-1.5 rounded-full"
+                            style={{ backgroundColor: color }}
+                          />
                           {a.category}
                         </span>
                         <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
@@ -343,8 +465,13 @@ export function DashboardPage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                        <span className="text-xs text-gray-400 whitespace-nowrap">{timeAgo(a.read_at)}</span>
-                        <ChevronRight size={13} className="text-gray-300 group-hover:text-red-600 transition-colors" />
+                        <span className="text-xs text-gray-400 whitespace-nowrap">
+                          {timeAgo(a.read_at)}
+                        </span>
+                        <ChevronRight
+                          size={13}
+                          className="text-gray-300 group-hover:text-red-600 transition-colors"
+                        />
                       </div>
                     </Link>
                   );
@@ -352,14 +479,31 @@ export function DashboardPage() {
               </div>
             </div>
 
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>Saved articles</h2>
-                <Bookmark size={14} className="text-gray-400" />
+            {/* --------------------------------------------
+                main- left- Saved articles   
+         -------------------------------------------- 
+   */}
+            <div className="bg-white border border-gray-300 rounded-sm p-6 flex flex-col flex-1">
+              <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+                <h2
+                  className="text-xl"
+                  style={{ fontFamily: "Georgia, serif" }}
+                >
+                  Saved articles
+                </h2>
+                <Bookmark size={16} className="text-gray-400" />
               </div>
-              <div className="divide-y divide-gray-200 border-t border-gray-200 mt-3">
+
+              <div className="flex-1 flex flex-col divide-y divide-gray-200">
                 {!dataLoading && savedArticles.length === 0 && (
-                  <p className="py-6 text-sm text-gray-500">You haven’t saved any articles yet.</p>
+                  <div className="flex-1 flex flex-col items-center justify-center gap-3 py-5 text-center">
+                    <span className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                      <Bookmark size={20} className="text-gray-500" />
+                    </span>
+                    <p className="text-sm font-medium text-gray-500">
+                      You haven’t saved any articles yet.
+                    </p>
+                  </div>
                 )}
                 {savedArticles.map((a) => (
                   <Link
@@ -368,147 +512,222 @@ export function DashboardPage() {
                     className="py-4 flex items-center justify-between group"
                   >
                     <div>
-                      <span className="text-xs text-gray-500">{a.category}</span>
-                      <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">{a.title}</p>
+                      <span className="text-xs text-gray-500">
+                        {a.category}
+                      </span>
+                      <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {a.title}
+                      </p>
                     </div>
-                    <span className="text-xs text-gray-400 flex-shrink-0 ml-4">{shortDate(a.saved_at)}</span>
+                    <span className="text-xs text-gray-400 flex-shrink-0 ml-4">
+                      {shortDate(a.saved_at)}
+                    </span>
                   </Link>
                 ))}
               </div>
             </div>
-
-            {!isPremium && (
-              <div className="relative overflow-hidden rounded-sm bg-black text-white p-7">
-                <div
-                  className="absolute -top-24 -right-24 w-72 h-72 rounded-full opacity-20 pointer-events-none"
-                  style={{ background: "radial-gradient(circle, #eab308 0%, transparent 70%)" }}
-                />
-                <div className="relative">
-                  <Crown size={18} className="text-amber-400 mb-3" />
-                  <h2 className="text-2xl leading-snug max-w-sm" style={{ fontFamily: "Georgia, serif" }}>
-                    Read The Pride Times without limits.
-                  </h2>
-                  <p className="text-gray-400 text-sm mt-2 mb-6">From ₹299/month — cancel anytime.</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 mb-7 max-w-lg">
-                    {premiumFeatures.map(({ icon: Icon, title, desc }) => (
-                      <div key={title} className="flex items-start gap-2.5 py-2 border-t border-white/10">
-                        <Icon size={14} className="text-amber-400 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="text-sm text-white">{title}</p>
-                          <p className="text-xs text-gray-500">{desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <Link
-                    to="/premium"
-                    className="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-sm transition-colors"
-                  >
-                    Start your free 30-day trial
-                  </Link>
-                </div>
-              </div>
-            )}
           </div>
 
-          <div className="flex flex-col gap-8">
-            <div className="bg-white border border-gray-200 rounded-sm p-5">
-              <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
-                <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Account</h2>
-                <Settings size={14} className="text-gray-400" />
-              </div>
-              <div className="flex flex-col">
-                {accountItems.map(({ icon: Icon, label, to, onClick, soon }) => {
-                  const inner = (
-                    <>
-                      <Icon size={14} className={soon ? "text-gray-300" : "text-gray-400 group-hover:text-red-600 transition-colors"} />
-                      {label}
-                      {soon ? (
-                        <span className="ml-auto text-[10px] uppercase tracking-wider text-gray-400">Soon</span>
-                      ) : (
-                        <ChevronRight size={12} className="text-gray-300 ml-auto group-hover:text-red-600 transition-colors" />
-                      )}
-                    </>
-                  );
-                  const cls = "flex items-center gap-3 text-sm text-gray-700 hover:text-red-600 transition-colors group py-2.5 w-full text-left";
-                  if (soon) {
-                    return (
-                      <div key={label} className="flex items-center gap-3 text-sm text-gray-400 py-2.5">
-                        {inner}
-                      </div>
-                    );
-                  }
-                  if (onClick) {
-                    return (
-                      <button key={label} type="button" onClick={onClick} className={cls}>
-                        {inner}
-                      </button>
-                    );
-                  }
-                  return (
-                    <Link key={label} to={to} className={cls}>
-                      {inner}
-                    </Link>
-                  );
-                })}
-                <button
-                  onClick={() => { signOut(); navigate("/"); }}
-                  className="flex items-center gap-3 text-sm text-gray-500 hover:text-red-600 transition-colors group mt-1 pt-3 border-t border-gray-200"
+          {!isPremium && (
+            <div className="relative overflow-hidden rounded-sm bg-[#071a2d] text-white p-7">
+              <div
+                className="absolute -top-24 -right-24 w-72 h-72 rounded-full opacity-20 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle, #eab308 0%, transparent 70%)",
+                }}
+              />
+              <div className="relative">
+                <Crown size={18} className="text-amber-400 mb-3" />
+                <h2
+                  className="text-2xl leading-snug max-w-sm"
+                  style={{ fontFamily: "Georgia, serif" }}
                 >
-                  <LogOut size={14} />
-                  Sign out
-                </button>
+                  Read The Pride Times without limits.
+                </h2>
+                <p className="text-gray-400 text-sm mt-2 mb-6">
+                  From ₹299/month — cancel anytime.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 mb-7 max-w-lg">
+                  {premiumFeatures.map(({ icon: Icon, title, desc }) => (
+                    <div
+                      key={title}
+                      className="flex items-start gap-2.5 py-2 border-t border-white/10"
+                    >
+                      <Icon
+                        size={14}
+                        className="text-amber-400 mt-0.5 flex-shrink-0"
+                      />
+                      <div>
+                        <p className="text-sm text-white">{title}</p>
+                        <p className="text-xs text-gray-500">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Link
+                  to="/premium"
+                  className="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-sm transition-colors"
+                >
+                  Start your free 30-day trial
+                </Link>
               </div>
             </div>
+          )}
 
-            <div id="newsletters" className="bg-white border border-gray-200 rounded-sm p-5 scroll-mt-6">
-              <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
-                <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Newsletters</h2>
-                <Mail size={14} className="text-gray-400" />
-              </div>
-              <div className="flex flex-col divide-y divide-gray-100">
-                {NEWSLETTER_CATALOG.map((n) => {
-                  const isOn = !!subscribed[n.key];
+          {/* --------------------------------------------
+                main- right- account
+         -------------------------------------------- 
+   */}
+          {/* <div className="flex flex-col gap-8"> */}
+          <div className="bg-white border border-gray-300 rounded-sm p-7 flex flex-col h-full">
+            <div className="flex items-center justify-between pb-5 border-b border-gray-300">
+              <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>
+                Account
+              </h2>
+              <Settings size={16} className="text-gray-400" />
+            </div>
+            <div className="flex flex-col flex-1 mt-2 font-medium">
+              {accountItems.map(({ icon: Icon, label, to, onClick, soon }) => {
+                const inner = (
+                  <>
+                    <Icon
+                      size={14}
+                      className={
+                        soon
+                          ? "text-gray-300"
+                          : "text-gray-400 group-hover:text-red-600 transition-colors"
+                      }
+                    />
+                    {label}
+                    {soon ? (
+                      <span className="ml-auto text-[10px] uppercase tracking-wider text-gray-400">
+                        Soon
+                      </span>
+                    ) : (
+                      <ChevronRight
+                        size={12}
+                        className="text-gray-300 ml-auto group-hover:text-red-600 transition-colors"
+                      />
+                    )}
+                  </>
+                );
+                const cls =
+                  "flex items-center gap-3 text-sm text-gray-700 hover:text-red-600 transition-colors group py-3 w-full text-left";
+                if (soon) {
                   return (
-                    <div key={n.key} className="flex items-center justify-between py-2.5">
-                      <div>
-                        <p className="text-sm text-gray-900">{n.name}</p>
-                        <p className="text-xs text-gray-400">{n.freq}</p>
-                      </div>
-                      <button
-                        onClick={() => toggleNewsletter(n.key)}
-                        className={`text-xs px-3 py-1 rounded-sm transition-colors flex-shrink-0 ml-3 ${
-                          isOn
-                            ? "bg-black text-white hover:bg-gray-800"
-                            : "border border-gray-300 text-gray-600 hover:border-black hover:text-black"
-                        }`}
-                      >
-                        {isOn ? "Subscribed" : "Subscribe"}
-                      </button>
+                    <div
+                      key={label}
+                      className="flex items-center gap-3 text-sm text-gray-400 py-2.5"
+                    >
+                      {inner}
                     </div>
                   );
-                })}
-              </div>
-            </div>
-
-            <div className="bg-white border border-gray-200 rounded-sm p-5">
-              <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
-                <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Trending for you</h2>
-                <TrendingUp size={14} className="text-gray-400" />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {TRENDING_TAGS.map((tag) => (
-                  <Link
-                    key={tag}
-                    to={`/search?q=${encodeURIComponent(tag)}`}
-                    className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-sm hover:bg-black hover:text-white transition-colors"
-                  >
-                    {tag}
+                }
+                if (onClick) {
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={onClick}
+                      className={cls}
+                    >
+                      {inner}
+                    </button>
+                  );
+                }
+                return (
+                  <Link key={label} to={to} className={cls}>
+                    {inner}
                   </Link>
-                ))}
-              </div>
+                );
+              })}
+              <button
+                onClick={() => {
+                  signOut();
+                  navigate("/");
+                }}
+                className="flex items-center gap-4 text-base text-gray-500 hover:text-red-600 transition-colors mt-auto pt-5 border-t border-gray-300 w-full text-left"
+              >
+                <LogOut size={14} />
+                Sign out
+              </button>
             </div>
           </div>
+          {/* </div> */}
+        </div>
+
+        {/* news letter and tranding */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-6 items-stretch mb-6">
+          <section
+            id="newsletters"
+            className="bg-white border border-gray-300 rounded-sm p-6 scroll-mt-6"
+          >
+            <div className="flex items-center justify-between pb-5 border-b border-gray-300">
+              <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>
+                Newsletters
+              </h2>
+              <Mail size={16} className="text-gray-400" />
+            </div>
+            <div
+              // className="flex flex-col divide-y divide-gray-100"
+              className="grid grid-cols-1 md:grid-cols-2 gap-x-10 mt-2"
+            >
+              {NEWSLETTER_CATALOG.map((n) => {
+                const isOn = !!subscribed[n.key];
+                return (
+                  <div
+                    key={n.key}
+                    className="flex items-center justify-between py-4 border-b border-gray-300"
+                  >
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {n.name}
+                      </p>
+                      <p className="text-xs font-medium text-gray-400">
+                        {n.freq}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleNewsletter(n.key)}
+                      className={`w-22 text-sm font-medium px-3 py-1 whitespace-nowrap text-center rounded-md transition-colors flex-shrink-0 ml-4 ${
+                        isOn
+                          ? "bg-black text-white hover:bg-gray-800"
+                          : "border border-gray-300 text-gray-600 hover:border-black hover:text-black"
+                      }`}
+                    >
+                      {isOn ? "Subscribed" : "Subscribe"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* trending  */}
+          <section className="bg-white border border-gray-300 rounded-sm p-6">
+            <div className="flex items-center justify-between pb-5 border-b border-gray-300">
+              <h2
+                className="text-xl font-medium"
+                style={{ fontFamily: "Georgia, serif" }}
+              >
+                Trending for you
+              </h2>
+              <TrendingUp size={16} className="text-gray-400" />
+            </div>
+            <div className="flex flex-wrap gap-3 mt-5">
+              {TRENDING_TAGS.map((tag) => (
+                <Link
+                  key={tag}
+                  to={`/search?q=${encodeURIComponent(tag)}`}
+                  className="text-sm font-medium bg-gray-200 text-gray-700 px-2.5 py-1 rounded-sm hover:bg-black hover:text-white transition-colors"
+                >
+                  {tag}
+                </Link>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </div>
