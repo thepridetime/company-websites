@@ -3,8 +3,9 @@
 // Export, clear history, clear saved articles. Account deletion is a support request:
 // deleting an auth user needs a service-role edge function, which this repo doesn't have yet.
 import { useState } from "react";
-import { Link, Navigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
+import { supabase } from "../../../lib/supabase";
 import { clearReadingHistory } from "../../../lib/readingHistory";
 import {
   clearSavedArticles,
@@ -17,6 +18,7 @@ export function PrivacyDataPage() {
   const { user, isSignedIn, isLoading } = useAuth();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const navigate = useNavigate();
 
   if (!isLoading && !isSignedIn) return <Navigate to="/login" replace />;
   if (isLoading || !user) return null;
@@ -66,6 +68,29 @@ export function PrivacyDataPage() {
           : { kind: "error", text: "Could not send the request. Please try again." }
       );
     });
+  };
+
+  const onDeleteAccountNow = async () => {
+    const typed = window.prompt(
+      "This permanently deletes your login, profile picture, reading history, saved articles and newsletter settings. " +
+      "Any active Premium plan ends. This cannot be undone.\n\nType DELETE to confirm."
+    );
+    if (typed === null) return;
+    if (typed.trim() !== "DELETE") {
+      setMessage({ kind: "error", text: "Nothing was deleted. Type DELETE exactly to confirm." });
+      return;
+    }
+    setBusy(true);
+    setMessage(null);
+    const { error } = await supabase.functions.invoke("delete-account", { body: {} });
+    if (error) {
+      console.error("DELETE_ACCOUNT_FAILED", error);
+      setMessage({ kind: "error", text: "Could not delete your account. Please try again or use Request deletion." });
+      setBusy(false);
+      return;
+    }
+    await supabase.auth.signOut();
+    navigate("/", { replace: true });
   };
 
   const rowCls = "flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4";
@@ -126,6 +151,22 @@ export function PrivacyDataPage() {
             </div>
             <button type="button" disabled={busy} onClick={onRequestDeletion} className={btnCls}>
               Request deletion
+            </button>
+          </div>
+          <div className={rowCls}>
+            <div>
+              <p className="text-sm text-red-700">Delete account now</p>
+              <p className="text-xs text-gray-400">
+                Immediately and permanently deletes your login, profile picture, reading history, saved articles and newsletter settings. This cannot be undone.
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={onDeleteAccountNow}
+              className="self-start sm:self-auto bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm px-4 py-2 rounded-sm transition-colors"
+            >
+              Delete account
             </button>
           </div>
         </div>
