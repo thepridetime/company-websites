@@ -8,7 +8,6 @@ import {
 import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
 import { supabase } from "../../../lib/supabase";
-import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
 
 type ReadItem = { title: string; category: string; path: string; read_at: string };
 type SavedItem = { title: string; category: string; path: string; saved_at: string };
@@ -176,10 +175,15 @@ export function DashboardPage() {
     const next = !subscribed[key];
     setSubscribed((prev) => ({ ...prev, [key]: next }));
 
-    // Goes through the newsletter-notify function, which saves the change and emails the user.
-    const ok = await setNewsletterSubscribed(user.id, key, next);
-    if (!ok) {
-      console.error("NEWSLETTER_SAVE_FAILED", key);
+    const { error } = await supabase
+      .from("newsletter_subscriptions")
+      .upsert(
+        { user_id: user.id, newsletter_key: key, subscribed: next, updated_at: new Date().toISOString() },
+        { onConflict: "user_id,newsletter_key" }
+      );
+
+    if (error) {
+      console.error("NEWSLETTER_SAVE_FAILED", error);
       setSubscribed((prev) => ({ ...prev, [key]: !next }));
     }
   };
@@ -208,9 +212,9 @@ export function DashboardPage() {
   const accountItems: any[] = [
     { icon: CreditCard, label: isPremium ? "Manage subscription" : "Upgrade to Premium", to: "/premium" },
     { icon: Mail, label: "Newsletter preferences", onClick: scrollToNewsletters },
-    { icon: User, label: "Edit profile", to: "/dashboard/profile" },
-    { icon: Bell, label: "Notification settings", to: "/dashboard/notifications" },
-    { icon: Shield, label: "Privacy & data", to: "/dashboard/privacy" },
+    { icon: User, label: "Edit profile", soon: true },
+    { icon: Bell, label: "Notification settings", soon: true },
+    { icon: Shield, label: "Privacy & data", soon: true },
   ];
 
   return (
@@ -240,25 +244,14 @@ export function DashboardPage() {
       <div className="max-w-screen-xl mx-auto px-4 py-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-8 pb-8 border-b border-gray-200">
           <div className="flex items-center gap-5">
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt=""
-                referrerPolicy="no-referrer"
-                className={`w-16 h-16 rounded-full object-cover ring-2 ring-offset-4 ring-offset-[#faf9f6] ${
-                  isPremium ? "ring-amber-400" : "ring-gray-300"
-                }`}
-              />
-            ) : (
-              <div
-                className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#faf9f6] ${
-                  isPremium ? "bg-black ring-amber-400" : "bg-gray-800 ring-gray-300"
-                }`}
-                style={{ fontFamily: "Georgia, serif" }}
-              >
-                {user.name[0]}
-              </div>
-            )}
+            <div
+              className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#faf9f6] ${
+                isPremium ? "bg-black ring-amber-400" : "bg-gray-800 ring-gray-300"
+              }`}
+              style={{ fontFamily: "Georgia, serif" }}
+            >
+              {user.name[0]}
+            </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
                 <h1 className="text-3xl leading-tight" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
@@ -513,4 +506,3 @@ export function DashboardPage() {
       </div>
     </div>
   );
-}
