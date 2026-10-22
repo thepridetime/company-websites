@@ -1,6 +1,14 @@
 import { useEffect } from "react";
-import { Link } from "react-router";
-import { ArrowRight, Clock, MapPin } from "lucide-react";
+import { Link, useParams } from "react-router";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  CheckCircle2,
+  Clock,
+  Clock3,
+  MapPin,
+} from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { PrideTimesAd } from "../AdSenseSlots";
 import {
@@ -13,6 +21,15 @@ import {
   octEditionArticlePath,
   type OctEditionArticle,
 } from "../../data/octEditionData";
+import {
+  maArticles,
+  maDeals,
+  maHeroArticle,
+  getMAArticleBySlug,
+  getRelatedMAArticles,
+  type MAArticle,
+  type MADeal,
+} from "../../data/mergersAcquisitionsData";
 
 /* Display label for this section (page title, cards and feed). */
 const SECTION_LABEL = "Mergers and Acquisitions";
@@ -23,7 +40,7 @@ const SECTION_LABEL = "Mergers and Acquisitions";
    - "Deals and Moves Roundup" from the October 2026 Global
      Industry Edition (octEditionData.ts, section
      "Mergers and Acquisitions")
-========================================================= */
+   ========================================================= */
 
 type MAItem = {
   id: string;
@@ -52,7 +69,10 @@ const editionItems: MAItem[] = maEdition1Articles.map(
 );
 
 const octMAItems: MAItem[] = octEditionArticles
-  .filter((article: OctEditionArticle) => article.section === "Mergers and Acquisitions")
+  .filter(
+    (article: OctEditionArticle) =>
+      article.section === "Mergers and Acquisitions"
+  )
   .map((article) => ({
     id: article.id,
     href: octEditionArticlePath(article),
@@ -66,13 +86,12 @@ const octMAItems: MAItem[] = octEditionArticles
   }));
 
 const maItems: MAItem[] = [...editionItems, ...octMAItems];
-
 const leadStory = maItems[0];
 const otherStories = maItems.slice(1);
 
 /* =========================================================
    GOOGLE ADSENSE SLOTS
-========================================================= */
+   ========================================================= */
 
 type AdSlotProps = {
   slot: string;
@@ -96,7 +115,6 @@ function AdSlot({
       const w = window as Window & {
         adsbygoogle?: unknown[];
       };
-
       w.adsbygoogle = w.adsbygoogle || [];
       w.adsbygoogle.push({});
     } catch {
@@ -110,7 +128,6 @@ function AdSlot({
       <div className="mb-1 text-center text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
         Advertisement
       </div>
-
       <div className="w-full overflow-hidden" style={{ minHeight }}>
         <ins
           className="adsbygoogle"
@@ -146,7 +163,7 @@ function SidebarAd() {
 
 /* =========================================================
    SECTION HEADER (same style as homepage)
-========================================================= */
+   ========================================================= */
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -154,7 +171,6 @@ function SectionHeader({ title }: { title: string }) {
       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
         {title}
       </h2>
-
       <span className="hidden sm:block text-[8px] uppercase tracking-[0.16em] text-gray-400">
         The Pride Times
       </span>
@@ -164,29 +180,25 @@ function SectionHeader({ title }: { title: string }) {
 
 /* =========================================================
    MERGERS AND ACQUISITIONS PAGE
-========================================================= */
+   ========================================================= */
 
 export function MergersAcquisitionsPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
-
           {/* PAGE TITLE */}
-
           <header className="border-t-[3px] border-red-600 pt-4 mb-6">
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
               <div>
                 <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
                   {SECTION_LABEL}
                 </h1>
-
                 <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
                   Deals, takeovers, mergers and divestitures from The Pride
                   Times.
                 </p>
               </div>
-
               <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
                 Deals • Takeovers • Mergers
               </span>
@@ -204,9 +216,7 @@ export function MergersAcquisitionsPage() {
           {leadStory && (
             <section className="pb-8 mb-8 border-b border-gray-300">
               <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-6">
-
                 {/* LEAD STORY */}
-
                 <Link
                   to={leadStory.href}
                   className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
@@ -216,7 +226,6 @@ export function MergersAcquisitionsPage() {
                     alt={leadStory.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
-
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                   <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
@@ -228,27 +237,22 @@ export function MergersAcquisitionsPage() {
                     <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
                       {leadStory.title}
                     </h2>
-
                     <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
                       {leadStory.lede}
                     </p>
-
                     <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
-                      Read Full Story
-                      <ArrowRight size={12} />
+                      Read Full Story <ArrowRight size={12} />
                     </span>
                   </div>
                 </Link>
 
                 {/* RIGHT COLUMN */}
-
                 <aside className="min-w-0">
                   <div className="pb-5 border-b border-gray-200">
                     <div className="flex items-center justify-between mb-3">
                       <h2 className="font-serif text-lg font-bold">
                         Key Figures
                       </h2>
-
                       <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
                         {maItems.length} stories
                       </span>
@@ -263,7 +267,6 @@ export function MergersAcquisitionsPage() {
                           <span className="text-[10px] font-semibold text-gray-800">
                             {fact.label}
                           </span>
-
                           <span className="text-[10px] text-gray-500 text-right tabular-nums">
                             {fact.value}
                           </span>
@@ -277,7 +280,6 @@ export function MergersAcquisitionsPage() {
                       <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
                         More M&amp;A News
                       </h2>
-
                       <span className="text-[8px] uppercase tracking-wide text-gray-400">
                         Newsroom
                       </span>
@@ -295,12 +297,10 @@ export function MergersAcquisitionsPage() {
                               <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
                                 {item.location ?? item.kicker}
                               </span>
-
                               <div className="min-w-0">
                                 <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
                                   {item.title}
                                 </span>
-
                                 <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
                                   {item.lede}
                                 </span>
@@ -323,7 +323,6 @@ export function MergersAcquisitionsPage() {
           )}
 
           {/* LATEST M&A FEED */}
-
           {maItems.length > 0 && (
             <section className="mb-12">
               <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
@@ -348,11 +347,9 @@ export function MergersAcquisitionsPage() {
                         <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
                           {item.kicker}
                         </span>
-
                         {item.location && (
                           <>
                             <span className="text-[8px] text-gray-300">•</span>
-
                             <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
                               <MapPin size={8} />
                               {item.location}
@@ -388,33 +385,9 @@ export function MergersAcquisitionsPage() {
 }
 
 /* =========================================================
-   M&A ARTICLE PAGE (restored)
-   Append this block to the END of
-   src/app/components/pages/MergersAcquisitionsPage.tsx
-   (below the listing page). Keeps the /mergers-acquisitions/:slug route working.
-========================================================= */
-
-// Already imported at the top of the listing page: useEffect, Link, ArrowRight.
-import { useParams } from "react-router";
-import {
-  ArrowLeft,
-  ArrowUpRight,
-  BriefcaseBusiness,
-  CheckCircle2,
-  Clock3,
-  FileText,
-  Scale,
-  TrendingUp,
-} from "lucide-react";
-import {
-  maArticles,
-  maDeals,
-  maHeroArticle,
-  getMAArticleBySlug,
-  getRelatedMAArticles,
-  type MAArticle,
-  type MADeal,
-} from "../../data/mergersAcquisitionsData";
+   M&A ARTICLE PAGE
+   Keeps the /mergers-acquisitions/:slug route working.
+   ========================================================= */
 
 type AdSenseWindow = Window & {
   adsbygoogle?: unknown[];
@@ -442,7 +415,6 @@ function MAAdSpace({
       <p className="mb-2 text-center text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-400">
         Advertisement
       </p>
-
       <ins
         className="adsbygoogle"
         style={{
@@ -480,7 +452,7 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
           className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.13em] text-gray-500 transition-colors hover:text-red-600"
         >
           <ArrowLeft size={13} />
-          Back to M&A
+          Back to M&amp;A
         </Link>
 
         <header className="mx-auto mt-8 max-w-3xl border-b border-gray-200 pb-7 text-center">
@@ -500,13 +472,9 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
             <span className="font-semibold text-gray-700">
               By {article.author}
             </span>
-
             <span className="h-1 w-1 rounded-full bg-gray-300" />
-
             <span>{article.publishedAt}</span>
-
             <span className="h-1 w-1 rounded-full bg-gray-300" />
-
             <span className="flex items-center gap-1">
               <Clock3 size={11} />
               {article.readTime}
@@ -520,7 +488,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               <p className="text-[9px] font-bold uppercase tracking-[0.17em] text-red-600">
                 The central argument
               </p>
-
               <p className="mt-2 font-serif text-lg leading-[1.65] text-gray-800">
                 {article.subtitle}
               </p>
@@ -530,7 +497,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               <h2 className="font-serif text-xl font-bold text-gray-950">
                 Key takeaways
               </h2>
-
               <ul className="mt-4 space-y-3">
                 {article.highlights.map((point) => (
                   <li
@@ -541,7 +507,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
                       size={16}
                       className="mt-1 shrink-0 text-red-600"
                     />
-
                     <span>{point}</span>
                   </li>
                 ))}
@@ -555,14 +520,11 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
                     <span className="font-serif text-sm font-bold text-red-600">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-
                     <div className="h-px flex-1 bg-gray-200" />
                   </div>
-
                   <h2 className="font-serif text-xl font-bold leading-tight tracking-tight text-gray-950">
                     {section.heading}
                   </h2>
-
                   <p className="mt-4 text-[15px] leading-[1.95] text-gray-700">
                     {section.body}
                   </p>
@@ -574,7 +536,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               <p className="text-[9px] font-bold uppercase tracking-[0.17em] text-red-600">
                 Editorial note
               </p>
-
               <p className="mt-2 text-xs leading-6 text-gray-500">
                 {article.editorNote}
               </p>
@@ -597,7 +558,6 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
                 Story guide
               </p>
-
               <h2 className="mt-2 font-serif text-xl font-bold text-gray-950">
                 About this article
               </h2>
@@ -607,27 +567,22 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
                   <p className="text-[9px] uppercase tracking-[0.15em] text-gray-400">
                     Publication
                   </p>
-
                   <p className="mt-1 text-sm font-medium text-gray-800">
                     The Pride Times
                   </p>
                 </div>
-
                 <div>
                   <p className="text-[9px] uppercase tracking-[0.15em] text-gray-400">
                     Desk
                   </p>
-
                   <p className="mt-1 text-sm font-medium text-gray-800">
                     Mergers &amp; Acquisitions
                   </p>
                 </div>
-
                 <div>
                   <p className="text-[9px] uppercase tracking-[0.15em] text-gray-400">
                     Reading time
                   </p>
-
                   <p className="mt-1 text-sm font-medium text-gray-800">
                     {article.readTime}
                   </p>
@@ -639,22 +594,18 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
                 The Pride Times
               </p>
-
               <h3 className="mt-2 font-serif text-xl font-bold text-gray-950">
                 Follow the transaction, not just the headline.
               </h3>
-
               <p className="mt-3 text-xs leading-6 text-gray-600">
                 Explore more coverage on deal strategy, valuation, regulation
                 and integration.
               </p>
-
               <Link
                 to="/mergers-acquisitions"
                 className="mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-900 hover:text-red-600"
               >
-                Explore M&A
-                <ArrowRight size={13} />
+                Explore M&amp;A <ArrowRight size={13} />
               </Link>
             </div>
           </aside>
@@ -670,9 +621,8 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-600">
                 Continue reading
               </p>
-
               <h2 className="mt-1 font-serif text-2xl font-bold text-gray-950">
-                More M&A Analysis
+                More M&amp;A Analysis
               </h2>
             </div>
 
@@ -686,18 +636,14 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
                   <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-red-600">
                     {item.category}
                   </p>
-
                   <h3 className="mt-2 font-serif text-lg font-bold leading-tight text-gray-950 transition-colors group-hover:text-red-600">
                     {item.title}
                   </h3>
-
                   <p className="mt-3 line-clamp-3 text-xs leading-5 text-gray-500">
                     {item.subtitle}
                   </p>
-
                   <span className="mt-4 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.1em] text-gray-800">
-                    Read article
-                    <ArrowUpRight size={12} />
+                    Read article <ArrowUpRight size={12} />
                   </span>
                 </Link>
               ))}
@@ -711,11 +657,10 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
 
 /* =========================================================
    ARTICLE ROUTE WRAPPER
-========================================================= */
+   ========================================================= */
 
 export function MergersAcquisitionsArticlePage() {
   const { slug } = useParams<{ slug: string }>();
-
   const article = getMAArticleBySlug(slug);
 
   useEffect(() => {
@@ -726,23 +671,20 @@ export function MergersAcquisitionsArticlePage() {
     return (
       <main className="mx-auto min-h-[60vh] max-w-4xl px-5 py-20 text-center">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-red-600">
-          M&A | Article not found
+          M&amp;A | Article not found
         </p>
-
         <h1 className="mt-3 font-serif text-3xl font-bold text-gray-950">
           This article is unavailable.
         </h1>
-
         <p className="mt-3 text-sm text-gray-500">
           The article may have been moved or the link may be incorrect.
         </p>
-
         <Link
           to="/mergers-acquisitions"
           className="mt-6 inline-flex items-center gap-2 bg-black px-5 py-3 text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-red-600"
         >
           <ArrowLeft size={13} />
-          Return to M&A
+          Return to M&amp;A
         </Link>
       </main>
     );
