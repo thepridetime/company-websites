@@ -235,3 +235,15 @@ export async function clearSavedArticles(userId: string): Promise<boolean> {
   }
   return true;
 }
+
+/** Saves an account deletion request for the team to process. Returns true if saved. */
+export async function requestAccountDeletion(userId: string, email: string): Promise<boolean> {
+  const { error } = await supabase
+    .from("account_requests")
+    .insert({ user_id: userId, email, request_type: "delete" });
+  if (error) {
+    console.error("DELETE_REQUEST_FAILED", error);
+    return false;
+  }
+  return true;
+}

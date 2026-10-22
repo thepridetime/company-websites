@@ -74,6 +74,7 @@ import { EditProfilePage } from "./components/auth/EditProfilePage";
 import { NotificationSettingsPage } from "./components/auth/NotificationSettingsPage";
 import { PrivacyDataPage } from "./components/auth/PrivacyDataPage";
 import { SearchResultsPage } from "./context/SearchResultsPage";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 // ============================================================
 // MAGAZINE LAYOUT
@@ -119,6 +120,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
 
           {/* ==================================================
