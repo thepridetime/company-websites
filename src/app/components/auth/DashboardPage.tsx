@@ -334,9 +334,9 @@ export function DashboardPage() {
    */}
       <div className="bg-[#071a2d]">
         <div className="max-w-screen-xl mx-auto px-4 py-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-8 sm:gap-8 pl-2">
             <div
-              className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
+              className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
                 isPremium
                   ? "bg-black ring-amber-400"
                   : "bg-gray-800 ring-gray-300"
@@ -691,7 +691,7 @@ export function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => toggleNewsletter(n.key)}
-                      className={`w-22 text-sm font-medium px-3 py-1 whitespace-nowrap text-center rounded-md transition-colors flex-shrink-0 ml-4 ${
+                      className={`w-22 text-sm font-medium px-3 py-1 whitespace-nowrap text-center rounded-sm transition-colors flex-shrink-0 ml-4 ${
                         isOn
                           ? "bg-black text-white hover:bg-gray-800"
                           : "border border-gray-300 text-gray-600 hover:border-black hover:text-black"

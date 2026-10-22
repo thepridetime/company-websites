@@ -47,12 +47,12 @@ function Feedback({ msg }: { msg: Msg }) {
 }
 
 const inputCls =
-  "w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500";
-const cardCls = "mt-8 bg-white border border-gray-200 rounded-sm p-6 flex flex-col gap-5";
+  "w-full border border-gray-300 rounded-sm font-medium px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500";
+const cardCls = "mt-8 bg-white border border-gray-200 w-full min-w-0 rounded-sm p-6 flex flex-col gap-5";
 const primaryBtn =
   "self-start bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-6 py-2.5 rounded-sm text-sm transition-colors";
 const secondaryBtn =
-  "self-start border border-gray-300 hover:border-red-600 hover:text-red-600 disabled:opacity-60 px-5 py-2 rounded-sm text-sm transition-colors";
+  "self-start border border-gray-400 hover:border-red-600 hover:text-red-600 disabled:opacity-60 px-5 py-2 rounded-sm text-sm transition-colors";
 
 export function EditProfilePage() {
   const { user, isSignedIn, isLoading } = useAuth();
@@ -214,35 +214,35 @@ export function EditProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#faf9f6]">
-      <div className="max-w-xl mx-auto px-4 py-10 pb-20">
-        <Link to="/dashboard" className="text-sm text-gray-500 hover:text-red-600">
+      <div className="max-w-4xl mx-auto px-4 py-10 pb-20">
+        <Link to="/dashboard" className="text-sm font-medium text-gray-500 hover:text-red-600">
           ← Back to dashboard
         </Link>
-        <h1 className="mt-4 text-2xl" style={{ fontFamily: "Georgia, serif" }}>
+        <h1 className="mt-4 text-3xl" style={{ fontFamily: "Georgia, serif" }}>
           Edit profile
         </h1>
 
         {/* ---------- Profile ---------- */}
         <section className={cardCls}>
-          <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Profile</h2>
+          <h2 className="text-lg ml-6" style={{ fontFamily: "Georgia, serif" }}>Profile</h2>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-start gap-10 pl-4">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="h-16 w-16 rounded-full object-cover border border-gray-200" />
+              <img src={avatarUrl} alt="" className="h-16 w-16 -mt-5 rounded-full object-cover border border-gray-200" />
             ) : (
-              <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-lg">
+              <div className="h-18 w-18 shrink-0 rounded-full border-4 border-amber-400 bg-black flex items-center justify-center text-white text-lg">
                 {initials || "?"}
               </div>
             )}
             <div className="flex flex-col gap-2">
-              <label className={`${secondaryBtn} cursor-pointer`}>
+              <label className={`${secondaryBtn} cursor-pointer w-28 sm:w-44 h-10 flex items-center justify-center whitespace-nowrap`}>
                 Upload picture
                 <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={onPickAvatar} disabled={profileBusy} />
               </label>
-              <button type="button" onClick={onRemoveAvatar} disabled={profileBusy || !avatarUrl} className={secondaryBtn}>
+              <button type="button" onClick={onRemoveAvatar} disabled={profileBusy || !avatarUrl} className={`${secondaryBtn} w-28 sm:w-44 h-10 flex items-center justify-center whitespace-nowrap`}>
                 Remove picture
               </button>
-              <p className="text-xs text-gray-400">JPG, PNG or WebP, up to 2 MB.</p>
+              <p className="text-xs text-gray-500 font-medium">JPG, PNG or WebP, up to 2 MB.</p>
             </div>
           </div>
 
@@ -260,7 +260,7 @@ export function EditProfilePage() {
             <label className="flex flex-col gap-1.5 text-sm text-gray-700">
               <span className="flex justify-between">
                 <span>Bio</span>
-                <span className="text-xs text-gray-400">{bio.length}/{BIO_MAX}</span>
+                <span className="text-xs text-gray-500">{bio.length}/{BIO_MAX}</span>
               </span>
               <textarea
                 className={`${inputCls} min-h-[84px] resize-y`}
@@ -270,9 +270,9 @@ export function EditProfilePage() {
               />
             </label>
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-700 font-medium">
               Email: {user.email}
-              <span className="block text-xs text-gray-400 mt-1">To change your email, contact support.</span>
+              <span className="block text-xs text-gray-500 mt-1">To change your email, contact support.</span>
             </p>
 
             <Feedback msg={profileMsg} />
@@ -304,7 +304,7 @@ export function EditProfilePage() {
             <label className="flex flex-col gap-1.5 text-sm text-gray-700">
               New password
               <input type="password" autoComplete="new-password" className={inputCls} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} />
-              <span className="text-xs text-gray-400">At least {MIN_PASSWORD_LENGTH} characters.</span>
+              <span className="text-xs text-gray-500">At least {MIN_PASSWORD_LENGTH} characters.</span>
             </label>
             <label className="flex flex-col gap-1.5 text-sm text-gray-700">
               Confirm new password
@@ -324,8 +324,8 @@ export function EditProfilePage() {
           <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Security</h2>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <p className="text-sm text-gray-800">Sign out other devices</p>
-              <p className="text-xs text-gray-400">Ends every session except this one.</p>
+              <p className="text-sm font-medium text-gray-800">Sign out other devices</p>
+              <p className="text-xs font-medium text-gray-500">Ends every session except this one.</p>
             </div>
             <button type="button" onClick={onSignOutOthers} disabled={secBusy} className={secondaryBtn}>
               {secBusy ? "Signing out…" : "Sign out others"}
