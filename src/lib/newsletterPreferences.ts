@@ -1,8 +1,6 @@
-// DRAFT - not wired in yet. Do not import until reviewed.
 // Target path: src/lib/newsletterPreferences.ts
-// Moves NEWSLETTER_CATALOG out of DashboardPage.tsx so both the dashboard and any
-// future signup/settings page share one list. Backed by `newsletter_subscriptions`
-// (PK user_id + newsletter_key), the same table DashboardPage already uses.
+// Reads preferences directly from newsletter_subscriptions (RLS: own rows only).
+// Changes go through the newsletter-notify edge function, which saves the row and emails the user.
 import { supabase } from "./supabase";
 
 export type Newsletter = { key: string; name: string; freq: string };
@@ -36,8 +34,12 @@ export async function getNewsletterPreferences(userId: string): Promise<Record<s
   return prefs;
 }
 
+/**
+ * Subscribes or unsubscribes. The server saves the change and emails the user's registered address.
+ * Returns true if the change was saved. Check the console for NEWSLETTER_EMAIL_NOT_SENT if the email failed.
+ */
 export async function setNewsletterSubscribed(
-  userId: string,
+  _userId: string,
   key: string,
   subscribed: boolean
 ): Promise<boolean> {
@@ -45,18 +47,15 @@ export async function setNewsletterSubscribed(
     console.error("NEWSLETTER_UNKNOWN_KEY", key);
     return false;
   }
-  const { error } = await supabase.from("newsletter_subscriptions").upsert(
-    {
-      user_id: userId,
-      newsletter_key: key,
-      subscribed,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "user_id,newsletter_key" }
-  );
+  const { data, error } = await supabase.functions.invoke("newsletter-notify", {
+    body: { newsletter_key: key, subscribed },
+  });
   if (error) {
     console.error("NEWSLETTER_SAVE_FAILED", error);
     return false;
+  }
+  if (data && data.emailSent === false) {
+    console.warn("NEWSLETTER_EMAIL_NOT_SENT", key);
   }
   return true;
 }
