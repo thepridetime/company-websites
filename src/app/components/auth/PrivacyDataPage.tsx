@@ -6,10 +6,12 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { clearReadingHistory } from "../../../lib/readingHistory";
-import { clearSavedArticles, downloadDataPdf, exportUserData } from "../../../lib/accountData";
-
-// Replace with your real support address before release.
-const SUPPORT_EMAIL = "pridetimenews@gmail.com";
+import {
+  clearSavedArticles,
+  downloadDataPdf,
+  exportUserData,
+  requestAccountDeletion,
+} from "../../../lib/accountData";
 
 export function PrivacyDataPage() {
   const { user, isSignedIn, isLoading } = useAuth();
@@ -51,6 +53,18 @@ export function PrivacyDataPage() {
     run(async () => {
       const ok = await clearSavedArticles(user.id);
       setMessage(ok ? { kind: "ok", text: "Saved articles removed." } : { kind: "error", text: "Could not remove saved articles." });
+    });
+  };
+
+  const onRequestDeletion = () => {
+    if (!window.confirm("Request deletion of your account and all data? Our team will confirm by email.")) return;
+    run(async () => {
+      const ok = await requestAccountDeletion(user.id, user.email);
+      setMessage(
+        ok
+          ? { kind: "ok", text: "Deletion request received. We will confirm by email." }
+          : { kind: "error", text: "Could not send the request. Please try again." }
+      );
     });
   };
 
@@ -110,12 +124,9 @@ export function PrivacyDataPage() {
               <p className="text-sm text-gray-800">Delete account</p>
               <p className="text-xs text-gray-400">Permanently deletes your account and all data. Requests are handled by support.</p>
             </div>
-            <a
-              href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent("Account deletion request")}&body=${encodeURIComponent(`Please delete the account for ${user.email}.`)}`}
-              className={btnCls}
-            >
+            <button type="button" disabled={busy} onClick={onRequestDeletion} className={btnCls}>
               Request deletion
-            </a>
+            </button>
           </div>
         </div>
       </div>
