@@ -3,6 +3,7 @@
 // Sections: profile (picture, name, country, bio), password, and security (sign out other devices).
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router";
+import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../../lib/supabase";
 import {
@@ -56,6 +57,40 @@ function Feedback({ msg }: { msg: Msg }) {
 const inputCls =
   "w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500";
 const cardCls = "mt-8 bg-white border border-gray-200 rounded-sm p-6 flex flex-col gap-5";
+function PasswordInput({
+  value,
+  onChange,
+  autoComplete,
+  show,
+  onToggle,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  autoComplete: string;
+  show: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="relative">
+      <input
+        type={show ? "text" : "password"}
+        autoComplete={autoComplete}
+        className={`${inputCls} pr-10`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-label={show ? "Hide password" : "Show password"}
+        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700"
+      >
+        {show ? <EyeOff size={16} /> : <Eye size={16} />}
+      </button>
+    </div>
+  );
+}
+
 const primaryBtn =
   "self-start bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-6 py-2.5 rounded-sm text-sm transition-colors";
 const secondaryBtn =
@@ -80,6 +115,7 @@ export function EditProfilePage() {
   const [pwdMsg, setPwdMsg] = useState<Msg>(null);
   const [pwdBusy, setPwdBusy] = useState(false);
   const [editingPassword, setEditingPassword] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
 
   // Security
   const [secMsg, setSecMsg] = useState<Msg>(null);
@@ -365,17 +401,17 @@ export function EditProfilePage() {
                 {hasPassword && (
                   <label className="flex flex-col gap-1.5 text-sm text-gray-700">
                     Current password
-                    <input type="password" autoComplete="current-password" className={inputCls} value={currentPwd} onChange={(e) => setCurrentPwd(e.target.value)} />
+                    <PasswordInput value={currentPwd} onChange={setCurrentPwd} autoComplete="current-password" show={showPwd} onToggle={() => setShowPwd(!showPwd)} />
                   </label>
                 )}
                 <label className="flex flex-col gap-1.5 text-sm text-gray-700">
                   New password
-                  <input type="password" autoComplete="new-password" className={inputCls} value={newPwd} onChange={(e) => setNewPwd(e.target.value)} />
+                  <PasswordInput value={newPwd} onChange={setNewPwd} autoComplete="new-password" show={showPwd} onToggle={() => setShowPwd(!showPwd)} />
                   <span className="text-xs text-gray-400">At least {MIN_PASSWORD_LENGTH} characters.</span>
                 </label>
                 <label className="flex flex-col gap-1.5 text-sm text-gray-700">
                   Confirm new password
-                  <input type="password" autoComplete="new-password" className={inputCls} value={confirmPwd} onChange={(e) => setConfirmPwd(e.target.value)} />
+                  <PasswordInput value={confirmPwd} onChange={setConfirmPwd} autoComplete="new-password" show={showPwd} onToggle={() => setShowPwd(!showPwd)} />
                 </label>
 
                 <Feedback msg={pwdMsg} />
