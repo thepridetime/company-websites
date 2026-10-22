@@ -73,6 +73,7 @@ import { DashboardPage } from "./components/auth/DashboardPage";
 import { EditProfilePage } from "./components/auth/EditProfilePage";
 import { NotificationSettingsPage } from "./components/auth/NotificationSettingsPage";
 import { PrivacyDataPage } from "./components/auth/PrivacyDataPage";
+import { SearchResultsPage } from "./context/SearchResultsPage";
 
 // ============================================================
 // MAGAZINE LAYOUT
@@ -133,6 +134,7 @@ export default function App() {
           <Route path="/dashboard/notifications" element={<NotificationSettingsPage />} />
           <Route path="/dashboard/privacy" element={<PrivacyDataPage />} />
           <Route path="/premium" element={<MagazineLayout><PremiumPage /></MagazineLayout>} />
+          <Route path="/search" element={<MagazineLayout><SearchResultsPage /></MagazineLayout>} />
 
           <Route
             path="/reset-password"
