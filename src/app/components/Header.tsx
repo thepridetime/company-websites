@@ -332,15 +332,24 @@ export function Header() {
                   aria-label="Account"
                   aria-expanded={userMenuOpen}
                 >
-                  <div
-                    className={`w-full h-full rounded-full flex items-center justify-center text-white text-xs ${
-                      isPremium
-                        ? "bg-black"
-                        : "bg-gray-500"
-                    }`}
-                  >
-                    {user?.name?.[0]}
-                  </div>
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt=""
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className={`w-full h-full rounded-full flex items-center justify-center text-white text-xs ${
+                        isPremium
+                          ? "bg-black"
+                          : "bg-gray-500"
+                      }`}
+                    >
+                      {user?.name?.[0]}
+                    </div>
+                  )}
                 </button>
 
                 {userMenuOpen && (
