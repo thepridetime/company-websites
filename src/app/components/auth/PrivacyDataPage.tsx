@@ -1,4 +1,3 @@
-// DRAFT - not wired in yet. Review before merging.
 // Target path: src/app/components/auth/PrivacyDataPage.tsx
 // Route: /dashboard/privacy
 // Export, clear history, clear saved articles. Account deletion is a support request:
@@ -7,7 +6,7 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { clearReadingHistory } from "../../../lib/readingHistory";
-import { clearSavedArticles, downloadJson, exportUserData } from "../../../lib/accountData";
+import { clearSavedArticles, downloadDataPdf, exportUserData } from "../../../lib/accountData";
 
 // Replace with your real support address before release.
 const SUPPORT_EMAIL = "support@example.com";
@@ -35,7 +34,7 @@ export function PrivacyDataPage() {
   const onExport = () =>
     run(async () => {
       const data = await exportUserData(user.id, user.email);
-      downloadJson(`pride-times-data-${new Date().toISOString().slice(0, 10)}.json`, data);
+      downloadDataPdf(`pride-times-data-${new Date().toISOString().slice(0, 10)}.pdf`, data);
       setMessage({ kind: "ok", text: "Your data file has been downloaded." });
     });
 
@@ -79,7 +78,7 @@ export function PrivacyDataPage() {
           <div className={rowCls}>
             <div>
               <p className="text-sm text-gray-800">Download your data</p>
-              <p className="text-xs text-gray-400">Reading history, saved articles and newsletter preferences as a JSON file.</p>
+              <p className="text-xs text-gray-400">Reading history, saved articles and newsletter preferences as a PDF file.</p>
             </div>
             <button type="button" disabled={busy} onClick={onExport} className={btnCls}>
               Download
