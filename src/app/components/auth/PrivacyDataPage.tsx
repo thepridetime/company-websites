@@ -11,7 +11,6 @@ import {
   clearSavedArticles,
   downloadDataPdf,
   exportUserData,
-  requestAccountDeletion,
 } from "../../../lib/accountData";
 
 export function PrivacyDataPage() {
@@ -58,18 +57,6 @@ export function PrivacyDataPage() {
     });
   };
 
-  const onRequestDeletion = () => {
-    if (!window.confirm("Request deletion of your account and all data? Our team will confirm by email.")) return;
-    run(async () => {
-      const ok = await requestAccountDeletion(user.id, user.email);
-      setMessage(
-        ok
-          ? { kind: "ok", text: "Deletion request received. We will confirm by email." }
-          : { kind: "error", text: "Could not send the request. Please try again." }
-      );
-    });
-  };
-
   const onDeleteAccountNow = async () => {
     const typed = window.prompt(
       "This permanently deletes your login, profile picture, reading history, saved articles and newsletter settings. " +
@@ -85,7 +72,7 @@ export function PrivacyDataPage() {
     const { error } = await supabase.functions.invoke("delete-account", { body: {} });
     if (error) {
       console.error("DELETE_ACCOUNT_FAILED", error);
-      setMessage({ kind: "error", text: "Could not delete your account. Please try again or use Request deletion." });
+      setMessage({ kind: "error", text: "Could not delete your account. Please try again." });
       setBusy(false);
       return;
     }
@@ -144,15 +131,6 @@ export function PrivacyDataPage() {
             </button>
           </div>
 
-          <div className={rowCls}>
-            <div>
-              <p className="text-sm text-gray-800">Delete account</p>
-              <p className="text-xs text-gray-400">Permanently deletes your account and all data. Requests are handled by support.</p>
-            </div>
-            <button type="button" disabled={busy} onClick={onRequestDeletion} className={btnCls}>
-              Request deletion
-            </button>
-          </div>
           <div className={rowCls}>
             <div>
               <p className="text-sm text-red-700">Delete account now</p>
