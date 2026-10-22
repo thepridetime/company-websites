@@ -150,9 +150,10 @@ export function DashboardPage() {
       monthStart.setDate(1);
       monthStart.setHours(0, 0, 0, 0);
 
-      const [authRes, recentRes, datesRes, savedRes, nlRes] = await Promise.all(
+      const { data: sessionData } = await supabase.auth.getSession();
+
+      const [recentRes, datesRes, savedRes, nlRes] = await Promise.all(
         [
-          supabase.auth.getUser(),
           supabase
             .from("reading_history")
             .select("title, category, path, read_at")
@@ -179,9 +180,10 @@ export function DashboardPage() {
 
       if (cancelled) return;
 
-      if (authRes.data?.user?.created_at) {
+      const createdAt = sessionData?.session?.user?.created_at;
+      if (createdAt) {
         setJoinedDate(
-          new Date(authRes.data.user.created_at).toLocaleDateString("en-US", {
+          new Date(createdAt).toLocaleDateString("en-US", {
             month: "long",
             year: "numeric",
           }),
@@ -335,16 +337,27 @@ export function DashboardPage() {
       <div className="bg-[#071a2d]">
         <div className="max-w-screen-xl mx-auto px-4 py-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
           <div className="flex items-center gap-5">
-            <div
-              className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
-                isPremium
-                  ? "bg-black ring-amber-400"
-                  : "bg-gray-800 ring-gray-300"
-              }`}
-              style={{ fontFamily: "Georgia, serif" }}
-            >
-              {user.name[0]}
-            </div>
+            {user.avatar ? (
+              <img
+                src={user.avatar}
+                alt=""
+                referrerPolicy="no-referrer"
+                className={`w-16 h-16 rounded-full object-cover ring-2 ring-offset-4 ring-offset-[#071a2d] ${
+                  isPremium ? "ring-amber-400" : "ring-gray-300"
+                }`}
+              />
+            ) : (
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
+                  isPremium
+                    ? "bg-black ring-amber-400"
+                    : "bg-gray-800 ring-gray-300"
+                }`}
+                style={{ fontFamily: "Georgia, serif" }}
+              >
+                {user.name[0]}
+              </div>
+            )}
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
                 <h1
