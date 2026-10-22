@@ -9,7 +9,7 @@ import { clearReadingHistory } from "../../../lib/readingHistory";
 import { clearSavedArticles, downloadDataPdf, exportUserData } from "../../../lib/accountData";
 
 // Replace with your real support address before release.
-const SUPPORT_EMAIL = "support@example.com";
+const SUPPORT_EMAIL = "pridetimenews@gmail.com";
 
 export function PrivacyDataPage() {
   const { user, isSignedIn, isLoading } = useAuth();
