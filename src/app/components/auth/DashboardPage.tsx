@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
 import { supabase } from "../../../lib/supabase";
+import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
 
 type ReadItem = { title: string; category: string; path: string; read_at: string };
 type SavedItem = { title: string; category: string; path: string; saved_at: string };
@@ -175,15 +176,10 @@ export function DashboardPage() {
     const next = !subscribed[key];
     setSubscribed((prev) => ({ ...prev, [key]: next }));
 
-    const { error } = await supabase
-      .from("newsletter_subscriptions")
-      .upsert(
-        { user_id: user.id, newsletter_key: key, subscribed: next, updated_at: new Date().toISOString() },
-        { onConflict: "user_id,newsletter_key" }
-      );
-
-    if (error) {
-      console.error("NEWSLETTER_SAVE_FAILED", error);
+    // Goes through the newsletter-notify function, which saves the change and emails the user.
+    const ok = await setNewsletterSubscribed(user.id, key, next);
+    if (!ok) {
+      console.error("NEWSLETTER_SAVE_FAILED", key);
       setSubscribed((prev) => ({ ...prev, [key]: !next }));
     }
   };
