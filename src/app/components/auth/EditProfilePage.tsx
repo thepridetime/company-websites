@@ -1,9 +1,10 @@
 // Target path: src/app/components/auth/EditProfilePage.tsx
 // Route: /dashboard/profile
-// Sections: profile (picture, name, country, bio), password, and security (sign out other devices).
+// Profile (picture, name, country, bio) and password use a pencil button to switch into edit mode.
+// Security lists signed-in devices with per-device sign-out.
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Pencil } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../../lib/supabase";
 import {
@@ -26,6 +27,7 @@ const BIO_MAX = 160;
 const SESSION_EXPIRED = "Your session has expired. Please sign in again.";
 
 type Msg = { kind: "ok" | "error"; text: string } | null;
+type Profile = { name: string; country: string; bio: string };
 
 function isSessionError(text: string): boolean {
   return /jwt|expired|not authenticated|refresh token/i.test(text);
@@ -57,6 +59,23 @@ function Feedback({ msg }: { msg: Msg }) {
 const inputCls =
   "w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500";
 const cardCls = "mt-8 bg-white border border-gray-200 rounded-sm p-6 flex flex-col gap-5";
+const primaryBtn =
+  "self-start bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-6 py-2.5 rounded-sm text-sm transition-colors";
+const secondaryBtn =
+  "self-start border border-gray-300 hover:border-red-600 hover:text-red-600 disabled:opacity-60 px-5 py-2 rounded-sm text-sm transition-colors";
+const pencilBtn =
+  "inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-red-600 disabled:opacity-60 transition-colors";
+const sectionTitle = { fontFamily: "Georgia, serif" } as const;
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs uppercase tracking-wider text-gray-400">{label}</p>
+      <p className="text-sm text-gray-800 mt-1 whitespace-pre-wrap">{value}</p>
+    </div>
+  );
+}
+
 function PasswordInput({
   value,
   onChange,
@@ -91,31 +110,27 @@ function PasswordInput({
   );
 }
 
-const primaryBtn =
-  "self-start bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-6 py-2.5 rounded-sm text-sm transition-colors";
-const secondaryBtn =
-  "self-start border border-gray-300 hover:border-red-600 hover:text-red-600 disabled:opacity-60 px-5 py-2 rounded-sm text-sm transition-colors";
-
 export function EditProfilePage() {
   const { user, isSignedIn, isLoading } = useAuth();
+  const navigate = useNavigate();
 
-  // Profile
-  const [name, setName] = useState("");
-  const [country, setCountry] = useState("");
-  const [bio, setBio] = useState("");
+  // Profile: `profile` is what's saved; `draft` is what the form is editing.
+  const [profile, setProfile] = useState<Profile>({ name: "", country: "", bio: "" });
+  const [draft, setDraft] = useState<Profile>({ name: "", country: "", bio: "" });
+  const [editingProfile, setEditingProfile] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [profileMsg, setProfileMsg] = useState<Msg>(null);
   const [profileBusy, setProfileBusy] = useState(false);
 
   // Password
   const [hasPassword, setHasPassword] = useState<boolean | null>(null);
+  const [editingPassword, setEditingPassword] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
   const [pwdMsg, setPwdMsg] = useState<Msg>(null);
   const [pwdBusy, setPwdBusy] = useState(false);
-  const [editingPassword, setEditingPassword] = useState(false);
-  const [showPwd, setShowPwd] = useState(false);
 
   // Security
   const [secMsg, setSecMsg] = useState<Msg>(null);
@@ -127,13 +142,20 @@ export function EditProfilePage() {
 
   useEffect(() => {
     if (!user) return;
-    setName(user.name);
-    setCountry(user.country);
+    const initial = { name: user.name, country: user.country, bio: "" };
+    setProfile(initial);
+    setDraft(initial);
     setAvatarUrl(user.avatar);
     // Bio and avatar_url live in user_metadata, which AuthContext doesn't expose.
     supabase.auth.getUser().then(({ data }) => {
       const meta = data.user?.user_metadata ?? {};
-      setBio((meta.bio as string) ?? "");
+      const loaded = {
+        name: user.name,
+        country: user.country,
+        bio: (meta.bio as string) ?? "",
+      };
+      setProfile(loaded);
+      setDraft(loaded);
       setAvatarUrl((meta.avatar_url as string) || user.avatar);
       setHasPassword((data.user?.identities ?? []).some((i) => i.provider === "email"));
     });
@@ -184,18 +206,34 @@ export function EditProfilePage() {
   };
 
   // ---- Profile ----
+  const startEditingProfile = () => {
+    setDraft(profile);
+    setProfileMsg(null);
+    setEditingProfile(true);
+  };
+
+  const cancelEditingProfile = () => {
+    setDraft(profile);
+    setProfileMsg(null);
+    setEditingProfile(false);
+  };
+
   const onSaveProfile = (e: FormEvent) => {
     e.preventDefault();
-    const trimmedName = name.trim();
-    if (!trimmedName) {
+    const name = draft.name.trim();
+    if (!name) {
       setProfileMsg({ kind: "error", text: "Name cannot be empty." });
       return;
     }
+    const next: Profile = { name, country: draft.country.trim(), bio: draft.bio.trim() };
     withFreshSession(setProfileMsg, setProfileBusy, async () => {
       const { error } = await supabase.auth.updateUser({
-        data: { full_name: trimmedName, name: trimmedName, country: country.trim(), bio: bio.trim() },
+        data: { full_name: next.name, name: next.name, country: next.country, bio: next.bio },
       });
       if (error) throw error;
+      setProfile(next);
+      setDraft(next);
+      setEditingProfile(false);
       return { kind: "ok", text: "Profile saved." };
     });
   };
@@ -224,6 +262,22 @@ export function EditProfilePage() {
     });
 
   // ---- Password ----
+  const startEditingPassword = () => {
+    setCurrentPwd("");
+    setNewPwd("");
+    setConfirmPwd("");
+    setPwdMsg(null);
+    setEditingPassword(true);
+  };
+
+  const cancelEditingPassword = () => {
+    setEditingPassword(false);
+    setCurrentPwd("");
+    setNewPwd("");
+    setConfirmPwd("");
+    setPwdMsg(null);
+  };
+
   const onChangePassword = (e: FormEvent) => {
     e.preventDefault();
     if (newPwd.length < MIN_PASSWORD_LENGTH) {
@@ -287,7 +341,7 @@ export function EditProfilePage() {
     }
   };
 
-  const initials = user.name
+  const initials = profile.name
     .split(" ")
     .map((w) => w[0])
     .join("")
@@ -300,17 +354,24 @@ export function EditProfilePage() {
         <Link to="/dashboard" className="text-sm text-gray-500 hover:text-red-600">
           ← Back to dashboard
         </Link>
-        <h1 className="mt-4 text-2xl" style={{ fontFamily: "Georgia, serif" }}>
+        <h1 className="mt-4 text-2xl" style={sectionTitle}>
           Edit profile
         </h1>
 
         {/* ---------- Profile ---------- */}
         <section className={cardCls}>
-          <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Profile</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-base" style={sectionTitle}>Profile</h2>
+            {!editingProfile && (
+              <button type="button" onClick={startEditingProfile} aria-label="Edit profile" className={pencilBtn}>
+                <Pencil size={14} /> Edit
+              </button>
+            )}
+          </div>
 
           <div className="flex items-center gap-5">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="h-16 w-16 rounded-full object-cover border border-gray-200" />
+              <img src={avatarUrl} alt="" referrerPolicy="no-referrer" className="h-16 w-16 rounded-full object-cover border border-gray-200" />
             ) : (
               <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-lg">
                 {initials || "?"}
@@ -319,7 +380,13 @@ export function EditProfilePage() {
             <div className="flex flex-col gap-2">
               <label className={`${secondaryBtn} cursor-pointer`}>
                 Upload picture
-                <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={onPickAvatar} disabled={profileBusy} />
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={onPickAvatar}
+                  disabled={profileBusy}
+                />
               </label>
               <button type="button" onClick={onRemoveAvatar} disabled={profileBusy || !avatarUrl} className={secondaryBtn}>
                 Remove picture
@@ -328,66 +395,92 @@ export function EditProfilePage() {
             </div>
           </div>
 
-          <form onSubmit={onSaveProfile} className="flex flex-col gap-5">
-            <label className="flex flex-col gap-1.5 text-sm text-gray-700">
-              Full name
-              <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
-            </label>
+          {editingProfile ? (
+            <form onSubmit={onSaveProfile} className="flex flex-col gap-5">
+              <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+                Full name
+                <input
+                  className={inputCls}
+                  value={draft.name}
+                  onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+                  maxLength={80}
+                />
+              </label>
 
-            <label className="flex flex-col gap-1.5 text-sm text-gray-700">
-              Country
-              <input className={inputCls} value={country} onChange={(e) => setCountry(e.target.value)} maxLength={80} />
-            </label>
+              <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+                Country
+                <input
+                  className={inputCls}
+                  value={draft.country}
+                  onChange={(e) => setDraft({ ...draft, country: e.target.value })}
+                  maxLength={80}
+                />
+              </label>
 
-            <label className="flex flex-col gap-1.5 text-sm text-gray-700">
-              <span className="flex justify-between">
-                <span>Bio</span>
-                <span className="text-xs text-gray-400">{bio.length}/{BIO_MAX}</span>
-              </span>
-              <textarea
-                className={`${inputCls} min-h-[84px] resize-y`}
-                value={bio}
-                onChange={(e) => setBio(e.target.value.slice(0, BIO_MAX))}
-                placeholder="A line about you (optional)"
-              />
-            </label>
+              <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+                <span className="flex justify-between">
+                  <span>Bio</span>
+                  <span className="text-xs text-gray-400">
+                    {draft.bio.length}/{BIO_MAX}
+                  </span>
+                </span>
+                <textarea
+                  className={`${inputCls} min-h-[84px] resize-y`}
+                  value={draft.bio}
+                  onChange={(e) => setDraft({ ...draft, bio: e.target.value.slice(0, BIO_MAX) })}
+                  placeholder="A line about you (optional)"
+                />
+              </label>
 
-            <p className="text-sm text-gray-500">
-              Email: {user.email}
-              <span className="block text-xs text-gray-400 mt-1">To change your email, contact support.</span>
-            </p>
+              <p className="text-sm text-gray-500">
+                Email: {user.email}
+                <span className="block text-xs text-gray-400 mt-1">To change your email, contact support.</span>
+              </p>
 
-            <Feedback msg={profileMsg} />
+              <Feedback msg={profileMsg} />
 
-            <button type="submit" disabled={profileBusy} className={primaryBtn}>
-              {profileBusy ? "Saving…" : "Save changes"}
-            </button>
-          </form>
+              <div className="flex flex-wrap gap-3">
+                <button type="submit" disabled={profileBusy} className={primaryBtn}>
+                  {profileBusy ? "Saving…" : "Save changes"}
+                </button>
+                <button type="button" onClick={cancelEditingProfile} disabled={profileBusy} className={secondaryBtn}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <InfoRow label="Full name" value={profile.name || "Not set"} />
+              <InfoRow label="Country" value={profile.country || "Not set"} />
+              <InfoRow label="Bio" value={profile.bio || "Not set"} />
+              <p className="text-sm text-gray-500">
+                Email: {user.email}
+                <span className="block text-xs text-gray-400 mt-1">To change your email, contact support.</span>
+              </p>
+              <Feedback msg={profileMsg} />
+            </div>
+          )}
         </section>
 
         {/* ---------- Password ---------- */}
         <section className={cardCls}>
-          <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>
-            {hasPassword === false ? "Set a password" : "Password"}
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-base" style={sectionTitle}>
+              {hasPassword === false ? "Set a password" : "Password"}
+            </h2>
+            {hasPassword && !editingPassword && (
+              <button type="button" onClick={startEditingPassword} aria-label="Change password" className={pencilBtn}>
+                <Pencil size={14} /> Edit
+              </button>
+            )}
+          </div>
 
           {hasPassword && !editingPassword ? (
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                {/* Fixed-length mask. The real password is never stored or shown in the app. */}
-                <p className="text-sm text-gray-800 tracking-widest">••••••••</p>
-                <p className="text-xs text-gray-400 mt-1">Hidden for your security.</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingPassword(true);
-                  setPwdMsg(null);
-                }}
-                className={secondaryBtn}
-              >
-                Edit
-              </button>
+            <div>
+              {/* Fixed-length mask. The real password is never stored or shown in the app. */}
+              <p className="text-sm text-gray-800 tracking-widest">••••••••</p>
+              <p className="text-xs text-gray-400 mt-1">Hidden for your security.</p>
+              <Feedback msg={pwdMsg} />
             </div>
           ) : (
             <>
@@ -401,17 +494,35 @@ export function EditProfilePage() {
                 {hasPassword && (
                   <label className="flex flex-col gap-1.5 text-sm text-gray-700">
                     Current password
-                    <PasswordInput value={currentPwd} onChange={setCurrentPwd} autoComplete="current-password" show={showPwd} onToggle={() => setShowPwd(!showPwd)} />
+                    <PasswordInput
+                      value={currentPwd}
+                      onChange={setCurrentPwd}
+                      autoComplete="current-password"
+                      show={showPwd}
+                      onToggle={() => setShowPwd(!showPwd)}
+                    />
                   </label>
                 )}
                 <label className="flex flex-col gap-1.5 text-sm text-gray-700">
                   New password
-                  <PasswordInput value={newPwd} onChange={setNewPwd} autoComplete="new-password" show={showPwd} onToggle={() => setShowPwd(!showPwd)} />
+                  <PasswordInput
+                    value={newPwd}
+                    onChange={setNewPwd}
+                    autoComplete="new-password"
+                    show={showPwd}
+                    onToggle={() => setShowPwd(!showPwd)}
+                  />
                   <span className="text-xs text-gray-400">At least {MIN_PASSWORD_LENGTH} characters.</span>
                 </label>
                 <label className="flex flex-col gap-1.5 text-sm text-gray-700">
                   Confirm new password
-                  <PasswordInput value={confirmPwd} onChange={setConfirmPwd} autoComplete="new-password" show={showPwd} onToggle={() => setShowPwd(!showPwd)} />
+                  <PasswordInput
+                    value={confirmPwd}
+                    onChange={setConfirmPwd}
+                    autoComplete="new-password"
+                    show={showPwd}
+                    onToggle={() => setShowPwd(!showPwd)}
+                  />
                 </label>
 
                 <Feedback msg={pwdMsg} />
@@ -421,17 +532,7 @@ export function EditProfilePage() {
                     {pwdBusy ? "Saving…" : hasPassword === false ? "Set password" : "Update password"}
                   </button>
                   {hasPassword && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingPassword(false);
-                        setCurrentPwd("");
-                        setNewPwd("");
-                        setConfirmPwd("");
-                        setPwdMsg(null);
-                      }}
-                      className={secondaryBtn}
-                    >
+                    <button type="button" onClick={cancelEditingPassword} disabled={pwdBusy} className={secondaryBtn}>
                       Cancel
                     </button>
                   )}
@@ -443,7 +544,7 @@ export function EditProfilePage() {
 
         {/* ---------- Security ---------- */}
         <section className={cardCls}>
-          <h2 className="text-base" style={{ fontFamily: "Georgia, serif" }}>Signed-in devices</h2>
+          <h2 className="text-base" style={sectionTitle}>Signed-in devices</h2>
 
           {devicesLoading ? (
             <p className="text-sm text-gray-400">Loading devices…</p>
