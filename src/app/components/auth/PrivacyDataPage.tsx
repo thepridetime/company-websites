@@ -80,14 +80,14 @@ export function PrivacyDataPage() {
     navigate("/", { replace: true });
   };
 
-  const rowCls = "flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4";
+  const rowCls = "flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-6";
   const btnCls =
-    "self-start sm:self-auto border border-gray-300 hover:border-red-600 hover:text-red-600 disabled:opacity-60 text-sm px-4 py-2 rounded-sm transition-colors";
+    "self-start sm:self-auto w-32 sm:w-36 text-center border border-gray-300 hover:border-red-600 hover:text-red-600 disabled:opacity-60 text-sm px-4 py-2 rounded-sm transition-colors";
 
   return (
-    <div className="min-h-screen bg-[#faf9f6]">
-      <div className="max-w-xl mx-auto px-4 py-10">
-        <Link to="/dashboard" className="text-sm text-gray-500 hover:text-red-600">
+    <div className="bg-[#faf9f6]">
+      <div className="max-w-4xl mx-auto px-4 py-4">
+        <Link to="/dashboard" className="text-sm font-medium text-gray-500 hover:text-red-600">
           ← Back to dashboard
         </Link>
         <h1 className="mt-4 text-2xl" style={{ fontFamily: "Georgia, serif" }}>
@@ -95,7 +95,7 @@ export function PrivacyDataPage() {
         </h1>
 
         {message && (
-          <p className={`mt-4 text-sm ${message.kind === "error" ? "text-red-600" : "text-green-700"}`}>
+          <p className={`mt-4 text-sm font-medium ${message.kind === "error" ? "text-red-600" : "text-green-700"}`}>
             {message.text}
           </p>
         )}
@@ -103,8 +103,8 @@ export function PrivacyDataPage() {
         <div className="mt-8 bg-white border border-gray-200 rounded-sm divide-y divide-gray-200">
           <div className={rowCls}>
             <div>
-              <p className="text-sm text-gray-800">Download your data</p>
-              <p className="text-xs text-gray-400">Reading history, saved articles and newsletter preferences as a PDF file.</p>
+              <p className="text-sm font-medium text-gray-800">Download your data</p>
+              <p className="text-xs font-medium text-gray-400">Reading history, saved articles and newsletter preferences as a PDF file.</p>
             </div>
             <button type="button" disabled={busy} onClick={onExport} className={btnCls}>
               Download
@@ -113,8 +113,8 @@ export function PrivacyDataPage() {
 
           <div className={rowCls}>
             <div>
-              <p className="text-sm text-gray-800">Clear reading history</p>
-              <p className="text-xs text-gray-400">Removes all articles from your reading history and streak.</p>
+              <p className="text-sm font-medium text-gray-800">Clear reading history</p>
+              <p className="text-xs font-medium text-gray-400">Removes all articles from your reading history and streak.</p>
             </div>
             <button type="button" disabled={busy} onClick={onClearHistory} className={btnCls}>
               Clear history
@@ -123,8 +123,8 @@ export function PrivacyDataPage() {
 
           <div className={rowCls}>
             <div>
-              <p className="text-sm text-gray-800">Remove saved articles</p>
-              <p className="text-xs text-gray-400">Removes everything on your saved list.</p>
+              <p className="text-sm font-medium text-gray-800">Remove saved articles</p>
+              <p className="text-xs font-medium text-gray-400">Removes everything on your saved list.</p>
             </div>
             <button type="button" disabled={busy} onClick={onClearSaved} className={btnCls}>
               Remove all
@@ -133,16 +133,17 @@ export function PrivacyDataPage() {
 
           <div className={rowCls}>
             <div>
-              <p className="text-sm text-red-700">Delete account now</p>
-              <p className="text-xs text-gray-400">
-                Immediately and permanently deletes your login, profile picture, reading history, saved articles and newsletter settings. This cannot be undone.
+              <p className="text-sm font-medium text-red-700">Delete account now</p>
+              <p className="text-xs font-medium text-gray-400">
+                Immediately and permanently deletes your login, profile picture, reading history, saved articles and newsletter settings.
+                This cannot be undone.
               </p>
             </div>
             <button
               type="button"
               disabled={busy}
               onClick={onDeleteAccountNow}
-              className="self-start sm:self-auto bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm px-4 py-2 rounded-sm transition-colors"
+              className="shrink-0 self-start w-32 sm:w-36 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm px-4 py-2 rounded-sm transition-colors whitespace-nowrap"
             >
               Delete account
             </button>

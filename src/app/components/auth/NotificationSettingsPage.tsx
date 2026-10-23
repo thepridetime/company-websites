@@ -46,14 +46,14 @@ export function NotificationSettingsPage() {
 
   return (
     <div className="min-h-screen bg-[#faf9f6]">
-      <div className="max-w-xl mx-auto px-4 py-10">
-        <Link to="/dashboard" className="text-sm text-gray-500 hover:text-red-600">
+      <div className="max-w-4xl mx-auto px-4 py-10">
+        <Link to="/dashboard" className="text-sm font-medium text-gray-500 hover:text-red-600">
           ← Back to dashboard
         </Link>
-        <h1 className="mt-4 text-2xl" style={{ fontFamily: "Georgia, serif" }}>
+        <h1 className="mt-4 text-2xl font-medium" style={{ fontFamily: "Georgia, serif" }}>
           Notification settings
         </h1>
-        <p className="mt-2 text-sm text-gray-500">Choose which newsletters you receive by email.</p>
+        <p className="mt-2 text-sm font-medium text-gray-500">Choose which newsletters you receive by email.</p>
 
         <div className="mt-8 bg-white border border-gray-200 rounded-sm divide-y divide-gray-200">
           {NEWSLETTER_CATALOG.map((n) => {
@@ -61,8 +61,8 @@ export function NotificationSettingsPage() {
             return (
               <div key={n.key} className="flex items-center justify-between gap-4 px-5 py-4">
                 <div>
-                  <p className="text-sm text-gray-800">{n.name}</p>
-                  <p className="text-xs text-gray-400">{n.freq}</p>
+                  <p className="text-sm font-medium text-gray-800">{n.name}</p>
+                  <p className="text-xs font-medium text-gray-400">{n.freq}</p>
                 </div>
                 <button
                   type="button"

@@ -249,7 +249,7 @@ export function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm text-gray-500">
+      <div className="min-h-screen flex items-center justify-center text-sm font-medium text-gray-500">
         Loading your dashboard…
       </div>
     );

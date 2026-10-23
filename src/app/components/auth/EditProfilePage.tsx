@@ -42,7 +42,7 @@ function Feedback({ msg }: { msg: Msg }) {
   if (!msg) return null;
   return (
     <div className="flex flex-col gap-3">
-      <p className={`text-sm ${msg.kind === "error" ? "text-red-600" : "text-green-700"}`}>{msg.text}</p>
+      <p className={`text-sm font-medium ${msg.kind === "error" ? "text-red-600" : "text-green-700"}`}>{msg.text}</p>
       {msg.text === SESSION_EXPIRED && (
         <button
           type="button"
@@ -62,7 +62,7 @@ const cardCls = "mt-8 bg-white border border-gray-200 w-full min-w-0 rounded-sm 
 const primaryBtn =
   "self-start bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-6 py-2.5 rounded-sm text-sm transition-colors";
 const secondaryBtn =
-  "self-start border border-gray-300 hover:border-red-600 hover:text-red-600 disabled:opacity-60 px-5 py-2 rounded-sm text-sm transition-colors";
+  "self-start shrink-0 w-32 text-center whitespace-nowrap border border-gray-300 hover:border-red-600 hover:text-red-600 disabled:opacity-60 px-5 py-2 rounded-sm text-sm transition-colors";
 const pencilBtn =
   "inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-red-600 disabled:opacity-60 transition-colors";
 const sectionTitle = { fontFamily: "Georgia, serif" } as const;
@@ -397,7 +397,7 @@ export function EditProfilePage() {
 
           {editingProfile ? (
             <form onSubmit={onSaveProfile} className="flex flex-col gap-5">
-              <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
                 Full name
                 <input
                   className={inputCls}
@@ -407,7 +407,7 @@ export function EditProfilePage() {
                 />
               </label>
 
-              <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
                 Country
                 <input
                   className={inputCls}
@@ -417,10 +417,10 @@ export function EditProfilePage() {
                 />
               </label>
 
-              <label className="flex flex-col gap-1.5 text-sm text-gray-700">
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
                 <span className="flex justify-between">
                   <span>Bio</span>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs font-medium text-gray-400">
                     {draft.bio.length}/{BIO_MAX}
                   </span>
                 </span>
@@ -432,9 +432,9 @@ export function EditProfilePage() {
                 />
               </label>
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm font-medium text-gray-500">
                 Email: {user.email}
-                <span className="block text-xs text-gray-400 mt-1">To change your email, contact support.</span>
+                <span className="block text-xs font-medium text-gray-400 mt-1">To change your email, contact support.</span>
               </p>
 
               <Feedback msg={profileMsg} />
@@ -449,13 +449,13 @@ export function EditProfilePage() {
               </div>
             </form>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 font-medium mt-4">
               <InfoRow label="Full name" value={profile.name || "Not set"} />
               <InfoRow label="Country" value={profile.country || "Not set"} />
               <InfoRow label="Bio" value={profile.bio || "Not set"} />
-              <p className="text-sm text-gray-500">
-                Email: {user.email}
-                <span className="block text-xs text-gray-400 mt-1">To change your email, contact support.</span>
+              <p className="text-sm font-medium text-gray-500">
+                Email: <span className="text-gray-800">{user.email}</span>
+                <span className="block text-xs font-medium text-gray-400 mt-1">To change your email, contact support.</span>
               </p>
               <Feedback msg={profileMsg} />
             </div>
@@ -478,8 +478,8 @@ export function EditProfilePage() {
           {hasPassword && !editingPassword ? (
             <div>
               {/* Fixed-length mask. The real password is never stored or shown in the app. */}
-              <p className="text-sm text-gray-800 tracking-widest">••••••••</p>
-              <p className="text-xs text-gray-400 mt-1">Hidden for your security.</p>
+              <p className="text-sm font-medium text-gray-800 tracking-widest">••••••••</p>
+              <p className="text-xs font-medium text-gray-400 mt-1">Hidden for your security.</p>
               <Feedback msg={pwdMsg} />
             </div>
           ) : (
@@ -547,9 +547,9 @@ export function EditProfilePage() {
           <h2 className="text-base" style={sectionTitle}>Signed-in devices</h2>
 
           {devicesLoading ? (
-            <p className="text-sm text-gray-400">Loading devices…</p>
+            <p className="text-sm font-medium text-gray-400">Loading devices…</p>
           ) : devices.length === 0 ? (
-            <p className="text-sm text-gray-400">No devices found.</p>
+            <p className="text-sm font-medium text-gray-400">No devices found.</p>
           ) : (
             <ul className="divide-y divide-gray-200">
               {devices.map((d) => {
@@ -557,13 +557,13 @@ export function EditProfilePage() {
                 return (
                   <li key={d.session_id} className="flex items-center justify-between gap-4 py-3">
                     <div>
-                      <p className="text-sm text-gray-800 flex items-center gap-2">
+                      <p className="text-sm font-medium text-gray-800 flex items-center gap-2">
                         {d.label}
                         {isCurrent && (
-                          <span className="text-[10px] uppercase tracking-wider text-green-700">This device</span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-green-700">This device</span>
                         )}
                       </p>
-                      <p className="text-xs text-gray-400">Last active {timeAgo(d.last_seen_at)}</p>
+                      <p className="text-xs font-medium text-gray-400">Last active {timeAgo(d.last_seen_at)}</p>
                     </div>
                     {!isCurrent && (
                       <button
@@ -581,17 +581,17 @@ export function EditProfilePage() {
             </ul>
           )}
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-200 pt-5">
+          <div className="flex flex-row items-center sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-200 pt-5">
             <div>
-              <p className="text-sm text-gray-800">Sign out all other devices</p>
-              <p className="text-xs text-gray-400">Ends every session except this one.</p>
+              <p className="text-sm font-medium text-gray-800">Sign out all other devices</p>
+              <p className="text-xs font-medium text-gray-400">Ends every session except this one.</p>
             </div>
             <button type="button" onClick={onSignOutOthers} disabled={secBusy} className={secondaryBtn}>
               {secBusy ? "Signing out…" : "Sign out others"}
             </button>
           </div>
 
-          <Feedback msg={secMsg} />
+          <Feedback msg={secMsg}/>
         </section>
       </div>
     </div>
