@@ -62,18 +62,17 @@ const NEWSLETTER_CATALOG = [
 ];
 
 const TRENDING_TAGS = [
-  "AI",
-  "Fed Policy",
-  "India Markets",
-  "Billionaires",
-  "EV",
-  "Cybersecurity",
-  "NVIDIA",
-  "OpenAI",
-  "Clean Energy",
-  "Supply Chain",
+  { label: "AI", query: "AI" },
+  { label: "Fed Policy", query: "Fed" },
+  { label: "India Markets", query: "India" },
+  { label: "Leadership", query: "Leadership" },
+  { label: "EV", query: "EV" },
+  { label: "Cybersecurity", query: "Cybersecurity" },
+  { label: "NVIDIA", query: "NVIDIA" },
+  { label: "Quantum", query: "Quantum" },
+  { label: "Energy", query: "Energy" },
+  { label: "Supply Chain", query: "Supply Chain" },
 ];
-
 const premiumFeatures = [
   { icon: Shield, title: "Ad-free reading", desc: "No ads on any page" },
   {
@@ -249,7 +248,7 @@ export function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm font-medium text-gray-500">
+      <div className="min-h-screen flex items-center justify-center text-sm text-gray-500">
         Loading your dashboard…
       </div>
     );
@@ -732,11 +731,11 @@ export function DashboardPage() {
             <div className="flex flex-wrap gap-3 mt-5">
               {TRENDING_TAGS.map((tag) => (
                 <Link
-                  key={tag}
-                  to={`/search?q=${encodeURIComponent(tag)}`}
+                  key={tag.label}
+                  to={`/search?q=${encodeURIComponent(tag.query)}`}
                   className="text-sm font-medium bg-gray-200 text-gray-700 px-2.5 py-1 rounded-sm hover:bg-black hover:text-white transition-colors"
                 >
-                  {tag}
+                  {tag.label}
                 </Link>
               ))}
             </div>
