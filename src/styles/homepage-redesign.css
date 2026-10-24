@@ -445,7 +445,9 @@ footer li {
 ======================================== */
 
 .pt-footer a,
-footer a {
+footer a,
+.pt-footer button,
+footer button {
   font-family: Arial, Helvetica, sans-serif;
 
   font-size: 13px;
@@ -454,13 +456,19 @@ footer a {
 
   line-height: 1.3;
 
-  color: #bdbdbd;
+  color: #6b7280;
+
+  background: transparent;
+
+  padding: 0;
 
   text-decoration: none;
 
   margin: 0;
 
   border: none;
+
+  cursor: pointer;
 
   transform: none;
 
@@ -470,14 +478,88 @@ footer a {
 
 /* ========================================
    FOOTER LINK HOVER
-   Only `color` changes — nothing that can
-   shift layout (no padding/margin/border/
-   transform/font-weight) is touched here.
 ======================================== */
 
 .pt-footer a:hover,
-footer a:hover {
+footer a:hover,
+.pt-footer button:hover,
+footer button:hover {
   color: #ffffff;
+}
+
+/* ========================================
+   FORBES-STYLE FOOTER REDESIGN REFINEMENTS
+======================================== */
+
+.pt-footer-brand-title {
+  font-family: Georgia, "Times New Roman", Times, serif !important;
+  font-size: 44px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.5px !important;
+  color: #FFFFFF !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+}
+
+.pt-footer-brand-title .pt-brand-accent {
+  color: #ED1C24 !important;
+  font-weight: 700 !important;
+}
+
+.pt-footer-brand-title:hover {
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+}
+
+.pt-footer-brand-title:hover .pt-brand-accent {
+  color: #ED1C24 !important;
+}
+
+@media (max-width: 1024px) {
+  .pt-footer-brand-title {
+    font-size: 38px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .pt-footer-brand-title {
+    font-size: 28px !important;
+  }
+}
+
+.pt-footer-sep {
+  color: #454545 !important;
+  margin: 0 18px !important;
+  font-size: 14px !important;
+  user-select: none !important;
+}
+
+footer nav[aria-label="Primary footer navigation"] a {
+  font-family: inherit !important;
+  font-size: 15.5px !important;
+  font-weight: 400 !important;
+  color: #E5E7EB !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+footer nav[aria-label="Primary footer navigation"] a:hover {
+  color: #ED1C24 !important;
+}
+
+footer nav[aria-label="Secondary footer navigation"] a {
+  font-family: inherit !important;
+  font-size: 14.5px !important;
+  font-weight: 400 !important;
+  color: #8B9BB3 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+footer nav[aria-label="Secondary footer navigation"] a:hover {
+  color: #ED1C24 !important;
 }
 
 

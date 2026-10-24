@@ -42,6 +42,9 @@ import { InnovationPage } from "./components/pages/InnovationPage";
 import { MagazinePage } from "./components/pages/MagazinePage";
 import { CeoSpotlightPage } from "./components/pages/CeoSpotlightPage";
 import { AboutUsPage } from "./components/pages/AboutUsPage";
+import { ContactPage } from "./components/pages/ContactPage";
+import { AdvertisePage } from "./components/pages/AdvertisePage";
+import { CareersPage } from "./components/pages/CareersPage";
 
 // ============================================================
 // MERGERS & ACQUISITIONS
@@ -470,6 +473,96 @@ export default function App() {
 
                 <main className="flex-1">
                   <AboutUsPage />
+                </main>
+
+                <Footer />
+              </div>
+            }
+          />
+
+          <Route
+            path="/about"
+            element={
+              <div className="min-h-screen bg-white flex flex-col">
+                <Header />
+
+                <MarketsTicker />
+
+                <main className="flex-1">
+                  <AboutUsPage />
+                </main>
+
+                <Footer />
+              </div>
+            }
+          />
+
+          {/* ==================================================
+              CONTACT US
+              Standalone site-shell route.
+              ================================================== */}
+
+          <Route
+            path="/contact-us"
+            element={
+              <div className="min-h-screen bg-white flex flex-col">
+                <Header />
+
+                <MarketsTicker />
+
+                <main className="flex-1">
+                  <ContactPage />
+                </main>
+
+                <Footer />
+              </div>
+            }
+          />
+
+          <Route
+            path="/contact"
+            element={
+              <div className="min-h-screen bg-white flex flex-col">
+                <Header />
+
+                <MarketsTicker />
+
+                <main className="flex-1">
+                  <ContactPage />
+                </main>
+
+                <Footer />
+              </div>
+            }
+          />
+
+          <Route
+            path="/advertise"
+            element={
+              <div className="min-h-screen bg-white flex flex-col">
+                <Header />
+
+                <MarketsTicker />
+
+                <main className="flex-1">
+                  <AdvertisePage />
+                </main>
+
+                <Footer />
+              </div>
+            }
+          />
+
+          <Route
+            path="/careers"
+            element={
+              <div className="min-h-screen bg-white flex flex-col">
+                <Header />
+
+                <MarketsTicker />
+
+                <main className="flex-1">
+                  <CareersPage />
                 </main>
 
                 <Footer />
