@@ -1,3 +1,4 @@
+import { NewsletterCTA } from "../NewsletterCTA";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import {
@@ -1042,34 +1043,11 @@ export function MarketsPage() {
               NEWSLETTER CTA
           ================================================= */}
 
-          <section className="bg-[#0b1a30] text-white text-center p-8 md:p-10 rounded-[2px]">
-            <h2 className="font-serif text-2xl md:text-[30px] mb-2">
-              Stay Ahead with The Pride Times
-            </h2>
-
-            <p className="text-gray-400 text-sm mb-6">
-              Daily briefings on Markets delivered to your inbox.
-            </p>
-
-            <form
-              onSubmit={(event) => event.preventDefault()}
-              className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto"
-            >
-              <input
-                type="email"
-                placeholder="Enter your email"
-                aria-label="Email address"
-                className="flex-1 min-w-0 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 px-4 py-3 text-sm outline-none focus:border-white/50 rounded-[2px]"
-              />
-
-              <button
-                type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 text-sm font-semibold transition-colors rounded-[2px] whitespace-nowrap"
-              >
-                Subscribe Free
-              </button>
-            </form>
-          </section>
+          <NewsletterCTA
+            title="Stay Ahead with The Pride Times"
+            description="Daily briefings on Markets delivered to your inbox."
+            newsletterKey="markets-morning"
+          />
         </main>
       </div>
     </div>
