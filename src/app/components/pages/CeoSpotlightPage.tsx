@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import {
   Clock,
   Users,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import ceoJensen from "../../../imports/ceo-jensen-huang.png";
 import ceoSam from "../../../imports/ceo-sam-altman.png";
 import ceoMukesh from "../../../imports/ceo-mukesh-ambani.png";
@@ -23,7 +23,10 @@ import ceoLarry from "../../../imports/ceo-larry-fink.png";
 import ceoIndra from "../../../imports/ceo-indra-nooyi.png";
 import { PrideTimesAd } from "../AdSenseSlots";
 import { useAuth } from "../../context/AuthContext";
-import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
+import {
+  getNewsletterPreferences,
+  setNewsletterSubscribed,
+} from "../../../lib/newsletterPreferences";
 
 const CEO_NEWSLETTER_KEY = "ceo-spotlight";
 
@@ -32,34 +35,40 @@ const CEO_NEWSLETTER_KEY = "ceo-spotlight";
 ============================================================ */
 
 function NewsletterCTA() {
-  const { user, isSignedIn } = useAuth();
-  const [email, setEmail] = useState("");
+  const { user, isSignedIn, isLoading } = useAuth();
+  const location = useLocation();
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!isSignedIn || !user || status === "saving") return;
-
-    const typedEmail = email.trim().toLowerCase();
-
-    if (!typedEmail) {
-      setStatus("error");
-      setErrorMessage("Please enter your email address.");
+  useEffect(() => {
+    if (!isSignedIn || !user) {
+      setIsSubscribed(false);
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(typedEmail)) {
-      setStatus("error");
-      setErrorMessage("Please enter a valid email address.");
-      return;
-    }
+    let cancelled = false;
+    setChecking(true);
 
-    if (typedEmail !== user.email.toLowerCase()) {
-      setStatus("error");
-      setErrorMessage("Please use the email address linked to your account.");
-      return;
-    }
+    getNewsletterPreferences(user.id)
+      .then((prefs) => {
+        if (!cancelled) setIsSubscribed(prefs[CEO_NEWSLETTER_KEY] === true);
+      })
+      .catch(() => {
+        // Error is logged in the helper. Keep the subscribe button available.
+      })
+      .finally(() => {
+        if (!cancelled) setChecking(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isSignedIn, user?.id]);
+
+  async function handleSubscribe() {
+    if (!user || status === "saving" || isSubscribed) return;
 
     setStatus("saving");
     setErrorMessage("");
@@ -67,12 +76,16 @@ function NewsletterCTA() {
     const ok = await setNewsletterSubscribed(user.id, CEO_NEWSLETTER_KEY, true);
 
     if (ok) {
+      setIsSubscribed(true);
       setStatus("done");
     } else {
       setStatus("error");
       setErrorMessage("Could not subscribe right now. Please try again in a moment.");
     }
   }
+
+  const buttonBase =
+    "whitespace-nowrap rounded-[2px] px-8 py-3 text-sm font-semibold text-white transition-colors";
 
   return (
     <section className="mb-14 rounded-[2px] bg-[#0b1a30] p-8 text-center text-white md:p-10">
@@ -89,54 +102,39 @@ function NewsletterCTA() {
         briefings.
       </p>
 
-      {!isSignedIn ? (
-        <div className="mx-auto flex max-w-md flex-col items-center gap-3">
-          <p className="text-sm text-gray-300">
-            Create a free account to subscribe.
-          </p>
-          <Link
-            to="/signup"
-            className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
-          >
-            Subscribe Free
-          </Link>
-          <p className="text-xs text-gray-400">
-            Already have an account?{" "}
-            <Link to="/login" className="underline hover:text-white">
-              Sign in
-            </Link>
-          </p>
-        </div>
-      ) : status === "done" ? (
-        <p className="text-sm font-semibold text-green-300">
-          You are subscribed. A confirmation email has been sent to {user.email}.
-        </p>
-      ) : (
-        <form
-          onSubmit={handleSubscribe}
-          noValidate
-          className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
+      {isLoading ? null : !isSignedIn ? (
+        <Link
+          to="/login"
+          state={{ from: location.pathname }}
+          className={`${buttonBase} inline-block bg-red-600 hover:bg-red-700`}
         >
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (status === "error") setStatus("idle");
-            }}
-            placeholder="Enter your email"
-            aria-label="Email address"
-            className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50"
-          />
-
-          <button
-            type="submit"
-            disabled={status === "saving"}
-            className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {status === "saving" ? "Subscribing..." : "Subscribe Free"}
-          </button>
-        </form>
+          Subscribe Free
+        </Link>
+      ) : checking ? (
+        <button
+          type="button"
+          disabled
+          className={`${buttonBase} bg-red-600 opacity-60 cursor-not-allowed`}
+        >
+          Checking...
+        </button>
+      ) : isSubscribed ? (
+        <button
+          type="button"
+          disabled
+          className={`${buttonBase} bg-green-700 cursor-default`}
+        >
+          Subscribed
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={handleSubscribe}
+          disabled={status === "saving"}
+          className={`${buttonBase} bg-red-600 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60`}
+        >
+          {status === "saving" ? "Subscribing..." : "Subscribe Free"}
+        </button>
       )}
 
       {status === "error" && errorMessage && (
