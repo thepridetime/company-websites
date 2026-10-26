@@ -116,7 +116,7 @@ function AdSenseUnit({
         <div className="flex min-h-0 w-full flex-1 justify-center overflow-hidden">
           <ins
             ref={insRef}
-            className="adsbygoogle block h-[250px] w-[300px] max-w-full lg:h-full"
+            className="adsbygoogle block h-[250px] w-[300px] max-w-full"
             style={{ display: "block" }}
             data-ad-client="ca-pub-2331501617441941"
             data-ad-slot={slot}
@@ -655,7 +655,7 @@ function ArticleShell({
         .pt-magazine .blog-prose .drop-cap:first-letter { float:left; font-family:Georgia,'Times New Roman',serif; font-size:62px; line-height:.78; padding:5px 8px 0 0; color:#ed1c24; }
 
         .pt-magazine aside .rounded-xl { border-radius:0 !important; box-shadow:none !important; border-color:#e3e7eb !important; }
-        .pt-magazine aside img { border-radius:0 !important; }
+        .pt-magazine aside img { border-radius:8px !important; }
         .pt-magazine aside h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:18px !important; }
         .pt-magazine aside ul li { padding-top:14px !important; padding-bottom:14px !important; }
         .pt-magazine aside ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.25 !important; }
@@ -675,14 +675,32 @@ function ArticleShell({
         .pt-magazine .mt-6.border-t > h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:24px !important; }
         .pt-magazine .mt-5.grid > a { border-radius:0 !important; box-shadow:none !important; padding:16px !important; }
         .pt-magazine .mt-8.flex.flex-wrap.items-center.justify-between { border-color:#e3e7eb !important; border-radius:0 !important; }
-        @media (min-width:1024px) {
-          .pt-magazine .max-w-6xl.pb-12 { padding-top:12px !important; }
-          .pt-magazine .pt-article-grid { display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; gap:40px !important; align-items:start !important; }
-          .pt-magazine main { max-width:none !important; }
-          .pt-magazine .pt-article-grid { align-items:stretch !important; }
-          .pt-magazine aside { margin-top:0 !important; position:relative !important; }
-          .pt-magazine .pt-aside-inner { position:absolute !important; inset:0 !important; overflow:hidden !important; }
-        }
+
+       
+        
+
+
+       /* Related news now sits BELOW the article, on all screen sizes */
+.pt-magazine .pt-article-grid { display:block !important; }
+.pt-magazine aside { position:static !important; margin-top:40px !important; padding-top:24px !important; border-top:1px solid #dfe3e7 !important; }
+.pt-magazine .pt-aside-inner { position:static !important; overflow:visible !important; }
+
+/* Related cards laid out in a grid */
+.pt-magazine aside section[aria-label="Related articles"] ul { display:grid !important; grid-template-columns:1fr; gap:24px !important; }
+.pt-magazine aside section[aria-label="Related articles"] ul li { padding:0 !important; border:none !important; }
+
+@media (min-width:640px) {
+  .pt-magazine aside section[aria-label="Related articles"] ul { grid-template-columns:repeat(2,1fr); }
+}
+@media (min-width:1024px) {
+  .pt-magazine .max-w-6xl.pb-12 { padding-top:12px !important; }
+  .pt-magazine main { max-width:none !important; }
+  .pt-magazine aside section[aria-label="Related articles"] ul { grid-template-columns:repeat(3,1fr); }
+}
+
+
+
+        
         @media (max-width:767px) {
           .pt-magazine header h1 { font-size:31px !important; line-height:1.04 !important; }
           .pt-magazine header > p { font-size:15px !important; }
@@ -780,7 +798,8 @@ function ArticleShell({
           </div>
 
           {/* Related news with images */}
-          <aside ref={asideRef} className="pt-aside mt-8 w-full lg:mt-0">
+          {/* <aside ref={asideRef} className="pt-aside mt-8 w-full lg:mt-0"> */}
+          <aside ref={asideRef} className="pt-aside mt-10 w-full">
             <div className="pt-aside-inner">{sidebar}</div>
           </aside>
         </div>
