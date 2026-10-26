@@ -14,13 +14,14 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-// Keep in sync with NEWSLETTER_CATALOG in src/lib/newsletterPreferences.ts
+// Keep in sync with NEWSLETTER_CATALOG and EXTRA_SUBSCRIPTION_KEYS in src/lib/newsletterPreferences.ts
 const NEWSLETTERS: Record<string, string> = {
   "daily-brief": "The Daily Brief",
   "markets-morning": "Markets Morning",
   "technology-weekly": "Technology Weekly",
   "billionaires-tracker": "Billionaires Tracker",
   "india-business-digest": "India Business Digest",
+  "ceo-spotlight": "CEO Spotlight",
 };
 
 function json(body: unknown, status = 200) {
