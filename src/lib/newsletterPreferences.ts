@@ -13,12 +13,19 @@ export const NEWSLETTER_CATALOG: Newsletter[] = [
   { key: "india-business-digest", name: "India Business Digest", freq: "Daily" },
 ];
 
-const VALID_KEYS = new Set(NEWSLETTER_CATALOG.map((n) => n.key));
+/* Keys that can be subscribed to but are not shown in the notification settings list.
+   "ceo-spotlight" is used by the CEO Spotlight page's newsletter box. */
+const EXTRA_SUBSCRIPTION_KEYS = ["ceo-spotlight"];
+
+const VALID_KEYS = new Set<string>([
+  ...NEWSLETTER_CATALOG.map((n) => n.key),
+  ...EXTRA_SUBSCRIPTION_KEYS,
+]);
 
 /** Map of newsletter key -> subscribed. Keys with no row default to false. */
 export async function getNewsletterPreferences(userId: string): Promise<Record<string, boolean>> {
   const prefs: Record<string, boolean> = Object.fromEntries(
-    NEWSLETTER_CATALOG.map((n) => [n.key, false])
+    [...VALID_KEYS].map((key) => [key, false])
   );
   const { data, error } = await supabase
     .from("newsletter_subscriptions")
