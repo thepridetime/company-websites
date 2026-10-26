@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   Clock,
   Users,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import ceoJensen from "../../../imports/ceo-jensen-huang.png";
 import ceoSam from "../../../imports/ceo-sam-altman.png";
 import ceoMukesh from "../../../imports/ceo-mukesh-ambani.png";
@@ -37,11 +37,14 @@ const CEO_NEWSLETTER_KEY = "ceo-spotlight";
 function NewsletterCTA() {
   const { user, isSignedIn, isLoading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [checking, setChecking] = useState(false);
-  const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Load the real subscription state for the signed-in user.
   useEffect(() => {
     if (!isSignedIn || !user) {
       setIsSubscribed(false);
@@ -56,7 +59,7 @@ function NewsletterCTA() {
         if (!cancelled) setIsSubscribed(prefs[CEO_NEWSLETTER_KEY] === true);
       })
       .catch(() => {
-        // Error is logged in the helper. Keep the subscribe button available.
+        // Error is logged in the helper. Keep the subscribe form available.
       })
       .finally(() => {
         if (!cancelled) setChecking(false);
@@ -67,8 +70,40 @@ function NewsletterCTA() {
     };
   }, [isSignedIn, user?.id]);
 
-  async function handleSubscribe() {
-    if (!user || status === "saving" || isSubscribed) return;
+  function showError(message: string) {
+    setStatus("error");
+    setErrorMessage(message);
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (status === "saving") return;
+
+    const typedEmail = email.trim().toLowerCase();
+
+    if (!typedEmail) {
+      showError("Please enter your email address.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(typedEmail)) {
+      showError("Please enter a valid email address.");
+      return;
+    }
+
+    // Not signed in: keep the entered email and continue to login.
+    if (!isSignedIn || !user) {
+      navigate("/login", {
+        state: { from: location.pathname, email: typedEmail },
+      });
+      return;
+    }
+
+    // Signed in: subscribe the account, using its own registered email.
+    if (typedEmail !== user.email.toLowerCase()) {
+      showError("Please use the email address linked to your account.");
+      return;
+    }
 
     setStatus("saving");
     setErrorMessage("");
@@ -77,15 +112,17 @@ function NewsletterCTA() {
 
     if (ok) {
       setIsSubscribed(true);
-      setStatus("done");
+      setStatus("idle");
     } else {
-      setStatus("error");
-      setErrorMessage("Could not subscribe right now. Please try again in a moment.");
+      showError("Could not subscribe right now. Please try again in a moment.");
     }
   }
 
-  const buttonBase =
-    "whitespace-nowrap rounded-[2px] px-8 py-3 text-sm font-semibold text-white transition-colors";
+  const inputClass =
+    "flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50";
+
+  const buttonClass =
+    "whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60";
 
   return (
     <section className="mb-14 rounded-[2px] bg-[#0b1a30] p-8 text-center text-white md:p-10">
@@ -102,39 +139,44 @@ function NewsletterCTA() {
         briefings.
       </p>
 
-      {isLoading ? null : !isSignedIn ? (
-        <Link
-          to="/login"
-          state={{ from: location.pathname }}
-          className={`${buttonBase} inline-block bg-red-600 hover:bg-red-700`}
-        >
-          Subscribe Free
-        </Link>
-      ) : checking ? (
-        <button
-          type="button"
-          disabled
-          className={`${buttonBase} bg-red-600 opacity-60 cursor-not-allowed`}
-        >
+      {isLoading ? null : checking ? (
+        <button type="button" disabled className={`${buttonClass} px-8`}>
           Checking...
         </button>
-      ) : isSubscribed ? (
+      ) : isSignedIn && isSubscribed ? (
         <button
           type="button"
           disabled
-          className={`${buttonBase} bg-green-700 cursor-default`}
+          className="whitespace-nowrap rounded-[2px] bg-green-700 px-8 py-3 text-sm font-semibold text-white cursor-default"
         >
           Subscribed
         </button>
       ) : (
-        <button
-          type="button"
-          onClick={handleSubscribe}
-          disabled={status === "saving"}
-          className={`${buttonBase} bg-red-600 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60`}
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
         >
-          {status === "saving" ? "Subscribing..." : "Subscribe Free"}
-        </button>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (status === "error") setStatus("idle");
+            }}
+            placeholder="Enter your email"
+            aria-label="Email address"
+            className={inputClass}
+          />
+
+          <button
+            type="submit"
+            disabled={status === "saving"}
+            className={buttonClass}
+          >
+            {status === "saving" ? "Subscribing..." : "Subscribe Free"}
+          </button>
+        </form>
       )}
 
       {status === "error" && errorMessage && (
@@ -479,13 +521,18 @@ function CompanyCoverage({
   company,
   title,
   time,
+  to,
 }: {
   company: string;
   title: string;
   time: string;
+  to: string;
 }) {
   return (
-    <article className="group border-b border-gray-200 py-4 last:border-b-0">
+    <Link
+      to={to}
+      className="group block border-b border-gray-200 py-4 last:border-b-0"
+    >
       <div className="mb-1.5 flex items-center justify-between gap-3">
         <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
           {company}
@@ -500,7 +547,7 @@ function CompanyCoverage({
       <h3 className="font-serif text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-red-600">
         {title}
       </h3>
-    </article>
+    </Link>
   );
 }
 
@@ -861,18 +908,21 @@ export function CeoSpotlightPage() {
 
               <CompanyCoverage
                 company="NVIDIA"
+                to="/article/ceo-coverage-nvidia"
                 title="AI infrastructure remains central to executive strategy"
                 time="Latest"
               />
 
               <CompanyCoverage
                 company="MICROSOFT"
+                to="/article/ceo-coverage-microsoft"
                 title="Cloud and AI remain central themes in leadership strategy"
                 time="Latest"
               />
 
               <CompanyCoverage
                 company="ALPHABET"
+                to="/article/ceo-coverage-alphabet"
                 title="AI reshapes search, cloud and digital services"
                 time="Latest"
               />
@@ -891,18 +941,21 @@ export function CeoSpotlightPage() {
 
               <CompanyCoverage
                 company="APPLE"
+                to="/article/ceo-coverage-apple"
                 title="Leadership focus remains on technology and product strategy"
                 time="Latest"
               />
 
               <CompanyCoverage
                 company="BLACKROCK"
+                to="/article/ceo-coverage-blackrock"
                 title="Asset management leadership faces changing market conditions"
                 time="Latest"
               />
 
               <CompanyCoverage
                 company="TESLA"
+                to="/article/ceo-coverage-tesla"
                 title="Executive strategy spans mobility, energy and technology"
                 time="Latest"
               />
@@ -921,18 +974,21 @@ export function CeoSpotlightPage() {
 
               <CompanyCoverage
                 company="RELIANCE"
+                to="/article/ceo-coverage-reliance"
                 title="Leadership strategy expands across telecom, retail and energy"
                 time="Latest"
               />
 
               <CompanyCoverage
                 company="IBM"
+                to="/article/ceo-coverage-ibm"
                 title="Corporate leadership continues strategic transformation"
                 time="Latest"
               />
 
               <CompanyCoverage
                 company="ADOBE"
+                to="/article/ceo-coverage-adobe"
                 title="Technology leadership focuses on evolving digital markets"
                 time="Latest"
               />
