@@ -1,286 +1,181 @@
 import { Link } from "react-router";
-import {
-  Instagram,
-  Youtube,
-  Linkedin,
-} from "lucide-react";
 import logoImg from "../../imports/logo.png";
 
 /* =========================================================
-   X ICON
+   NAVIGATION ROWS
 ========================================================= */
 
-function XIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
+const primaryNavRow = [
+  { label: "About Us", path: "/about-us" },
+  { label: "Contact Us", path: "/contact" },
+  { label: "Privacy Policy", path: "/Privacy" },
+  { label: "Terms of Use", path: "/Terms" },
+  { label: "Cookie Settings", path: "/cookiepolicy" },
+  { label: "Accessibility", path: "/accessibility" },
+];
 
-/* =========================================================
-   FACEBOOK ICON
-========================================================= */
-
-function FacebookIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M22 12.06C22 6.507 17.523 2 12 2S2 6.507 2 12.06c0 5.02 3.657 9.184 8.438 9.94v-7.03H7.898v-2.91h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.459h-1.26c-1.243 0-1.63.771-1.63 1.562v1.878h2.773l-.443 2.91h-2.33V22c4.78-.756 8.437-4.92 8.437-9.94z" />
-    </svg>
-  );
-}
-
-/* =========================================================
-   SOCIAL LINKS
-========================================================= */
-
-const socialLinks = [
-  {
-    icon: (s: number) => <FacebookIcon size={s} />,
-    href: "https://www.facebook.com/thepridetime",
-    label: "Facebook",
-  },
-  {
-    icon: (s: number) => <XIcon size={s} />,
-    href: "https://x.com/thepridetime",
-    label: "X",
-  },
-  {
-    icon: (s: number) => <Linkedin size={s} />,
-    href: "https://www.linkedin.com/company/thepridetimes",
-    label: "LinkedIn",
-  },
-  {
-    icon: (s: number) => <Instagram size={s} />,
-    href: "https://www.instagram.com/thepridetime/",
-    label: "Instagram",
-  },
-  {
-    icon: (s: number) => <Youtube size={s} />,
-    href: "https://www.youtube.com/@vmpridetimes",
-    label: "YouTube",
-  },
+const secondaryNavRow = [
+  { label: "Advertise", path: "/advertise" },
+  { label: "Media Kit", path: "/advertise" },
+  { label: "News Tips", path: "/contact" },
+  { label: "Careers", path: "/careers" },
+  { label: "Reprints & Permissions", path: "/Terms" },
+  { label: "Sitemap", path: "/markets" },
 ];
 
 /* =========================================================
-   FOOTER LINKS
-========================================================= */
-
-const footerLinks = [
-  {
-    label: "Privacy Policy",
-    path: "/Privacy",
-  },
-  {
-    label: "Terms of Use",
-    path: "/Terms",
-  },
-  {
-    label: "Cookie Settings",
-    path: "#",
-  },
-  {
-    label: "Accessibility",
-    path: "#",
-  },
-];
-
-/* =========================================================
-   FOOTER
+   FOOTER COMPONENT (CENTERED COMPOSITION)
 ========================================================= */
 
 export function Footer() {
   return (
-    <footer className="w-full bg-black text-white">
+    <footer className="w-full bg-[#000000] text-white">
 
       {/* =====================================================
-          MAIN FOOTER
+          1. BRANDING SECTION (approx 180–220 px high)
+          Centered stack: Logo -> Brand Title -> Tagline -> Copyright
       ====================================================== */}
+      <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10">
+        <div className="min-h-[180px] sm:min-h-[200px] lg:h-[210px] flex flex-col items-center justify-center text-center py-8 lg:py-0">
 
-      <div className="max-w-[1760px] mx-auto px-6 sm:px-8 lg:px-12 xl:px-20">
-
-        <div className="min-h-[150px] flex flex-col md:flex-row items-center md:items-center justify-between gap-8 py-10">
-
-          {/* =================================================
-              BRAND
-          ================================================= */}
-
+          {/* Logo centered above the brand name */}
           <Link
             to="/"
-            className="flex items-center gap-3 flex-shrink-0"
+            className="transition-opacity hover:opacity-90 block mb-3 sm:mb-3.5"
+            aria-label="The Pride Times Home"
           >
             <img
               src={logoImg}
               alt="The Pride Times logo"
-              className="h-16 w-16 flex-shrink-0 object-contain opacity-90"
+              className="w-[58px] h-[58px] sm:w-[64px] sm:h-[64px] object-contain block mx-auto"
+              style={{ width: "64px", height: "64px" }}
             />
-
-            <div className="flex flex-col items-start">
-              {/* Main Logo Text */}
-              <div
-                className="pt-logo leading-none whitespace-nowrap"
-                style={{
-                  fontSize: "clamp(1.8rem, 2.6vw, 2.25rem)",
-                }}
-              >
-                THE{" "}
-                <span className="pt-logo-accent">
-                  PRIDE
-                </span>{" "}
-                TIMES
-              </div>
-
-              {/* Tagline */}
-              <p className="mt-2 text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-[0.18em]">
-                THE GLOBAL VOICE OF INNOVATION, LEADERSHIP &amp; SUCCESS
-              </p>
-            </div>
           </Link>
 
-          {/* =================================================
-              SOCIAL ICONS
-          ================================================== */}
+          {/* Brand Name: 42–48px (44px), bold serif, PRIDE red (#ED1C24), THE & TIMES white */}
+          <Link
+            to="/"
+            className="pt-footer-brand-title font-serif font-bold tracking-tight whitespace-nowrap leading-none block"
+            style={{
+              fontFamily: 'Georgia, "Times New Roman", Times, serif',
+              fontSize: "44px",
+              fontWeight: 700,
+              lineHeight: 1,
+              color: "#FFFFFF",
+              textDecoration: "none",
+            }}
+          >
+            THE{" "}
+            <span
+              className="pt-brand-accent text-[#ED1C24]"
+              style={{ color: "#ED1C24" }}
+            >
+              PRIDE
+            </span>{" "}
+            TIMES
+          </Link>
 
-          <div className="flex items-center justify-center gap-6 sm:gap-7">
+          {/* Tagline: centered directly beneath, 12–13px, subtle letter spacing, muted blue-grey #8B9BB3 */}
+          <p
+            className="mt-2.5 text-[12px] sm:text-[12.5px] font-semibold uppercase tracking-[1.5px] leading-tight text-[#8B9BB3]"
+            style={{
+              fontSize: "12.5px",
+              letterSpacing: "1.5px",
+              color: "#8B9BB3",
+            }}
+          >
+            THE GLOBAL VOICE OF INNOVATION, LEADERSHIP &amp; SUCCESS
+          </p>
 
-            {socialLinks.map(
-              ({ icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="
-                    text-white
-                    hover:text-gray-400
-                    transition-colors
-                    duration-200
-                    flex
-                    items-center
-                    justify-center
-                  "
-                >
-                  {icon(21)}
-                </a>
-              )
-            )}
-
-          </div>
+          {/* Copyright: centered beneath tagline, 10–14px vertical spacing, 15–16px, muted blue-grey #8B9BB3 */}
+          <p
+            className="text-[15px] sm:text-[15.5px] text-[#8B9BB3] leading-none"
+            style={{
+              fontSize: "15.5px",
+              color: "#8B9BB3",
+              marginTop: "12px",
+            }}
+          >
+            © 2026 The Pride Times. All rights reserved.
+          </p>
 
         </div>
-
       </div>
 
       {/* =====================================================
-          DIVIDER
+          2. DIVIDER (Full-width grey line #303030, 1px)
       ====================================================== */}
-
-      <div className="border-t border-white/10" />
+      <div className="w-full border-t border-[#303030]" />
 
       {/* =====================================================
-          COPYRIGHT + LINKS
+          3. NAVIGATION SECTION (approx 130–160 px high)
+          - Row 1: 38–48px below divider, 15–16px #E5E7EB, subtle #454545 separators
+          - Row 2: 24–30px below row 1, 14–15px #8B9BB3
+          - Bottom padding: 30–36px
       ====================================================== */}
+      <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10">
+        <div className="pt-[38px] sm:pt-[42px] pb-[32px] sm:pb-[36px] flex flex-col items-center justify-center text-center">
 
-      <div className="max-w-[1760px] mx-auto px-6 sm:px-8 lg:px-12 xl:px-20">
-
-        <div
-          className="
-            min-h-[62px]
-            flex
-            flex-col
-            sm:flex-row
-            items-center
-            justify-between
-            gap-4
-            py-4
-          "
-        >
-
-          {/* =================================================
-              COPYRIGHT
-          ================================================== */}
-
-          <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-            © {new Date().getFullYear()} The Pride Times. All rights reserved.
-          </p>
-
-          {/* =================================================
-              FOOTER NAVIGATION
-          ================================================== */}
-
+          {/* First Row: 15–16px, light grey/white #E5E7EB, on one line on desktop */}
           <nav
-            className="
-              flex
-              flex-wrap
-              items-center
-              justify-center
-              sm:justify-end
-              gap-x-7
-              gap-y-2
-            "
-            aria-label="Footer navigation"
+            className="flex flex-wrap items-center justify-center text-[15px] sm:text-[15.5px] text-[#E5E7EB]"
+            aria-label="Primary footer navigation"
           >
-
-            {footerLinks.map((link) => {
-
-              /* External/non-route placeholders */
-
-              if (link.path === "#") {
-                return (
-                  <button
-                    key={link.label}
-                    type="button"
-                    className="
-                      text-xs
-                      sm:text-sm
-                      text-gray-500
-                      hover:text-white
-                      transition-colors
-                      duration-200
-                      whitespace-nowrap
-                    "
-                  >
-                    {link.label}
-                  </button>
-                );
-              }
-
-              return (
+            {primaryNavRow.map((link, index) => (
+              <div key={link.label} className="inline-flex items-center">
                 <Link
-                  key={link.label}
                   to={link.path}
-                  className="
-                    text-xs
-                    sm:text-sm
-                    text-gray-500
-                    hover:text-white
-                    transition-colors
-                    duration-200
-                    whitespace-nowrap
-                  "
+                  className="hover:text-[#ED1C24] transition-colors duration-150 whitespace-nowrap px-1 py-0.5"
+                  style={{ color: "#E5E7EB", fontSize: "15.5px" }}
                 >
                   {link.label}
                 </Link>
-              );
-            })}
 
+                {index < primaryNavRow.length - 1 && (
+                  <span
+                    className="pt-footer-sep text-[#454545] select-none hidden sm:inline"
+                    style={{ margin: "0 18px", color: "#454545" }}
+                    aria-hidden="true"
+                  >
+                    |
+                  </span>
+                )}
+              </div>
+            ))}
+          </nav>
+
+          {/* Vertical distance between rows: around 24–30px */}
+          <div className="h-[24px] sm:h-[26px]" />
+
+          {/* Second Row: 14–15px, muted blue-grey #8B9BB3 */}
+          <nav
+            className="flex flex-wrap items-center justify-center text-[14px] sm:text-[14.5px] text-[#8B9BB3]"
+            aria-label="Secondary footer navigation"
+          >
+            {secondaryNavRow.map((link, index) => (
+              <div key={link.label} className="inline-flex items-center">
+                <Link
+                  to={link.path}
+                  className="hover:text-[#ED1C24] transition-colors duration-150 whitespace-nowrap px-1 py-0.5"
+                  style={{ color: "#8B9BB3", fontSize: "14.5px" }}
+                >
+                  {link.label}
+                </Link>
+
+                {index < secondaryNavRow.length - 1 && (
+                  <span
+                    className="pt-footer-sep text-[#454545] select-none hidden sm:inline"
+                    style={{ margin: "0 18px", color: "#454545" }}
+                    aria-hidden="true"
+                  >
+                    |
+                  </span>
+                )}
+              </div>
+            ))}
           </nav>
 
         </div>
-
       </div>
 
     </footer>

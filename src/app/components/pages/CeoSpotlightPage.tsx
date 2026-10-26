@@ -1,3 +1,4 @@
+import { useState, type FormEvent } from "react";
 import {
   Clock,
   Users,
@@ -21,12 +22,58 @@ import ceoTim from "../../../imports/ceo-tim-cook.png";
 import ceoLarry from "../../../imports/ceo-larry-fink.png";
 import ceoIndra from "../../../imports/ceo-indra-nooyi.png";
 import { PrideTimesAd } from "../AdSenseSlots";
+import { useAuth } from "../../context/AuthContext";
+import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
+
+const CEO_NEWSLETTER_KEY = "ceo-spotlight";
 
 /* ============================================================
    NEWSLETTER CTA
 ============================================================ */
 
 function NewsletterCTA() {
+  const { user, isSignedIn } = useAuth();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!isSignedIn || !user || status === "saving") return;
+
+    const typedEmail = email.trim().toLowerCase();
+
+    if (!typedEmail) {
+      setStatus("error");
+      setErrorMessage("Please enter your email address.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(typedEmail)) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
+    if (typedEmail !== user.email.toLowerCase()) {
+      setStatus("error");
+      setErrorMessage("Please use the email address linked to your account.");
+      return;
+    }
+
+    setStatus("saving");
+    setErrorMessage("");
+
+    const ok = await setNewsletterSubscribed(user.id, CEO_NEWSLETTER_KEY, true);
+
+    if (ok) {
+      setStatus("done");
+    } else {
+      setStatus("error");
+      setErrorMessage("Could not subscribe right now. Please try again in a moment.");
+    }
+  }
+
   return (
     <section className="mb-14 rounded-[2px] bg-[#0b1a30] p-8 text-center text-white md:p-10">
       <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.22em] text-red-400">
@@ -42,23 +89,59 @@ function NewsletterCTA() {
         briefings.
       </p>
 
-      <form
-        onSubmit={(e) => e.preventDefault()}
-        className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
-      >
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50"
-        />
-
-        <button
-          type="submit"
-          className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+      {!isSignedIn ? (
+        <div className="mx-auto flex max-w-md flex-col items-center gap-3">
+          <p className="text-sm text-gray-300">
+            Create a free account to subscribe.
+          </p>
+          <Link
+            to="/signup"
+            className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+          >
+            Subscribe Free
+          </Link>
+          <p className="text-xs text-gray-400">
+            Already have an account?{" "}
+            <Link to="/login" className="underline hover:text-white">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      ) : status === "done" ? (
+        <p className="text-sm font-semibold text-green-300">
+          You are subscribed. A confirmation email has been sent to {user.email}.
+        </p>
+      ) : (
+        <form
+          onSubmit={handleSubscribe}
+          noValidate
+          className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
         >
-          Subscribe Free
-        </button>
-      </form>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (status === "error") setStatus("idle");
+            }}
+            placeholder="Enter your email"
+            aria-label="Email address"
+            className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50"
+          />
+
+          <button
+            type="submit"
+            disabled={status === "saving"}
+            className="whitespace-nowrap rounded-[2px] bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {status === "saving" ? "Subscribing..." : "Subscribe Free"}
+          </button>
+        </form>
+      )}
+
+      {status === "error" && errorMessage && (
+        <p className="mt-4 text-xs text-red-300">{errorMessage}</p>
+      )}
     </section>
   );
 }
@@ -705,10 +788,13 @@ export function CeoSpotlightPage() {
               ))}
             </div>
 
-            <button className="mt-5 flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+            <Link
+              to="/leadership"
+              className="mt-5 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600 transition-colors hover:text-red-700"
+            >
               More Opinions
               <ChevronRight size={11} />
-            </button>
+            </Link>
           </div>
 
           {/* EXECUTIVE MOVES */}
