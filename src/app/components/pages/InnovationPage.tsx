@@ -1,3 +1,4 @@
+import { NewsletterCTA } from "../NewsletterCTA";
 import {
   defaultFeaturedInnovation,
   defaultTopInnovationStories,
@@ -60,31 +61,11 @@ export function InnovationPage() {
           {/* =================================================
               4. NEWSLETTER CTA
           ================================================= */}
-          <section className="bg-[#0b1a30] text-white text-center p-8 md:p-10 rounded-none border border-gray-800">
-            <h2 className="font-serif text-2xl md:text-[30px] mb-2 font-bold">
-              Stay Ahead with The Pride Times
-            </h2>
-            <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
-              Daily briefings on AI, semiconductors, quantum breakthroughs, and global tech policy delivered directly to your inbox.
-            </p>
-            <form
-              onSubmit={(event) => event.preventDefault()}
-              className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto"
-            >
-              <input
-                type="email"
-                placeholder="Enter your email"
-                aria-label="Email address"
-                className="flex-1 min-w-0 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 px-4 py-3 text-sm outline-none focus:border-white/50 rounded-none"
-              />
-              <button
-                type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 text-sm font-semibold transition-colors rounded-none whitespace-nowrap"
-              >
-                Subscribe Free
-              </button>
-            </form>
-          </section>
+          <NewsletterCTA
+            title="Stay Ahead with The Pride Times"
+            description="Daily briefings on AI, semiconductors, quantum breakthroughs, and global tech policy delivered directly to your inbox."
+            newsletterKey="daily-brief"
+          />
         </main>
       </div>
     </div>
