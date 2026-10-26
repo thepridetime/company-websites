@@ -33,15 +33,45 @@ const CEO_NEWSLETTER_KEY = "ceo-spotlight";
 
 function NewsletterCTA() {
   const { user, isSignedIn } = useAuth();
+  const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!isSignedIn || !user || status === "saving") return;
 
+    const typedEmail = email.trim().toLowerCase();
+
+    if (!typedEmail) {
+      setStatus("error");
+      setErrorMessage("Please enter your email address.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(typedEmail)) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
+    if (typedEmail !== user.email.toLowerCase()) {
+      setStatus("error");
+      setErrorMessage("Please use the email address linked to your account.");
+      return;
+    }
+
     setStatus("saving");
+    setErrorMessage("");
+
     const ok = await setNewsletterSubscribed(user.id, CEO_NEWSLETTER_KEY, true);
-    setStatus(ok ? "done" : "error");
+
+    if (ok) {
+      setStatus("done");
+    } else {
+      setStatus("error");
+      setErrorMessage("Could not subscribe right now. Please try again in a moment.");
+    }
   }
 
   return (
@@ -62,7 +92,7 @@ function NewsletterCTA() {
       {!isSignedIn ? (
         <div className="mx-auto flex max-w-md flex-col items-center gap-3">
           <p className="text-sm text-gray-300">
-            Free subscribe karne ke liye account banayein.
+            Create a free account to subscribe.
           </p>
           <Link
             to="/signup"
@@ -79,19 +109,24 @@ function NewsletterCTA() {
         </div>
       ) : status === "done" ? (
         <p className="text-sm font-semibold text-green-300">
-          You are subscribed. A confirmation email has been sent to {user?.email}.
+          You are subscribed. A confirmation email has been sent to {user.email}.
         </p>
       ) : (
         <form
           onSubmit={handleSubscribe}
+          noValidate
           className="mx-auto flex max-w-md flex-col justify-center gap-3 sm:flex-row"
         >
           <input
             type="email"
-            value={user?.email ?? ""}
-            readOnly
-            aria-label="Subscription email"
-            className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (status === "error") setStatus("idle");
+            }}
+            placeholder="Enter your email"
+            aria-label="Email address"
+            className="flex-1 rounded-[2px] border border-white/20 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-gray-400 focus:border-white/50"
           />
 
           <button
@@ -104,10 +139,8 @@ function NewsletterCTA() {
         </form>
       )}
 
-      {status === "error" && (
-        <p className="mt-4 text-xs text-red-300">
-          Subscribe nahi ho paya. Please dobara try karein.
-        </p>
+      {status === "error" && errorMessage && (
+        <p className="mt-4 text-xs text-red-300">{errorMessage}</p>
       )}
     </section>
   );
