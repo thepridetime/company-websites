@@ -2374,6 +2374,75 @@ const refreshedDigestArticles: SpecialArticle[] = [
   ...sustainabilityEsgArticles.map(refreshedSectionArticleToSpecial),
 ];
 
+/* CEO Spotlight "Executive Company Coverage" cards → /article/ceo-coverage-<slug> */
+const ceoCoverageItems: [string, string, string, string][] = [
+  ["nvidia", "NVIDIA", "AI & Technology Leaders", "AI infrastructure remains central to executive strategy"],
+  ["microsoft", "Microsoft", "AI & Technology Leaders", "Cloud and AI remain central themes in leadership strategy"],
+  ["alphabet", "Alphabet", "AI & Technology Leaders", "AI reshapes search, cloud and digital services"],
+  ["apple", "Apple", "Global Business Leaders", "Leadership focus remains on technology and product strategy"],
+  ["blackrock", "BlackRock", "Global Business Leaders", "Asset management leadership faces changing market conditions"],
+  ["tesla", "Tesla", "Global Business Leaders", "Executive strategy spans mobility, energy and technology"],
+  ["reliance", "Reliance Industries", "Leadership Across Markets", "Leadership strategy expands across telecom, retail and energy"],
+  ["ibm", "IBM", "Leadership Across Markets", "Corporate leadership continues strategic transformation"],
+  ["adobe", "Adobe", "Leadership Across Markets", "Technology leadership focuses on evolving digital markets"],
+];
+
+const ceoCoverageArticles: SpecialArticle[] = ceoCoverageItems.map(
+  ([slug, company, category, title]) =>
+    makeArticle({
+      id: `ceo-coverage-${slug}`,
+      section: "CEO Spotlight",
+      category: `Company Coverage · ${category}`,
+      title: `${company}: ${title}`,
+      dek: title,
+      highlights: [
+        `${company} leadership is judged by how its strategy turns into measurable execution.`,
+        "Decisions on technology, capital and partnerships shape the company's direction.",
+        "Investors, customers and employees will watch results over the coming quarters.",
+      ],
+      sections: [
+        {
+          heading: `${company} leadership brief`,
+          body: `${title}. Executive decisions on products, investment and partnerships are central to how the company competes and where it is heading.`,
+        },
+        {
+          heading: "Strategy under changing conditions",
+          body: `Leaders at ${company} must balance current business performance with investments that may take years to pay off. The key questions concern where to allocate capital and how quickly to respond to changing customer demand.`,
+        },
+        {
+          heading: "The signals to watch",
+          body: `Product launches, financial guidance, hiring priorities and major partnerships give the clearest picture of how ${company}'s strategy is being carried out.`,
+        },
+      ],
+      keyFacts: [
+        { label: "Company", value: company },
+        { label: "Desk", value: "Executive Intelligence" },
+        { label: "Coverage", value: category },
+      ],
+    })
+);
+
+/* Leadership & Governance articles → /article/<leadership-id> */
+const leadershipGovernanceSpecialArticles: SpecialArticle[] =
+  leadershipGovernanceArticles.map((a) =>
+    makeArticle({
+      id: a.id,
+      section: "Leadership & Governance",
+      category: a.category,
+      title: a.title,
+      dek: a.excerpt,
+      image: a.image,
+      highlights: a.highlights,
+      sections: [
+        { heading: "The leadership brief", body: a.excerpt },
+        { heading: "The signals to watch", body: a.highlights.join(" ") },
+      ],
+      keyFacts: a.keyFacts,
+      publishedAt: a.publishedAt,
+      readTime: a.readTime,
+    })
+  );
+
 export const specialArticles: SpecialArticle[] = [
   ...healthcareArticles,
   ...refreshedDigestArticles,
@@ -2384,6 +2453,8 @@ export const specialArticles: SpecialArticle[] = [
   ...ceoWomen,
   ...ceoOpinions,
   ...ceoMoves,
+  ...ceoCoverageArticles,
+  ...leadershipGovernanceSpecialArticles,
   innovationHero,
   ...innovationStories,
   ...cybersecurityArticles,
