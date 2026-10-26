@@ -1,3 +1,4 @@
+import { NewsletterCTA } from "../NewsletterCTA";
 import { TimeAgo } from "../../utils/timeAgo";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Clock, ChevronRight } from "lucide-react";
@@ -596,31 +597,11 @@ export function TechnologyPage() {
             NEWSLETTER
         ================================================= */}
 
-        <section className="bg-[#071A2D] rounded-lg px-5 sm:px-8 md:px-12 py-9 md:py-10 text-center mb-14">
-
-          <h2 className="font-serif text-[24px] md:text-[28px] font-bold text-white">
-            Stay Ahead with The Pride Times
-          </h2>
-
-          <p className="text-[11px] md:text-[12px] text-gray-300 mt-2">
-            Daily briefings on AI platforms, chips, data centres and the global technology economy delivered to your inbox.
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-2 mt-5 max-w-[520px] mx-auto">
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="h-10 flex-1 rounded-md border border-white/10 bg-white/10 px-3 text-[11px] text-white placeholder:text-gray-400 outline-none focus:border-red-500"
-            />
-
-            <button className="h-10 px-5 rounded-md bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold transition-colors">
-              Subscribe Free
-            </button>
-
-          </div>
-
-        </section>
+        <NewsletterCTA
+          title="Stay Ahead with The Pride Times"
+          description="Daily briefings on AI platforms, chips, data centres and the global technology economy delivered to your inbox."
+          newsletterKey="technology-weekly"
+        />
 
       </div>
     </main>
