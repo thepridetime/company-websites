@@ -39,9 +39,11 @@ const tagStyles: Record<string, string> = {
 function SectionHeader({
   title,
   id,
+  to,
 }: {
   title: string;
   id?: string;
+  to: string;
 }) {
   return (
     <div
@@ -52,10 +54,13 @@ function SectionHeader({
         {title}
       </h2>
 
-      <button className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-red-600 transition-colors">
+      <Link
+        to={to}
+        className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-red-600 transition-colors"
+      >
         See All
         <ChevronRight size={12} />
-      </button>
+      </Link>
     </div>
   );
 }
@@ -250,7 +255,7 @@ export function TechnologyPage() {
 
         <section className="mt-12 md:mt-14">
 
-          <SectionHeader title="Latest Technology News" />
+          <SectionHeader title="Latest Technology News" to="/innovation" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 lg:gap-x-7 gap-y-8">
 
@@ -371,7 +376,7 @@ export function TechnologyPage() {
 
           <div>
 
-            <SectionHeader title="Companies in Focus" />
+            <SectionHeader title="Companies in Focus" to="/business-news" />
 
             <div className="divide-y divide-gray-200">
 
@@ -449,7 +454,7 @@ export function TechnologyPage() {
 
         <section className="mb-12">
 
-          <SectionHeader title="Technology Market Watch" />
+          <SectionHeader title="Technology Market Watch" to="/markets" />
 
           <div className="overflow-x-auto border border-gray-200 rounded-md">
 
@@ -518,7 +523,7 @@ export function TechnologyPage() {
 
         <section className="border-t-2 border-black pt-8 mb-12">
 
-          <SectionHeader title="Regional Market Snapshot" />
+          <SectionHeader title="Regional Market Snapshot" to="/world" />
 
           <p className="-mt-2 mb-4 text-[10px] text-gray-400">
             Illustrative regional indicators from this edition.
