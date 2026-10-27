@@ -421,6 +421,35 @@ function MetaDot() {
   return <span aria-hidden className="text-slate-300">•</span>;
 }
 
+/* Aa button: toggles larger article text by adding a class to the article wrapper. */
+function toggleArticleTextSize(event: { currentTarget: HTMLElement }) {
+  const article = event.currentTarget.closest(".pt-magazine");
+  if (!article) return;
+  article.classList.toggle("pt-text-large");
+}
+
+/* Share icon button: native share sheet if available, otherwise copy the link. */
+async function shareArticleLink() {
+  const url = window.location.href;
+  const title = document.title;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, url });
+      return;
+    } catch (error) {
+      if ((error as Error).name === "AbortError") return;
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(url);
+    window.alert("Link copied to clipboard.");
+  } catch {
+    window.prompt("Copy this link:", url);
+  }
+}
+
 function BlogMeta({
   save,
   author,
@@ -491,6 +520,7 @@ function BlogMeta({
         <button
           type="button"
           aria-label="Adjust text size"
+          onClick={toggleArticleTextSize}
           className={`inline-flex h-7 w-7 items-center justify-center rounded-md text-[11px] font-semibold transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
         >
           Aa
@@ -498,6 +528,7 @@ function BlogMeta({
         <button
           type="button"
           aria-label="Share article"
+          onClick={shareArticleLink}
           className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
         >
           <Share2 size={13} />
@@ -652,6 +683,10 @@ function ArticleShell({
         .pt-magazine .blog-prose h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:23px !important; line-height:1.3 !important; color:#17191c !important; margin:0 0 12px !important; }
         .pt-magazine .blog-prose p { font-family:Georgia,'Times New Roman',serif !important; font-size:17px !important; line-height:1.75 !important; margin:0 0 1.25em !important; color:#2b2f35 !important; text-align:left; }
         .pt-magazine .blog-prose section > p:last-child { margin-bottom:0 !important; }
+        .pt-magazine.pt-text-large .blog-prose p,
+        .pt-magazine.pt-text-large .blog-prose li { font-size:20px !important; line-height:1.8 !important; }
+        .pt-magazine.pt-text-large .blog-prose h2 { font-size:28px !important; }
+        .pt-magazine.pt-text-large header h1 { font-size:clamp(34px,4vw,54px) !important; }
         .pt-magazine .blog-prose .drop-cap:first-letter { float:left; font-family:Georgia,'Times New Roman',serif; font-size:62px; line-height:.78; padding:5px 8px 0 0; color:#ed1c24; }
 
         .pt-magazine aside .rounded-xl { border-radius:0 !important; box-shadow:none !important; border-color:#e3e7eb !important; }
