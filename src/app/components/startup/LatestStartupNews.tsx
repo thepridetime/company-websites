@@ -35,7 +35,7 @@ export function LatestStartupNews({
       {/* COMPACT ROWS */}
       <div className="divide-y divide-gray-100">
         {news.map((item) => {
-          const destination = item.url || `/article/${item.id}`;
+          const destination = item.url || "/technology";
 
           return (
             <Link
