@@ -20,7 +20,7 @@ export function FeaturedStartupStory({
     );
   }
 
-  const destination = story.url || `/article/${story.id}`;
+  const destination = story.url || "/technology";
 
   return (
     <div className={`relative overflow-hidden rounded-none border border-gray-200/80 bg-black group ${className}`}>
