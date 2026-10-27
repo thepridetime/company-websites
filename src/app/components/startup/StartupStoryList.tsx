@@ -66,7 +66,7 @@ export function StartupStoryList({
       <div className="divide-y divide-gray-100">
         {stories.map((story) => {
           const isSaved = !!bookmarkedIds[story.id];
-          const destination = story.url || `/article/${story.id}`;
+          const destination = story.url || "/technology";
 
           return (
             <Link
