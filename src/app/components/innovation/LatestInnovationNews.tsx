@@ -27,7 +27,7 @@ export function LatestInnovationNews({
           Latest in Innovation
         </h3>
         <Link
-          to="/article/clean-energy-battery-storage-cost-breakthrough"
+          to="/energy"
           className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-red-600 hover:text-red-700 transition-colors"
         >
           <span>View All</span>
