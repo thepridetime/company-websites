@@ -64,7 +64,7 @@ export const defaultStartupWatch: StartupStory = {
   publishedAt: "7 October 2026",
   readTime: "3 min read",
   image: img_space_tech_rocket,
-  url: "/article/startup-starlink-gen3-global",
+  url: "/innovation",
 };
 
 /* =========================================================
@@ -80,7 +80,7 @@ export const defaultTopStartupStories: StartupStory[] = [
     publishedAt: "7 October 2026",
     readTime: "3 min read",
     image: img_photonics_engineer,
-    url: "/article/startup-alphabet-ai-data-center",
+    url: "/innovation",
   },
   {
     id: "robotics-startups-pilots-to-real-world",
@@ -91,7 +91,7 @@ export const defaultTopStartupStories: StartupStory[] = [
     publishedAt: "7 October 2026",
     readTime: "4 min read",
     image: img_warehouse_robotics,
-    url: "/article/startup-nvidia-humanoid-robot-push",
+    url: "/innovation",
   },
 ];
 
@@ -144,7 +144,6 @@ export const defaultFundedStartups: FundedCompany[] = [
     amount: "$320M",
     round: "Series C",
     iconType: "star",
-    url: "/article/startup-meta-llama4-enterprise",
   },
   {
     id: "axion-robotics",
@@ -153,7 +152,6 @@ export const defaultFundedStartups: FundedCompany[] = [
     amount: "$150M",
     round: "Series B",
     iconType: "robot",
-    url: "/article/startup-zepto-10b-valuation",
   },
   {
     id: "qubitsys",
@@ -162,7 +160,6 @@ export const defaultFundedStartups: FundedCompany[] = [
     amount: "$200M",
     round: "Series B",
     iconType: "quantum",
-    url: "/article/startup-quantum-commercial-milestone",
   },
   {
     id: "terravolt",
