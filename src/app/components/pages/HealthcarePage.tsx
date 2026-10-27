@@ -12,6 +12,24 @@ import {
   specialArticlePath,
 } from "../../data/specialArticleData";
 import HealthFallbackImg from "../../../imports/HC1.png";
+import HC2Img from "../../../imports/HC2.png";
+import HC3Img from "../../../imports/HC3.png";
+import HC4Img from "../../../imports/HC4.png";
+import AiHealthcareImg from "../../../imports/ai-healthcare.png";
+import BiotechLabImg from "../../../imports/biotech-drug-lab.jpg";
+import HealthTechImg from "../../../imports/health-tech-discovery.jpg";
+
+/* Image pool for the healthcare cards. Each card takes the next image in the
+   list, so neighbouring headlines never share a picture. */
+const healthImagePool = [
+  HealthFallbackImg,
+  HC2Img,
+  HC3Img,
+  HC4Img,
+  AiHealthcareImg,
+  BiotechLabImg,
+  HealthTechImg,
+];
 
 /* Display label for this section (page title, cards and feed). */
 const SECTION_LABEL = "Healthcare and Pharma";
@@ -62,7 +80,12 @@ const specialHealthItems: HealthItem[] = specialArticles
     keyFacts: article.keyFacts,
   }));
 
-const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems];
+const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems].map(
+  (item, index) => ({
+    ...item,
+    image: healthImagePool[index % healthImagePool.length],
+  })
+);
 
 const leadStory = healthItems[0];
 const otherStories = healthItems.slice(1);
