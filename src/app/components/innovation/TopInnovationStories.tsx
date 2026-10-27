@@ -50,7 +50,7 @@ export function TopInnovationStories({
                 {/* Thumbnail */}
                 <Link
                   to={storyUrl}
-                  className="shrink-0 w-[112px] sm:w-[124px] h-[80px] sm:h-[88px] overflow-hidden rounded-none border border-gray-200/70 bg-gray-100 block"
+                  className="shrink-0 w-[112px] sm:w-[124px] h-[80px] sm:h-[88px] overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100 block"
                 >
                   <ImageWithFallback
                     src={story.image}

@@ -51,7 +51,7 @@ export function StartupWatch({
       {/* STORY CARD */}
       <Link to={destination} className="group block">
         {/* IMAGE */}
-        <div className="relative w-full h-[180px] sm:h-[200px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100 mb-3">
+        <div className="relative w-full h-[180px] sm:h-[200px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100 mb-3">
           <ImageWithFallback
             src={story.image}
             alt={story.title}

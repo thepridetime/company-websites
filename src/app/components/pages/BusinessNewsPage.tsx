@@ -607,7 +607,7 @@ export function BusinessNewsPage() {
               <div className="min-w-0 flex flex-col">
                 <Link
                   to={leadStory.path}
-                  className="group relative flex flex-col justify-end overflow-hidden rounded-none border border-gray-200/90 bg-gray-950 h-full min-h-[500px] lg:min-h-[540px] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                  className="group relative flex flex-col justify-end overflow-hidden rounded-lg border border-gray-200/90 bg-gray-950 h-full min-h-[500px] lg:min-h-[540px] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                 >
                   <ImageWithFallback
                     src={businessNyseTrading}
@@ -671,7 +671,7 @@ export function BusinessNewsPage() {
                     to={majorStories[0].path}
                     className="group flex gap-3 items-start pb-3"
                   >
-                    <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
+                    <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100">
                       <ImageWithFallback
                         src={majorStories[0].image}
                         alt={majorStories[0].title}
@@ -730,7 +730,7 @@ export function BusinessNewsPage() {
                       to={majorStories[1].path}
                       className="group flex gap-3 items-start"
                     >
-                      <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
+                      <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100">
                         <ImageWithFallback
                           src={majorStories[1].image}
                           alt={majorStories[1].title}
@@ -805,7 +805,7 @@ export function BusinessNewsPage() {
                         to="/article/paramount-skydance-and-warner-bros-discovery-a-110-billion-deal-stuck-in-court"
                         className="group flex gap-3 items-start"
                       >
-                        <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
+                        <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100">
                           <ImageWithFallback
                             src={microsoftDatacenterAi}
                             alt="Microsoft Expands AI Infrastructure with New Data Center Investment"
@@ -852,7 +852,7 @@ export function BusinessNewsPage() {
                           to="/article/deals-and-moves-roundup"
                           className="group flex gap-3 items-start"
                         >
-                          <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100">
+                          <div className="shrink-0 w-[95px] sm:w-[105px] h-[72px] sm:h-[78px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100">
                             <ImageWithFallback
                               src={hsbcBankBuilding}
                               alt="HSBC to Restructure Operations Amid Cost-Cutting Drive"
@@ -1087,7 +1087,7 @@ export function BusinessNewsPage() {
                   </div>
 
                   <Link to={editorsPick.path} className="group block">
-                    <div className="relative overflow-hidden rounded-none border border-gray-200/80 bg-gray-100 aspect-[16/9]">
+                    <div className="relative overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100 aspect-[16/9]">
                       <ImageWithFallback
                         src={editorsPick.image}
                         alt={editorsPick.title}
@@ -1154,7 +1154,7 @@ export function BusinessNewsPage() {
                       >
                         <div className="flex gap-2.5 items-start">
                           {item.image && (
-                            <div className="shrink-0 w-[58px] h-[58px] overflow-hidden rounded-none border border-gray-200/80 bg-gray-100 mt-0.5">
+                            <div className="shrink-0 w-[58px] h-[58px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100 mt-0.5">
                               <ImageWithFallback
                                 src={item.image}
                                 alt={item.title}

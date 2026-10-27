@@ -436,7 +436,7 @@ export function InternationalNewsPage() {
               <div className="flex flex-col h-full min-h-[580px] lg:min-h-[660px]">
                 <Link
                   to="/article/international-global-trade-asia-growth"
-                  className="group relative flex flex-col justify-end overflow-hidden rounded-none border border-gray-200/80 bg-black h-full"
+                  className="group relative flex flex-col justify-end overflow-hidden rounded-lg border border-gray-200/80 bg-black h-full"
                 >
                   <ImageWithFallback
                     src={globalTradePortImg}
@@ -491,7 +491,7 @@ export function InternationalNewsPage() {
                     to="/article/international-india-third-largest-economy"
                     className="group flex gap-3.5 sm:gap-4 items-start"
                   >
-                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                       <ImageWithFallback
                         src={tajMahalImg}
                         alt="India Overtakes Germany as World's 3rd Largest Economy"
@@ -527,7 +527,7 @@ export function InternationalNewsPage() {
                     to="/article/international-eu-us-digital-trade"
                     className="group flex gap-3.5 sm:gap-4 items-start"
                   >
-                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                       <ImageWithFallback
                         src={euUsFlagsImg}
                         alt="EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce"
@@ -563,7 +563,7 @@ export function InternationalNewsPage() {
                     to="/article/international-shipping-costs-routes"
                     className="group flex gap-3.5 sm:gap-4 items-start"
                   >
-                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                       <ImageWithFallback
                         src={shippingCostsImg}
                         alt="Shipping Costs Decline as Key Trade Routes Stabilize"
@@ -622,7 +622,7 @@ export function InternationalNewsPage() {
                     to="/article/international-europe-fiscal-buffer"
                     className="group block"
                   >
-                    <div className="w-full h-[160px] sm:h-[172px] overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                    <div className="w-full h-[160px] sm:h-[172px] overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                       <ImageWithFallback
                         src={euParliamentImg}
                         alt="EU finance ministers agree on joint fiscal buffer"
@@ -671,7 +671,7 @@ export function InternationalNewsPage() {
                       to="/article/international-france-germany-industrial-policy"
                       className="group flex gap-2.5 py-2.5 first:pt-1 last:pb-0 items-start"
                     >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                         <ImageWithFallback
                           src={europeIndustryImg}
                           alt="France and Germany industrial policy"
@@ -699,7 +699,7 @@ export function InternationalNewsPage() {
                       to="/article/international-uk-eu-youth-mobility"
                       className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
                     >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                         <ImageWithFallback
                           src={ukMobilityImg}
                           alt="UK-EU youth mobility scheme"
@@ -727,7 +727,7 @@ export function InternationalNewsPage() {
                       to="/article/international-italy-no-confidence"
                       className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
                     >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                         <ImageWithFallback
                           src={italyParliamentImg}
                           alt="Italy government survives vote"
@@ -755,7 +755,7 @@ export function InternationalNewsPage() {
                       to="/article/international-asean-supply-chain-pact"
                       className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
                     >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                         <ImageWithFallback
                           src={aseanSupplyChainImg}
                           alt="ASEAN supply-chain resilience pact"

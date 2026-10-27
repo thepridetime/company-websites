@@ -76,7 +76,7 @@ export function StartupStoryList({
             >
               <div className="flex gap-3.5 sm:gap-4 items-start">
                 {/* THUMBNAIL */}
-                <div className="w-[115px] h-[82px] sm:w-[135px] sm:h-[92px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+                <div className="w-[115px] h-[82px] sm:w-[135px] sm:h-[92px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                   <ImageWithFallback
                     src={story.image}
                     alt={story.title}

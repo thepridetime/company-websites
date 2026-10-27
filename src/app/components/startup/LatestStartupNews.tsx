@@ -44,7 +44,7 @@ export function LatestStartupNews({
               className="group flex gap-3 py-3 hover:bg-gray-50/60 px-1 -mx-1 transition-colors"
             >
               {/* THUMBNAIL */}
-              <div className="w-[84px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
+              <div className="w-[84px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
                 <ImageWithFallback
                   src={item.image}
                   alt={item.title}

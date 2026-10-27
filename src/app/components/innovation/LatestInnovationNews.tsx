@@ -47,7 +47,7 @@ export function LatestInnovationNews({
                 {/* Thumbnail */}
                 <Link
                   to={storyUrl}
-                  className="shrink-0 w-[95px] sm:w-[102px] h-[68px] sm:h-[72px] overflow-hidden rounded-none border border-gray-200/70 bg-gray-100 block"
+                  className="shrink-0 w-[95px] sm:w-[102px] h-[68px] sm:h-[72px] overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100 block"
                 >
                   <ImageWithFallback
                     src={story.image}

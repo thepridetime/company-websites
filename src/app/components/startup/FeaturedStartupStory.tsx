@@ -23,7 +23,7 @@ export function FeaturedStartupStory({
   const destination = story.url || "/technology";
 
   return (
-    <div className={`relative overflow-hidden rounded-none border border-gray-200/80 bg-black group ${className}`}>
+    <div className={`relative overflow-hidden rounded-lg border border-gray-200/80 bg-black group ${className}`}>
       <Link
         to={destination}
         className="block relative w-full h-[430px] sm:h-[480px] lg:h-[520px]"

@@ -22,7 +22,7 @@ export function InnovationFeaturedStory({
   const linkTarget = story.url || "/article/ai-infrastructure-supercomputing";
 
   return (
-    <article className={`relative overflow-hidden rounded-none border border-gray-200 bg-black group h-full min-h-[560px] lg:min-h-[620px] flex flex-col justify-between ${className}`}>
+    <article className={`relative overflow-hidden rounded-lg border border-gray-200 bg-black group h-full min-h-[560px] lg:min-h-[620px] flex flex-col justify-between ${className}`}>
       <Link to={linkTarget} className="absolute inset-0 z-0 block">
         <ImageWithFallback
           src={story.image}
