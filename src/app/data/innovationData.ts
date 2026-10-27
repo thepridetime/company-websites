@@ -1,8 +1,6 @@
 import img_innovation_hero_ai from "../../imports/innovation-hero-ai.jpg";
 import img_semiconductor_ai_chip from "../../imports/semiconductor-ai-chip.jpg";
 import img_humanoid_robot_factory from "../../imports/humanoid-robot-factory.jpg";
-import img_biotech_drug_lab from "../../imports/biotech-drug-lab.jpg";
-import img_clean_tech_batteries from "../../imports/climate-tech-hydrogen.jpg";
 import img_satellite_orbit_space from "../../imports/satellite-orbit-space.jpg";
 import img_quantum_computing_chip from "../../imports/quantum-computing-chip.jpg";
 
@@ -46,15 +44,16 @@ export interface InnovationMetric {
 
 /* =========================================================
    FEATURED INNOVATION STORY (LEFT COLUMN)
+   (Text and links come from existing articles in the data folder)
 ========================================================= */
 export const defaultFeaturedInnovation: InnovationFeaturedStoryData = {
-  id: "ais-next-leap-from-smarter-models-to-real-world-impact",
-  category: "INNOVATION | AI AND CLOUD INFRASTRUCTURE | GLOBAL",
-  title: "AI's Next Leap: From Smarter Models to Real-World Impact",
+  id: "manufacturing-ai-hardware-production",
+  category: "AI HARDWARE",
+  title: "AI Hardware Demand Raises the Importance of Advanced Manufacturing Quality Control",
   summary:
-    "From enterprise copilots to autonomous systems, a new wave of AI innovation is moving beyond the lab and into the real economy.",
+    "The expansion of AI hardware production increases pressure on manufacturers to improve process visibility, defect detection and yield management.",
   image: img_innovation_hero_ai,
-  url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+  url: "/article/manufacturing-ai-hardware-production",
 };
 
 /* =========================================================
@@ -62,40 +61,37 @@ export const defaultFeaturedInnovation: InnovationFeaturedStoryData = {
 ========================================================= */
 export const defaultTopInnovationStories: InnovationStory[] = [
   {
-    id: "memory-chip-bottleneck-bonanza",
-    category: "SEMICONDUCTORS",
-    location: "SOUTH KOREA",
-    title: "Memory Becomes the Chip Industry’s Bottleneck and Bonanza",
-    summary:
-      "Tight supply, rising prices and record exports are reshaping capacity plans from Texas to Singapore.",
-    publishedAt: "7 October 2026",
-    readTime: "4 min read",
-    image: img_semiconductor_ai_chip,
-    url: "/article/south-korea-chip-exports-surge-record-high-ai-memory-demand",
-  },
-  {
-    id: "humanoid-robots-commercial-deployment",
+    id: "manufacturing-mind-robotics-500m",
     category: "ROBOTICS",
-    location: "GLOBAL",
-    title: "Humanoid Robots Move Closer to Commercial Deployment",
+    title: "Mind Robotics Raises $500M Series A to Address Western Manufacturing Labor Shortages",
     summary:
-      "Startups and tech giants are racing to bring general-purpose robots into factories and services.",
-    publishedAt: "7 October 2026",
-    readTime: "3 min read",
+      "The Rivian spin-off is using large-scale venture funding to develop robotics for manufacturers facing persistent labor shortages across Western markets.",
+    publishedAt: "September 29, 2026",
+    readTime: "8 min read",
     image: img_humanoid_robot_factory,
-    url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+    url: "/article/manufacturing-mind-robotics-500m",
   },
   {
-    id: "ai-designed-drugs-human-trials",
-    category: "BIOTECH",
-    location: "UNITED STATES",
-    title: "AI-Designed Drugs Enter Human Trials",
+    id: "world-quantum-1000-qubit",
+    category: "QUANTUM COMPUTING",
+    title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
     summary:
-      "A new generation of biotech startups is using generative AI to compress drug discovery timelines.",
-    publishedAt: "7 October 2026",
-    readTime: "3 min read",
-    image: img_biotech_drug_lab,
-    url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+      "A reported 1,000-qubit milestone highlights the rapid development of quantum hardware and the continuing challenge of making systems commercially useful.",
+    publishedAt: "September 26, 2026",
+    readTime: "7 min read",
+    image: img_quantum_computing_chip,
+    url: "/article/world-quantum-1000-qubit",
+  },
+  {
+    id: "manufacturing-ai-robotics-digital-twins",
+    category: "SMART MANUFACTURING",
+    title: "AI, Robotics and Digital Twins Transform Factory Operations",
+    summary:
+      "Smart manufacturing combines artificial intelligence, robotics and digital-twin technology to improve production planning, maintenance, quality control and factory simulation.",
+    publishedAt: "September 29, 2026",
+    readTime: "8 min read",
+    image: img_semiconductor_ai_chip,
+    url: "/article/manufacturing-ai-robotics-digital-twins",
   },
 ];
 
@@ -268,30 +264,14 @@ export const defaultInnovationMetrics: InnovationMetric[] = [
 ========================================================= */
 export const defaultLatestInnovationNews: InnovationStory[] = [
   {
-    id: "next-gen-batteries-renewable-storage",
-    category: "CLEAN TECH",
-    title: "Next-gen batteries could cut renewable storage costs by 40%",
-    publishedAt: "7 October 2026",
-    readTime: "3 min read",
-    image: img_clean_tech_batteries,
-    url: "/article/clean-energy-battery-storage-cost-breakthrough",
-  },
-  {
-    id: "private-space-startups-orbit-stations",
+    id: "world-starlink-gen3-global",
     category: "SPACE TECH",
-    title: "Private space startups plan new wave of low-Earth orbit stations",
-    publishedAt: "7 October 2026",
-    readTime: "4 min read",
+    title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
+    summary:
+      "The latest satellite expansion is aimed at increasing high-speed connectivity across regions where conventional broadband remains difficult to deploy.",
+    publishedAt: "September 26, 2026",
+    readTime: "7 min read",
     image: img_satellite_orbit_space,
-    url: "/article/startup-starlink-gen3-global",
-  },
-  {
-    id: "startups-push-commercial-quantum-advantage",
-    category: "QUANTUM COMPUTING",
-    title: "Startups push toward commercial quantum advantage",
-    publishedAt: "7 October 2026",
-    readTime: "3 min read",
-    image: img_quantum_computing_chip,
-    url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+    url: "/article/world-starlink-gen3-global",
   },
 ];
