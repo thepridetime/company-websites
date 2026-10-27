@@ -380,6 +380,29 @@ export function MagazinePage() {
       ? Articles
       : Articles.filter((issue) => issue.category === activeFilter);
 
+  // Report download: only starts a download when the file really is a PDF.
+  // Without this check, a missing file returns the website's HTML page, which
+  // is saved as a ".pdf" that shows website content instead of the report.
+  const downloadReport = async (title: string) => {
+    const url = reportFileUrl(title);
+    try {
+      const response = await fetch(url, { method: "HEAD" });
+      const type = response.headers.get("content-type") ?? "";
+      if (!response.ok || !type.toLowerCase().includes("pdf")) {
+        window.alert("This report is not available for download yet.");
+        return;
+      }
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = url.split("/").pop() ?? "report.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch {
+      window.alert("Could not download this report. Please try again later.");
+    }
+  };
+
   // "View All Editions": show every edition and bring the list into view.
   const showAllEditions = () => {
     setActiveFilter("All Editions");
@@ -804,15 +827,17 @@ export function MagazinePage() {
                   <Crown size={15} className="text-amber-500" />
                 )}
 
-                <a
-                  href={reportFileUrl(report.title)}
-                  download
+                <button
+                  type="button"
                   aria-label={`Download ${report.title}`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-100 hover:text-black"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadReport(report.title);
+                  }}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-100 hover:text-black"
                 >
                   <Download size={15} />
-                </a>
+                </button>
               </div>
             </div>
           ))}
