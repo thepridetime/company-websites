@@ -316,6 +316,12 @@ export function HealthcarePage() {
                                 {item.location ?? "Healthcare"}
                               </span>
 
+                              <ImageWithFallback
+                                src={item.image}
+                                alt={item.title}
+                                className="h-[60px] w-[84px] shrink-0 rounded-sm object-cover"
+                              />
+
                               <div className="min-w-0">
                                 <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
                                   {item.title}
