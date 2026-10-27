@@ -371,6 +371,14 @@ export function MagazinePage() {
       ? Articles
       : Articles.filter((issue) => issue.category === activeFilter);
 
+  // "View All Editions": show every edition and bring the list into view.
+  const showAllEditions = () => {
+    setActiveFilter("All Editions");
+    document
+      .getElementById("all-editions")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
 
@@ -535,7 +543,7 @@ export function MagazinePage() {
           2. ALL EDITIONS
          ===================================================== */}
 
-      <section className="mb-16">
+      <section id="all-editions" className="mb-16 scroll-mt-24">
 
         <div className="mb-4 flex items-center justify-between border-b-2 border-black pb-2">
           <div className="flex items-center gap-2">
@@ -547,7 +555,7 @@ export function MagazinePage() {
 
           <button
             type="button"
-            onClick={() => setActiveFilter("All Editions")}
+            onClick={showAllEditions}
             className="group flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-red-600 transition-colors hover:text-red-700 cursor-pointer"
           >
             <span>View All Editions</span>
