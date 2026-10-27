@@ -1562,7 +1562,7 @@ export function BusinessNewsPage() {
                   <ImageWithFallback
                     src={magazinePreview.image}
                     alt={magazinePreview.title}
-                    className="w-full h-[210px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="w-full h-[260px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 </div>
 
