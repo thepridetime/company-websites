@@ -340,6 +340,15 @@ const specialReports = [
   },
 ];
 
+/* Download file for each report: /public/reports/<slug>.pdf */
+function reportFileUrl(title: string) {
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  return `/reports/${slug}.pdf`;
+}
+
 /* =========================================================
    MAGAZINE PAGE
    ========================================================= */
@@ -734,7 +743,7 @@ export function MagazinePage() {
           4. SPECIAL REPORTS & RESEARCH
          ===================================================== */}
 
-      <section className="mb-16">
+      <section id="special-reports" className="mb-16 scroll-mt-24">
 
         <div className="mb-4 flex items-center justify-between border-b-2 border-black pb-2">
           <div className="flex items-center gap-2">
@@ -744,13 +753,18 @@ export function MagazinePage() {
             </h2>
           </div>
 
-          <Link
-            to="/archive"
-            className="group flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-red-600 transition-colors hover:text-red-700"
+          <button
+            type="button"
+            onClick={() =>
+              document
+                .getElementById("special-reports")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+            className="group flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-red-600 transition-colors hover:text-red-700 cursor-pointer"
           >
             <span>View All Reports</span>
             <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
-          </Link>
+          </button>
         </div>
 
         <p className="mb-6 max-w-2xl text-xs text-gray-500 md:text-sm">
@@ -785,9 +799,15 @@ export function MagazinePage() {
                   <Crown size={15} className="text-amber-500" />
                 )}
 
-                <div className="flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors group-hover:bg-gray-100 group-hover:text-black">
+                <a
+                  href={reportFileUrl(report.title)}
+                  download
+                  aria-label={`Download ${report.title}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-100 hover:text-black"
+                >
                   <Download size={15} />
-                </div>
+                </a>
               </div>
             </div>
           ))}
@@ -857,12 +877,12 @@ export function MagazinePage() {
                 Start Free 30-Day Trial
               </Link>
 
-              <button
-                type="button"
-                className="border border-zinc-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:border-zinc-400 hover:bg-white/5 cursor-pointer"
+              <Link
+                to="/premium"
+                className="border border-zinc-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:border-zinc-400 hover:bg-white/5"
               >
                 Compare Plans
-              </button>
+              </Link>
             </div>
 
           </div>
