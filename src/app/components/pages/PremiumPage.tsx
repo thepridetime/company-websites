@@ -934,7 +934,7 @@ export function PremiumPage() {
       ================================================= */}
 
       {!isLoading && !isPremium && (
-        <section className="relative overflow-hidden bg-black text-white">
+        <section className="relative overflow-hidden bg-black text-white mb-12 md:mb-16">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(220,38,38,0.28),transparent_55%)]"
