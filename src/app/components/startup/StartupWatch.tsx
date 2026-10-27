@@ -27,7 +27,7 @@ export function StartupWatch({
     return null;
   }
 
-  const destination = story.url || `/article/${story.id}`;
+  const destination = story.url || "/technology";
 
   return (
     <div className={`pb-5 border-b border-gray-200 ${className}`}>
