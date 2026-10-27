@@ -27,7 +27,7 @@ export function TopInnovationStories({
           Top Innovation Stories
         </h3>
         <Link
-          to="/article/semiconductor-ai-memory-supercycle"
+          to="/technology"
           className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-red-600 hover:text-red-700 transition-colors"
         >
           <span>View More</span>
