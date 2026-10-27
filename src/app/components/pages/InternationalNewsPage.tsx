@@ -435,7 +435,7 @@ export function InternationalNewsPage() {
               ============================================= */}
               <div className="flex flex-col h-full min-h-[580px] lg:min-h-[660px]">
                 <Link
-                  to="/special-article/international-global-trade-asia-growth"
+                  to="/article/international-global-trade-asia-growth"
                   className="group relative flex flex-col justify-end overflow-hidden rounded-none border border-gray-200/80 bg-black h-full"
                 >
                   <ImageWithFallback
@@ -488,7 +488,7 @@ export function InternationalNewsPage() {
 
                   {/* STORY 1 (TAJ MAHAL) */}
                   <Link
-                    to="/special-article/international-india-third-largest-economy"
+                    to="/article/international-india-third-largest-economy"
                     className="group flex gap-3.5 sm:gap-4 items-start"
                   >
                     <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
@@ -524,7 +524,7 @@ export function InternationalNewsPage() {
 
                   {/* STORY 2 (EU-US FLAGS) */}
                   <Link
-                    to="/special-article/international-eu-us-digital-trade"
+                    to="/article/international-eu-us-digital-trade"
                     className="group flex gap-3.5 sm:gap-4 items-start"
                   >
                     <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
@@ -560,7 +560,7 @@ export function InternationalNewsPage() {
 
                   {/* STORY 3 (SHIPPING COSTS) */}
                   <Link
-                    to="/special-article/international-shipping-costs-routes"
+                    to="/article/international-shipping-costs-routes"
                     className="group flex gap-3.5 sm:gap-4 items-start"
                   >
                     <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
@@ -619,7 +619,7 @@ export function InternationalNewsPage() {
                   </div>
 
                   <Link
-                    to="/special-article/international-europe-fiscal-buffer"
+                    to="/article/international-europe-fiscal-buffer"
                     className="group block"
                   >
                     <div className="w-full h-[160px] sm:h-[172px] overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
@@ -668,7 +668,7 @@ export function InternationalNewsPage() {
                   <div className="divide-y divide-gray-100">
                     {/* ITEM 1 */}
                     <Link
-                      to="/special-article/international-france-germany-industrial-policy"
+                      to="/article/international-france-germany-industrial-policy"
                       className="group flex gap-2.5 py-2.5 first:pt-1 last:pb-0 items-start"
                     >
                       <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
@@ -696,7 +696,7 @@ export function InternationalNewsPage() {
 
                     {/* ITEM 2 */}
                     <Link
-                      to="/special-article/international-uk-eu-youth-mobility"
+                      to="/article/international-uk-eu-youth-mobility"
                       className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
                     >
                       <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
@@ -724,7 +724,7 @@ export function InternationalNewsPage() {
 
                     {/* ITEM 3 */}
                     <Link
-                      to="/special-article/international-italy-no-confidence"
+                      to="/article/international-italy-no-confidence"
                       className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
                     >
                       <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
@@ -752,7 +752,7 @@ export function InternationalNewsPage() {
 
                     {/* ITEM 4 */}
                     <Link
-                      to="/special-article/international-asean-supply-chain-pact"
+                      to="/article/international-asean-supply-chain-pact"
                       className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
                     >
                       <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-none border border-gray-200/70 bg-gray-100">
