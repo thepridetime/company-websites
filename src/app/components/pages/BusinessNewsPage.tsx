@@ -1441,10 +1441,10 @@ export function BusinessNewsPage() {
               ALL BUSINESS NEWS + MAGAZINE
           ================================================= */}
 
-          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
+          <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,0.8fr)] gap-7 mb-12">
             {/* LATEST NEWS (every business story) */}
 
-            <div ref={newsListRef} className="scroll-mt-24">
+            <div ref={newsListRef} className="scroll-mt-24 min-w-0">
               <SectionHeader title="All Business News" />
 
               {/* FILTER TABS */}
