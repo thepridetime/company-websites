@@ -49,7 +49,7 @@ export const defaultFeaturedStartup: StartupStory = {
   publishedAt: "7 October 2026",
   readTime: "5 min read",
   image: img_ai_startups_hero,
-  url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+  url: "/article/startup-perplexity-ai-1-2b-series-d",
 };
 
 /* =========================================================
@@ -80,7 +80,7 @@ export const defaultTopStartupStories: StartupStory[] = [
     publishedAt: "7 October 2026",
     readTime: "3 min read",
     image: img_photonics_engineer,
-    url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+    url: "/article/startup-alphabet-ai-data-center",
   },
   {
     id: "robotics-startups-pilots-to-real-world",
@@ -91,7 +91,7 @@ export const defaultTopStartupStories: StartupStory[] = [
     publishedAt: "7 October 2026",
     readTime: "4 min read",
     image: img_warehouse_robotics,
-    url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+    url: "/article/startup-nvidia-humanoid-robot-push",
   },
 ];
 
@@ -144,7 +144,7 @@ export const defaultFundedStartups: FundedCompany[] = [
     amount: "$320M",
     round: "Series C",
     iconType: "star",
-    url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+    url: "/article/startup-meta-llama4-enterprise",
   },
   {
     id: "axion-robotics",
@@ -153,7 +153,7 @@ export const defaultFundedStartups: FundedCompany[] = [
     amount: "$150M",
     round: "Series B",
     iconType: "robot",
-    url: "/article/photonics-physical-ai-and-quantum-move-from-labs-toward-deals",
+    url: "/article/startup-zepto-10b-valuation",
   },
   {
     id: "qubitsys",
