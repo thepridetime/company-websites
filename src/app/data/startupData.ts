@@ -1,10 +1,8 @@
 import img_ai_startups_hero from "../../imports/ai-startups-hero.jpg";
 import img_space_tech_rocket from "../../imports/space-tech-rocket.jpg";
-import img_photonics_engineer from "../../imports/photonics-chip-engineer.jpg";
 import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
-import img_climate_hydrogen from "../../imports/climate-tech-hydrogen.jpg";
-import img_health_discovery from "../../imports/health-tech-discovery.jpg";
 import img_fintech_expansion from "../../imports/fintech-expansion.jpg";
+import img_quantum_chip from "../../imports/quantum-computing-chip.jpg";
 
 export interface StartupStory {
   id: string;
@@ -39,32 +37,33 @@ export interface StartupMetric {
 
 /* =========================================================
    FEATURED LEAD STORY
+   (Text and links come from existing articles in the data folder)
 ========================================================= */
 export const defaultFeaturedStartup: StartupStory = {
-  id: "ai-startups-fuel-new-wave-global-innovation",
-  category: "STARTUP SUCCESS | GLOBAL",
-  title: "AI Startups Fuel a New Wave of Global Innovation",
+  id: "manufacturing-mind-robotics-500m",
+  category: "ROBOTICS",
+  title: "Mind Robotics Raises $500M Series A to Address Western Manufacturing Labor Shortages",
   summary:
-    "From foundation models to vertical AI, startups are attracting record funding and reshaping how businesses and societies operate.",
-  publishedAt: "7 October 2026",
-  readTime: "5 min read",
-  image: img_ai_startups_hero,
-  url: "/article/startup-perplexity-ai-1-2b-series-d",
+    "The Rivian spin-off is using large-scale venture funding to develop robotics for manufacturers facing persistent labor shortages across Western markets.",
+  publishedAt: "September 29, 2026",
+  readTime: "8 min read",
+  image: img_warehouse_robotics,
+  url: "/article/manufacturing-mind-robotics-500m",
 };
 
 /* =========================================================
    STARTUP WATCH (UPPER RIGHT)
 ========================================================= */
 export const defaultStartupWatch: StartupStory = {
-  id: "indian-startup-launch-earth-observation-satellites",
-  category: "SPACE TECH",
-  title: "Indian startup to launch next-gen Earth observation satellites.",
+  id: "world-starlink-gen3-global",
+  category: "TECHNOLOGY",
+  title: "SpaceX Starlink Gen 3 Delivers 1 Gbps to 50 Million New Users Globally",
   summary:
-    "The startup plans to deploy a new constellation of low-Earth orbit satellites to provide high-resolution climate and infrastructure data.",
-  publishedAt: "7 October 2026",
-  readTime: "3 min read",
+    "The latest satellite constellation expansion brings high-speed internet to more regions across Africa, South Asia, and Latin America.",
+  publishedAt: "September 26, 2026",
+  readTime: "7 min read",
   image: img_space_tech_rocket,
-  url: "/innovation",
+  url: "/article/world-starlink-gen3-global",
 };
 
 /* =========================================================
@@ -72,26 +71,26 @@ export const defaultStartupWatch: StartupStory = {
 ========================================================= */
 export const defaultTopStartupStories: StartupStory[] = [
   {
-    id: "photonics-startup-closes-new-funding",
-    category: "DEEP TECHNOLOGY",
-    title: "Photonics startup closes new funding to scale AI infrastructure",
+    id: "market-zerodha-unicorn",
+    category: "INDIA · BROKING",
+    title: "Zerodha Is India's Most Valuable Unicorn at $9 Billion, and It Never Raised Outside Capital",
     summary:
-      "Light-based interconnects are attracting major investment as data-center demand rises and AI workloads expand.",
-    publishedAt: "7 October 2026",
-    readTime: "3 min read",
-    image: img_photonics_engineer,
-    url: "/innovation",
+      "The discount stockbroker tops India's unicorn list in the Hurun Global Unicorn Index 2026 on the strength of its own profits. Here is how the model works and where the risks sit.",
+    publishedAt: "October 5, 2026",
+    readTime: "6 min read",
+    image: img_fintech_expansion,
+    url: "/article/market-zerodha-unicorn",
   },
   {
-    id: "robotics-startups-pilots-to-real-world",
-    category: "PHYSICAL AI",
-    title: "Robotics startups move from pilots to real-world deployment",
+    id: "world-quantum-1000-qubit",
+    category: "TECHNOLOGY",
+    title: "Quantum Computing Reaches Commercial Milestone: 1,000-Qubit Processor Achieved",
     summary:
-      "Companies are securing commercial deals across manufacturing and logistics as automation demand grows.",
-    publishedAt: "7 October 2026",
-    readTime: "4 min read",
-    image: img_warehouse_robotics,
-    url: "/innovation",
+      "A reported 1,000-qubit milestone highlights the rapid development of quantum hardware and the continuing challenge of making systems commercially useful.",
+    publishedAt: "September 26, 2026",
+    readTime: "7 min read",
+    image: img_quantum_chip,
+    url: "/article/world-quantum-1000-qubit",
   },
 ];
 
@@ -177,33 +176,14 @@ export const defaultFundedStartups: FundedCompany[] = [
 ========================================================= */
 export const defaultLatestStartupNews: StartupStory[] = [
   {
-    id: "climate-tech-100m-clean-hydrogen",
-    category: "CLIMATE TECH",
-    title: "Climate tech startup secures $100M to scale clean hydrogen.",
-    summary: "Clean hydrogen ventures accelerate commercial infrastructure.",
-    publishedAt: "7 October 2026",
-    readTime: "3 min read",
-    image: img_climate_hydrogen,
-    url: "/energy",
-  },
-  {
-    id: "ai-drug-discovery-startup-pharma",
-    category: "HEALTH TECH",
-    title: "AI drug-discovery startup partners with global pharma giant.",
-    summary: "Novel target discovery moves into multi-phase clinical validation.",
-    publishedAt: "7 October 2026",
-    readTime: "4 min read",
-    image: img_health_discovery,
-    url: "/healthcare",
-  },
-  {
-    id: "fintech-startup-southeast-asia-licenses",
-    category: "FINTECH",
-    title: "Fintech startup expands into Southeast Asia with new licenses.",
-    summary: "Cross-border payment infrastructure receives regulatory green lights.",
-    publishedAt: "7 October 2026",
-    readTime: "3 min read",
-    image: img_fintech_expansion,
-    url: "/finance",
+    id: "manufacturing-uber-rivian-50000-robotaxis",
+    category: "AUTONOMOUS MOBILITY",
+    title: "Uber and Rivian Target 50,000 Autonomous Robotaxis by 2031 With More Than $1B of Planned Uber Investment",
+    summary:
+      "The partnership connects autonomous vehicle manufacturing, fleet deployment and the capital requirements of scaling a large robotaxi network.",
+    publishedAt: "September 29, 2026",
+    readTime: "8 min read",
+    image: img_ai_startups_hero,
+    url: "/article/manufacturing-uber-rivian-50000-robotaxis",
   },
 ];
