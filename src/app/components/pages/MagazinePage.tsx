@@ -414,13 +414,18 @@ export function MagazinePage() {
             </p>
           </div>
 
-          <Link
-            to="/archive"
-            className="group flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:text-red-600"
+          <button
+            type="button"
+            onClick={() =>
+              document
+                .getElementById("all-editions")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+            className="group flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:text-red-600 cursor-pointer"
           >
             <span>Explore Magazine</span>
             <ArrowRight size={13} className="text-red-600 transition-transform group-hover:translate-x-1" />
-          </Link>
+          </button>
         </div>
       </div>
 
