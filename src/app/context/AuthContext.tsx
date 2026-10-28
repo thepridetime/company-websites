@@ -162,9 +162,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ? toUser(session.user) : null);
       setIsLoading(false);
+
+      // Admin alert on a real sign-in only (not on page reloads). Fire-and-forget.
+      if (event === "SIGNED_IN" && session) {
+        supabase.functions.invoke("notify-admin", { body: {} }).catch(() => {});
+      }
     });
 
     return () => subscription.unsubscribe();
