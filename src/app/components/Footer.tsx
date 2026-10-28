@@ -30,14 +30,12 @@ const secondaryNavRow = [
 export function Footer() {
   return (
     <footer className="w-full bg-[#000000] text-white">
-
       {/* =====================================================
           1. BRANDING SECTION (approx 180–220 px high)
           Centered stack: Logo -> Brand Title -> Tagline -> Copyright
       ====================================================== */}
       <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10">
         <div className="min-h-[180px] sm:min-h-[200px] lg:h-[210px] flex flex-col items-center justify-center text-center py-8 lg:py-0">
-
           {/* Logo centered above the brand name */}
           <Link
             to="/"
@@ -98,7 +96,6 @@ export function Footer() {
           >
             © 2026 The Pride Times. All rights reserved.
           </p>
-
         </div>
       </div>
 
@@ -115,10 +112,10 @@ export function Footer() {
       ====================================================== */}
       <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10">
         <div className="pt-[38px] sm:pt-[42px] pb-[32px] sm:pb-[36px] flex flex-col items-center justify-center text-center">
-
           {/* First Row: 15–16px, light grey/white #E5E7EB, on one line on desktop */}
           <nav
-            className="flex flex-wrap items-center justify-center text-[15px] sm:text-[15.5px] text-[#E5E7EB]"
+            // className="flex flex-wrap items-center justify-center text-[15px] sm:text-[15.5px] text-[#E5E7EB]"
+            className="flex flex-wrap items-center justify-center gap-y-3 text-[13px] sm:gap-0 sm:text-[15.5px] text-[#E5E7EB]"
             aria-label="Primary footer navigation"
           >
             {primaryNavRow.map((link, index) => (
@@ -133,8 +130,11 @@ export function Footer() {
 
                 {index < primaryNavRow.length - 1 && (
                   <span
-                    className="pt-footer-sep text-[#454545] select-none hidden sm:inline"
-                    style={{ margin: "0 18px", color: "#454545" }}
+                    // className="pt-footer-sep text-[#454545] select-none hidden sm:inline"
+                    // style={{ margin: "0 18px", color: "#454545" }}
+                    className={`pt-footer-sep mx-1.5 select-none text-[#454545] sm:mx-[18px] ${
+                      index % 3 === 2 ? "hidden sm:inline" : "inline"
+                    }`}
                     aria-hidden="true"
                   >
                     |
@@ -149,7 +149,8 @@ export function Footer() {
 
           {/* Second Row: 14–15px, muted blue-grey #8B9BB3 */}
           <nav
-            className="flex flex-wrap items-center justify-center text-[14px] sm:text-[14.5px] text-[#8B9BB3]"
+            // className="flex flex-wrap items-center justify-center text-[14px] sm:text-[14.5px] text-[#8B9BB3]"
+            className="flex flex-wrap items-center justify-center gap-y-3 text-[14px] sm:gap-0 sm:text-[14.5px] text-[#8B9BB3]"
             aria-label="Secondary footer navigation"
           >
             {secondaryNavRow.map((link, index) => (
@@ -164,8 +165,11 @@ export function Footer() {
 
                 {index < secondaryNavRow.length - 1 && (
                   <span
-                    className="pt-footer-sep text-[#454545] select-none hidden sm:inline"
-                    style={{ margin: "0 18px", color: "#454545" }}
+                    // className="pt-footer-sep text-[#454545] select-none hidden sm:inline"
+                    // style={{ margin: "0 18px", color: "#454545" }}
+                    className={`pt-footer-sep mx-1.5 select-none text-[#454545] sm:mx-[18px] ${
+                      index % 3 === 2 ? "hidden sm:inline" : "inline"
+                    }`}
                     aria-hidden="true"
                   >
                     |
@@ -174,10 +178,8 @@ export function Footer() {
               </div>
             ))}
           </nav>
-
         </div>
       </div>
-
     </footer>
   );
 }
