@@ -166,9 +166,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ? toUser(session.user) : null);
       setIsLoading(false);
 
-      // Admin alert on a real sign-in only (not on page reloads). Fire-and-forget.
-      if (event === "SIGNED_IN" && session) {
-        supabase.functions.invoke("notify-admin", { body: {} }).catch(() => {});
+      // Admin alert: once per user per browser session. Supabase also emits SIGNED_IN
+      // when the tab regains focus, so the flag in sessionStorage stops repeat alerts.
+      try {
+        if (event === "SIGNED_OUT") {
+          Object.keys(window.sessionStorage)
+            .filter((k) => k.startsWith("pt_signin_alert:"))
+            .forEach((k) => window.sessionStorage.removeItem(k));
+        } else if (event === "SIGNED_IN" && session) {
+          const flag = `pt_signin_alert:${session.user.id}`;
+          if (!window.sessionStorage.getItem(flag)) {
+            window.sessionStorage.setItem(flag, "1");
+            supabase.functions.invoke("notify-admin", { body: {} }).catch(() => {});
+          }
+        }
+      } catch {
+        // Storage blocked: skip the alert rather than risk sending repeats.
       }
     });
 
