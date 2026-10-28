@@ -58,7 +58,7 @@ export function Terms() {
       <div className="mt-6 flex gap-3">
         <Link to="/privacy" className="text-[#C9A227] text-sm hover:underline font-medium">Privacy Policy</Link>
         <span className="text-[#94A3B8]">·</span>
-        <Link to="/cookie-policy" className="text-[#C9A227] text-sm hover:underline font-medium">Cookie Policy</Link>
+        <Link to="/cookiepolicy" className="text-[#C9A227] text-sm hover:underline font-medium">Cookie Policy</Link>
       </div>
     </div>
   );

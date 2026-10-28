@@ -99,7 +99,7 @@ export function Privacy() {
       <div className="mt-8 flex gap-3">
         <Link to="/terms" className="text-[#C9A227] text-sm hover:underline font-medium">Terms of Use</Link>
         <span className="text-[#94A3B8]">·</span>
-        <Link to="/cookie-policy" className="text-[#C9A227] text-sm hover:underline font-medium">Cookie Policy</Link>
+        <Link to="/cookiepolicy" className="text-[#C9A227] text-sm hover:underline font-medium">Cookie Policy</Link>
         <span className="text-[#94A3B8]">·</span>
         <Link to="/accessibility" className="text-[#C9A227] text-sm hover:underline font-medium">Accessibility</Link>
       </div>
