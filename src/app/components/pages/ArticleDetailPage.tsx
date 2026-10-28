@@ -1,7 +1,7 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { useAuth } from "../../context/AuthContext";
-import { ArrowLeft, ArrowRight, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
 import { SaveArticleButton } from "./SaveArticleButton";
 import { ReadTracker } from "./ReadTracker";
 import {
@@ -1040,6 +1040,47 @@ function ShareRow({
   title: string;
   description: string;
 }) {
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  /* Copy the article link. Uses the clipboard API when available and falls back
+     to a hidden text field when it is blocked (e.g. non-HTTPS or permissions). */
+  async function copyArticleLink() {
+    const url = window.location.href;
+    let copied = false;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        copied = true;
+      }
+    } catch {
+      copied = false;
+    }
+
+    if (!copied) {
+      const field = document.createElement("textarea");
+      field.value = url;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.appendChild(field);
+      field.select();
+      try {
+        copied = document.execCommand("copy");
+      } catch {
+        copied = false;
+      }
+      field.remove();
+    }
+
+    if (copied) {
+      setLinkCopied(true);
+      window.setTimeout(() => setLinkCopied(false), 2000);
+    } else {
+      window.prompt("Copy this link:", url);
+    }
+  }
+
   return (
     <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-y border-slate-200 py-4">
       <button
@@ -1089,10 +1130,11 @@ function ShareRow({
         <button
           type="button"
           aria-label="Copy link"
-          onClick={() => navigator.clipboard?.writeText(window.location.href)}
-          className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing}`}
+          onClick={copyArticleLink}
+          title={linkCopied ? "Link copied" : "Copy link"}
+          className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200 hover:bg-slate-100 hover:text-red-600 ${focusRing} ${linkCopied ? "text-green-600" : ""}`}
         >
-          <Link2 size={14} />
+          {linkCopied ? <Check size={14} /> : <Link2 size={14} />}
         </button>
       </div>
     </div>
