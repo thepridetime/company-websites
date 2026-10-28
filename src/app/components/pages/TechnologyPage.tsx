@@ -606,6 +606,7 @@ export function TechnologyPage() {
           title="Stay Ahead with The Pride Times"
           description="Daily briefings on AI platforms, chips, data centres and the global technology economy delivered to your inbox."
           newsletterKey="technology-weekly"
+          className="mb-12 md:mb-16"
         />
 
       </div>
