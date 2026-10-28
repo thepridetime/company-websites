@@ -369,8 +369,8 @@ export function AboutUsPage() {
 
             {/* Thin Divider & Our Vision */}
             <div className="pt-8 lg:pt-0 lg:pl-10 xl:pl-12 border-t lg:border-t-0 lg:border-l border-[#e5e5e5]">
-              <div className="inline-block border-b-2 border-[#111111] pb-1 mb-4">
-                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#111111]">
+              <div className="inline-block border-b-2 border-[#e31b23] pb-1 mb-4">
+                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#e31b23]">
                   Our Vision
                 </span>
               </div>
