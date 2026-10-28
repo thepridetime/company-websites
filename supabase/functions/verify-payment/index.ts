@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { notifyAdmin, premiumReceiptHtml, sendEmail } from "../_shared/notify.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -19,6 +20,32 @@ async function hmacHex(secret: string, message: string) {
   );
   const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
   return Array.from(new Uint8Array(sig)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Admin alert + customer receipt. Never throws, so a failed email cannot undo a payment.
+async function sendPurchaseEmails(opts: {
+  email?: string; name?: string; userId: string; plan: string;
+  amount: number; paymentId: string; orderId: string; validUntil?: string;
+}) {
+  await notifyAdmin("premium_purchase", {
+    email: opts.email,
+    name: opts.name,
+    user_id: opts.userId,
+    plan: opts.plan,
+    amount: (opts.amount / 100).toFixed(2),
+    payment_id: opts.paymentId,
+    order_id: opts.orderId,
+  });
+  if (opts.email) {
+    await sendEmail({
+      to: opts.email,
+      toName: opts.name,
+      subject: "Your Pride Times purchase",
+      html: premiumReceiptHtml({
+        plan: opts.plan, amount: opts.amount, paymentId: opts.paymentId, validUntil: opts.validUntil,
+      }),
+    });
+  }
 }
 
 Deno.serve(async (req) => {
@@ -99,6 +126,10 @@ Deno.serve(async (req) => {
         return json({ error: "Could not record the purchase: " + prodPayError.message }, 500);
       }
       console.log("PRODUCT_PURCHASED", user.id, plan, razorpay_payment_id);
+      await sendPurchaseEmails({
+        email: user.email, name: user.user_metadata?.full_name, userId: user.id, plan,
+        amount: order.amount, paymentId: razorpay_payment_id, orderId: razorpay_order_id,
+      });
       return json({ ok: true, product: plan });
     }
 
@@ -148,6 +179,11 @@ Deno.serve(async (req) => {
     if (payError) console.error("PAYMENT_INSERT_FAILED", JSON.stringify(payError));
 
     console.log("PREMIUM_ACTIVATED", user.id, plan, razorpay_payment_id);
+    await sendPurchaseEmails({
+      email: user.email, name: user.user_metadata?.full_name, userId: user.id, plan,
+      amount: order.amount, paymentId: razorpay_payment_id, orderId: razorpay_order_id,
+      validUntil: end.toISOString(),
+    });
     return json({ ok: true });
   } catch (e) {
     console.error("VERIFY_ERROR", String(e));
