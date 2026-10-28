@@ -1,12 +1,11 @@
 // Target path: supabase/functions/newsletter-notify/index.ts
-// Saves a newsletter subscribe/unsubscribe and emails the signed-in user's registered address.
+// Saves a newsletter subscribe/unsubscribe, emails the signed-in user, and alerts the admin.
 // The email address is read from the verified login token on the server, never from the browser.
 //
-// Secrets needed (Supabase dashboard > Edge Functions > Secrets):
-//   RESEND_API_KEY      API key from resend.com
-//   NOTIFY_FROM_EMAIL   e.g. "Pride Times <news@yourdomain.com>" (domain must be verified in Resend)
+// Secrets needed (Supabase dashboard > Edge Functions > Secrets): see _shared/notify.ts
 // SUPABASE_URL, SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY are provided automatically.
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { notifyAdmin, newsletterEmailHtml, sendEmail } from "../_shared/notify.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -70,32 +69,21 @@ Deno.serve(async (req) => {
     return json({ error: "could not save" }, 500);
   }
 
-  // Send the confirmation email.
+  // Confirmation email to the subscriber, and an alert to the admin. Neither can fail the request.
   const subject = subscribed ? `You're subscribed to ${name}` : `You've unsubscribed from ${name}`;
-  const text = subscribed
-    ? `Hi,\n\nYou are now subscribed to ${name} on Pride Times. You can change this anytime in your account settings.\n\nIf you did not make this change, please sign in and review your settings, or contact support.`
-    : `Hi,\n\nYou have unsubscribed from ${name} on Pride Times. You will no longer receive emails for this newsletter.\n\nIf you did not make this change, please sign in and review your settings, or contact support.`;
+  const [userMail] = await Promise.all([
+    sendEmail({
+      to: user.email,
+      subject,
+      html: newsletterEmailHtml(name, subscribed),
+    }),
+    notifyAdmin(subscribed ? "newsletter_subscribe" : "newsletter_unsubscribe", {
+      email: user.email,
+      name: (user.user_metadata?.full_name as string) ?? undefined,
+      user_id: user.id,
+      newsletter: name,
+    }),
+  ]);
 
-  let emailSent = false;
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: Deno.env.get("NOTIFY_FROM_EMAIL"),
-        to: [user.email],
-        subject,
-        text,
-      }),
-    });
-    emailSent = res.ok;
-    if (!res.ok) console.error("NEWSLETTER_EMAIL_FAILED", res.status, await res.text());
-  } catch (err) {
-    console.error("NEWSLETTER_EMAIL_ERROR", err);
-  }
-
-  return json({ saved: true, subscribed, emailSent });
+  return json({ saved: true, subscribed, emailSent: userMail.success });
 });
