@@ -282,14 +282,18 @@ export function ContactPage() {
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-[#f2f2f2] flex items-center justify-between">
+                  <div 
+                  // className="pt-3 border-t border-[#f2f2f2] flex items-center justify-between"
+                  className="pt-3 border-t border-[#f2f2f2] flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                  >
                     <button
                       type="button"
                       onClick={() => handleCategorySelect(cat.subjectValue)}
                       className="inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-[#111111] group-hover:text-[#e31b23] transition-colors"
                     >
                       {cat.actionText}
-                      <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                      <ArrowRight size={13} 
+                      className="shrink-0 transition-transform group-hover:translate-x-1" />
                     </button>
 
                     <a

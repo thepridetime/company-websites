@@ -151,31 +151,29 @@ export function DashboardPage() {
 
       const { data: sessionData } = await supabase.auth.getSession();
 
-      const [recentRes, datesRes, savedRes, nlRes] = await Promise.all(
-        [
-          supabase
-            .from("reading_history")
-            .select("title, category, path, read_at")
-            .eq("user_id", user.id)
-            .order("read_at", { ascending: false })
-            .limit(30),
-          supabase
-            .from("reading_history")
-            .select("read_at")
-            .eq("user_id", user.id)
-            .order("read_at", { ascending: false })
-            .limit(1000),
-          supabase
-            .from("saved_articles")
-            .select("title, category, path, saved_at")
-            .eq("user_id", user.id)
-            .order("saved_at", { ascending: false }),
-          supabase
-            .from("newsletter_subscriptions")
-            .select("newsletter_key, subscribed")
-            .eq("user_id", user.id),
-        ],
-      );
+      const [recentRes, datesRes, savedRes, nlRes] = await Promise.all([
+        supabase
+          .from("reading_history")
+          .select("title, category, path, read_at")
+          .eq("user_id", user.id)
+          .order("read_at", { ascending: false })
+          .limit(30),
+        supabase
+          .from("reading_history")
+          .select("read_at")
+          .eq("user_id", user.id)
+          .order("read_at", { ascending: false })
+          .limit(1000),
+        supabase
+          .from("saved_articles")
+          .select("title, category, path, saved_at")
+          .eq("user_id", user.id)
+          .order("saved_at", { ascending: false }),
+        supabase
+          .from("newsletter_subscriptions")
+          .select("newsletter_key, subscribed")
+          .eq("user_id", user.id),
+      ]);
 
       if (cancelled) return;
 
@@ -285,10 +283,22 @@ export function DashboardPage() {
   ];
 
   const accountItems: any[] = [
-    { icon: CreditCard, label: isPremium ? "Manage subscription" : "Upgrade to Premium", to: "/premium" },
-    { icon: Mail, label: "Newsletter preferences", onClick: scrollToNewsletters },
+    {
+      icon: CreditCard,
+      label: isPremium ? "Manage subscription" : "Upgrade to Premium",
+      to: "/premium",
+    },
+    {
+      icon: Mail,
+      label: "Newsletter preferences",
+      onClick: scrollToNewsletters,
+    },
     { icon: User, label: "Edit profile", to: "/dashboard/profile" },
-    { icon: Bell, label: "Notification settings", to: "/dashboard/notifications" },
+    {
+      icon: Bell,
+      label: "Notification settings",
+      to: "/dashboard/notifications",
+    },
     { icon: Shield, label: "Privacy & data", to: "/dashboard/privacy" },
   ];
 
@@ -334,20 +344,20 @@ export function DashboardPage() {
          -------------------------------------------- 
    */}
       <div className="bg-[#071a2d]">
-        <div className="max-w-screen-xl mx-auto px-4 py-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
-          <div className="flex items-center gap-5">
+        <div className="max-w-screen-xl mx-auto px-6 sm:px-4 py-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
+          <div className="flex items-center gap-7 sm:gap-6">
             {user.avatar ? (
               <img
                 src={user.avatar}
                 alt=""
                 referrerPolicy="no-referrer"
-                className={`w-16 h-16 rounded-full object-cover ring-2 ring-offset-4 ring-offset-[#071a2d] ${
+                className={`w-16 h-16 shrink-0 rounded-full object-cover ring-2 ring-offset-4 ring-offset-[#071a2d] ${
                   isPremium ? "ring-amber-400" : "ring-gray-300"
                 }`}
               />
             ) : (
               <div
-                className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
+                className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
                   isPremium
                     ? "bg-black ring-amber-400"
                     : "bg-gray-800 ring-gray-300"
@@ -472,7 +482,11 @@ export function DashboardPage() {
                           />
                           {a.category}
                         </span>
-                        <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                        {/* <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors"> */}
+                        <p
+                          className="text-[14px] sm:text-[15px] font-medium leading-snug mt-1 text-gray-900 group-hover:text-red-600 transition-colors"
+                          // style={{ fontFamily: "Georgia, serif" }}
+                        >
                           {a.title}
                         </p>
                       </div>
@@ -527,7 +541,10 @@ export function DashboardPage() {
                       <span className="text-xs text-gray-500">
                         {a.category}
                       </span>
-                      <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
+                      <p 
+                      // className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors"
+                      className="text-[14px] sm:text-[15px] font-medium leading-snug mt-1 text-gray-900 group-hover:text-red-600 transition-colors"
+                      >
                         {a.title}
                       </p>
                     </div>
