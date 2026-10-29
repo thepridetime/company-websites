@@ -4,13 +4,16 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  Bookmark,
   CheckCircle2,
   Clock,
   Clock3,
+  Handshake,
   MapPin,
 } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { PrideTimesAd } from "../AdSenseSlots";
+import { NewsletterCTA } from "../NewsletterCTA";
 import {
   maEdition1Articles,
   maEdition1ArticlePath,
@@ -22,9 +25,7 @@ import {
   type OctEditionArticle,
 } from "../../data/octEditionData";
 import {
-  maArticles,
   maDeals,
-  maHeroArticle,
   getMAArticleBySlug,
   getRelatedMAArticles,
   type MAArticle,
@@ -87,99 +88,335 @@ const octMAItems: MAItem[] = octEditionArticles
 
 const maItems: MAItem[] = [...editionItems, ...octMAItems];
 const leadStory = maItems[0];
-const otherStories = maItems.slice(1);
+const feedStories = maItems.slice(1);
+const topStories = feedStories.slice(0, 4);
 
 /* =========================================================
-   GOOGLE ADSENSE SLOTS
+   DEAL HELPERS
    ========================================================= */
 
-type AdSlotProps = {
-  slot: string;
-  format?: "auto" | "fluid";
-  layout?: string;
-  layoutKey?: string;
-  className?: string;
-  minHeight?: number;
+const parseValueB = (value: string) => {
+  const n = parseFloat(value.replace(/[^0-9.]/g, ""));
+  return Number.isFinite(n) ? n : 0;
 };
 
-function AdSlot({
-  slot,
-  format = "auto",
-  layout,
-  layoutKey,
-  className = "",
-  minHeight = 90,
-}: AdSlotProps) {
-  useEffect(() => {
-    try {
-      const w = window as Window & {
-        adsbygoogle?: unknown[];
-      };
-      w.adsbygoogle = w.adsbygoogle || [];
-      w.adsbygoogle.push({});
-    } catch {
-      // AdSense may be unavailable because of an ad blocker,
-      // development environment, consent settings, or no inventory.
-    }
-  }, []);
+const totalDealValueB = maDeals.reduce(
+  (sum, deal) => sum + parseValueB(deal.value),
+  0
+);
 
-  return (
-    <div className={`w-full overflow-hidden ${className}`}>
-      <div className="mb-1 text-center text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-        Advertisement
-      </div>
-      <div className="w-full overflow-hidden" style={{ minHeight }}>
-        <ins
-          className="adsbygoogle"
-          style={{
-            display: "block",
-            width: "100%",
-            minHeight,
-          }}
-          data-ad-client="ca-pub-2331501617441941"
-          data-ad-slot={slot}
-          data-ad-format={format}
-          data-full-width-responsive={
-            format === "auto" ? "true" : undefined
-          }
-          data-ad-layout={layout}
-          data-ad-layout-key={layoutKey}
-        />
-      </div>
-    </div>
-  );
-}
+const countByStatus = (status: MADeal["status"]) =>
+  maDeals.filter((deal) => deal.status === status).length;
 
-function SidebarAd() {
-  return (
-    <AdSlot
-      slot="5373718974"
-      format="auto"
-      minHeight={250}
-      className="mt-6"
-    />
-  );
-}
+const STATUS_STYLES: Record<MADeal["status"], string> = {
+  Announced: "bg-blue-50 text-blue-700 border-blue-200",
+  Pending: "bg-amber-50 text-amber-700 border-amber-200",
+  Closed: "bg-emerald-50 text-emerald-700 border-emerald-200",
+};
 
 /* =========================================================
-   SECTION HEADER (same style as homepage)
+   SECTION HEADER (same style as Innovation / Startup pages)
    ========================================================= */
 
-function SectionHeader({ title }: { title: string }) {
+function SectionHeader({
+  title,
+  rightLabel = "The Pride Times",
+}: {
+  title: string;
+  rightLabel?: string;
+}) {
   return (
-    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-4">
+      <h2 className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.16em] text-red-600">
         {title}
       </h2>
-      <span className="hidden sm:block text-[8px] uppercase tracking-[0.16em] text-gray-400">
-        The Pride Times
+      <span className="hidden sm:block text-[10px] uppercase tracking-[0.14em] font-semibold text-gray-400">
+        {rightLabel}
       </span>
     </div>
   );
 }
 
 /* =========================================================
-   MERGERS AND ACQUISITIONS PAGE
+   FEATURED DEAL CARD (left column, dark image card)
+   ========================================================= */
+
+function FeaturedDealCard({ item }: { item: MAItem }) {
+  return (
+    <article className="relative overflow-hidden rounded-lg border border-gray-200 bg-black group h-full min-h-[560px] lg:min-h-[640px] flex flex-col justify-between">
+      <Link
+        to={item.href}
+        aria-label={item.title}
+        className="absolute inset-0 z-0 block"
+      >
+        <ImageWithFallback
+          src={item.image}
+          alt={item.title}
+          loading="eager"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/20" />
+      </Link>
+
+      {/* Badges */}
+      <div className="relative z-10 p-4 sm:p-5 flex flex-wrap items-center gap-2">
+        <span className="bg-red-600 text-white text-[10px] sm:text-[10.5px] font-bold tracking-[0.14em] uppercase px-2.5 py-1">
+          {item.kicker}
+        </span>
+        {item.location && (
+          <span className="inline-flex items-center gap-1 bg-white/90 text-gray-900 text-[10px] font-bold tracking-[0.12em] uppercase px-2.5 py-1">
+            <MapPin size={10} />
+            {item.location}
+          </span>
+        )}
+      </div>
+
+      {/* Headline, summary, key facts, action */}
+      <div className="relative z-10 p-5 sm:p-6 md:p-7">
+        <Link to={item.href} className="block group/title">
+          <h2 className="font-serif text-[26px] sm:text-[30px] lg:text-[34px] font-bold leading-[1.12] text-white group-hover/title:text-gray-100 transition-colors">
+            {item.title}
+          </h2>
+          <p className="mt-3 text-[13.5px] sm:text-[14px] text-gray-200 leading-[1.55] line-clamp-3">
+            {item.lede}
+          </p>
+        </Link>
+
+        {item.keyFacts.length > 0 && (
+          <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3 border-t border-white/20 pt-4">
+            {item.keyFacts.slice(0, 4).map((fact) => (
+              <div key={fact.label} className="min-w-0">
+                <p className="text-[9px] uppercase tracking-[0.14em] text-gray-300 font-semibold">
+                  {fact.label}
+                </p>
+                <p className="mt-0.5 font-serif text-[15px] sm:text-[17px] font-bold text-white leading-tight truncate">
+                  {fact.value}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-5">
+          <Link
+            to={item.href}
+            className="inline-flex items-center gap-1.5 text-[11px] sm:text-[12px] font-bold text-white uppercase tracking-[0.14em] hover:text-red-400 transition-colors group/link"
+          >
+            <span>Read Full Story</span>
+            <ArrowRight
+              size={13}
+              className="transition-transform group-hover/link:translate-x-1"
+            />
+          </Link>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* =========================================================
+   TOP M&A STORIES (middle column, thumbnail list)
+   ========================================================= */
+
+function TopDealStories({ items }: { items: MAItem[] }) {
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-3">
+        <h3 className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.16em] text-red-600">
+          Top M&amp;A Stories
+        </h3>
+        <span className="text-[10px] uppercase tracking-[0.12em] font-semibold text-gray-400">
+          {items.length} stories
+        </span>
+      </div>
+
+      <div className="flex flex-col divide-y divide-gray-100">
+        {items.map((item) => (
+          <article
+            key={item.id}
+            className="group py-3.5 first:pt-0 last:pb-1"
+          >
+            <div className="flex gap-4">
+              <Link
+                to={item.href}
+                className="shrink-0 w-[112px] sm:w-[124px] h-[80px] sm:h-[88px] overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100 block"
+              >
+                <ImageWithFallback
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </Link>
+
+              <div className="min-w-0 flex-1 flex flex-col justify-between">
+                <div>
+                  <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-red-600 truncate mb-1">
+                    {item.location
+                      ? `${item.kicker} | ${item.location}`
+                      : item.kicker}
+                  </span>
+                  <Link to={item.href} className="block">
+                    <h4 className="font-serif text-[15.5px] sm:text-[16.5px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2">
+                      {item.title}
+                    </h4>
+                  </Link>
+                </div>
+
+                <div className="flex items-center justify-between mt-2 text-[11px] text-gray-400">
+                  <span className="inline-flex items-center gap-1 min-w-0">
+                    <Clock size={11} className="shrink-0" />
+                    <span className="truncate">{item.meta}</span>
+                  </span>
+                  <button
+                    type="button"
+                    aria-label="Bookmark story"
+                    className="text-gray-400 hover:text-gray-700 transition-colors p-0.5 shrink-0"
+                  >
+                    <Bookmark size={12} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   DEAL NUMBERS (right column, Startup-metrics style)
+   ========================================================= */
+
+function DealNumbers() {
+  const stats = [
+    { label: "Tracked deals", value: String(maDeals.length) },
+    { label: "Combined value", value: `$${totalDealValueB.toFixed(1)}B` },
+    { label: "Pending", value: String(countByStatus("Pending")) },
+    { label: "Closed", value: String(countByStatus("Closed")) },
+  ];
+
+  return (
+    <div className="pb-5 border-b border-gray-200">
+      <SectionHeader title="Numbers at a Glance" rightLabel="Deal tracker" />
+      <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+        {stats.map((stat) => (
+          <div key={stat.label}>
+            <div className="font-serif font-bold text-[24px] sm:text-[26px] text-gray-900 leading-none">
+              {stat.value}
+            </div>
+            <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   DEAL WATCH (right column, compact tracker list)
+   ========================================================= */
+
+function DealWatch({ deals }: { deals: MADeal[] }) {
+  if (deals.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="pt-5">
+      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-3">
+        <h2 className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.16em] text-red-600">
+          Deal Watch
+        </h2>
+        <span className="text-[10px] uppercase tracking-[0.12em] font-semibold text-gray-400">
+          {deals.length} tracked
+        </span>
+      </div>
+
+      <div className="divide-y divide-gray-100">
+        {deals.map((deal) => (
+          <div
+            key={deal.id}
+            className="flex items-start justify-between gap-3 py-3 px-1 -mx-1 hover:bg-gray-50/70 transition-colors"
+          >
+            <div className="min-w-0">
+              <p className="text-[12.5px] font-semibold text-gray-900 leading-snug truncate">
+                {deal.acquirer}{" "}
+                <span className="text-gray-400 font-normal">→</span>{" "}
+                {deal.target}
+              </p>
+              <p className="mt-0.5 text-[11px] text-gray-500 truncate">
+                {deal.sector}
+              </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <div className="font-serif font-bold text-[15px] sm:text-[16px] text-gray-900 leading-tight">
+                {deal.value}
+              </div>
+              <span
+                className={`inline-block mt-1 border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide rounded-sm ${STATUS_STYLES[deal.status]}`}
+              >
+                {deal.status}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   LATEST M&A FEED (two-column card grid, Startup-style)
+   ========================================================= */
+
+function LatestDealCard({ item }: { item: MAItem }) {
+  return (
+    <Link to={item.href} className="group block">
+      <div className="relative h-[200px] sm:h-[230px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100">
+        <ImageWithFallback
+          src={item.image}
+          alt={item.title}
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+        <span className="absolute top-3 left-3 bg-black/80 text-white px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em]">
+          {item.kicker}
+        </span>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+        {item.location && (
+          <>
+            <span className="inline-flex items-center gap-1 text-red-600">
+              <MapPin size={9} />
+              {item.location}
+            </span>
+            <span className="text-gray-300">•</span>
+          </>
+        )}
+        <span className="inline-flex items-center gap-1">
+          <Clock size={9} />
+          {item.meta}
+        </span>
+      </div>
+
+      <h3 className="mt-2 font-serif text-xl sm:text-[22px] font-bold leading-[1.2] text-gray-900 group-hover:text-red-600 transition-colors">
+        {item.title}
+      </h3>
+      <p className="mt-2 text-[13px] text-gray-500 leading-[1.55] line-clamp-2">
+        {item.lede}
+      </p>
+    </Link>
+  );
+}
+
+/* =========================================================
+   MERGERS AND ACQUISITIONS PAGE (LISTING)
    ========================================================= */
 
 export function MergersAcquisitionsPage() {
@@ -187,11 +424,15 @@ export function MergersAcquisitionsPage() {
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
-          {/* PAGE TITLE */}
+          {/* PAGE HEADER */}
           <header className="border-t-[3px] border-red-600 pt-4 mb-6">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
               <div>
-                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
+                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-red-600">
+                  <Handshake size={13} />
+                  Deals &amp; Corporate Strategy
+                </span>
+                <h1 className="mt-2 font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
                   {SECTION_LABEL}
                 </h1>
                 <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
@@ -199,13 +440,16 @@ export function MergersAcquisitionsPage() {
                   Times.
                 </p>
               </div>
-              <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
+              <span className="text-[9px] uppercase tracking-[0.18em] font-semibold text-gray-400">
                 Deals • Takeovers • Mergers
               </span>
             </div>
           </header>
 
-          <PrideTimesAd variant="first" />
+          {/* TOP AD */}
+          <div className="mb-6">
+            <PrideTimesAd variant="first" />
+          </div>
 
           {!leadStory && (
             <p className="py-10 text-center text-[11px] text-gray-400">
@@ -214,170 +458,58 @@ export function MergersAcquisitionsPage() {
           )}
 
           {leadStory && (
-            <section className="pb-8 mb-8 border-b border-gray-300">
-              <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-6">
-                {/* LEAD STORY */}
-                <Link
-                  to={leadStory.href}
-                  className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
-                >
-                  <ImageWithFallback
-                    src={leadStory.image}
-                    alt={leadStory.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            <>
+              {/* =================================================
+                  MAIN EDITORIAL SECTION (3-COLUMN MAGAZINE LAYOUT)
+              ================================================= */}
+              <section className="pb-8 sm:pb-10 mb-10 sm:mb-12 border-b border-gray-200">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.16fr_1.18fr_0.92fr] gap-6 lg:gap-7 items-stretch">
+                  {/* LEFT: Featured deal */}
+                  <div className="min-w-0 flex flex-col">
+                    <FeaturedDealCard item={leadStory} />
+                  </div>
+
+                  {/* MIDDLE: Top stories */}
+                  <div className="min-w-0 lg:border-x lg:border-gray-200 lg:px-6">
+                    <TopDealStories items={topStories} />
+                  </div>
+
+                  {/* RIGHT: Numbers + Deal Watch */}
+                  <div className="min-w-0 flex flex-col lg:pl-1">
+                    <DealNumbers />
+                    <DealWatch deals={maDeals} />
+                  </div>
+                </div>
+              </section>
+
+              {/* MID AD */}
+              <div className="mb-12">
+                <PrideTimesAd variant="second" />
+              </div>
+
+              {/* LATEST FEED */}
+              {feedStories.length > 0 && (
+                <section className="mb-12">
+                  <SectionHeader
+                    title={`Latest ${SECTION_LABEL} News`}
+                    rightLabel="Newsroom"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-
-                  <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                    {leadStory.kicker}
-                    {leadStory.location ? ` | ${leadStory.location}` : ""}
-                  </span>
-
-                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                    <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
-                      {leadStory.title}
-                    </h2>
-                    <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
-                      {leadStory.lede}
-                    </p>
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
-                      Read Full Story <ArrowRight size={12} />
-                    </span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-10">
+                    {feedStories.map((item) => (
+                      <LatestDealCard key={item.id} item={item} />
+                    ))}
                   </div>
-                </Link>
-
-                {/* RIGHT COLUMN */}
-                <aside className="min-w-0">
-                  <div className="pb-5 border-b border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <h2 className="font-serif text-lg font-bold">
-                        Key Figures
-                      </h2>
-                      <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
-                        {maItems.length} stories
-                      </span>
-                    </div>
-
-                    <div className="divide-y divide-gray-100">
-                      {leadStory.keyFacts.map((fact) => (
-                        <div
-                          key={fact.label}
-                          className="py-2 flex items-start justify-between gap-3"
-                        >
-                          <span className="text-[10px] font-semibold text-gray-800">
-                            {fact.label}
-                          </span>
-                          <span className="text-[10px] text-gray-500 text-right tabular-nums">
-                            {fact.value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pt-5">
-                    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
-                      <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-                        More M&amp;A News
-                      </h2>
-                      <span className="text-[8px] uppercase tracking-wide text-gray-400">
-                        Newsroom
-                      </span>
-                    </div>
-
-                    {otherStories.length > 0 ? (
-                      <div className="divide-y divide-gray-100">
-                        {otherStories.slice(0, 6).map((item) => (
-                          <Link
-                            key={item.id}
-                            to={item.href}
-                            className="group block py-3"
-                          >
-                            <div className="flex gap-3">
-                              <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
-                                {item.location ?? item.kicker}
-                              </span>
-                              <div className="min-w-0">
-                                <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
-                                  {item.title}
-                                </span>
-                                <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
-                                  {item.lede}
-                                </span>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="py-3 text-[10px] text-gray-400">
-                        More M&amp;A stories will appear here.
-                      </p>
-                    )}
-                  </div>
-
-                  <SidebarAd />
-                </aside>
-              </div>
-            </section>
+                </section>
+              )}
+            </>
           )}
 
-          {/* LATEST M&A FEED */}
-          {maItems.length > 0 && (
-            <section className="mb-12">
-              <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
-
-              <div className="divide-y divide-gray-200">
-                {maItems.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
-                  >
-                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
-                      <ImageWithFallback
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2">
-                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {item.kicker}
-                        </span>
-                        {item.location && (
-                          <>
-                            <span className="text-[8px] text-gray-300">•</span>
-                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
-                              <MapPin size={8} />
-                              {item.location}
-                            </span>
-                          </>
-                        )}
-                      </div>
-
-                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {item.title}
-                      </h3>
-
-                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
-                        {item.lede}
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
-                        <Clock size={8} />
-                        {item.meta}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <PrideTimesAd variant="second" />
+          {/* NEWSLETTER CTA */}
+          <NewsletterCTA
+            title="Stay Ahead with The Pride Times"
+            description="Daily briefings on mergers, acquisitions, takeovers and corporate strategy delivered directly to your inbox."
+            newsletterKey="daily-brief"
+          />
         </main>
       </div>
     </div>
