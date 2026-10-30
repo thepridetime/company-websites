@@ -15,6 +15,7 @@ import type { DigestArticle } from "./digestArticleData";
 
 import img_FIN4 from "../../imports/FIN4.png";
 import img_HC1 from "../../imports/HC1.png";
+import img_healthcare1 from "../../imports/healthcare1.png";
 import img_Insightimage from "../../imports/Insightimage.png";
 import img_Manu3 from "../../imports/Manu3.png";
 import img_business_aviation_jet from "../../imports/business-aviation-jet.png";
@@ -213,7 +214,7 @@ export const octEditionArticles: OctEditionArticle[] = [
     lede: "Lilly and Novo both raised forecasts in August, but pricing deals and new entrants are changing the economics.",
     location: "Global",
     readTime: "3 min read",
-    image: img_HC1,
+    image: img_healthcare1,
     body: [
       "The obesity-drug race remains the engine of pharma growth. IQVIA data cited by BNN Bloomberg put the global obesity drug market at $66 billion in 2025. In early August, Eli Lilly beat quarterly expectations and raised its full-year revenue forecast, sending shares up about 5% in premarket trading. Novo Nordisk raised its own profit and sales forecasts less than a day earlier.",
       "Lilly's Mounjaro and Zepbound together accounted for 64.7% of revenue in the latest reported quarter. The company's newly launched once-daily obesity pill, Foundayo, generated $98 million, short of analysts' average estimate of $105.6 million. Lilly's valuation passed $1 trillion in 2025.",

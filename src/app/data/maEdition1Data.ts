@@ -24,6 +24,7 @@ import img_Energy2 from "../../imports/Energy2.png";
 import img_energy_tanks from "../../imports/energy-tanks.png";
 import img_FIN3 from "../../imports/FIN3.png";
 import img_FIN4 from "../../imports/FIN4.png";
+import img_apartment from "../../imports/apartment.png";
 import img_FIN5 from "../../imports/FIN5.png";
 import img_Insightimage from "../../imports/Insightimage.png";
 import img_HC1 from "../../imports/HC1.png";
@@ -258,7 +259,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "This all-stock merger of equals would create one of the largest US apartment owners, with more than 180,000 units and a pro forma equity market value near $52 billion.",
     location: "United States",
     readTime: "1 min read",
-    image: img_FIN4,
+    image: img_apartment,
     body: [
       "This all-stock merger of equals would create one of the largest US apartment owners, with more than 180,000 units and a pro forma equity market value near $52 billion. AvalonBay holders receive 2.793 Equity Residential shares each and would own about 51.2% of the combined company. Because it is a merger of equals, no purchase price exists, and the $69 billion is combined enterprise value. Both shareholder groups still need to vote.",
     ],

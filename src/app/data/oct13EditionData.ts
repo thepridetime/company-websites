@@ -20,6 +20,7 @@
 import type { OctEditionArticle } from "./octEditionData";
 
 import img_FIN4 from "../../imports/FIN4.png";
+import img_startup from "../../imports/startup.png";
 import img_FIN5 from "../../imports/FIN5.png";
 import img_Insightimage from "../../imports/Insightimage.png";
 import img_Manu3 from "../../imports/Manu3.png";
@@ -33,6 +34,7 @@ import img_pt_global_markets from "../../imports/pt-global-markets.png";
 import img_supply_chain_map from "../../imports/supply-chain-map.png";
 import img_warehouse_robotics from "../../imports/warehouse-robotics.png";
 import img_tech16_unicorns from "../../imports/tech16-unicorns.png";
+import img_venture from "../../imports/venture capital.png";
 import img_tech16_global_funding from "../../imports/tech16-global-funding.png";
 import img_tech16_india_chips from "../../imports/tech16-india-chips.png";
 import img_LN4image from "../../imports/LN4image.png";
@@ -40,7 +42,9 @@ import img_CS3 from "../../imports/CS3.png";
 import img_CS2 from "../../imports/CS2.png";
 import img_SC2 from "../../imports/SC2.png";
 import img_Smartc2 from "../../imports/Smartc2.png";
+import img_chip from "../../imports/chip.png";
 import img_HC4 from "../../imports/HC4.png";
+import img_hc from "../../imports/hc-ai.png";
 import img_Ln1 from "../../imports/Ln1.png";
 import img_FIN3 from "../../imports/FIN3.png";
 
@@ -79,7 +83,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "About 1,830 private companies are now valued at $1 billion or more, together worth roughly $8.41 trillion, and capital is concentrating in a handful of AI labs.",
     location: "Global",
     readTime: "4 min read",
-    image: img_tech16_unicorns,
+    image: img_venture,
     body: [
       "AI is absorbing most venture capital. Global equity funding for AI companies was on track for a record of about $387.5 billion in the first half of 2026, and one analysis estimates AI took roughly 80% of all venture dollars in the first quarter.",
       "The unicorn club is at an all-time high. About 1,830 private companies are valued at $1 billion or more, together worth roughly $8.41 trillion, according to Crunchbase and PitchBook data as of August 2026. Of those, 173 became unicorns in 2026 alone.",
@@ -249,7 +253,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "From AI agents and compute to quantum and robotics, value is moving from model access to workflow integration and governance.",
     location: "Global",
     readTime: "4 min read",
-    image: img_Smartc2,
+    image: img_chip,
     body: [
       "Foundation models and AI agents: the shift is from chat to systems that execute multi-step work such as coding, support, procurement and finance operations. Value is moving from model access to workflow integration and governance.",
       "Compute and AI infrastructure: GPUs, data centres, networking, power and cooling are strategic assets. Expect long-term capacity contracts and sovereign compute programmes.",
@@ -287,7 +291,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Eleven industries face a different technology shift, and the corporate action the report recommends for each ranges from modernising core systems to securing power.",
     location: "Global",
     readTime: "4 min read",
-    image: img_HC4,
+    image: img_hc,
     body: [
       "Banking and fintech: agentic payments, AI underwriting and real-time rails in the style of UPI. Corporate action: modernise the core and pilot agent-based servicing with controls.",
       "Insurance: AI claims triage, usage-based pricing and reinsurance tech. Corporate action: automate claims and rebuild data foundations.",
@@ -327,7 +331,7 @@ export const oct13EditionArticles: OctEditionArticle[] = [
     lede: "Investors are writing fewer, larger cheques, and first-time seed funding is harder to get, according to Tracxn data for January to September 2026.",
     location: "India",
     readTime: "3 min read",
-    image: img_FIN4,
+    image: img_startup,
     body: [
       "According to Tracxn data for 1 January to 21 September 2026, total tech funding in India was $10.3 billion, up 7% year on year. Funding rounds numbered 1,134, down 38%.",
       "Early-stage funding was $4.2 billion, up 27%. Seed funding was $698 million, down 37%. Late-stage funding was $5.4 billion, roughly flat.",
