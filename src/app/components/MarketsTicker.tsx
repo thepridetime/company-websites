@@ -36,7 +36,7 @@ const megaMenuColumns = [
     title: "Markets",
     links: [
       { label: "Global Economy and Finance", path: marketTab("Global Economy and Finance") },
-      { label: "Energy", path: marketTab("Energy") },
+      { label: "Energy Markets", path: marketTab("Energy") },
       { label: "AI and Cloud Infrastructure", path: marketTab("AI and Cloud Infrastructure") },
       { label: "Corporate", path: marketTab("Corporate") },
     ],
@@ -55,22 +55,24 @@ const megaMenuColumns = [
     ],
   },
   {
-    title: "More",
+    title: "Business and Leadership",
     links: [
       { label: "Business News", path: "/business-news" },
       { label: "International Business", path: "/international-news" },
       { label: "Startup Success", path: "/startup-success" },
       { label: "CEO Spotlight", path: "/ceospotlight" },
       { label: "Leadership and Governance", path: "/leadership-governance" },
-      { label: "Sustainability and ESG", path: "/sustainability-esg" },
-      { label: "Magazines", path: "/magazine" },
+      { label: "Mergers and Acquisitions", path: "/mergers-acquisitions" },
+    ],
+  },
+  {
+    title: "Insights",
+    links: [
       { label: "Innovation", path: "/innovation" },
-      { label: "White House Watch", path: "/white-house-watch" },
+      { label: "Sustainability and ESG", path: "/sustainability-esg" },
       { label: "World and Geopolitics", path: "/world" },
-      {
-        label: "Mergers and Acquisitions",
-        path: "/mergers-acquisitions",
-      },
+      { label: "White House Watch", path: "/white-house-watch" },
+      { label: "Magazines", path: "/magazine" },
     ],
   },
 ];
@@ -79,6 +81,7 @@ export function MarketsTicker() {
   const [cards, setCards] = useState<TickerCard[]>([]);
   const [showSecurities, setShowSecurities] = useState(false);
 
+  const menuRootRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const isPausedRef = useRef(false);
@@ -145,15 +148,31 @@ export function MarketsTicker() {
     };
   }, []);
 
-  // Automatically close the mega-menu after 9 seconds.
+  // Keep the mega-menu open until the reader closes it:
+  // click outside, press Esc, pick a link, or click Menu again.
   useEffect(() => {
     if (!showSecurities) return;
 
-    const timer = window.setTimeout(() => {
-      setShowSecurities(false);
-    }, 9000);
+    const onMouseDown = (event: MouseEvent) => {
+      if (
+        menuRootRef.current &&
+        !menuRootRef.current.contains(event.target as Node)
+      ) {
+        setShowSecurities(false);
+      }
+    };
 
-    return () => window.clearTimeout(timer);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowSecurities(false);
+    };
+
+    document.addEventListener("mousedown", onMouseDown);
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", onMouseDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [showSecurities]);
 
   // Manually scroll the market ticker.
@@ -234,7 +253,7 @@ export function MarketsTicker() {
   };
 
   return (
-    <div className="pt-securities-bar w-full relative">
+    <div ref={menuRootRef} className="pt-securities-bar w-full relative">
       <div className="pt-container flex items-stretch">
         {/* Menu trigger */}
         <div className="relative flex-shrink-0 flex items-center">
@@ -360,19 +379,29 @@ export function MarketsTicker() {
 
       {/* Mega menu */}
       {showSecurities && (
-        <div className="pt-mega-menu absolute inset-x-0 top-full z-50">
+        <div
+          role="navigation"
+          aria-label="Site menu"
+          className="absolute inset-x-0 top-full z-50 max-h-[80vh] overflow-y-auto border-t-2 border-[#ED1C24] bg-black text-white shadow-2xl"
+        >
           <div className="pt-container">
-            <div className="pt-mega-menu-inner">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-8 py-8 lg:grid-cols-5">
+              {/* Link columns */}
+
               {megaMenuColumns.map((column) => (
-                <div key={column.title}>
-                  <h4 className="pt-mega-menu-heading">
+                <div key={column.title} className="min-w-0">
+                  <h4 className="border-b border-white/15 pb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#ED1C24]">
                     {column.title}
                   </h4>
 
-                  <ul className="pt-mega-menu-list">
+                  <ul className="mt-4 space-y-2.5">
                     {column.links.map((link) => (
                       <li key={link.label}>
-                        <Link to={link.path} onClick={closeMenu}>
+                        <Link
+                          to={link.path}
+                          onClick={closeMenu}
+                          className="text-[13px] font-medium text-gray-300 underline-offset-4 transition-colors hover:text-white hover:underline"
+                        >
                           {link.label}
                         </Link>
                       </li>
@@ -380,22 +409,72 @@ export function MarketsTicker() {
                   </ul>
                 </div>
               ))}
+
+              {/* Featured story (first Markets story from your data) */}
+
+              {marketArticles[0] && (
+                <div className="col-span-2 min-w-0 lg:col-span-1 lg:border-l lg:border-white/15 lg:pl-8">
+                  <h4 className="border-b border-white/15 pb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#ED1C24]">
+                    Featured
+                  </h4>
+
+                  <Link
+                    to={`/article/${marketArticles[0].id}`}
+                    onClick={closeMenu}
+                    className="group mt-4 block"
+                  >
+                    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                      {marketArticles[0].category}
+                    </span>
+
+                    <span className="mt-1.5 block font-serif text-[17px] font-bold leading-[1.25] text-white group-hover:underline">
+                      {marketArticles[0].title}
+                    </span>
+
+                    <span className="mt-2 line-clamp-3 block text-[12px] leading-[1.5] text-gray-400">
+                      {marketArticles[0].dek}
+                    </span>
+
+                    <span className="mt-3 inline-block border-b border-white/50 pb-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                      Read the post →
+                    </span>
+                  </Link>
+                </div>
+              )}
             </div>
 
-            <div className="pt-mega-menu-utility">
-              <Link to="/signup" onClick={closeMenu}>
+            {/* Utility row */}
+
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/15 py-4">
+              <Link
+                to="/signup"
+                onClick={closeMenu}
+                className="text-[12px] font-semibold text-white underline-offset-4 hover:underline"
+              >
                 Sign Up
               </Link>
 
-              <Link to="/magazine" onClick={closeMenu}>
+              <Link
+                to="/magazine"
+                onClick={closeMenu}
+                className="text-[12px] text-gray-400 underline-offset-4 hover:text-white hover:underline"
+              >
                 Digital Edition
               </Link>
 
-              <Link to="/Privacy" onClick={closeMenu}>
+              <Link
+                to="/Privacy"
+                onClick={closeMenu}
+                className="text-[12px] text-gray-400 underline-offset-4 hover:text-white hover:underline"
+              >
                 Privacy Policy
               </Link>
 
-              <Link to="/terms" onClick={closeMenu}>
+              <Link
+                to="/terms"
+                onClick={closeMenu}
+                className="text-[12px] text-gray-400 underline-offset-4 hover:text-white hover:underline"
+              >
                 Terms of Use
               </Link>
             </div>
