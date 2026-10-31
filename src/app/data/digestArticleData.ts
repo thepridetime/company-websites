@@ -15,7 +15,7 @@ import img_Energy2 from "../../imports/Energy2.png";
 import img_Energy3 from "../../imports/Energy3.png";
 import img_FIN3 from "../../imports/FIN3.png";
 import img_FIN4 from "../../imports/FIN4.png";
-import img_mergers from "../../imports/mergers.png";
+import img_mergers from "../../imports/Mergers.png";
 import img_FIN5 from "../../imports/FIN5.png";
 import img_HC1 from "../../imports/HC1.png";
 import img_HC2 from "../../imports/HC2.png";
