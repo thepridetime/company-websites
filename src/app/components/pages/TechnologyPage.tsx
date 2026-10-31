@@ -101,7 +101,6 @@ export function TechnologyPage() {
     <main className="tc-page">
       <div className="tc-wrap">
         <div className="tc-main">
-
           {/* =================================================
               TITLE BAND
           ================================================= */}
@@ -124,16 +123,49 @@ export function TechnologyPage() {
           </div>
 
           {/* =================================================
-              HERO (LEAD) + SIDEBAR (MORE STORIES)
+              MORE STORIES | LEAD | WATCH + ADVERTISEMENT
           ================================================= */}
 
           <section className="tc-hero">
-            {/* LEAD STORY */}
+            {/* LEFT — MORE STORIES (text only) */}
 
-            <Link
-              to={technologyArticlePath(leadStory.id)}
-              className="tc-lead"
-            >
+            <aside className="tc-more-list">
+              <div className="tc-head">
+                <h3 className="tc-head-title">More Stories</h3>
+              </div>
+
+              {sidebarStories.map((story, index) => (
+                <Link
+                  key={story.id}
+                  to={technologyArticlePath(story.id)}
+                  className="tc-more-item"
+                >
+                  <span className="tc-more-num">
+                    {String(index + 2).padStart(2, "0")}
+                  </span>
+
+                  <div className="min-w-0">
+                    <span
+                      className="tc-tag"
+                      style={parseTagStyle(tagStyleFor(story.category))}
+                    >
+                      {story.category}
+                    </span>
+
+                    <span className="tc-more-title-text">{story.title}</span>
+
+                    <span className="tc-more-time">
+                      <Clock size={8} />
+                      <TimeAgo iso={story.publishedAt} />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </aside>
+
+            {/* CENTRE — LEAD STORY */}
+
+            <Link to={technologyArticlePath(leadStory.id)} className="tc-lead">
               <div className="tc-lead-img">
                 <ImageWithFallback
                   src={sized(leadStory.image, 1400)}
@@ -171,49 +203,21 @@ export function TechnologyPage() {
               </div>
             </Link>
 
-            {/* RIGHT SIDEBAR (TEXT ONLY — NO IMAGES) */}
+            {/* RIGHT — ADVERTISEMENT + TECHNOLOGY WATCH */}
 
             <aside className="tc-aside">
-              {/* REAL ADSENSE */}
-
-              <div>
+              <div className="tc-ad">
                 <PrideTimesAd variant="second" />
               </div>
 
-              {/* MORE STORIES */}
+              <div className="tc-watch">
+                <span className="tc-watch-label">Technology Watch</span>
 
-              <div>
-                <div className="tc-more-head">
-                  <h3 className="tc-more-title">More Stories</h3>
-                </div>
+                <h4 className="tc-watch-title">{technologyWatchNote.title}</h4>
 
-                {sidebarStories.map((story, index) => (
-                  <Link
-                    key={story.id}
-                    to={technologyArticlePath(story.id)}
-                    className="tc-more-item"
-                  >
-                    <span className="tc-more-num">
-                      {String(index + 2).padStart(2, "0")}
-                    </span>
+                <p className="tc-watch-body">{technologyWatchNote.body}</p>
 
-                    <div className="min-w-0">
-                      <span
-                        className="tc-tag"
-                        style={parseTagStyle(tagStyleFor(story.category))}
-                      >
-                        {story.category}
-                      </span>
-
-                      <span className="tc-more-title-text">{story.title}</span>
-
-                      <span className="tc-more-time">
-                        <Clock size={8} />
-                        <TimeAgo iso={story.publishedAt} />
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                <div className="tc-watch-bar" />
               </div>
             </aside>
           </section>
@@ -292,143 +296,131 @@ export function TechnologyPage() {
           </section>
 
           {/* =================================================
-              COMPANIES IN FOCUS + TECHNOLOGY WATCH
+              COMPANIES IN FOCUS
           ================================================= */}
 
           <section className="tc-focus">
-            <div>
-              <SectionHeader title="Companies in Focus" to="/business-news" />
+            <SectionHeader title="Companies in Focus" to="/business-news" />
 
-              <div className="tc-company-list">
-                {technologyCompanies.map((item) => (
-                  <Link
-                    key={item.articleId}
-                    to={technologyArticlePath(item.articleId)}
-                    className="tc-company"
-                  >
-                    <div className="min-w-0">
-                      <p className="tc-company-name">{item.company}</p>
+            <div className="tc-company-list">
+              {technologyCompanies.map((item) => (
+                <Link
+                  key={item.articleId}
+                  to={technologyArticlePath(item.articleId)}
+                  className="tc-company"
+                >
+                  <div className="min-w-0">
+                    <p className="tc-company-name">{item.company}</p>
 
-                      <p className="tc-company-loc">{item.location}</p>
-                    </div>
+                    <p className="tc-company-loc">{item.location}</p>
+                  </div>
 
-                    <div className="tc-company-right">
-                      <p className="tc-company-headline">{item.headline}</p>
+                  <div className="tc-company-right">
+                    <p className="tc-company-headline">{item.headline}</p>
 
-                      <p className="tc-company-detail">{item.detail}</p>
-                    </div>
-                  </Link>
-                ))}
+                    <p className="tc-company-detail">{item.detail}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================
+              MARKET WATCH + REGIONAL SNAPSHOT (side by side)
+          ================================================= */}
+
+          <div className="tc-table-grid">
+            {/* TECHNOLOGY MARKET WATCH */}
+
+            <section className="tc-section" style={{ marginTop: 0, borderBottom: "none", paddingBottom: 0 }}>
+              <SectionHeader title="Technology Market Watch" to="/markets" />
+
+              <div className="tc-table-wrap">
+                <table className="tc-table">
+                  <thead>
+                    <tr>
+                      <th>Theme</th>
+                      <th>Momentum</th>
+                      <th className="is-right">Outlook</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {technologySectionGlance.map((item) => (
+                      <tr key={item.theme}>
+                        <td className="is-strong">{item.theme}</td>
+
+                        <td>{item.momentum}</td>
+
+                        <td className="is-right">
+                          <span
+                            className={`tc-pill ${
+                              /positive|improv/i.test(item.outlook)
+                                ? "is-up"
+                                : /neutral|cautious/i.test(item.outlook)
+                                ? "is-mid"
+                                : ""
+                            }`}
+                          >
+                            {item.outlook}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            </div>
+            </section>
 
-            {/* TECHNOLOGY WATCH */}
+            {/* REGIONAL SNAPSHOT */}
 
-            <aside className="tc-watch">
-              <span className="tc-watch-label">Technology Watch</span>
+            <section className="tc-section" style={{ marginTop: 0, borderBottom: "none", paddingBottom: 0 }}>
+              <SectionHeader title="Regional Market Snapshot" to="/world" />
 
-              <h4 className="tc-watch-title">{technologyWatchNote.title}</h4>
+              <p className="tc-section-note">
+                Illustrative regional indicators from this edition.
+              </p>
 
-              <p className="tc-watch-body">{technologyWatchNote.body}</p>
-
-              <div className="tc-watch-bar" />
-            </aside>
-          </section>
-
-          {/* =================================================
-              TECHNOLOGY MARKET WATCH
-          ================================================= */}
-
-          <section className="tc-section">
-            <SectionHeader title="Technology Market Watch" to="/markets" />
-
-            <div className="tc-table-wrap">
-              <table className="tc-table">
-                <thead>
-                  <tr>
-                    <th>Theme</th>
-                    <th>Momentum</th>
-                    <th className="is-right">Outlook</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {technologySectionGlance.map((item) => (
-                    <tr key={item.theme}>
-                      <td className="is-strong">{item.theme}</td>
-
-                      <td>{item.momentum}</td>
-
-                      <td className="is-right">
-                        <span
-                          className={`tc-pill ${
-                            /positive|improv/i.test(item.outlook)
-                              ? "is-up"
-                              : /neutral|cautious/i.test(item.outlook)
-                              ? "is-mid"
-                              : ""
-                          }`}
-                        >
-                          {item.outlook}
-                        </span>
-                      </td>
+              <div className="tc-table-wrap">
+                <table className="tc-table tc-table-min">
+                  <thead>
+                    <tr>
+                      <th>Region</th>
+                      <th>Deal Value (US$ bn)</th>
+                      <th>Earnings Growth</th>
+                      <th className="is-right">Hiring Outlook</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
+                  </thead>
 
-          {/* =================================================
-              REGIONAL SNAPSHOT
-          ================================================= */}
+                  <tbody>
+                    {regionalSnapshot.map((row) => (
+                      <tr key={row.region}>
+                        <td className="is-strong">{row.region}</td>
 
-          <section className="tc-section">
-            <SectionHeader title="Regional Market Snapshot" to="/world" />
+                        <td>{row.dealValue}</td>
 
-            <p className="tc-section-note">
-              Illustrative regional indicators from this edition.
-            </p>
+                        <td>{row.earnings}</td>
 
-            <div className="tc-table-wrap">
-              <table className="tc-table tc-table-min">
-                <thead>
-                  <tr>
-                    <th>Region</th>
-                    <th>Deal Value (US$ bn)</th>
-                    <th>Earnings Growth</th>
-                    <th className="is-right">Hiring Outlook</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {regionalSnapshot.map((row) => (
-                    <tr key={row.region}>
-                      <td className="is-strong">{row.region}</td>
-
-                      <td>{row.dealValue}</td>
-
-                      <td>{row.earnings}</td>
-
-                      <td className="is-right">
-                        <span
-                          className={`tc-pill ${
-                            /growing|strong|expan|increas/i.test(row.hiring)
-                              ? "is-up"
-                              : /stable|mixed|flat/i.test(row.hiring)
-                              ? "is-mid"
-                              : ""
-                          }`}
-                        >
-                          {row.hiring}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
+                        <td className="is-right">
+                          <span
+                            className={`tc-pill ${
+                              /growing|strong|expan|increas/i.test(row.hiring)
+                                ? "is-up"
+                                : /stable|mixed|flat/i.test(row.hiring)
+                                ? "is-mid"
+                                : ""
+                            }`}
+                          >
+                            {row.hiring}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
 
           {/* =================================================
               NEWSLETTER
