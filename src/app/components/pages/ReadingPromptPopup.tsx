@@ -93,7 +93,7 @@ export function ReadingPromptPopup({
         role="dialog"
         aria-modal="true"
         aria-labelledby="read-prompt-title"
-        className="relative w-full bg-red-600 text-white"
+        className="relative w-full bg-black text-white"
       >
         <div className="mx-auto max-w-4xl px-6 pb-8 pt-14 text-center sm:pt-16">
           <h2
@@ -103,13 +103,13 @@ export function ReadingPromptPopup({
             Get unlimited access to The Pride Times
           </h2>
 
-          <p className="mt-3 text-sm text-red-100 sm:text-base">
+          <p className="mt-3 text-sm text-zinc-300 sm:text-base">
             Keep reading unlimited articles, full archive access and ad-free reading.
           </p>
 
           <Link
             to="/premium"
-            className="mt-7 inline-block rounded-sm bg-white px-8 py-3 text-sm font-semibold text-red-600 transition-colors duration-200 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-red-600"
+            className="mt-7 inline-block rounded-sm bg-white px-8 py-3 text-sm font-semibold text-black transition-colors duration-200 hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
             Subscribe to keep reading
           </Link>
@@ -118,7 +118,7 @@ export function ReadingPromptPopup({
         <div className="border-t border-white/20">
           <nav
             aria-label="Account and legal"
-            className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-5 text-xs text-red-100"
+            className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-5 text-xs text-zinc-300"
           >
             <Link to="/login" className="transition-colors duration-200 hover:text-white">
               Sign In
