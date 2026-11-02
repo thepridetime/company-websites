@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { useAuth } from "../../context/AuthContext";
-import { ArrowLeft, ArrowRight, Check, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clock, Link2, MapPin, Quote, Share2, TrendingDown, TrendingUp } from "lucide-react";
+import { getQuotes } from "../../../services/marketApi";
 import { SaveArticleButton } from "./SaveArticleButton";
 import { ReadTracker } from "./ReadTracker";
 import { ReadingPromptPopup } from "./ReadingPromptPopup";
@@ -356,12 +357,12 @@ function specialArticlesForSection(
       (article) =>
         article.section === section && article.id !== currentId
     )
-    .slice(0, 3);
+    .slice(0, 8);
 }
 
 function relatedHomepageArticles(
   article: HomepageArticleType,
-  limit = 3
+  limit = 8
 ) {
   const sameCategory = homepageArticles.filter(
     (item) =>
@@ -630,6 +631,8 @@ function ArticleShell({
   sidebar,
   adSlots = defaultSideAdSlots,
   share,
+  heroImage,
+  related,
 }: {
   backTo: string;
   backLabel: string;
@@ -644,10 +647,12 @@ function ArticleShell({
   meta: ReactNode;
   children: ReactNode;
   sidebar: ReactNode;
-  /** Kept so existing call sites compile; related posts now live in the sidebar. */
+  /** Full-width Related News row (4 across) shown below the article. */
   related?: ReactNode;
   /** AdSense slots for the banner under the header and the banner above the footer. */
   adSlots?: SideAdSlots;
+  /** Optional lead image shown under the header. */
+  heroImage?: string;
   share: {
     title: string;
     description: string;
@@ -665,7 +670,7 @@ function ArticleShell({
         .pt-magazine * { box-sizing:border-box; }
         .pt-magazine .max-w-6xl { max-width:1240px !important; padding-left:clamp(16px,3vw,42px) !important; padding-right:clamp(16px,3vw,42px) !important; }
         .pt-magazine > .border-b { background:#fff !important; border-color:#e4e7eb !important; }
-        .pt-magazine nav[aria-label="Breadcrumb"] { font-size:10px !important; font-weight:500 !important; gap:7px !important; color:#7b8188 !important; }
+        .pt-magazine nav[aria-label="Breadcrumb"] { font-size:11px !important; font-weight:500 !important; gap:7px !important; color:#7b8188 !important; }
         .pt-magazine nav[aria-label="Breadcrumb"] a { color:#777e86 !important; }
         .pt-magazine .max-w-6xl.pb-12 { padding-top:14px !important; }
         .pt-magazine header { max-width:none !important; }
@@ -688,11 +693,10 @@ function ArticleShell({
         .pt-magazine.pt-text-large .blog-prose li { font-size:20px !important; line-height:1.8 !important; }
         .pt-magazine.pt-text-large .blog-prose h2 { font-size:28px !important; }
         .pt-magazine.pt-text-large header h1 { font-size:clamp(34px,4vw,54px) !important; }
-        .pt-magazine .blog-prose .drop-cap:first-letter { float:left; font-family:Georgia,'Times New Roman',serif; font-size:62px; line-height:.78; padding:5px 8px 0 0; color:#ed1c24; }
+        /* Drop cap removed (cleaner, Bloomberg-style opening paragraph) */
 
         .pt-magazine aside .rounded-xl { border-radius:0 !important; box-shadow:none !important; border-color:#e3e7eb !important; }
         .pt-magazine aside img { border-radius:8px !important; }
-        .pt-magazine aside h2 { font-family:Georgia,'Times New Roman',serif !important; font-size:18px !important; }
         .pt-magazine aside ul li { padding-top:14px !important; padding-bottom:14px !important; }
         .pt-magazine aside ul h3 { font-family:Georgia,'Times New Roman',serif !important; font-size:15px !important; line-height:1.25 !important; }
         .pt-magazine aside .adsbygoogle { border-radius:0 !important; }
@@ -716,22 +720,21 @@ function ArticleShell({
 
 
 
-       /* Related news now sits BELOW the article, on all screen sizes */
+       /* Sidebar (Markets, ad, related) sits BELOW the article on tablet and mobile,
+          and beside it (sticky, 320px) on desktop. */
 .pt-magazine .pt-article-grid { display:block !important; }
 .pt-magazine aside { position:static !important; margin-top:40px !important; padding-top:24px !important; border-top:1px solid #dfe3e7 !important; }
 .pt-magazine .pt-aside-inner { position:static !important; overflow:visible !important; }
 
 /* Related cards laid out in a grid */
-.pt-magazine aside section[aria-label="Related articles"] ul { display:grid !important; grid-template-columns:1fr; gap:24px !important; }
-.pt-magazine aside section[aria-label="Related articles"] ul li { padding:0 !important; border:none !important; }
-
-@media (min-width:640px) {
-  .pt-magazine aside section[aria-label="Related articles"] ul { grid-template-columns:repeat(2,1fr); }
-}
+.pt-magazine aside section[aria-label="Related articles"] ul { display:block !important; }
+.pt-magazine aside section[aria-label="Related articles"] ul li { padding:14px 0 !important; }
+.pt-magazine aside section[aria-label="Related articles"] ul li:first-child { padding-top:0 !important; }
 @media (min-width:1024px) {
   .pt-magazine .max-w-6xl.pb-12 { padding-top:12px !important; }
   .pt-magazine main { max-width:none !important; }
-  .pt-magazine aside section[aria-label="Related articles"] ul { grid-template-columns:repeat(3,1fr); }
+  .pt-magazine .pt-article-grid { display:grid !important; grid-template-columns:minmax(0,1fr) 320px; column-gap:48px; align-items:start; }
+  .pt-magazine aside { position:sticky !important; top:16px !important; margin-top:0 !important; padding-top:0 !important; border-top:none !important; }
 }
 
 
@@ -794,8 +797,7 @@ function ArticleShell({
       </div>
 
       <div className={`${pageClass} pb-8 pt-4 sm:pt-5`}>
-        {/* Ad 1: just below the header bar, above the article */}
-        <AdSenseUnit slot={adSlots.top} />
+        {/* No ad above the headline: the sidebar ad sits beside the article. */}
 
         {/* One column for header + body (same left edge), related news beside it */}
         <div className="pt-article-grid mt-2 lg:mt-4">
@@ -823,6 +825,16 @@ function ArticleShell({
               {meta}
             </header>
 
+            {heroImage && (
+              <figure className="mt-6">
+                <img
+                  src={heroImage}
+                  alt=""
+                  className="aspect-[16/9] w-full rounded-sm object-cover"
+                />
+              </figure>
+            )}
+
             <main className="mt-8 w-full min-w-0">
               {children}
 
@@ -840,8 +852,11 @@ function ArticleShell({
           </aside>
         </div>
 
+        {/* Related News: 4 across with images, full width below the article */}
+        {related && <div className="mt-10">{related}</div>}
+
         {/* Ad 2: bottom of the page, above the footer (no extra gap above it) */}
-        <div className="mt-4 [&>div]:!my-0">
+        <div className="mt-6 [&>div]:!my-0">
           <AdSenseUnit slot={adSlots.bottom} />
         </div>
       </div>
@@ -902,7 +917,8 @@ function BlogBody({
   return (
     <div className="blog-prose">
       {sections.map((section, index) => (
-        <section key={`${section.heading}-${index}`} className="scroll-mt-24">
+        <Fragment key={`${section.heading}-${index}`}>
+        <section className="scroll-mt-24">
           <h2 className="break-words">
             {formatSectionHeading(section.heading, category)}
           </h2>
@@ -911,13 +927,17 @@ function BlogBody({
             <p
               key={pIndex}
               className={`break-words${
-                index === 0 && pIndex === 0 ? " drop-cap" : ""
+                ""
               }`}
             >
               {paragraph}
             </p>
           ))}
         </section>
+
+        {/* One in-article ad, after the first section */}
+        {index === 0 && <AdSenseUnit slot="6033028012" inArticle />}
+        </Fragment>
       ))}
     </div>
   );
@@ -959,9 +979,117 @@ const defaultSideAdSlots: SideAdSlots = {
   bottom: "8042854193",
 };
 
+/* =========================================================
+   MARKETS PANEL (sidebar)
+   Same live data as the homepage and the ticker (getQuotes).
+   Shows a skeleton while loading and hides itself if loading fails.
+========================================================= */
+
+type MarketRow = {
+  symbol: string;
+  value: string | number;
+  change: string;
+  up: boolean;
+};
+
+function MarketsPanel() {
+  const [rows, setRows] = useState<MarketRow[]>([]);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    getQuotes()
+      .then((data: any) => {
+        if (!active) return;
+
+        setRows(
+          (data?.indices ?? []).slice(0, 4).map((item: any) => ({
+            symbol: item.name,
+            value: item.value,
+            change: item.change,
+            up: item.up,
+          }))
+        );
+      })
+      .catch((error: unknown) => {
+        console.warn("Markets panel could not load:", error);
+        if (active) setFailed(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (failed) return null;
+
+  return (
+    <section aria-label="Markets" className="rounded-sm bg-black p-4 text-white">
+      <div className="flex items-center justify-between border-b border-white/20 pb-2">
+        <p className="text-[12px] font-bold uppercase tracking-[0.16em]">
+          Markets
+        </p>
+
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+          Indices
+        </span>
+      </div>
+
+      <div className="divide-y divide-white/10">
+        {rows.length === 0
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center justify-between py-3">
+                <span className="h-3 w-20 animate-pulse rounded bg-white/10" />
+                <span className="h-3 w-24 animate-pulse rounded bg-white/10" />
+              </div>
+            ))
+          : rows.map((row) => (
+              <div
+                key={row.symbol}
+                className="flex items-center justify-between py-3"
+              >
+                <span className="text-[12px] font-semibold text-gray-100">
+                  {row.symbol}
+                </span>
+
+                <span className="flex items-center gap-3">
+                  <span className="text-[12px] tabular-nums text-gray-300">
+                    {row.value}
+                  </span>
+
+                  <span
+                    className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
+                      row.up ? "text-emerald-400" : "text-red-400"
+                    }`}
+                  >
+                    {row.up ? (
+                      <TrendingUp size={11} aria-hidden="true" />
+                    ) : (
+                      <TrendingDown size={11} aria-hidden="true" />
+                    )}
+                    {row.change}
+                  </span>
+                </span>
+              </div>
+            ))}
+      </div>
+
+      <Link
+        to="/markets"
+        className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-white hover:underline"
+      >
+        View all markets
+        <ArrowRight size={10} aria-hidden="true" />
+      </Link>
+    </section>
+  );
+}
+
 function BlogSidebar({
   adSlots = defaultSideAdSlots,
   relatedItems,
+  category,
 }: {
   /* Kept optional so existing call sites still compile; the sidebar
      now only holds ads. */
@@ -981,30 +1109,23 @@ function BlogSidebar({
 }) {
   if (relatedItems?.length) {
     return (
-      <section aria-label="Related articles">
-        <div className="mb-4 flex items-center gap-2">
-          <span aria-hidden="true" className="h-4 w-1 bg-red-600" />
-          <h2 className="font-serif text-lg font-bold text-slate-950">
-            Related News
-          </h2>
-        </div>
+      <div className="space-y-7">
+      <MarketsPanel />
+
+      <AdSenseUnit slot={adSlots.top} side />
+
+      <section aria-label="Related articles" className="border-t-[3px] border-slate-950 pt-3">
+        <p className="mb-4 font-sans text-[11px] font-bold uppercase leading-none tracking-[0.16em] text-slate-950">
+          {category ? `More in ${category}` : "More stories"}
+        </p>
 
         <ul className="divide-y divide-slate-200">
-          {relatedItems.map((item) => (
+          {relatedItems.slice(0, 4).map((item) => (
             <li key={item.href} className="py-3 first:pt-0">
               <Link
                 to={item.href}
                 className={`group block rounded-sm ${focusRing}`}
               >
-                {item.image && (
-                  <img
-                    src={item.image}
-                    alt=""
-                    loading="lazy"
-                    className="mb-2.5 aspect-[16/9] w-full object-cover"
-                  />
-                )}
-
                 <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
                   {item.category}
                 </p>
@@ -1019,6 +1140,7 @@ function BlogSidebar({
           ))}
         </ul>
       </section>
+      </div>
     );
   }
 
@@ -1158,6 +1280,9 @@ function RelatedPosts<
     category?: string;
     dek?: string;
     excerpt?: string;
+    image?: string;
+    publishedAt?: string;
+    time?: string;
   }
 >({
   items,
@@ -1172,51 +1297,58 @@ function RelatedPosts<
   if (!items.length) return null;
 
   return (
-    <section className="mt-6 border-t border-slate-200 pt-6">
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-        Keep exploring
-      </p>
-
-      <h2 className="mt-2 font-serif text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-        More ideas to explore
+    <section aria-label="Related news" className="border-t-[3px] border-slate-950 pt-3">
+      <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-950">
+        Related News
       </h2>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item, index) => (
-          <Link
-            key={item.id ?? item.slug ?? index}
-            to={getHref(item)}
-            className={`group flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-1 hover:border-red-200 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${focusRing}`}
-          >
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
-              {item.category ?? "The Pride Times"}
-            </p>
+      <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {items.slice(0, 4).map((item, index) => {
+          console.log("hereeee", item)
+          const image = item.image;
+          const date = item.publishedAt ?? item.time;
 
-            <h3 className="mt-3 break-words font-serif text-lg font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
-              {plainTitles
-                ? item.title
-                : formatBlogTitle(
-                    item.title,
-                    item.category ?? "Business"
-                  )}
-            </h3>
+          return (
+            <Link
+              key={item.id ?? item.slug ?? index}
+              to={getHref(item)}
+              className={`group block rounded-sm ${focusRing}`}
+            >
+              {image ? (
+                <img
+                  src={image}
+                  alt=""
+                  loading="lazy"
+                  className="aspect-[16/9] w-full rounded-sm bg-slate-100 object-cover"
+                />
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="aspect-[16/9] w-full rounded-sm bg-slate-900"
+                />
+              )}
 
-            <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-500">
-              {item.dek ??
-                item.excerpt ??
-                "Explore the context, developments and ideas shaping this topic."}
-            </p>
+              <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">
+                {item.category ?? "The Pride Times"}
+              </p>
 
-            <span className="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:text-red-700">
-              Read the post
+              <h3 className="mt-1 break-words font-serif text-[17px] font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
+                {plainTitles
+                  ? item.title
+                  : formatBlogTitle(
+                      item.title,
+                      item.category ?? "Business"
+                    )}
+              </h3>
 
-              <ArrowRight
-                size={13}
-                className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-              />
-            </span>
-          </Link>
-        ))}
+              {date && (
+                <p className="mt-1 text-[11px] text-slate-400">
+                  {formatIsoDate(date)}
+                </p>
+              )}
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
@@ -1283,7 +1415,7 @@ function SpecialBlog({
       }
       related={
         <RelatedPosts
-          items={related}
+          items={related.length > 4 ? related.slice(4, 8) : related}
           getHref={(item) => specialArticlePath(item.id)}
         />
       }
@@ -1327,6 +1459,7 @@ function HomepageBlog({
         bottom: isExpandedAdCategory ? "6810700989" : "8042854193",
       }}
       title={title}
+      heroImage={(article as { image?: string }).image}
       dek={article.dek}
       meta={
         <BlogMeta
@@ -1364,7 +1497,7 @@ function HomepageBlog({
       }
       related={
         <RelatedPosts
-          items={related}
+          items={related.length > 4 ? related.slice(4, 8) : related}
           getHref={(item) => articlePath(item.title)}
         />
       }
@@ -1391,7 +1524,7 @@ function DigestBlog({
 
   if (!digest) return null;
 
-  const related = relatedHomepageArticles(article, 3);
+  const related = relatedHomepageArticles(article);
 
   return (
     <ArticleShell
@@ -1411,6 +1544,7 @@ function DigestBlog({
         </Link>
       }
       title={article.title}
+      heroImage={(article as { image?: string }).image}
       dek={
         <span className="font-medium text-slate-700">{digest.lede}</span>
       }
@@ -1449,7 +1583,7 @@ function DigestBlog({
       }
       related={
         <RelatedPosts
-          items={related}
+          items={related.length > 4 ? related.slice(4, 8) : related}
           plainTitles
           getHref={(item) => `/article/${item.slug}`}
         />
@@ -1468,6 +1602,9 @@ function DigestBlog({
                 by={digest.quote.by}
               />
             )}
+
+            {/* One in-article ad, after the second paragraph */}
+            {index === 1 && <AdSenseUnit slot="6033028012" inArticle />}
           </Fragment>
         ))}
       </div>
@@ -1591,7 +1728,7 @@ function MagazineBlog({
       }
       related={
         <RelatedPosts
-          items={related}
+          items={related.length > 4 ? related.slice(4, 8) : related}
           getHref={relatedPath}
         />
       }

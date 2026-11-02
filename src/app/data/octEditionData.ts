@@ -22,7 +22,9 @@ import img_business_aviation_jet from "../../imports/business-aviation-jet.png";
 import img_cyber_ops from "../../imports/cyber-ops.png";
 import img_data_centre from "../../imports/data-centre.png";
 import img_energy_tanks from "../../imports/energy-tanks.png";
+import img_hormuz from "../../imports/hormuz.jpg";
 import img_energy_1 from "../../imports/Energy1.png";
+import img_nextera from "../../imports/nextera.jpg";
 import img_energy_2 from "../../imports/Energy2.png";
 import img_energy_3 from "../../imports/Energy3.png";
 import img_energy_refinery from "../../imports/pt-energy-refinery.png";
@@ -93,7 +95,7 @@ export const octEditionArticles: OctEditionArticle[] = [
     lede: "The largest oil supply disruption on record is easing, but forecasters still disagree on how quickly markets return to surplus.",
     location: "Strait of Hormuz",
     readTime: "3 min read",
-    image: img_energy_tanks,
+    image: img_hormuz,
     body: [
       "No industry has been reshaped this year like energy. The war that began at the end of February, and the near-total disruption of shipping through the Strait of Hormuz, a channel that carries roughly a fifth of the world's oil and LNG, produced what the World Bank described as the largest oil market disruption in history. Global oil supply fell by 10.1 million barrels per day in March alone as energy infrastructure was attacked and tanker traffic restricted.",
       "Forecasts swung wildly. Brent touched about $109 a barrel at one point, according to a Bloomberg report on a Goldman Sachs note. In May, Moody's said it expected prices to stay in a $90-110 range through 2026 and called the disruption a structural constraint rather than a passing shock. On 20 May, Wood Mackenzie warned that Brent could approach $200 by year-end if the disruption lasted beyond September without a US-Iran settlement, with more than 11 million barrels per day of Gulf crude and condensate shut in and about a fifth of global LNG supply cut off.",
@@ -315,7 +317,7 @@ export const octEditionArticles: OctEditionArticle[] = [
     lede: "An all-stock deal would combine two large utilities, with approvals spanning federal regulators and three state commissions. Virginia is the likeliest pressure point.",
     location: "United States",
     readTime: "3 min read",
-    image: img_energy_1,
+    image: img_nextera,
     body: [
       "NextEra Energy will acquire Dominion Energy in an all-stock deal announced on 18 May 2026. Dominion shareholders receive 0.8138 NextEra shares each, plus a one-time aggregate cash payment of $360 million. NextEra holders would own about 74.5% of the combined company.",
       "Neither company has disclosed a transaction value. Figures near $67 billion in trade press are derived calculations, so readers should not treat them as the price paid.",

@@ -12,7 +12,9 @@ import img_Ceospot from "../../imports/Ceospot.png";
 import img_Coverstory from "../../imports/Coverstory.png";
 import img_Energy1 from "../../imports/Energy1.png";
 import img_Energy2 from "../../imports/Energy2.png";
+import img_hydrozen from "../../imports/hydrogen.jpg";
 import img_Energy3 from "../../imports/Energy3.png";
+import img_lng from "../../imports/lng.jpg";
 import img_FIN3 from "../../imports/FIN3.png";
 import img_FIN4 from "../../imports/FIN4.png";
 import img_mergers from "../../imports/Mergers.png";
@@ -577,7 +579,7 @@ export const digestArticles: DigestArticle[] = [
     author: "Sagar Kumar",
     publishedAt: digestEdition,
     readTime: "3 min read",
-    image: img_Energy2,
+    image: img_hydrozen,
     body: [
       "Regulatory considerations remain a factor. Authorities in several jurisdictions will need to review aspects of the plan, and the company said it had begun early engagement with relevant agencies. Legal advisers noted that approvals processes in Chile and neighbouring markets have lengthened in recent years, although most reviews conclude without major changes.",
       "Financial terms were disclosed in part. The programme is expected to require capital expenditure of roughly $16.5 billion over three years, funded through a combination of operating cash flow and existing credit facilities. Management said it did not expect the plan to affect its dividend policy or its investment-grade credit rating.",
@@ -604,7 +606,7 @@ export const digestArticles: DigestArticle[] = [
     author: "Sagar Kumar",
     publishedAt: digestEdition,
     readTime: "3 min read",
-    image: img_Energy3,
+    image: img_lng,
     body: [
       "Customers may feel the effects first. The company indicated that service improvements and new product options would be introduced progressively, beginning in Warsaw before extending to additional markets. Pricing, it said, would remain competitive, although it declined to commit to specific figures.",
       "Speaking at a briefing in Warsaw, Amara Tanaka, president of Lumina Group, said the decision reflected a long-term view. \"We are not reacting to a single quarter,\" Amara said. \"We are positioning the company for the next decade of demand, and that requires patient capital and clear priorities.\"",

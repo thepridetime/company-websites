@@ -128,20 +128,24 @@ const ceoFeatured = makeArticle({
 });
 
 const ceoLeaders = [
-  [1, "Jensen Huang", "President and CEO", "NVIDIA Corporation", "Jensen Huang co-founded NVIDIA in 1993 and has led its transition from a gaming graphics specialist toward a broad accelerated-computing platform."],
-  [2, "Sam Altman", "CEO", "OpenAI", "Sam Altman leads OpenAI as the company develops advanced AI systems and expands their use across consumer and enterprise products."],
-  [3, "Mukesh Ambani", "Chairman and MD", "Reliance Industries", "Mukesh Ambani has overseen Reliance's expansion beyond energy into telecom, retail, digital services and new-energy investments."],
-  [4, "Sundar Pichai", "CEO", "Alphabet / Google", "Sundar Pichai leads Alphabet through a period in which AI is being integrated across search, cloud, devices and productivity products."],
-  [5, "Satya Nadella", "Chairman and CEO", "Microsoft", "Satya Nadella's leadership has centered Microsoft around cloud computing, developer platforms and an increasingly AI-focused product portfolio."],
-  [6, "Elon Musk", "CEO", "Tesla / SpaceX / xAI", "Elon Musk's companies operate across electric vehicles, launch systems and artificial intelligence, linking engineering investment with ambitious long-term product roadmaps."],
-  [7, "Tim Cook", "CEO", "Apple Inc.", "Tim Cook has led Apple through a period of continued services growth, hardware expansion and increasing attention to on-device artificial intelligence."],
-  [8, "Larry Fink", "Chairman and CEO", "BlackRock", "Larry Fink leads BlackRock as the asset-management industry responds to changing capital markets, technology and investor expectations."],
-].map(([rank, name, role, company, bio]) => makeArticle({
+  [1, "Jensen Huang", "President and CEO", "NVIDIA Corporation", "Jensen Huang co-founded NVIDIA in 1993 and has led its transition from a gaming graphics specialist toward a broad accelerated-computing platform.", "https://images.unsplash.com/photo-1662947683280-3be5bfc47075?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"],
+  [2, "Sam Altman", "CEO", "OpenAI", "Sam Altman leads OpenAI as the company develops advanced AI systems and expands their use across consumer and enterprise products.", "https://images.unsplash.com/photo-1684369175833-4b445ad6bfb5?q=80&w=796&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"],
+  [3, "Mukesh Ambani", "Chairman and MD", "Reliance Industries", "Mukesh Ambani has overseen Reliance's expansion beyond energy into telecom, retail, digital services and new-energy investments.", "https://images.unsplash.com/photo-1594025149461-6338fc34e3f2?q=80&w=888&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"],
+
+  [4, "Sundar Pichai", "CEO", "Alphabet / Google", "Sundar Pichai leads Alphabet through a period in which AI is being integrated across search, cloud, devices and productivity products.", "https://images.unsplash.com/photo-1678483790053-71367bc7a02c?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"],
+  
+  [5, "Satya Nadella", "Chairman and CEO", "Microsoft", "Satya Nadella's leadership has centered Microsoft around cloud computing, developer platforms and an increasingly AI-focused product portfolio.","https://images.unsplash.com/photo-1662947036644-ecfde1221ac7?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"]
+  ,
+  [6, "Elon Musk", "CEO", "Tesla / SpaceX / xAI", "Elon Musk's companies operate across electric vehicles, launch systems and artificial intelligence, linking engineering investment with ambitious long-term product roadmaps.", "https://images.unsplash.com/photo-1652017659242-2714397b42f6?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"],
+  [7, "Tim Cook", "CEO", "Apple Inc.", "Tim Cook has led Apple through a period of continued services growth, hardware expansion and increasing attention to on-device artificial intelligence.", "https://images.unsplash.com/photo-1778120413698-01d919dd13ae?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"],
+  [8, "Larry Fink", "Chairman and CEO", "BlackRock", "Larry Fink leads BlackRock as the asset-management industry responds to changing capital markets, technology and investor expectations.", "https://images.unsplash.com/photo-1511883040705-6011fad9edfc?q=80&w=874&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"],
+].map(([rank, name, role, company, bio, image]) => makeArticle({
   id: `ceo-leader-${rank}`,
   section: "CEO Spotlight",
   category: "Leaders to Watch",
   title: `${name}: Leadership, Strategy and the Next Phase`,
   dek: bio as string,
+  image: image as string,
   highlights: [
     `${name} leads ${company} as its industry undergoes significant technological and strategic change.`,
     `The leadership agenda combines near-term execution with longer-term investment in products, people and infrastructure.`,
@@ -347,7 +351,7 @@ const ceoMoves = [
 
 const healthcareArticles: SpecialArticle[] = [
   makeArticle({ id: "healthcare-ai-resilient-sector", section: "Healthcare", category: "HEALTHCARE OUTLOOK", title: "Healthcare Resilience Meets an AI-Led Transformation of Diagnostics, Supply Chains and Patient Management", dek: "Healthcare remains resilient as AI adoption expands across diagnostics, inventory management, demand forecasting and patient operations. The sector is also supported by continued employment growth and investment in digital infrastructure.", 
-    image: HC1Img, 
+    image: undefined, 
     highlights: [
 "Healthcare and private education added more than 1 million jobs from January 2025 through August 2026, according to the supplied Deloitte Insights briefing.", "AI is moving into diagnostics, supply-chain visibility and patient-management workflows.", "Digital traceability requirements are accelerating technology adoption.", "The next phase combines operational resilience with software-led healthcare delivery."], sections: [
 { heading: "A resilient sector with a broader technology mandate", body: "The supplied briefing describes healthcare as a resilient part of the economy while highlighting a widening role for AI. Instead of being limited to clinical experimentation, AI is increasingly connected with operational workflows such as inventory visibility, demand forecasting, supplier-risk management and patient management." }, { heading: "Employment and operational scale", body: "According to the supplied Deloitte Insights figure, healthcare and private education sectors added more than 1 million jobs between January 2025 and August 2026, accounting for the bulk of total employment growth in that briefing. The employment trend sits alongside a healthcare operating model that is becoming more data-intensive." }, { heading: "Why supply chains are becoming a technology story", body: "Healthcare organizations need visibility across products, suppliers and demand. The briefing points to software-led and cloud-based systems as important parts of the healthcare supply-chain market, while inflation and traceability requirements create additional pressure to modernize operations." }, { heading: "The next operating model", body: "The direction described by the briefing is toward connected healthcare systems in which clinical, supply-chain and administrative information can be used together. Implementation will depend on governance, interoperability, regulatory traceability and the ability of hospitals and health systems to operationalize new tools." }], keyFacts: [
