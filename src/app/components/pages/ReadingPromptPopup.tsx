@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 
 /* Subscription wall shown 10 seconds after an article opens.
    - Appears on every visit to the article, including after the reader
      comes back from the subscribe or sign-in pages without subscribing.
+   - No close, skip or "maybe later" control.
+   - Pressing Escape leaves the article and returns the reader to the home page.
    - The article behind is fully obscured (dark, blurred overlay).
    - Premium members never see it.
-   - Dismissed with "Maybe later" or the Escape key.
    - The timer starts as soon as the article mounts; it does not wait for
      the account check to finish.
    - Shows no prices. */
@@ -20,6 +21,7 @@ export function ReadingPromptPopup({
   delayMs?: number;
 }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const isPremium = user?.tier === "premium";
 
   const [open, setOpen] = useState(false);
@@ -59,14 +61,16 @@ export function ReadingPromptPopup({
     };
   }, [delayMs]);
 
-  /* While open: Escape dismisses, and the page behind cannot scroll. */
+  /* While open: Escape leaves the article, and the page behind cannot scroll. */
   useEffect(() => {
     if (!open) return;
 
-    const dismiss = () => setOpen(false);
-
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") dismiss();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+        navigate("/");
+      }
     };
 
     const previousOverflow = document.body.style.overflow;
@@ -77,13 +81,11 @@ export function ReadingPromptPopup({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, navigate]);
 
   /* Premium members never see the wall, even if it was already open
      while their account was still loading. */
   if (!open || isPremium) return null;
-
-  const dismiss = () => setOpen(false);
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col justify-end bg-black/90 backdrop-blur-md antialiased">
@@ -111,14 +113,6 @@ export function ReadingPromptPopup({
           >
             Subscribe to keep reading
           </Link>
-
-          <button
-            type="button"
-            onClick={dismiss}
-            className="mt-4 block w-full text-xs text-red-100 transition-colors duration-200 hover:text-white sm:mx-auto sm:w-auto"
-          >
-            Maybe later
-          </button>
         </div>
 
         <div className="border-t border-white/20">
