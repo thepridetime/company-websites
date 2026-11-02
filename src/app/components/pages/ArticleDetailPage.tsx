@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { ArrowLeft, ArrowRight, Check, Clock, Link2, MapPin, Quote, Share2 } from "lucide-react";
 import { SaveArticleButton } from "./SaveArticleButton";
 import { ReadTracker } from "./ReadTracker";
-import { ReadingPromptPopup } from "../ReadingPromptPopup";
+import { ReadingPromptPopup } from "./ReadingPromptPopup";
 import {
   TimeAgo,
   estimateReadTime,
@@ -713,6 +713,7 @@ function ArticleShell({
         .pt-magazine .mt-8.flex.flex-wrap.items-center.justify-between { border-color:#e3e7eb !important; border-radius:0 !important; }
 
        
+
 
 
        /* Related news now sits BELOW the article, on all screen sizes */
