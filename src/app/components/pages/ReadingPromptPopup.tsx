@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
-import { Lock, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
-/* Subscription prompt shown after a reader has spent some time on an article.
+/* Bloomberg-style subscription wall shown after a reader has spent some time on an article.
+   - The article behind is fully obscured (dark, blurred overlay).
    - Premium members never see it.
    - Once dismissed, it stays hidden for that article for the rest of the browser session.
    - Shows no prices. */
@@ -98,7 +99,7 @@ export function ReadingPromptPopup({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 px-4 antialiased"
+      className="fixed inset-0 z-[100] flex flex-col justify-end bg-black/90 backdrop-blur-md antialiased"
       onClick={dismiss}
     >
       <div
@@ -106,60 +107,73 @@ export function ReadingPromptPopup({
         aria-modal="true"
         aria-labelledby="read-prompt-title"
         onClick={(event) => event.stopPropagation()}
-        className="relative w-full max-w-md rounded-xl bg-white p-7 text-center shadow-2xl sm:p-8"
+        className="relative w-full bg-[#1b1b1b] text-white"
       >
         <button
           type="button"
           onClick={dismiss}
           aria-label="Close"
-          className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
         >
-          <X size={16} />
+          <X size={18} />
         </button>
 
-        <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-amber-400">
-          <Lock size={16} />
-        </div>
-
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600">
-          The Pride Times
-        </p>
-
-        <h2
-          id="read-prompt-title"
-          className="mt-2 font-serif text-2xl font-bold leading-tight text-slate-950"
-        >
-          Enjoying this story?
-        </h2>
-
-        <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-600">
-          Subscribe to keep reading unlimited articles, get full access to our
-          archive and enjoy an ad-free experience.
-        </p>
-
-        <Link
-          to="/premium"
-          onClick={dismiss}
-          className="mt-6 inline-block w-full rounded-sm bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-        >
-          Subscribe to keep reading
-        </Link>
-
-        <div className="mt-4 flex flex-col items-center gap-2 text-xs">
-          <Link
-            to="/login"
-            onClick={dismiss}
-            className="font-semibold text-slate-700 underline-offset-4 hover:text-red-600 hover:underline"
+        <div className="mx-auto max-w-4xl px-6 pb-8 pt-14 text-center sm:pt-16">
+          <h2
+            id="read-prompt-title"
+            className="font-sans text-2xl font-bold leading-tight tracking-tight sm:text-3xl md:text-[32px]"
           >
-            Already a subscriber? Sign in
+            Get unlimited access to The Pride Times
+          </h2>
+
+          <p className="mt-3 text-sm text-zinc-300 sm:text-base">
+            Keep reading unlimited articles, full archive access and ad-free reading.
+          </p>
+
+          <Link
+            to="/premium"
+            onClick={dismiss}
+            className="mt-7 inline-block rounded-sm bg-white px-8 py-3 text-sm font-semibold text-black transition-colors duration-200 hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1b1b]"
+          >
+            Subscribe to keep reading
           </Link>
+
           <button
             type="button"
             onClick={dismiss}
-            className="text-slate-500 transition-colors duration-200 hover:text-slate-800"
+            className="mt-4 block w-full text-xs text-zinc-400 transition-colors duration-200 hover:text-white sm:mx-auto sm:w-auto"
           >
             Maybe later
           </button>
+        </div>
+
+        <div className="border-t border-white/10">
+          <nav
+            aria-label="Account and legal"
+            className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-5 text-xs text-zinc-300"
+          >
+            <Link
+              to="/login"
+              onClick={dismiss}
+              className="transition-colors duration-200 hover:text-white"
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/terms"
+              onClick={dismiss}
+              className="transition-colors duration-200 hover:text-white"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              to="/privacy"
+              onClick={dismiss}
+              className="transition-colors duration-200 hover:text-white"
+            >
+              Privacy Policy
+            </Link>
+          </nav>
         </div>
       </div>
     </div>
