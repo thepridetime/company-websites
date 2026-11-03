@@ -1,404 +1,856 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
-import {
-  ArrowRight,
-  BarChart3,
-  Clock,
-  Coins,
-  Cpu,
-  Lightbulb,
-  TrendingDown,
-  TrendingUp,
-  type LucideIcon,
-} from "lucide-react";
-import { NewsletterCTA } from "../NewsletterCTA";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { AdvertisementSlot } from "../innovation/AdvertisementSlot";
+import {
+  Clock,
+  ArrowRight,
+  TrendingUp,
+  TrendingDown,
+  MapPin,
+} from "lucide-react";
+
+import { getQuotes } from "../../../services/marketApi";
+import { PrideTimesAd } from "./HomePage";
 import {
   defaultFeaturedInnovation,
   defaultTopInnovationStories,
+  defaultLatestInnovationNews,
   defaultMarketSnapshot,
   defaultInnovationMetrics,
-  defaultLatestInnovationNews,
-  type InnovationMetric,
   type InnovationStory,
-  type MarketIndexItem,
 } from "../../data/innovationData";
 
-const MARKET_TABS = ["Indices", "Commodities", "Crypto"] as const;
-type MarketTab = (typeof MARKET_TABS)[number];
+/* =========================================================
+   TYPES
+========================================================= */
 
-const METRIC_ICONS: Record<InnovationMetric["iconType"], LucideIcon> = {
-  capex: Coins,
-  revenue: BarChart3,
-  exports: Cpu,
-  funding: Lightbulb,
+type MarketItem = {
+  symbol: string;
+  value: string | number;
+  change: string;
+  up: boolean;
 };
+
+type MarketTab = "Indices" | "Crypto";
+
+/* =========================================================
+   DATA (same sources as before, arranged like the homepage)
+========================================================= */
 
 const storyHref = (story: { id: string; url?: string }) =>
   story.url || `/article/${story.id}`;
 
-const isNegative = (value: string) => value.trim().startsWith("-");
+const PAGE_SIZE = 8;
 
-/* ---------- Small presentational pieces ---------- */
+// Every unique innovation story across the data files
+const allStories: InnovationStory[] = Array.from(
+  new Map(
+    [...defaultLatestInnovationNews, ...defaultTopInnovationStories].map(
+      (story) => [story.id, story] as const
+    )
+  ).values()
+);
 
-function SectionHeading({
+const leadStory = defaultFeaturedInnovation;
+const majorStories = defaultTopInnovationStories.slice(0, 2);
+const editorsPick = defaultTopInnovationStories[2] ?? defaultTopInnovationStories[0];
+const sideHeadlines = defaultLatestInnovationNews.slice(0, 4);
+
+const categoryNames = Array.from(new Set(allStories.map((s) => s.category)));
+const newsTabs = ["All", ...categoryNames];
+
+const categoryGroups = categoryNames.map((name) => ({
+  name,
+  stories: allStories.filter((s) => s.category === name),
+}));
+
+const marketTableRows = (
+  Object.keys(defaultMarketSnapshot) as (keyof typeof defaultMarketSnapshot)[]
+).flatMap((tab) =>
+  defaultMarketSnapshot[tab].map((item) => ({ tab, ...item }))
+);
+
+/* =========================================================
+   SMALL UI PIECES (same as homepage)
+========================================================= */
+
+function ChangeChip({ change, up }: { change: string; up: boolean }) {
+  return (
+    <span
+      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
+        up ? "text-emerald-600" : "text-red-600"
+      }`}
+    >
+      {up ? (
+        <TrendingUp size={11} strokeWidth={2.25} />
+      ) : (
+        <TrendingDown size={11} strokeWidth={2.25} />
+      )}
+      {change}
+    </span>
+  );
+}
+
+function SectionHeader({
   title,
-  linkTo,
-  linkLabel,
+  link,
+  linkText = "View All",
 }: {
   title: string;
-  linkTo?: string;
-  linkLabel?: string;
+  link?: string;
+  linkText?: string;
 }) {
   return (
-    <div className="flex items-end justify-between gap-4 border-b-2 border-gray-950 pb-2.5 mb-6">
-      <h2 className="font-serif text-[22px] sm:text-[26px] font-bold text-gray-950 leading-none">
+    <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
         {title}
       </h2>
-      {linkTo && linkLabel && (
+
+      {link && (
         <Link
-          to={linkTo}
-          className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.14em] text-red-600 hover:text-red-700 transition-colors whitespace-nowrap"
+          to={link}
+          className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
         >
-          <span>{linkLabel}</span>
-          <ArrowRight size={12} />
+          {linkText}
+          <ArrowRight size={10} />
         </Link>
       )}
     </div>
   );
 }
 
-function CategoryTag({ children }: { children: React.ReactNode }) {
+function Kicker({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-block text-[10.5px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
       {children}
     </span>
   );
 }
 
-function Sparkline({ points, up }: { points: number[]; up: boolean }) {
-  if (!points || points.length < 2) return null;
-
-  const width = 100;
-  const height = 32;
-  const min = Math.min(...points);
-  const max = Math.max(...points);
-  const range = max - min || 1;
-
-  const coords = points
-    .map((p, i) => {
-      const x = (i / (points.length - 1)) * width;
-      const y = height - ((p - min) / range) * (height - 4) - 2;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
-
+function TimeStamp({ children }: { children: React.ReactNode }) {
   return (
-    <svg
-      viewBox={`0 0 ${width} ${height}`}
-      preserveAspectRatio="none"
-      className="w-full h-8"
-      aria-hidden="true"
-    >
-      <polyline
-        points={coords}
-        fill="none"
-        stroke={up ? "#16a34a" : "#dc2626"}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
+    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+      <Clock size={9} />
+      {children}
+    </span>
   );
 }
 
-function StoryCard({ story }: { story: InnovationStory }) {
-  const label = story.location
-    ? `${story.category} · ${story.location}`
-    : story.category;
-
-  return (
-    <article className="group flex flex-col">
-      <Link
-        to={storyHref(story)}
-        className="block overflow-hidden rounded-md bg-gray-100 aspect-[16/10]"
-      >
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </Link>
-
-      <div className="flex flex-col flex-1 pt-4">
-        <CategoryTag>{label}</CategoryTag>
-        <Link to={storyHref(story)} className="block mt-2">
-          <h3 className="font-serif text-[19px] sm:text-[20px] font-bold leading-[1.22] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-3">
-            {story.title}
-          </h3>
-        </Link>
-        {story.summary && (
-          <p className="mt-2 text-[14px] leading-[1.55] text-gray-600 line-clamp-3">
-            {story.summary}
-          </p>
-        )}
-        <span className="mt-auto pt-4 inline-flex items-center gap-1.5 text-[12px] text-gray-400">
-          <Clock size={12} />
-          {story.publishedAt} · {story.readTime}
-        </span>
-      </div>
-    </article>
-  );
-}
-
-function LatestItem({ story }: { story: InnovationStory }) {
-  return (
-    <article className="group flex gap-4 py-4 border-b border-gray-200 last:border-b-0">
-      <Link
-        to={storyHref(story)}
-        className="shrink-0 w-[104px] h-[72px] sm:w-[120px] sm:h-[80px] overflow-hidden rounded-md bg-gray-100"
-      >
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </Link>
-
-      <div className="min-w-0 flex-1">
-        <CategoryTag>{story.category}</CategoryTag>
-        <Link to={storyHref(story)} className="block mt-1">
-          <h3 className="font-serif text-[15px] sm:text-[16px] font-bold leading-[1.3] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2">
-            {story.title}
-          </h3>
-        </Link>
-        <span className="mt-1.5 inline-flex items-center gap-1 text-[12px] text-gray-400">
-          <Clock size={11} />
-          {story.publishedAt} · {story.readTime}
-        </span>
-      </div>
-    </article>
-  );
-}
-
-function MarketTile({ item }: { item: MarketIndexItem }) {
-  const Trend = item.up ? TrendingUp : TrendingDown;
-
-  return (
-    <div className="bg-white border border-gray-200 rounded-md p-4 flex flex-col">
-      <span
-        className="text-[11px] font-bold uppercase tracking-wider text-gray-500 truncate"
-        title={item.symbol}
-      >
-        {item.symbol}
-      </span>
-      <span className="mt-1 font-serif text-[20px] font-bold text-gray-950 tabular-nums">
-        {item.value}
-      </span>
-      <span
-        className={`mt-0.5 inline-flex items-center gap-1 text-[12.5px] font-semibold tabular-nums ${
-          item.up ? "text-green-600" : "text-red-600"
-        }`}
-      >
-        <Trend size={12} strokeWidth={2.5} />
-        {item.change}
-      </span>
-      <div className="mt-3">
-        <Sparkline points={item.sparkline} up={item.up} />
-      </div>
-    </div>
-  );
-}
-
-function MetricRow({ metric }: { metric: InnovationMetric }) {
-  const Icon = METRIC_ICONS[metric.iconType] ?? BarChart3;
-  const negative = isNegative(metric.change);
-
-  return (
-    <div className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
-      <div className="shrink-0 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-        <Icon className="w-5 h-5 text-red-400" strokeWidth={1.8} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <span className="block font-serif text-[24px] font-bold text-white leading-tight tabular-nums">
-          {metric.value}
-        </span>
-        <span className="block text-[13px] text-gray-400 leading-snug mt-0.5">
-          {metric.label}
-        </span>
-      </div>
-      <div className="shrink-0 text-right">
-        <span
-          className={`block text-[14px] font-bold tabular-nums ${
-            negative ? "text-red-400" : "text-green-400"
-          }`}
-        >
-          {metric.change}
-        </span>
-        <span className="block text-[11px] text-gray-500 mt-0.5">
-          {metric.changePeriod}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Page ---------- */
+/* =========================================================
+   INNOVATION PAGE
+========================================================= */
 
 export function InnovationPage() {
-  const [marketTab, setMarketTab] = useState<MarketTab>(MARKET_TABS[0]);
-  const marketItems = defaultMarketSnapshot[marketTab] ?? [];
+  const [activeMarketTab, setActiveMarketTab] = useState<MarketTab>("Indices");
+  const [liveMarket, setLiveMarket] = useState<Record<MarketTab, MarketItem[]> | null>(null);
 
-  const featured = defaultFeaturedInnovation;
+  const [activeNewsTab, setActiveNewsTab] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const newsListRef = useRef<HTMLDivElement | null>(null);
+
+  /* ---------- Market data (live, with static fallback) ---------- */
+
+  useEffect(() => {
+    const loadMarketData = async () => {
+      try {
+        const data = await getQuotes();
+
+        setLiveMarket({
+          Indices: data.indices.map((item: any) => ({
+            symbol: item.name,
+            value: item.value,
+            change: item.change,
+            up: item.up,
+          })),
+          Crypto: data.crypto.map((item: any) => ({
+            symbol: item.name,
+            value: item.value,
+            change: item.change,
+            up: item.up,
+          })),
+        });
+      } catch (error) {
+        console.error("Market API Error:", error);
+      }
+    };
+
+    loadMarketData();
+  }, []);
+
+  const liveRows = liveMarket?.[activeMarketTab] ?? [];
+  const marketRows: MarketItem[] =
+    liveRows.length > 0
+      ? liveRows
+      : defaultMarketSnapshot[activeMarketTab].map((item) => ({
+          symbol: item.symbol,
+          value: item.value,
+          change: item.change,
+          up: item.up,
+        }));
+
+  /* ---------- Latest news filtering ---------- */
+
+  const filteredStories = useMemo(
+    () =>
+      activeNewsTab === "All"
+        ? allStories
+        : allStories.filter((story) => story.category === activeNewsTab),
+    [activeNewsTab]
+  );
+
+  const latestStories =
+    activeNewsTab === "All"
+      ? filteredStories.slice(0, visibleCount)
+      : filteredStories;
+
+  const hasMore =
+    activeNewsTab === "All" && visibleCount < filteredStories.length;
+
+  const selectTab = (tab: string) => {
+    setActiveNewsTab(tab);
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  const openCategoryFeed = (name: string) => {
+    selectTab(name);
+
+    window.requestAnimationFrame(() => {
+      newsListRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <main className="pt-8 md:pt-10 pb-16">
-          {/* ---------- Page header ---------- */}
-          <header className="mb-10 sm:mb-12">
-            <CategoryTag>Innovation</CategoryTag>
-            <h1 className="mt-2 font-serif text-[34px] sm:text-[44px] lg:text-[52px] font-bold leading-[1.05] text-gray-950 max-w-3xl">
-              The technologies reshaping industry, markets and policy
-            </h1>
-          </header>
+    <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="pb-16 pt-4 md:pt-6">
+          {/* =================================================
+              1. TOP SECTION — 3 columns, like a newsroom front page
+                 LEFT   : text-only headline list
+                 CENTER : lead story + 2 secondary stories
+                 RIGHT  : Markets panel + Editor's Pick
+          ================================================= */}
 
-          {/* ---------- Hero: featured story + numbers ---------- */}
-          <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 mb-14">
-            <article className="lg:col-span-8 group">
-              <Link
-                to={storyHref(featured)}
-                className="block overflow-hidden rounded-md bg-gray-100 aspect-[16/9]"
-              >
-                <ImageWithFallback
-                  src={featured.image}
-                  alt={featured.title}
-                  loading="eager"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                />
-              </Link>
+          <section className="mb-10 border-b border-gray-300 pb-8">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
+              {/* ---------- LEFT: top headlines (text only) ---------- */}
 
-              <div className="pt-6">
-                <CategoryTag>{featured.category}</CategoryTag>
-                <Link to={storyHref(featured)} className="block mt-2">
-                  <h2 className="font-serif text-[28px] sm:text-[34px] lg:text-[38px] font-bold leading-[1.1] text-gray-950 group-hover:text-red-600 transition-colors">
-                    {featured.title}
+              <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
+                <div className="mb-1 border-t-[3px] border-black pt-2">
+                  <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                    Top Stories
                   </h2>
+                </div>
+
+                <ul className="divide-y divide-gray-200">
+                  {sideHeadlines.map((story) => (
+                    <li key={story.id}>
+                      <Link
+                        to={storyHref(story)}
+                        className="group block py-3.5"
+                      >
+                        <Kicker>{story.category}</Kicker>
+
+                        <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+
+              {/* ---------- CENTER: lead story ---------- */}
+
+              <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
+                <Link to={storyHref(leadStory)} className="group block">
+                  <div className="relative overflow-hidden rounded-sm bg-black">
+                    <ImageWithFallback
+                      src={leadStory.image}
+                      alt={leadStory.title}
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
+                  </div>
+
+                  <div className="mt-4">
+                    <Kicker>{leadStory.category}</Kicker>
+
+                    <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
+                      {leadStory.title}
+                    </h1>
+
+                    <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
+                      {leadStory.summary}
+                    </p>
+                  </div>
                 </Link>
-                <p className="mt-4 text-[16px] sm:text-[17px] leading-[1.6] text-gray-600 max-w-2xl">
-                  {featured.summary}
-                </p>
-                <Link
-                  to={storyHref(featured)}
-                  className="mt-5 inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.14em] text-gray-950 hover:text-red-600 transition-colors"
-                >
-                  <span>Read full story</span>
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-            </article>
 
-            <aside className="lg:col-span-4 bg-gray-950 rounded-md p-6 sm:p-7 h-fit">
-              <div className="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
-                <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-red-400">
-                  Numbers at a Glance
-                </h2>
-              </div>
-              <div className="divide-y divide-white/10">
-                {defaultInnovationMetrics.map((metric) => (
-                  <MetricRow key={metric.id} metric={metric} />
-                ))}
-              </div>
-            </aside>
-          </section>
+                {/* Two secondary stories under the lead */}
 
-          {/* ---------- Top stories ---------- */}
-          <section className="mb-14">
-            <SectionHeading
-              title="Top Innovation Stories"
-              linkTo="/technology"
-              linkLabel="View more"
-            />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-7 lg:gap-8">
-              {defaultTopInnovationStories.map((story) => (
-                <StoryCard key={story.id} story={story} />
-              ))}
-            </div>
-          </section>
+                <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
+                  {majorStories.map((story) => (
+                    <Link
+                      key={story.id}
+                      to={storyHref(story)}
+                      className="group block"
+                    >
+                      <div className="overflow-hidden rounded-sm">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </div>
 
-          {/* ---------- Market snapshot ---------- */}
-          <section className="mb-14">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b-2 border-gray-950 pb-2.5 mb-5">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                <h2 className="font-serif text-[22px] sm:text-[26px] font-bold text-gray-950 leading-none">
-                  Market Snapshot
-                </h2>
+                      <div className="mt-2.5">
+                        <Kicker>{story.category}</Kicker>
+
+                        <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div role="tablist" className="flex items-center gap-4">
-                {MARKET_TABS.map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    role="tab"
-                    aria-selected={marketTab === tab}
-                    onClick={() => setMarketTab(tab)}
-                    className={`text-[11px] font-bold uppercase tracking-[0.12em] pb-1 border-b-2 transition-colors ${
-                      marketTab === tab
-                        ? "text-red-600 border-red-600"
-                        : "text-gray-400 border-transparent hover:text-gray-700"
-                    }`}
+
+              {/* ---------- RIGHT: markets + editor's pick ---------- */}
+
+              <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
+                {/* Markets panel (dark, like a terminal) */}
+
+                <div className="rounded-sm bg-black p-4 text-white">
+                  <div className="flex items-center justify-between border-b border-white/20 pb-2">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                      Markets
+                    </h2>
+
+                    <div className="flex gap-3">
+                      {(["Indices", "Crypto"] as const).map((tab) => (
+                        <button
+                          key={tab}
+                          type="button"
+                          onClick={() => setActiveMarketTab(tab)}
+                          className={`text-[10px] font-semibold uppercase tracking-wide ${
+                            activeMarketTab === tab
+                              ? "text-white underline underline-offset-4"
+                              : "text-gray-500 hover:text-gray-200"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="divide-y divide-white/10">
+                    {marketRows.slice(0, 6).map((market) => (
+                      <div
+                        key={market.symbol}
+                        className="flex items-center justify-between py-2.5"
+                      >
+                        <span className="text-[12px] font-semibold text-gray-100">
+                          {market.symbol}
+                        </span>
+
+                        <div className="flex items-center gap-3">
+                          <span className="text-[12px] tabular-nums text-gray-300">
+                            {market.value}
+                          </span>
+
+                          <ChangeChip change={market.change} up={market.up} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Link
+                    to="/markets"
+                    className="mt-2 flex w-fit items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-white hover:underline"
                   >
-                    {tab}
-                  </button>
-                ))}
+                    View all markets
+                    <ArrowRight size={10} />
+                  </Link>
+                </div>
+
+                {/* Editor's pick */}
+
+                <div className="mt-6">
+                  <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                      Editor's Pick
+                    </h2>
+
+                    <Link
+                      to="/technology"
+                      className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+                    >
+                      Explore more
+                    </Link>
+                  </div>
+
+                  <Link to={storyHref(editorsPick)} className="group block">
+                    <div className="overflow-hidden rounded-sm">
+                      <ImageWithFallback
+                        src={editorsPick.image}
+                        alt={editorsPick.title}
+                        className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    </div>
+
+                    <div className="mt-2.5">
+                      <Kicker>{editorsPick.category}</Kicker>
+
+                      <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                        {editorsPick.title}
+                      </h3>
+
+                      {editorsPick.summary && (
+                        <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
+                          {editorsPick.summary}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <PrideTimesAd />
+
+          {/* =================================================
+              2. LATEST NEWS
+                 a) compact numbered list of the latest stories
+                 b) filterable feed + key figures (sticky)
+          ================================================= */}
+
+          <section aria-label="Latest innovation news" className="mb-12">
+            <SectionHeader
+              title="Latest Innovation News"
+              link="/technology"
+            />
+
+            <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
+              {defaultLatestInnovationNews.map((story, index) => (
+                <li key={story.id} className="border-b border-gray-200">
+                  <Link
+                    to={storyHref(story)}
+                    className="group flex gap-3 py-3.5"
+                  >
+                    <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                      {index + 1}
+                    </span>
+
+                    <div className="min-w-0">
+                      <Kicker>
+                        {story.category}
+                        {story.location ? ` · ${story.location}` : ""}
+                      </Kicker>
+
+                      <span className="mt-1 block font-serif text-[16px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                        {story.title}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+
+            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+              {/* ---------- Feed ---------- */}
+
+              <div ref={newsListRef} className="scroll-mt-24 min-w-0">
+                <SectionHeader title="More Innovation Stories" />
+
+                <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
+                  {newsTabs.map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => selectTab(tab)}
+                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                        activeNewsTab === tab
+                          ? "border-b-2 border-black pb-1 text-black"
+                          : "pb-1 text-gray-400 hover:text-gray-800"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="divide-y divide-gray-200">
+                  {latestStories.length === 0 && (
+                    <p className="py-6 text-[12px] text-gray-400">
+                      No stories in this category yet.
+                    </p>
+                  )}
+
+                  {latestStories.map((story) => (
+                    <Link
+                      key={story.id}
+                      to={storyHref(story)}
+                      className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                    >
+                      <div className="h-[80px] w-full overflow-hidden rounded-sm sm:h-[126px]">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-2">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                            {story.category}
+                          </span>
+
+                          {story.location && (
+                            <>
+                              <span className="text-[10px] text-gray-300">•</span>
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                                <MapPin size={9} />
+                                {story.location}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                          {story.title}
+                        </h3>
+
+                        {story.summary && (
+                          <p className="mt-1.5 hidden text-[13px] leading-[1.5] text-gray-500 line-clamp-2 sm:block">
+                            {story.summary}
+                          </p>
+                        )}
+
+                        <div className="mt-1.5">
+                          <TimeStamp>
+                            {story.publishedAt} · {story.readTime}
+                          </TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setVisibleCount((count) =>
+                          Math.min(count + PAGE_SIZE, filteredStories.length)
+                        )
+                      }
+                      className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                    >
+                      Show more stories
+                    </button>
+
+                    <span className="text-[10px] text-gray-400">
+                      Showing {latestStories.length} of {filteredStories.length}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* ---------- Key figures (sticky sidebar) ---------- */}
+
+              <div className="min-w-0">
+                <div className="lg:sticky lg:top-24">
+                  <SectionHeader title="Numbers at a Glance" />
+
+                  <div className="rounded-sm bg-black p-5 text-white">
+                    <div className="divide-y divide-white/10">
+                      {defaultInnovationMetrics.map((metric) => (
+                        <div
+                          key={metric.id}
+                          className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                        >
+                          <div className="min-w-0">
+                            <span className="block font-serif text-[20px] font-bold leading-tight tabular-nums">
+                              {metric.value}
+                            </span>
+                            <span className="block text-[11px] leading-snug text-gray-400">
+                              {metric.label}
+                            </span>
+                          </div>
+
+                          <div className="shrink-0 text-right">
+                            <span
+                              className={`block text-[12px] font-semibold tabular-nums ${
+                                metric.change.trim().startsWith("-")
+                                  ? "text-red-400"
+                                  : "text-emerald-400"
+                              }`}
+                            >
+                              {metric.change}
+                            </span>
+                            <span className="block text-[10px] text-gray-500">
+                              {metric.changePeriod}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Sidebar ad */}
+                  <div className="mt-8 lg:sticky lg:top-24">
+                    <PrideTimesAd />
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {marketItems.slice(0, 4).map((item) => (
-                <MarketTile key={item.symbol} item={item} />
-              ))}
-            </div>
-
-            <div className="flex items-center justify-between mt-4 text-[12px]">
-              <span className="text-gray-400">Delayed 15m · Global exchanges</span>
-              <Link
-                to="/markets"
-                className="inline-flex items-center gap-1 font-bold uppercase tracking-wider text-red-600 hover:text-red-700 transition-colors"
-              >
-                <span>View all markets</span>
-                <ArrowRight size={11} />
-              </Link>
-            </div>
           </section>
 
-          {/* ---------- Latest ---------- */}
+          {/* =================================================
+              3. DEEP DIVE + CATEGORY BRIEFINGS
+          ================================================= */}
+
+          {/* ---------- Deep dive banner ---------- */}
+
+          <section aria-label="Innovation deep dive" className="mb-12">
+            <SectionHeader title="Deep Dive" link="/technology" />
+
+            <Link
+              to={storyHref(defaultTopInnovationStories[0])}
+              className="group relative block min-h-[220px] overflow-hidden rounded-sm bg-black"
+            >
+              <ImageWithFallback
+                src={defaultTopInnovationStories[0].image}
+                alt={defaultTopInnovationStories[0].title}
+                className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-400">
+                  {defaultTopInnovationStories[0].category}
+                  {defaultTopInnovationStories[0].location
+                    ? ` · ${defaultTopInnovationStories[0].location}`
+                    : ""}
+                </span>
+
+                <h3 className="mt-2 max-w-3xl font-serif text-2xl font-bold leading-[1.15] text-white group-hover:underline sm:text-[30px]">
+                  {defaultTopInnovationStories[0].title}
+                </h3>
+
+                {defaultTopInnovationStories[0].summary && (
+                  <p className="mt-2 max-w-3xl text-[13px] leading-[1.5] text-gray-300 line-clamp-2">
+                    {defaultTopInnovationStories[0].summary}
+                  </p>
+                )}
+              </div>
+            </Link>
+          </section>
+
+          {/* ---------- Category briefings (grouped like industries) ---------- */}
+
           <section className="mb-12">
-            <SectionHeading
-              title="Latest in Innovation"
-              linkTo="/energy"
-              linkLabel="View all"
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-10">
-              {defaultLatestInnovationNews.map((story) => (
-                <LatestItem key={story.id} story={story} />
+            <SectionHeader title="Stories by Category" />
+
+            <div className="space-y-8">
+              {categoryGroups.map((group) => (
+                <div key={group.name}>
+                  <div className="mb-4 flex items-baseline justify-between border-b border-gray-300 pb-2">
+                    <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-950">
+                      {group.name}
+                    </h3>
+
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+                      {group.stories.length} stories
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+                    {group.stories.map((story) => (
+                      <Link
+                        key={story.id}
+                        to={storyHref(story)}
+                        className="group block"
+                      >
+                        <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
+                          <ImageWithFallback
+                            src={story.image}
+                            alt={story.title}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+
+                        {story.location && (
+                          <span className="mt-2.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-red-600">
+                            {story.location}
+                          </span>
+                        )}
+
+                        <h4 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h4>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               ))}
+            </div>
+
+            {/* Market data table (collapsed by default) */}
+
+            <details className="mt-6 rounded-sm border border-gray-300">
+              <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-900">
+                Full market snapshot
+              </summary>
+
+              <div className="overflow-x-auto border-t border-gray-200">
+                <table className="w-full min-w-[480px] text-left text-[12px]">
+                  <thead className="bg-gray-50 text-[10px] uppercase tracking-wide text-gray-500">
+                    <tr>
+                      <th className="px-4 py-2 font-semibold">Market</th>
+                      <th className="px-4 py-2 font-semibold">Symbol</th>
+                      <th className="px-4 py-2 font-semibold">Value</th>
+                      <th className="px-4 py-2 font-semibold">Change</th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-gray-100">
+                    {marketTableRows.map((row) => (
+                      <tr key={`${row.tab}-${row.symbol}`}>
+                        <td className="px-4 py-2 text-gray-500">{row.tab}</td>
+                        <td className="px-4 py-2 font-medium text-gray-900">
+                          {row.symbol}
+                        </td>
+                        <td className="px-4 py-2 tabular-nums text-gray-700">
+                          {row.value}
+                        </td>
+                        <td
+                          className={`px-4 py-2 font-semibold tabular-nums ${
+                            row.up ? "text-emerald-600" : "text-red-600"
+                          }`}
+                        >
+                          {row.change}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+
+          {/* =================================================
+              4. BROWSE BY CATEGORY + KEY FIGURES
+          ================================================= */}
+
+          {/* ---------- Browse by category ---------- */}
+
+          <section className="mb-12">
+            <SectionHeader title="Browse by Category" />
+
+            <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-5">
+              {categoryGroups.map((group) => {
+                const top = group.stories[0];
+
+                return (
+                  <div
+                    key={group.name}
+                    className="flex flex-col border-b border-gray-200 py-4"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => openCategoryFeed(group.name)}
+                      className="w-fit text-left text-[12px] font-bold uppercase tracking-[0.12em] text-gray-950 hover:underline"
+                    >
+                      {group.name}
+                    </button>
+
+                    {top && (
+                      <Link
+                        to={storyHref(top)}
+                        className="group mt-2 block"
+                      >
+                        <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
+                          {top.title}
+                        </span>
+                      </Link>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => openCategoryFeed(group.name)}
+                      className="mt-3 w-fit text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
+                    >
+                      {group.stories.length} stories
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </section>
 
-          {/* ---------- Ad + newsletter ---------- */}
-          <AdvertisementSlot variant="first" className="mb-12" />
+          {/* ---------- Key figures (numbered, like leaders list) ---------- */}
 
-          <NewsletterCTA
-            title="Stay Ahead with The Pride Times"
-            description="Daily briefings on AI, semiconductors, quantum breakthroughs, and global tech policy delivered directly to your inbox."
-            newsletterKey="daily-brief"
-          />
+          <section>
+            <SectionHeader
+              title="Key Figures Shaping Innovation"
+              link="/markets"
+              linkText="Full Data"
+            />
+
+            <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+              {defaultInnovationMetrics.map((metric, index) => (
+                <div
+                  key={metric.id}
+                  className="flex items-start gap-4 border-b border-gray-200 py-3.5"
+                >
+                  <span className="w-8 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <div className="min-w-0">
+                    <p className="text-[14px] font-bold text-gray-950">
+                      {metric.value}
+                      <span className="font-normal text-gray-400">
+                        {" "}
+                        · {metric.change} {metric.changePeriod}
+                      </span>
+                    </p>
+
+                    <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-2">
+                      {metric.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         </main>
       </div>
+
+      {/* Local page utilities */}
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        html { scroll-behavior: smooth; }
+        ::selection { background: rgba(227, 27, 35, 0.12); color: inherit; }
+      `}</style>
     </div>
   );
 }
