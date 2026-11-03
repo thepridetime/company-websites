@@ -19,6 +19,7 @@ import {
   defaultInnovationMetrics,
   type InnovationStory,
 } from "../../data/innovationData";
+import { innovationExtraStories } from "../../data/innovationArticleData";
 
 /* =========================================================
    TYPES
@@ -34,20 +35,24 @@ type MarketItem = {
 type MarketTab = "Indices" | "Crypto";
 
 /* =========================================================
-   DATA (same sources as before, arranged like the homepage)
+   DATA
 ========================================================= */
 
 const storyHref = (story: { id: string; url?: string }) =>
   story.url || `/article/${story.id}`;
 
+const storyCount = (n: number) => `${n} ${n === 1 ? "story" : "stories"}`;
+
 const PAGE_SIZE = 8;
 
-// Every unique innovation story across the data files
+// Every unique innovation story: homepage-style lists plus the full articles
 const allStories: InnovationStory[] = Array.from(
   new Map(
-    [...defaultLatestInnovationNews, ...defaultTopInnovationStories].map(
-      (story) => [story.id, story] as const
-    )
+    [
+      ...defaultLatestInnovationNews,
+      ...defaultTopInnovationStories,
+      ...innovationExtraStories,
+    ].map((story) => [story.id, story] as const)
   ).values()
 );
 
@@ -71,7 +76,7 @@ const marketTableRows = (
 );
 
 /* =========================================================
-   SMALL UI PIECES (same as homepage)
+   SMALL UI PIECES
 ========================================================= */
 
 function ChangeChip({ change, up }: { change: string; up: boolean }) {
@@ -228,15 +233,12 @@ export function InnovationPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
-              1. TOP SECTION — 3 columns, like a newsroom front page
-                 LEFT   : text-only headline list
-                 CENTER : lead story + 2 secondary stories
-                 RIGHT  : Markets panel + Editor's Pick
+              1. TOP SECTION
           ================================================= */}
 
           <section className="mb-10 border-b border-gray-300 pb-8">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-              {/* ---------- LEFT: top headlines (text only) ---------- */}
+              {/* LEFT: top headlines (text only) */}
 
               <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
                 <div className="mb-1 border-t-[3px] border-black pt-2">
@@ -248,10 +250,7 @@ export function InnovationPage() {
                 <ul className="divide-y divide-gray-200">
                   {sideHeadlines.map((story) => (
                     <li key={story.id}>
-                      <Link
-                        to={storyHref(story)}
-                        className="group block py-3.5"
-                      >
+                      <Link to={storyHref(story)} className="group block py-3.5">
                         <Kicker>{story.category}</Kicker>
 
                         <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
@@ -267,7 +266,7 @@ export function InnovationPage() {
                 </ul>
               </aside>
 
-              {/* ---------- CENTER: lead story ---------- */}
+              {/* CENTER: lead story */}
 
               <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
                 <Link to={storyHref(leadStory)} className="group block">
@@ -292,15 +291,9 @@ export function InnovationPage() {
                   </div>
                 </Link>
 
-                {/* Two secondary stories under the lead */}
-
                 <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
                   {majorStories.map((story) => (
-                    <Link
-                      key={story.id}
-                      to={storyHref(story)}
-                      className="group block"
-                    >
+                    <Link key={story.id} to={storyHref(story)} className="group block">
                       <div className="overflow-hidden rounded-sm">
                         <ImageWithFallback
                           src={story.image}
@@ -325,11 +318,9 @@ export function InnovationPage() {
                 </div>
               </div>
 
-              {/* ---------- RIGHT: markets + editor's pick ---------- */}
+              {/* RIGHT: markets + editor's pick */}
 
               <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
-                {/* Markets panel (dark, like a terminal) */}
-
                 <div className="rounded-sm bg-black p-4 text-white">
                   <div className="flex items-center justify-between border-b border-white/20 pb-2">
                     <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
@@ -384,8 +375,6 @@ export function InnovationPage() {
                   </Link>
                 </div>
 
-                {/* Editor's pick */}
-
                 <div className="mt-6">
                   <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
                     <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
@@ -432,23 +421,15 @@ export function InnovationPage() {
 
           {/* =================================================
               2. LATEST NEWS
-                 a) compact numbered list of the latest stories
-                 b) filterable feed + key figures (sticky)
           ================================================= */}
 
           <section aria-label="Latest innovation news" className="mb-12">
-            <SectionHeader
-              title="Latest Innovation News"
-              link="/technology"
-            />
+            <SectionHeader title="Latest Innovation News" link="/technology" />
 
             <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
               {defaultLatestInnovationNews.map((story, index) => (
                 <li key={story.id} className="border-b border-gray-200">
-                  <Link
-                    to={storyHref(story)}
-                    className="group flex gap-3 py-3.5"
-                  >
+                  <Link to={storyHref(story)} className="group flex gap-3 py-3.5">
                     <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
                       {index + 1}
                     </span>
@@ -469,7 +450,7 @@ export function InnovationPage() {
             </ol>
 
             <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
-              {/* ---------- Feed ---------- */}
+              {/* Feed */}
 
               <div ref={newsListRef} className="scroll-mt-24 min-w-0">
                 <SectionHeader title="More Innovation Stories" />
@@ -570,7 +551,7 @@ export function InnovationPage() {
                 )}
               </div>
 
-              {/* ---------- Key figures (sticky sidebar) ---------- */}
+              {/* Numbers at a glance (sticky sidebar) */}
 
               <div className="min-w-0">
                 <div className="lg:sticky lg:top-24">
@@ -611,7 +592,6 @@ export function InnovationPage() {
                     </div>
                   </div>
 
-                  {/* Sidebar ad */}
                   <div className="mt-8 lg:sticky lg:top-24">
                     <PrideTimesAd />
                   </div>
@@ -623,8 +603,6 @@ export function InnovationPage() {
           {/* =================================================
               3. DEEP DIVE + CATEGORY BRIEFINGS
           ================================================= */}
-
-          {/* ---------- Deep dive banner ---------- */}
 
           <section aria-label="Innovation deep dive" className="mb-12">
             <SectionHeader title="Deep Dive" link="/technology" />
@@ -662,8 +640,6 @@ export function InnovationPage() {
             </Link>
           </section>
 
-          {/* ---------- Category briefings (grouped like industries) ---------- */}
-
           <section className="mb-12">
             <SectionHeader title="Stories by Category" />
 
@@ -676,17 +652,13 @@ export function InnovationPage() {
                     </h3>
 
                     <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
-                      {group.stories.length} stories
+                      {storyCount(group.stories.length)}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
                     {group.stories.map((story) => (
-                      <Link
-                        key={story.id}
-                        to={storyHref(story)}
-                        className="group block"
-                      >
+                      <Link key={story.id} to={storyHref(story)} className="group block">
                         <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
                           <ImageWithFallback
                             src={story.image}
@@ -695,11 +667,9 @@ export function InnovationPage() {
                           />
                         </div>
 
-                        {story.location && (
-                          <span className="mt-2.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-red-600">
-                            {story.location}
-                          </span>
-                        )}
+                        <span className="mt-2.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400">
+                          {story.publishedAt}
+                        </span>
 
                         <h4 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
                           {story.title}
@@ -733,12 +703,8 @@ export function InnovationPage() {
                     {marketTableRows.map((row) => (
                       <tr key={`${row.tab}-${row.symbol}`}>
                         <td className="px-4 py-2 text-gray-500">{row.tab}</td>
-                        <td className="px-4 py-2 font-medium text-gray-900">
-                          {row.symbol}
-                        </td>
-                        <td className="px-4 py-2 tabular-nums text-gray-700">
-                          {row.value}
-                        </td>
+                        <td className="px-4 py-2 font-medium text-gray-900">{row.symbol}</td>
+                        <td className="px-4 py-2 tabular-nums text-gray-700">{row.value}</td>
                         <td
                           className={`px-4 py-2 font-semibold tabular-nums ${
                             row.up ? "text-emerald-600" : "text-red-600"
@@ -758,8 +724,6 @@ export function InnovationPage() {
               4. BROWSE BY CATEGORY + KEY FIGURES
           ================================================= */}
 
-          {/* ---------- Browse by category ---------- */}
-
           <section className="mb-12">
             <SectionHeader title="Browse by Category" />
 
@@ -768,10 +732,7 @@ export function InnovationPage() {
                 const top = group.stories[0];
 
                 return (
-                  <div
-                    key={group.name}
-                    className="flex flex-col border-b border-gray-200 py-4"
-                  >
+                  <div key={group.name} className="flex flex-col border-b border-gray-200 py-4">
                     <button
                       type="button"
                       onClick={() => openCategoryFeed(group.name)}
@@ -781,10 +742,7 @@ export function InnovationPage() {
                     </button>
 
                     {top && (
-                      <Link
-                        to={storyHref(top)}
-                        className="group mt-2 block"
-                      >
+                      <Link to={storyHref(top)} className="group mt-2 block">
                         <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
                           {top.title}
                         </span>
@@ -796,7 +754,7 @@ export function InnovationPage() {
                       onClick={() => openCategoryFeed(group.name)}
                       className="mt-3 w-fit text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
                     >
-                      {group.stories.length} stories
+                      {storyCount(group.stories.length)}
                     </button>
                   </div>
                 );
@@ -804,14 +762,8 @@ export function InnovationPage() {
             </div>
           </section>
 
-          {/* ---------- Key figures (numbered, like leaders list) ---------- */}
-
           <section>
-            <SectionHeader
-              title="Key Figures Shaping Innovation"
-              link="/markets"
-              linkText="Full Data"
-            />
+            <SectionHeader title="Key Figures Shaping Innovation" link="/markets" linkText="Full Data" />
 
             <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
               {defaultInnovationMetrics.map((metric, index) => (
@@ -842,8 +794,6 @@ export function InnovationPage() {
           </section>
         </main>
       </div>
-
-      {/* Local page utilities */}
 
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
