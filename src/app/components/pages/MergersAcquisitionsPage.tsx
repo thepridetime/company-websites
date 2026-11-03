@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link, useParams } from "react-router";
 import {
   ArrowLeft,
@@ -109,13 +109,18 @@ const countByStatus = (status: MADeal["status"]) =>
   maDeals.filter((deal) => deal.status === status).length;
 
 const STATUS_STYLES: Record<MADeal["status"], string> = {
-  Announced: "bg-blue-50 text-blue-700 border-blue-200",
+  Announced: "bg-gray-50 text-gray-700 border-gray-300",
   Pending: "bg-amber-50 text-amber-700 border-amber-200",
   Closed: "bg-emerald-50 text-emerald-700 border-emerald-200",
 };
 
 /* =========================================================
-   SECTION HEADER (same style as Innovation / Startup pages)
+   SMALL UI PIECES
+   Same design rules as the homepage:
+   - Headlines: serif, hover = underline (not colour change).
+   - Red is ONLY for category labels and "view all" links.
+   - Black top rule on every section header.
+   - Square-ish corners (rounded-sm), light grey dividers.
    ========================================================= */
 
 function SectionHeader({
@@ -126,14 +131,31 @@ function SectionHeader({
   rightLabel?: string;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-4">
-      <h2 className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.16em] text-red-600">
+    <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
         {title}
       </h2>
-      <span className="hidden sm:block text-[10px] uppercase tracking-[0.14em] font-semibold text-gray-400">
+      <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
         {rightLabel}
       </span>
     </div>
+  );
+}
+
+function Kicker({ children }: { children: ReactNode }) {
+  return (
+    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+      {children}
+    </span>
+  );
+}
+
+function TimeStamp({ children }: { children: ReactNode }) {
+  return (
+    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+      <Clock size={9} />
+      {children}
+    </span>
   );
 }
 
@@ -143,7 +165,7 @@ function SectionHeader({
 
 function FeaturedDealCard({ item }: { item: MAItem }) {
   return (
-    <article className="relative overflow-hidden rounded-lg border border-gray-200 bg-black group h-full min-h-[560px] lg:min-h-[640px] flex flex-col justify-between">
+    <article className="group relative flex h-full min-h-[560px] flex-col justify-between overflow-hidden rounded-sm bg-black lg:min-h-[640px]">
       <Link
         to={item.href}
         aria-label={item.title}
@@ -153,18 +175,18 @@ function FeaturedDealCard({ item }: { item: MAItem }) {
           src={item.image}
           alt={item.title}
           loading="eager"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/20" />
       </Link>
 
       {/* Badges */}
-      <div className="relative z-10 p-4 sm:p-5 flex flex-wrap items-center gap-2">
-        <span className="bg-red-600 text-white text-[10px] sm:text-[10.5px] font-bold tracking-[0.14em] uppercase px-2.5 py-1">
+      <div className="relative z-10 flex flex-wrap items-center gap-2 p-4 sm:p-5">
+        <span className="rounded-sm bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
           {item.kicker}
         </span>
         {item.location && (
-          <span className="inline-flex items-center gap-1 bg-white/90 text-gray-900 text-[10px] font-bold tracking-[0.12em] uppercase px-2.5 py-1">
+          <span className="inline-flex items-center gap-1 rounded-sm bg-white/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-gray-900">
             <MapPin size={10} />
             {item.location}
           </span>
@@ -173,11 +195,11 @@ function FeaturedDealCard({ item }: { item: MAItem }) {
 
       {/* Headline, summary, key facts, action */}
       <div className="relative z-10 p-5 sm:p-6 md:p-7">
-        <Link to={item.href} className="block group/title">
-          <h2 className="font-serif text-[26px] sm:text-[30px] lg:text-[34px] font-bold leading-[1.12] text-white group-hover/title:text-gray-100 transition-colors">
+        <Link to={item.href} className="group/title block">
+          <h2 className="font-serif text-[28px] font-bold leading-[1.1] text-white group-hover/title:underline md:text-[34px]">
             {item.title}
           </h2>
-          <p className="mt-3 text-[13.5px] sm:text-[14px] text-gray-200 leading-[1.55] line-clamp-3">
+          <p className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-gray-200">
             {item.lede}
           </p>
         </Link>
@@ -186,10 +208,10 @@ function FeaturedDealCard({ item }: { item: MAItem }) {
           <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3 border-t border-white/20 pt-4">
             {item.keyFacts.slice(0, 4).map((fact) => (
               <div key={fact.label} className="min-w-0">
-                <p className="text-[9px] uppercase tracking-[0.14em] text-gray-300 font-semibold">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
                   {fact.label}
                 </p>
-                <p className="mt-0.5 font-serif text-[15px] sm:text-[17px] font-bold text-white leading-tight truncate">
+                <p className="mt-0.5 truncate font-serif text-[16px] font-bold leading-tight text-white sm:text-[17px]">
                   {fact.value}
                 </p>
               </div>
@@ -200,11 +222,11 @@ function FeaturedDealCard({ item }: { item: MAItem }) {
         <div className="mt-5">
           <Link
             to={item.href}
-            className="inline-flex items-center gap-1.5 text-[11px] sm:text-[12px] font-bold text-white uppercase tracking-[0.14em] hover:text-red-400 transition-colors group/link"
+            className="group/link inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-white hover:underline"
           >
             <span>Read Full Story</span>
             <ArrowRight
-              size={13}
+              size={10}
               className="transition-transform group-hover/link:translate-x-1"
             />
           </Link>
@@ -225,56 +247,50 @@ function TopDealStories({ items }: { items: MAItem[] }) {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-3">
-        <h3 className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.16em] text-red-600">
+      <div className="mb-1 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+        <h3 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
           Top M&amp;A Stories
         </h3>
-        <span className="text-[10px] uppercase tracking-[0.12em] font-semibold text-gray-400">
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
           {items.length} stories
         </span>
       </div>
 
-      <div className="flex flex-col divide-y divide-gray-100">
+      <div className="flex flex-col divide-y divide-gray-200">
         {items.map((item) => (
-          <article
-            key={item.id}
-            className="group py-3.5 first:pt-0 last:pb-1"
-          >
+          <article key={item.id} className="group py-3.5 last:pb-1">
             <div className="flex gap-4">
               <Link
                 to={item.href}
-                className="shrink-0 w-[112px] sm:w-[124px] h-[80px] sm:h-[88px] overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100 block"
+                className="block h-[80px] w-[112px] shrink-0 overflow-hidden rounded-sm bg-gray-100 sm:h-[88px] sm:w-[124px]"
               >
                 <ImageWithFallback
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </Link>
 
-              <div className="min-w-0 flex-1 flex flex-col justify-between">
+              <div className="flex min-w-0 flex-1 flex-col justify-between">
                 <div>
-                  <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-red-600 truncate mb-1">
+                  <Kicker>
                     {item.location
-                      ? `${item.kicker} | ${item.location}`
+                      ? `${item.kicker} · ${item.location}`
                       : item.kicker}
-                  </span>
+                  </Kicker>
                   <Link to={item.href} className="block">
-                    <h4 className="font-serif text-[15.5px] sm:text-[16.5px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2">
+                    <h4 className="mt-1 line-clamp-2 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
                       {item.title}
                     </h4>
                   </Link>
                 </div>
 
-                <div className="flex items-center justify-between mt-2 text-[11px] text-gray-400">
-                  <span className="inline-flex items-center gap-1 min-w-0">
-                    <Clock size={11} className="shrink-0" />
-                    <span className="truncate">{item.meta}</span>
-                  </span>
+                <div className="mt-2 flex items-center justify-between">
+                  <TimeStamp>{item.meta}</TimeStamp>
                   <button
                     type="button"
                     aria-label="Bookmark story"
-                    className="text-gray-400 hover:text-gray-700 transition-colors p-0.5 shrink-0"
+                    className="shrink-0 p-0.5 text-gray-400 transition-colors hover:text-gray-800"
                   >
                     <Bookmark size={12} />
                   </button>
@@ -289,7 +305,7 @@ function TopDealStories({ items }: { items: MAItem[] }) {
 }
 
 /* =========================================================
-   DEAL NUMBERS (right column, Startup-metrics style)
+   DEAL NUMBERS (right column)
    ========================================================= */
 
 function DealNumbers() {
@@ -301,12 +317,12 @@ function DealNumbers() {
   ];
 
   return (
-    <div className="pb-5 border-b border-gray-200">
+    <div className="pb-5">
       <SectionHeader title="Numbers at a Glance" rightLabel="Deal tracker" />
       <div className="grid grid-cols-2 gap-x-4 gap-y-4">
         {stats.map((stat) => (
           <div key={stat.label}>
-            <div className="font-serif font-bold text-[24px] sm:text-[26px] text-gray-900 leading-none">
+            <div className="font-serif text-[24px] font-bold leading-none text-gray-950 sm:text-[26px]">
               {stat.value}
             </div>
             <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
@@ -327,39 +343,39 @@ function DealWatch({ deals }: { deals: MADeal[] }) {
   }
 
   return (
-    <section className="pt-5">
-      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-3">
-        <h2 className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.16em] text-red-600">
+    <section className="pt-1">
+      <div className="mb-1 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
           Deal Watch
         </h2>
-        <span className="text-[10px] uppercase tracking-[0.12em] font-semibold text-gray-400">
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
           {deals.length} tracked
         </span>
       </div>
 
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-200">
         {deals.map((deal) => (
           <div
             key={deal.id}
-            className="flex items-start justify-between gap-3 py-3 px-1 -mx-1 hover:bg-gray-50/70 transition-colors"
+            className="flex items-start justify-between gap-3 py-3"
           >
             <div className="min-w-0">
-              <p className="text-[12.5px] font-semibold text-gray-900 leading-snug truncate">
+              <p className="truncate text-[12px] font-semibold leading-snug text-gray-950">
                 {deal.acquirer}{" "}
-                <span className="text-gray-400 font-normal">→</span>{" "}
+                <span className="font-normal text-gray-400">→</span>{" "}
                 {deal.target}
               </p>
-              <p className="mt-0.5 text-[11px] text-gray-500 truncate">
+              <p className="mt-0.5 truncate text-[11px] text-gray-500">
                 {deal.sector}
               </p>
             </div>
 
             <div className="shrink-0 text-right">
-              <div className="font-serif font-bold text-[15px] sm:text-[16px] text-gray-900 leading-tight">
+              <div className="font-serif text-[15px] font-bold leading-tight text-gray-950">
                 {deal.value}
               </div>
               <span
-                className={`inline-block mt-1 border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide rounded-sm ${STATUS_STYLES[deal.status]}`}
+                className={`mt-1 inline-block rounded-sm border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${STATUS_STYLES[deal.status]}`}
               >
                 {deal.status}
               </span>
@@ -372,45 +388,47 @@ function DealWatch({ deals }: { deals: MADeal[] }) {
 }
 
 /* =========================================================
-   LATEST M&A FEED (two-column card grid, Startup-style)
+   LATEST M&A FEED (two-column card grid)
    ========================================================= */
 
 function LatestDealCard({ item }: { item: MAItem }) {
   return (
     <Link to={item.href} className="group block">
-      <div className="relative h-[200px] sm:h-[230px] overflow-hidden rounded-lg border border-gray-200/80 bg-gray-100">
+      <div className="overflow-hidden rounded-sm bg-gray-100">
         <ImageWithFallback
           src={item.image}
           alt={item.title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
-        <span className="absolute top-3 left-3 bg-black/80 text-white px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em]">
-          {item.kicker}
-        </span>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-        {item.location && (
-          <>
-            <span className="inline-flex items-center gap-1 text-red-600">
-              <MapPin size={9} />
-              {item.location}
-            </span>
-            <span className="text-gray-300">•</span>
-          </>
-        )}
-        <span className="inline-flex items-center gap-1">
-          <Clock size={9} />
-          {item.meta}
-        </span>
-      </div>
+      <div className="mt-2.5">
+        <div className="flex flex-wrap items-center gap-x-2">
+          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+            {item.kicker}
+          </span>
+          {item.location && (
+            <>
+              <span className="text-[10px] text-gray-300">•</span>
+              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                <MapPin size={9} />
+                {item.location}
+              </span>
+            </>
+          )}
+        </div>
 
-      <h3 className="mt-2 font-serif text-xl sm:text-[22px] font-bold leading-[1.2] text-gray-900 group-hover:text-red-600 transition-colors">
-        {item.title}
-      </h3>
-      <p className="mt-2 text-[13px] text-gray-500 leading-[1.55] line-clamp-2">
-        {item.lede}
-      </p>
+        <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline sm:text-[21px]">
+          {item.title}
+        </h3>
+        <p className="mt-1.5 line-clamp-2 text-[13px] leading-[1.5] text-gray-500">
+          {item.lede}
+        </p>
+
+        <div className="mt-1.5">
+          <TimeStamp>{item.meta}</TimeStamp>
+        </div>
+      </div>
     </Link>
   );
 }
@@ -421,26 +439,26 @@ function LatestDealCard({ item }: { item: MAItem }) {
 
 export function MergersAcquisitionsPage() {
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <main className="pt-4 md:pt-6 pb-16">
+    <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="pb-16 pt-4 md:pt-6">
           {/* PAGE HEADER */}
-          <header className="border-t-[3px] border-red-600 pt-4 mb-6">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+          <header className="mb-6 border-t-[3px] border-black pt-3">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-red-600">
+                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
                   <Handshake size={13} />
                   Deals &amp; Corporate Strategy
                 </span>
-                <h1 className="mt-2 font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
+                <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 md:text-[38px]">
                   {SECTION_LABEL}
                 </h1>
-                <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
+                <p className="mt-2 text-[12px] leading-[1.5] text-gray-500 md:text-[13px]">
                   Deals, takeovers, mergers and divestitures from The Pride
                   Times.
                 </p>
               </div>
-              <span className="text-[9px] uppercase tracking-[0.18em] font-semibold text-gray-400">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
                 Deals • Takeovers • Mergers
               </span>
             </div>
@@ -452,7 +470,7 @@ export function MergersAcquisitionsPage() {
           </div>
 
           {!leadStory && (
-            <p className="py-10 text-center text-[11px] text-gray-400">
+            <p className="py-10 text-center text-[12px] text-gray-400">
               No M&amp;A stories yet.
             </p>
           )}
@@ -462,10 +480,10 @@ export function MergersAcquisitionsPage() {
               {/* =================================================
                   MAIN EDITORIAL SECTION (3-COLUMN MAGAZINE LAYOUT)
               ================================================= */}
-              <section className="pb-8 sm:pb-10 mb-10 sm:mb-12 border-b border-gray-200">
-                <div className="grid grid-cols-1 lg:grid-cols-[1.16fr_1.18fr_0.92fr] gap-6 lg:gap-7 items-stretch">
+              <section className="mb-10 border-b border-gray-300 pb-8">
+                <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-[1.16fr_1.18fr_0.92fr] lg:gap-0">
                   {/* LEFT: Featured deal */}
-                  <div className="min-w-0 flex flex-col">
+                  <div className="flex min-w-0 flex-col lg:pr-6">
                     <FeaturedDealCard item={leadStory} />
                   </div>
 
@@ -475,7 +493,7 @@ export function MergersAcquisitionsPage() {
                   </div>
 
                   {/* RIGHT: Numbers + Deal Watch */}
-                  <div className="min-w-0 flex flex-col lg:pl-1">
+                  <div className="flex min-w-0 flex-col lg:pl-6">
                     <DealNumbers />
                     <DealWatch deals={maDeals} />
                   </div>
@@ -489,12 +507,12 @@ export function MergersAcquisitionsPage() {
 
               {/* LATEST FEED */}
               {feedStories.length > 0 && (
-                <section className="mb-12">
+                <section aria-label="Latest M&A news" className="mb-12">
                   <SectionHeader
                     title={`Latest ${SECTION_LABEL} News`}
                     rightLabel="Newsroom"
                   />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-10">
+                  <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2">
                     {feedStories.map((item) => (
                       <LatestDealCard key={item.id} item={item} />
                     ))}
