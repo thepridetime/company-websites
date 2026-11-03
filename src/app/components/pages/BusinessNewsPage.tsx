@@ -11,7 +11,6 @@ import {
 
 import "../../../styles/business-page.css";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { getQuotes } from "../../../services/marketApi";
 
 import MagazineImg from "../../../imports/pt30image.png";
 import businessNyseTrading from "../../../imports/business-nyse-trading.jpg";
@@ -26,7 +25,6 @@ import supplyChainMap from "../../../imports/supply-chain-map.png";
 import img_FIN4 from "../../../imports/FIN4.png";
 import microsoftDatacenterAi from "../../../imports/microsoft-datacenter-ai.jpg";
 import hsbcBankBuilding from "../../../imports/hsbc-bank-building.jpg";
-import { defaultMarketSnapshot } from "../../data/innovationData";
 
 import {
   hero,
@@ -56,6 +54,7 @@ import {
   digestArticlePath,
   digestSections,
 } from "../../data/digestArticleData";
+import { MarketSnapshot } from "../market/MarketSnapshot";
 
 /* =========================================================
    TYPES
@@ -536,72 +535,10 @@ function TimeRow({ when, readTime }: { when: string; readTime?: string }) {
 ========================================================= */
 
 export function BusinessNewsPage() {
-  const [activeMarketTab, setActiveMarketTab] =
-    useState<"Indices" | "Commodities" | "Crypto">("Indices");
-
   const [activeNewsTab, setActiveNewsTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const newsListRef = useRef<HTMLDivElement | null>(null);
-
-  const [marketSnapshotData, setMarketSnapshotData] = useState<
-    Record<string, MarketItem[]>
-  >({
-    Indices: [],
-    Commodities: [],
-    Crypto: [],
-  });
-
-  /* ---------- MARKET DATA ---------- */
-
-  useEffect(() => {
-    const loadMarketData = async () => {
-      try {
-        const data = await getQuotes();
-
-        setMarketSnapshotData({
-          Indices: data.indices.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: item.change,
-            up: item.up,
-          })),
-
-          Crypto: data.crypto.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: item.change,
-            up: item.up,
-          })),
-        });
-      } catch (error) {
-        console.error("Market API Error:", error);
-      }
-    };
-
-    loadMarketData();
-    const interval = setInterval(loadMarketData, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const currentMarketItems = useMemo(() => {
-    const fallbackList = defaultMarketSnapshot[activeMarketTab] || [];
-    const liveList = marketSnapshotData[activeMarketTab] || [];
-    if (!liveList || liveList.length === 0) return fallbackList;
-    return fallbackList.map((item, idx) => {
-      const live =
-        liveList.find(
-          (l) => l.symbol.toLowerCase() === item.symbol.toLowerCase()
-        ) ?? liveList[idx];
-      if (!live) return item;
-      return {
-        ...item,
-        value: String(live.value || item.value),
-        change: live.change || item.change,
-        up: typeof live.up === "boolean" ? live.up : item.up,
-      };
-    });
-  }, [activeMarketTab, marketSnapshotData]);
 
   /* ---------- LATEST NEWS FILTERING ---------- */
 
@@ -641,60 +578,7 @@ export function BusinessNewsPage() {
               MARKET SNAPSHOT BAR
           ================================================= */}
 
-          <section className="bz-snapshot" aria-label="Market snapshot">
-            <div className="bz-snapshot-head">
-              <h2 className="bz-snapshot-title">Market Snapshot</h2>
-
-              <div className="bz-seg">
-                {(["INDICES", "COMMODITIES", "CRYPTO"] as const).map((tab) => {
-                  const standardTab =
-                    tab === "INDICES"
-                      ? "Indices"
-                      : tab === "COMMODITIES"
-                      ? "Commodities"
-                      : "Crypto";
-                  const isActive = activeMarketTab === standardTab;
-                  return (
-                    <button
-                      key={tab}
-                      type="button"
-                      onClick={() => setActiveMarketTab(standardTab)}
-                      className={`bz-seg-btn ${isActive ? "is-active" : ""}`}
-                    >
-                      {tab}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="bz-snapshot-grid">
-              {currentMarketItems.slice(0, 4).map((market) => (
-                <div key={market.symbol} className="bz-snap-card">
-                  <span className="bz-snap-name">{market.symbol}</span>
-                  <span className="bz-snap-value">{market.value}</span>
-                  <span
-                    className={`bz-snap-change ${
-                      market.up ? "is-up" : "is-down"
-                    }`}
-                  >
-                    <span>{market.up ? "▲" : "▼"}</span> {market.change}
-                  </span>
-                  <div className="bz-snap-spark">
-                    <MiniAreaSparkline up={market.up} />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="bz-snapshot-foot">
-              <span>Delayed 15m · Global Exchanges</span>
-              <Link to="/markets">
-                <span>View All Markets</span>
-                <ArrowRight size={9} />
-              </Link>
-            </div>
-          </section>
+          <MarketSnapshot tabs={["Indices", "Commodities", "Crypto"]} />
 
           {/* =================================================
               HERO — Top Business Stories | Lead + Corporate Moves | Editor's Pick + Latest
