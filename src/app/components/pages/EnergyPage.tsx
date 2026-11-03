@@ -1,5 +1,4 @@
-// src/app/components/pages/EnergyPage.tsx
-import { useEffect } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { ArrowRight, Clock, MapPin } from "lucide-react";
 import {
@@ -26,137 +25,96 @@ import {
 } from "../../data/octEditionData";
 
 /* =========================================================
-   DATA
-   Only real Energy stories from octEditionData.ts are shown.
-   trendSeries stays empty until verified figures are supplied.
-   Expected shape: [{ year: "2024", supply: 12, demand: 10 }, ...]
+   STORY DATA (unchanged source)
+   Only Energy stories from octEditionData.ts are shown.
 ========================================================= */
+
+const SECTION_LABEL = "Energy";
 
 const energyStories: OctEditionArticle[] = octEditionArticles.filter(
-  (article) => article.industry === "Energy"
+  (article) => article.industry === SECTION_LABEL
 );
 
+/* =========================================================
+   FRONT-PAGE PICKS (same structure as the homepage)
+========================================================= */
+
 const leadStory = energyStories[0];
-const otherStories = energyStories.slice(1);
+const majorStories = [energyStories[1], energyStories[2]].filter(
+  Boolean
+) as OctEditionArticle[];
+const editorsPick = energyStories[3] ?? energyStories[0];
+const deepDiveStory = energyStories[4] ?? energyStories[0];
 
+const featuredIds = new Set(
+  [leadStory, ...majorStories, editorsPick]
+    .filter(Boolean)
+    .map((story) => story.id)
+);
 
-const THEMES = ["Global Energy", "Markets", "Decarbonization", "Security"];
+const sidebarStories = energyStories
+  .filter((story) => !featuredIds.has(story.id))
+  .slice(0, 4);
 
-/* =========================================================
-   GOOGLE ADSENSE SLOTS
-========================================================= */
+const locationNames = Array.from(
+  new Set(energyStories.map((story) => story.location).filter(Boolean))
+) as string[];
 
-type AdSlotProps = {
-  slot: string;
-  format?: "auto" | "fluid";
-  className?: string;
-  minHeight?: number;
-};
+const feedTabs = ["All", ...locationNames];
 
-function AdSlot({
-  slot,
-  format = "auto",
-  className = "",
-  minHeight = 90,
-}: AdSlotProps) {
-  useEffect(() => {
-    try {
-      const w = window as Window & { adsbygoogle?: unknown[] };
-      w.adsbygoogle = w.adsbygoogle || [];
-      w.adsbygoogle.push({});
-    } catch {
-      // Ad blockers, consent settings or missing inventory are expected.
-    }
-  }, []);
+const locationGroups = locationNames.map((name) => ({
+  name,
+  stories: energyStories.filter((story) => story.location === name),
+}));
 
-  return (
-    <div className={`w-full overflow-hidden ${className}`}>
-      <div className="mb-1 text-center text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-        Advertisement
-      </div>
-      <div className="w-full overflow-hidden" style={{ minHeight }}>
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block", width: "100%", minHeight }}
-          data-ad-client="ca-pub-2331501617441941"
-          data-ad-slot={slot}
-          data-ad-format={format}
-          data-full-width-responsive={format === "auto" ? "true" : undefined}
-        />
-      </div>
-    </div>
-  );
-}
+const PAGE_SIZE = 8;
 
 /* =========================================================
-   SHARED PIECES
+   SMALL UI PIECES (same as homepage)
 ========================================================= */
 
-function SectionHeader({ title, label = "The Pride Times" }: { title: string; label?: string }) {
+function SectionHeader({
+  title,
+  link,
+  linkText = "View All",
+}: {
+  title: string;
+  link?: string;
+  linkText?: string;
+}) {
   return (
-    <div className="mb-5 flex items-center justify-between border-b border-gray-200 pb-2.5">
-      <h2 className="font-serif text-xl font-bold text-gray-900 md:text-2xl">{title}</h2>
-      <span className="hidden text-[8px] uppercase tracking-[0.18em] text-gray-400 sm:block">
-        {label}
-      </span>
+    <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+        {title}
+      </h2>
+
+      {link && (
+        <Link
+          to={link}
+          className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+        >
+          {linkText}
+          <ArrowRight size={10} />
+        </Link>
+      )}
     </div>
   );
 }
 
-function PlaceholderCard({ label }: { label: string }) {
+function Kicker({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-[200px] flex-col items-center justify-center rounded-sm border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
-      <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-gray-400">
-        Placeholder
-      </span>
-      <p className="mt-2 text-[12px] text-gray-500">{label}</p>
-    </div>
+    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+      {children}
+    </span>
   );
 }
 
-function NewsCard({ story }: { story: OctEditionArticle }) {
+function TimeStamp({ children }: { children: React.ReactNode }) {
   return (
-    <Link
-      to={octEditionArticlePath(story)}
-      className="group flex flex-col overflow-hidden rounded-sm border border-gray-200 bg-white transition-shadow duration-300 hover:shadow-lg"
-    >
-      <div className="h-44 overflow-hidden bg-gray-100">
-        <ImageWithFallback
-          src={story.image}
-          alt={story.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
-      <div className="flex flex-1 flex-col p-4">
-        <span className="self-start rounded-sm bg-red-600 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-white">
-          {story.industry}
-        </span>
-        <h3 className="mt-3 font-serif text-[17px] font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600">
-          {story.title}
-        </h3>
-        <span className="mt-auto flex items-center gap-1 pt-3 text-[9px] text-gray-400">
-          <Clock size={9} />
-          {story.publishedAt}
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-function InsightCard({ story }: { story: OctEditionArticle }) {
-  return (
-    <Link
-      to={octEditionArticlePath(story)}
-      className="group flex flex-col rounded-sm border border-gray-200 bg-white p-5 transition-shadow duration-300 hover:shadow-lg"
-    >
-      <span className="self-start rounded-sm bg-gray-900 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-white">
-        {story.location}
-      </span>
-      <h3 className="mt-3 font-serif text-[17px] font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600">
-        {story.title}
-      </h3>
-      <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-gray-500">{story.lede}</p>
-    </Link>
+    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+      <Clock size={9} />
+      {children}
+    </span>
   );
 }
 
@@ -165,265 +123,544 @@ function InsightCard({ story }: { story: OctEditionArticle }) {
 ========================================================= */
 
 export function EnergyPage() {
+  const [activeTab, setActiveTab] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const feedRef = useRef<HTMLDivElement | null>(null);
+
+  /* ---------- Feed filtering ---------- */
+
+  const filteredStories = useMemo(
+    () =>
+      activeTab === "All"
+        ? energyStories
+        : energyStories.filter((story) => story.location === activeTab),
+    [activeTab]
+  );
+
+  const visibleStories =
+    activeTab === "All" ? filteredStories.slice(0, visibleCount) : filteredStories;
+
+  const hasMore = activeTab === "All" && visibleCount < filteredStories.length;
+
+  const selectTab = (tab: string) => {
+    setActiveTab(tab);
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  const openLocationFeed = (tab: string) => {
+    selectTab(tab);
+
+    window.requestAnimationFrame(() => {
+      feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  if (!leadStory) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-16 text-center text-gray-400">
+        No energy stories available right now.
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#f7f5f0] font-sans text-gray-900 antialiased">
+    <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <main className="pb-16 pt-6 md:pt-8">
+        <main className="pb-16 pt-4 md:pt-6">
+          {/* =================================================
+              1. TOP SECTION
+          ================================================= */}
 
-          {/* PAGE TITLE */}
+          <section className="mb-10 border-b border-gray-300 pb-8">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
+              {/* LEFT: top headlines (text only) */}
 
-          <header className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h1 className="font-serif text-[40px] font-bold leading-tight md:text-[52px]">Energy</h1>
-              <p className="mt-1 max-w-2xl text-[12px] text-gray-500 md:text-[13px]">
-                Oil, gas, power, climate and energy security coverage from The Pride Times
-                Global Industry Edition.
-              </p>
-            </div>
-            <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-gray-400">
-              {THEMES.join("  •  ")}
-            </p>
-          </header>
-
-          <PrideTimesAd variant="first" />
-
-          {!leadStory && (
-            <p className="py-16 text-center text-[12px] text-gray-400">
-              No energy stories in this edition yet.
-            </p>
-          )}
-
-          {/* HERO + KEY FIGURES + TRENDS */}
-
-          {leadStory && (
-            <section className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr] lg:gap-8">
-              <Link
-                to={octEditionArticlePath(leadStory)}
-                className="group relative block min-h-[380px] overflow-hidden rounded-sm bg-neutral-900 md:min-h-[480px]"
-              >
-                <ImageWithFallback
-                  src={leadStory.image}
-                  alt={leadStory.title}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
-
-                <span className="absolute left-4 top-4 rounded-sm bg-red-600 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white">
-                  {leadStory.industry} | {leadStory.location}
-                </span>
-
-                <div className="absolute right-4 top-4 hidden flex-col gap-2 sm:flex">
-                  {leadStory.keyFacts.slice(0, 2).map((fact) => (
-                    <span
-                      key={fact.label}
-                      className="max-w-[220px] rounded-sm bg-black/60 px-3 py-2 text-right text-[10px] text-white backdrop-blur-sm"
-                    >
-                      <span className="block text-[8px] uppercase tracking-wider text-gray-300">
-                        {fact.label}
-                      </span>
-                      <span className="font-semibold">{fact.value}</span>
-                    </span>
-                  ))}
-                </div>
-
-                <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
-                  <h2 className="font-serif text-2xl font-bold leading-[1.1] text-white text-balance md:text-[32px] lg:text-[36px]">
-                    {leadStory.title}
+              <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
+                <div className="mb-1 border-t-[3px] border-black pt-2">
+                  <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                    Top Stories
                   </h2>
-                  <p className="mt-3 line-clamp-3 text-[13px] leading-relaxed text-gray-200">
-                    {leadStory.lede}
-                  </p>
-                  <span className="mt-5 inline-flex items-center gap-2 border-b border-white/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                    Read Full Story
-                    <ArrowRight size={12} />
-                  </span>
                 </div>
-              </Link>
 
-              <aside className="min-w-0 space-y-6">
-                {/* KEY FIGURES */}
-                <div>
-                  <div className="mb-3 flex items-center justify-between">
-                    <h2 className="font-serif text-lg font-bold">Key Figures</h2>
-                    <span className="rounded-full border border-gray-300 bg-white px-3 py-0.5 text-[9px] font-medium">
-                      {energyStories.length} {energyStories.length === 1 ? "story" : "stories"}
-                    </span>
+                <ul className="divide-y divide-gray-200">
+                  {[leadStory, ...sidebarStories].slice(0, 4).map((story) => (
+                    <li key={story.id}>
+                      <Link
+                        to={octEditionArticlePath(story)}
+                        className="group block py-3.5"
+                      >
+                        <Kicker>{story.location ?? SECTION_LABEL}</Kicker>
+
+                        <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+
+              {/* CENTER: lead story */}
+
+              <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
+                <Link to={octEditionArticlePath(leadStory)} className="group block">
+                  <div className="relative overflow-hidden rounded-sm bg-black">
+                    <ImageWithFallback
+                      src={leadStory.image}
+                      alt={leadStory.title}
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="mt-4">
+                    <Kicker>
+                      {SECTION_LABEL}
+                      {leadStory.location ? ` · ${leadStory.location}` : ""}
+                    </Kicker>
+
+                    <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
+                      {leadStory.title}
+                    </h1>
+
+                    <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
+                      {leadStory.lede}
+                    </p>
+
+                    <div className="mt-3">
+                      <TimeStamp>
+                        {leadStory.publishedAt} · {leadStory.readTime}
+                      </TimeStamp>
+                    </div>
+                  </div>
+                </Link>
+
+                <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
+                  {majorStories.map((story) => (
+                    <Link
+                      key={story.id}
+                      to={octEditionArticlePath(story)}
+                      className="group block"
+                    >
+                      <div className="overflow-hidden rounded-sm">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </div>
+
+                      <div className="mt-2.5">
+                        <Kicker>{story.location ?? SECTION_LABEL}</Kicker>
+
+                        <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* RIGHT: key figures panel + editor's pick */}
+
+              <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
+                <div className="rounded-sm bg-black p-4 text-white">
+                  <div className="flex items-center justify-between border-b border-white/20 pb-2">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                      Key Figures
+                    </h2>
+                  </div>
+
+                  <div className="divide-y divide-white/10">
                     {leadStory.keyFacts.map((fact) => (
-                      <div key={fact.label} className="rounded-sm border border-gray-200 bg-white p-3 shadow-sm">
-                        <p className="text-[8px] font-bold uppercase tracking-[0.12em] text-gray-500">
+                      <div
+                        key={fact.label}
+                        className="flex items-start justify-between gap-3 py-2.5"
+                      >
+                        <span className="text-[11px] font-semibold text-gray-300">
                           {fact.label}
-                        </p>
-                        <p className="mt-2 font-serif text-[15px] font-bold leading-snug text-gray-900">
+                        </span>
+                        <span className="text-right text-[11px] tabular-nums text-gray-400">
                           {fact.value}
-                        </p>
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* TRENDING ENERGY DATA */}
-                <div className="rounded-sm border border-gray-200 bg-white p-4 shadow-sm">
-                  <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-700">
-                    Trending Energy Data
-                  </p>
-                  <p className="mb-3 text-[10px] text-gray-500">
-                    Annual average crude oil spot price, US$ per barrel
-                  </p>
-
-                  {energyTrendData.length > 0 ? (
-                    <>
-                      <div className="h-[180px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={energyTrendData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                            <XAxis dataKey="year" tick={{ fontSize: 10 }} />
-                            <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `$${v}`} />
-                            <Tooltip formatter={(v: number) => `$${v.toFixed(2)}`} />
-                            <Legend wrapperStyle={{ fontSize: 10 }} />
-                            {energyTrendKeys.map((s) => (
-                              <Area
-                                key={s.key}
-                                type="monotone"
-                                dataKey={s.key}
-                                name={s.label}
-                                stroke={s.color}
-                                fill={s.color}
-                                fillOpacity={0.12}
-                              />
-                            ))}
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </div>
-                      <p className="mt-2 text-[9px] text-gray-400">{energyTrendSource}</p>
-                    </>
-                  ) : (
-                    <div className="flex h-[180px] items-center justify-center rounded-sm border border-dashed border-gray-300 bg-gray-50 text-[11px] text-gray-400">
-                      Chart data will appear here once verified figures are added.
-                    </div>
-                  )}
-                </div>
-
-                {/* MORE ENERGY NEWS */}
-                <div>
-                  <div className="mb-1 flex items-center justify-between border-b border-gray-200 pb-2">
-                    <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-                      More Energy News
+                <div className="mt-6">
+                  <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                      Editor's Pick
                     </h2>
-                    <span className="text-[8px] uppercase tracking-wide text-gray-400">Newsroom</span>
+
+                    <Link
+                      to={octEditionArticlePath(editorsPick)}
+                      className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+                    >
+                      Read more
+                    </Link>
                   </div>
 
-                  {otherStories.length > 0 ? (
-                    <ul className="divide-y divide-gray-100">
-                      {otherStories.map((item) => (
-                        <li key={item.id}>
-                          <Link to={octEditionArticlePath(item)} className="group block py-3">
-                            <span className="block text-[9px] font-bold uppercase tracking-wide text-gray-400">
-                              {item.location}
-                            </span>
-                            <span className="mt-1 block text-[12px] font-semibold leading-snug text-gray-900 transition-colors group-hover:text-red-600">
-                              {item.title}
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="py-4 text-[11px] text-gray-400">More energy stories will appear here.</p>
-                  )}
+                  <Link to={octEditionArticlePath(editorsPick)} className="group block">
+                    <div className="overflow-hidden rounded-sm">
+                      <ImageWithFallback
+                        src={editorsPick.image}
+                        alt={editorsPick.title}
+                        className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    </div>
+
+                    <div className="mt-2.5">
+                      <Kicker>{editorsPick.location ?? SECTION_LABEL}</Kicker>
+
+                      <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                        {editorsPick.title}
+                      </h3>
+
+                      <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
+                        {editorsPick.lede}
+                      </p>
+                    </div>
+                  </Link>
                 </div>
-
-                <AdSlot slot="5373718974" format="auto" minHeight={250} className="mt-2" />
               </aside>
-            </section>
-          )}
-
-          {/* GLOBAL NEWS */}
-
-          <section className="mb-12">
-            <SectionHeader title="Global News" />
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {energyStories.map((story) => (
-                <NewsCard key={story.id} story={story} />
-              ))}
-              {energyStories.length < 4 &&
-                Array.from({ length: 4 - energyStories.length }).map((_, i) => (
-                  <PlaceholderCard key={`news-ph-${i}`} label="Add another Energy story" />
-                ))}
             </div>
           </section>
 
-          {/* SPOTLIGHT + INFOGRAPHICS */}
+          <PrideTimesAd variant="first" />
 
-          {leadStory && (
-            <section className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
-              <div>
-                <SectionHeader title="Spotlight on Data" />
-                <div className="rounded-sm border border-gray-200 bg-white p-6 shadow-sm">
-                  <div className="mb-4 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
-                    <MapPin size={10} />
-                    {leadStory.location}
-                  </div>
-                  <h3 className="font-serif text-xl font-bold leading-snug">{leadStory.title}</h3>
-                  <ul className="mt-4 space-y-2.5">
-                    {leadStory.highlights.map((point) => (
-                      <li key={point} className="flex gap-3 text-[12px] leading-relaxed text-gray-600">
-                        <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-red-600" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
+          {/* =================================================
+              2. LATEST NEWS
+          ================================================= */}
+
+          <section aria-label="Latest energy news" className="mb-12">
+            <SectionHeader title="Latest Energy News" />
+
+            <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
+              {energyStories.slice(0, 6).map((story, index) => (
+                <li key={story.id} className="border-b border-gray-200">
                   <Link
-                    to={octEditionArticlePath(leadStory)}
-                    className="mt-6 inline-flex items-center gap-1.5 border-b border-gray-900 pb-0.5 text-[10px] font-bold uppercase tracking-wide hover:border-red-600 hover:text-red-600"
+                    to={octEditionArticlePath(story)}
+                    className="group flex gap-3 py-3.5"
                   >
-                    Read More
-                    <ArrowRight size={11} />
-                  </Link>
-                </div>
-              </div>
+                    <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                      {index + 1}
+                    </span>
 
-              <div>
-                <SectionHeader title="Infographics" />
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {leadStory.keyFacts.map((fact) => (
-                    <div key={fact.label} className="rounded-sm border border-gray-200 bg-white p-5 shadow-sm">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-500">
-                        {fact.label}
-                      </p>
-                      <p className="mt-3 font-serif text-[22px] font-bold leading-tight text-gray-900">
-                        {fact.value}
-                      </p>
-                      <div className="mt-4 h-1.5 w-full rounded-full bg-gray-100">
-                        <div className="h-1.5 w-2/3 rounded-full bg-red-600" />
-                      </div>
+                    <div className="min-w-0">
+                      <Kicker>{story.location ?? SECTION_LABEL}</Kicker>
+
+                      <span className="mt-1 block font-serif text-[16px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                        {story.title}
+                      </span>
                     </div>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+
+            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+              {/* ---------- Feed ---------- */}
+
+              <div ref={feedRef} className="scroll-mt-24 min-w-0">
+                <SectionHeader title="More Energy Stories" />
+
+                <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
+                  {feedTabs.map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => selectTab(tab)}
+                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                        activeTab === tab
+                          ? "border-b-2 border-black pb-1 text-black"
+                          : "pb-1 text-gray-400 hover:text-gray-800"
+                      }`}
+                    >
+                      {tab}
+                    </button>
                   ))}
                 </div>
+
+                <div className="divide-y divide-gray-200">
+                  {visibleStories.length === 0 && (
+                    <p className="py-6 text-[12px] text-gray-400">
+                      No stories in this location yet.
+                    </p>
+                  )}
+
+                  {visibleStories.map((story) => (
+                    <Link
+                      key={story.id}
+                      to={octEditionArticlePath(story)}
+                      className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                    >
+                      <div className="h-[80px] w-full overflow-hidden rounded-sm sm:h-[126px]">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-2">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                            {SECTION_LABEL}
+                          </span>
+
+                          {story.location && (
+                            <>
+                              <span className="text-[10px] text-gray-300">•</span>
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                                <MapPin size={9} />
+                                {story.location}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                          {story.title}
+                        </h3>
+
+                        <p className="mt-1.5 hidden text-[13px] leading-[1.5] text-gray-500 line-clamp-2 sm:block">
+                          {story.lede}
+                        </p>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>
+                            {story.publishedAt} · {story.readTime}
+                          </TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setVisibleCount((count) =>
+                          Math.min(count + PAGE_SIZE, filteredStories.length)
+                        )
+                      }
+                      className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                    >
+                      Show more stories
+                    </button>
+
+                    <span className="text-[10px] text-gray-400">
+                      Showing {visibleStories.length} of {filteredStories.length}
+                    </span>
+                  </div>
+                )}
               </div>
-            </section>
-          )}
 
-          {/* INDUSTRY INSIGHT */}
+              {/* ---------- Locations (sticky sidebar) ---------- */}
 
-          <section className="mb-12">
-            <SectionHeader title="Industry Insight" />
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {otherStories.slice(0, 4).map((story) => (
-                <InsightCard key={story.id} story={story} />
+              <div className="min-w-0">
+                <div className="lg:sticky lg:top-24">
+                  <SectionHeader title="Locations" />
+
+                  <div className="rounded-sm bg-black p-5 text-white">
+                    <div className="divide-y divide-white/10">
+                      {locationGroups.map((group) => (
+                        <button
+                          key={group.name}
+                          type="button"
+                          onClick={() => openLocationFeed(group.name)}
+                          className="flex w-full items-center justify-between gap-3 py-2.5 text-left"
+                        >
+                          <span className="text-[11px] font-semibold text-gray-100">
+                            {group.name}
+                          </span>
+                          <span className="shrink-0 text-[11px] tabular-nums text-gray-400">
+                            {group.stories.length}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-8">
+                    <PrideTimesAd variant="second" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* =================================================
+              3. OIL PRICE TREND (chart from energyTrendData)
+          ================================================= */}
+
+          <section aria-label="Energy price trend" className="mb-12">
+            <SectionHeader title="Oil Price Trend" />
+
+            <div className="rounded-sm border border-gray-200 bg-white p-4 sm:p-6">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-gray-700">
+                Annual average crude oil spot price
+              </p>
+              <p className="mb-4 text-[10px] text-gray-500">US$ per barrel</p>
+
+              {energyTrendData.length > 0 ? (
+                <>
+                  <div className="h-[240px] sm:h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={energyTrendData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis dataKey="year" tick={{ fontSize: 10 }} />
+                        <YAxis
+                          tick={{ fontSize: 10 }}
+                          tickFormatter={(v) => `$${v}`}
+                        />
+                        <Tooltip formatter={(v: number) => `$${v.toFixed(2)}`} />
+                        <Legend wrapperStyle={{ fontSize: 10 }} />
+                        {energyTrendKeys.map((series) => (
+                          <Area
+                            key={series.key}
+                            type="monotone"
+                            dataKey={series.key}
+                            name={series.label}
+                            stroke={series.color}
+                            fill={series.color}
+                            fillOpacity={0.12}
+                          />
+                        ))}
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <p className="mt-3 text-[9px] text-gray-400">{energyTrendSource}</p>
+                </>
+              ) : (
+                <div className="flex h-[240px] items-center justify-center rounded-sm border border-dashed border-gray-300 bg-gray-50 text-[11px] text-gray-400">
+                  Chart data will appear here once verified figures are added.
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* =================================================
+              4. DEEP DIVE
+          ================================================= */}
+
+          <section aria-label="Energy deep dive" className="mb-12">
+            <SectionHeader
+              title="Deep Dive"
+              link={octEditionArticlePath(deepDiveStory)}
+              linkText="Read story"
+            />
+
+            <Link
+              to={octEditionArticlePath(deepDiveStory)}
+              className="group relative block min-h-[220px] overflow-hidden rounded-sm bg-black"
+            >
+              <ImageWithFallback
+                src={deepDiveStory.image}
+                alt={deepDiveStory.title}
+                className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-400">
+                  {SECTION_LABEL}
+                  {deepDiveStory.location ? ` · ${deepDiveStory.location}` : ""}
+                </span>
+
+                <h3 className="mt-2 max-w-3xl font-serif text-2xl font-bold leading-[1.15] text-white group-hover:underline sm:text-[30px]">
+                  {deepDiveStory.title}
+                </h3>
+
+                <p className="mt-2 max-w-3xl text-[13px] leading-[1.5] text-gray-300 line-clamp-2">
+                  {deepDiveStory.lede}
+                </p>
+              </div>
+            </Link>
+          </section>
+
+          {/* =================================================
+              5. STORIES BY LOCATION
+          ================================================= */}
+
+          <section aria-label="Stories by location" className="mb-12">
+            <SectionHeader title="Stories by Location" />
+
+            <div className="space-y-10">
+              {locationGroups.map((group) => (
+                <div key={group.name}>
+                  <div className="mb-4 flex items-baseline justify-between border-b border-gray-300 pb-2">
+                    <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-950">
+                      {group.name}
+                    </h3>
+
+                    <button
+                      type="button"
+                      onClick={() => openLocationFeed(group.name)}
+                      className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+                    >
+                      {group.stories.length}{" "}
+                      {group.stories.length === 1 ? "story" : "stories"}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+                    {group.stories.slice(0, 4).map((story) => (
+                      <Link
+                        key={story.id}
+                        to={octEditionArticlePath(story)}
+                        className="group block"
+                      >
+                        <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
+                          <ImageWithFallback
+                            src={story.image}
+                            alt={story.title}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+
+                        <span className="mt-2.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400">
+                          {story.publishedAt}
+                        </span>
+
+                        <h4 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h4>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               ))}
-              {otherStories.length < 4 &&
-                Array.from({ length: 4 - Math.min(otherStories.length, 4) }).map((_, i) => (
-                  <PlaceholderCard key={`insight-ph-${i}`} label="Awaiting an Energy insight story" />
-                ))}
             </div>
           </section>
 
           <PrideTimesAd variant="second" />
         </main>
       </div>
+
+      {/* Local page utilities */}
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        html { scroll-behavior: smooth; }
+        ::selection { background: rgba(227, 27, 35, 0.12); color: inherit; }
+      `}</style>
     </div>
   );
 }
