@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { ArrowRight, TrendingDown, TrendingUp } from "lucide-react";
 import { getQuotes } from "../../../services/marketApi";
-import { defaultMarketSnapshot } from "../../data/innovationData";
 
 /* =========================================================
    MARKET SNAPSHOT (shared)
@@ -63,13 +62,34 @@ const liveRowsFor = (tab: MarketTabName, quotes: QuotesShape | null): Row[] => {
   }
 };
 
+/* Reference data, used only when live quotes are unavailable.
+   Kept inside this component so it has no dependency on any data file. */
+const REFERENCE_DATA: Record<MarketTabName, Row[]> = {
+  Indices: [
+    { symbol: "S&P 500", value: "5,892.31", change: "+1.14%", up: true },
+    { symbol: "NASDAQ", value: "19,245.78", change: "+1.56%", up: true },
+    { symbol: "DOW JONES", value: "42,318.45", change: "+0.82%", up: true },
+    { symbol: "RUSSELL 2000", value: "2,214.60", change: "-0.37%", up: false },
+  ],
+  Commodities: [
+    { symbol: "Gold", value: "$2,345.60", change: "+0.89%", up: true },
+    { symbol: "Crude Oil", value: "$78.45", change: "-1.23%", up: false },
+    { symbol: "Silver", value: "$29.45", change: "+0.45%", up: true },
+  ],
+  Crypto: [
+    { symbol: "Bitcoin (BTC)", value: "$67,234", change: "+3.45%", up: true },
+    { symbol: "Ethereum (ETH)", value: "$3,456", change: "+2.87%", up: true },
+    { symbol: "Solana (SOL)", value: "$167", change: "+4.56%", up: true },
+  ],
+  Currencies: [
+    { symbol: "USD/INR", value: "83.45", change: "—", up: true },
+    { symbol: "EUR/USD", value: "1.0876", change: "—", up: true },
+    { symbol: "GBP/USD", value: "1.2734", change: "—", up: true },
+  ],
+};
+
 const fallbackRowsFor = (tab: MarketTabName): Row[] =>
-  (defaultMarketSnapshot[tab] ?? []).map((item) => ({
-    symbol: item.symbol,
-    value: item.value,
-    change: item.change,
-    up: item.up,
-  }));
+  REFERENCE_DATA[tab] ?? [];
 
 export interface MarketSnapshotProps {
   tabs?: MarketTabName[];
