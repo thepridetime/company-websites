@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { getQuotes } from "../../../services/marketApi";
 
 import MagazineImg from "../../../imports/pt30image.png";
 import worldLeaders from "../../../imports/pt-world-leaders.png";
@@ -29,7 +28,7 @@ import ukMobilityImg from "../../../imports/uk-youth-mobility.jpg";
 import italyParliamentImg from "../../../imports/italy-parliament.jpg";
 import aseanSupplyChainImg from "../../../imports/asean-supply-chain.jpg";
 
-import { MarketSnapshot } from "../innovation/MarketSnapshot";
+import { MarketSnapshot } from "../market/MarketSnapshot";
 
 import {
   specialArticles,
@@ -305,52 +304,10 @@ function SectionHeader({
 ========================================================= */
 
 export function InternationalNewsPage() {
-  const [activeMarketTab, setActiveMarketTab] =
-    useState<"Indices" | "Crypto">("Indices");
-
   const [activeNewsTab, setActiveNewsTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const newsListRef = useRef<HTMLDivElement | null>(null);
-
-  const [marketSnapshotData, setMarketSnapshotData] = useState<
-    Record<string, MarketItem[]>
-  >({
-    Indices: [],
-    Crypto: [],
-  });
-
-  /* =======================================================
-     MARKET DATA
-  ======================================================= */
-
-  useEffect(() => {
-    const loadMarketData = async () => {
-      try {
-        const data = await getQuotes();
-
-        setMarketSnapshotData({
-          Indices: data.indices.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: item.change,
-            up: item.up,
-          })),
-
-          Crypto: data.crypto.map((item: any) => ({
-            symbol: item.name,
-            value: item.value,
-            change: item.change,
-            up: item.up,
-          })),
-        });
-      } catch (error) {
-        console.error("Market API Error:", error);
-      }
-    };
-
-    loadMarketData();
-  }, []);
 
   /* =======================================================
      LATEST NEWS FILTERING
