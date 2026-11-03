@@ -38,6 +38,7 @@ import {
   sustainabilityEsgArticles,
   type SustainabilityEsgArticle,
 } from "./sustainabilityEsgNewsData";
+import { innovationExtraArticles } from "./innovationArticleData";
 
 export const specialArticleImages = {
   hc1: HC1Img,
@@ -2471,6 +2472,7 @@ export const specialArticles: SpecialArticle[] = [
   ...leadershipGovernanceSpecialArticles,
   innovationHero,
   ...innovationStories,
+  ...innovationExtraArticles,
   ...cybersecurityArticles,
   ...cyberFeedArticles, // cards on the Cybersecurity page (slug-matched IDs)
   ...internationalBusinessArticles,
