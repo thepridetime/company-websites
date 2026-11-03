@@ -26,6 +26,12 @@ export function ReadingPromptPopup({
 
   const [open, setOpen] = useState(false);
 
+  /* The wall is only really visible when it has been triggered AND the
+     reader is not premium. The page lock must follow this exact value,
+     otherwise it can stay applied after the wall has been hidden
+     (e.g. when the account check finishes after the timer fired). */
+  const showWall = open && !isPremium;
+
   /* Keep the latest premium status in a ref so the timer can read it
      without being restarted every time the account check finishes. */
   const isPremiumRef = useRef(isPremium);
@@ -61,9 +67,11 @@ export function ReadingPromptPopup({
     };
   }, [delayMs]);
 
-  /* While open: Escape leaves the article, and the page behind cannot scroll. */
+  /* While the wall is showing: Escape leaves the article, and the page
+     behind cannot scroll. The lock is released as soon as the wall is
+     hidden for any reason, and again on unmount. */
   useEffect(() => {
-    if (!open) return;
+    if (!showWall) return;
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -81,11 +89,11 @@ export function ReadingPromptPopup({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open, navigate]);
+  }, [showWall, navigate]);
 
   /* Premium members never see the wall, even if it was already open
      while their account was still loading. */
-  if (!open || isPremium) return null;
+  if (!showWall) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col justify-end bg-black/90 backdrop-blur-md antialiased">
