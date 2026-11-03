@@ -191,7 +191,7 @@ export const octEditionArticles: OctEditionArticle[] = [
     lede: "Internet-facing systems remain the weak point, while policymakers set long-range encryption deadlines.",
     location: "United States",
     readTime: "3 min read",
-    image: img_cyber_ops,
+    image: "https://images.unsplash.com/photo-1597692969854-b615b33f9696?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     body: [
       "A data breach at the Pentagon's Defense Manpower Data Center exposed unencrypted personal information on more than 3 million people, ABC News reported. The breach stemmed from a vulnerability in the agency's file-sharing system.",
       "In the enterprise, CISA reported that Citrix disclosed eight new vulnerabilities in NetScaler ADC and NetScaler Gateway, including two critical zero-days that are being actively exploited and can enable remote code execution. Organisations running affected products should consult CISA's advisories and apply vendor fixes without delay.",

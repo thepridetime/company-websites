@@ -83,7 +83,7 @@ export const consumerRetailArticles: ConsumerRetailArticle[] = [
     excerpt: "Tidewater Energy said digital sales rose 8.9% but higher logistics costs weighed on profitability.",
     author: AUTHOR,
     publishedAt: "2026-09-28T08:00:00Z",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1664455340023-214c33a9d0bd?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "4 min read",
     highlights: [
       "Digital sales increased 8.9% in the latest update.",
@@ -105,7 +105,7 @@ export const consumerRetailArticles: ConsumerRetailArticle[] = [
     excerpt: "Stratos Logistics voluntarily recalled a product line in several markets following an internal safety review.",
     author: AUTHOR,
     publishedAt: "2026-09-27T08:00:00Z",
-    image: "https://images.unsplash.com/photo-1586528116493-da8b8f2e8b1b?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "4 min read",
     highlights: [
       "Stratos Logistics has begun a voluntary product recall in multiple markets.",
@@ -127,7 +127,7 @@ export const consumerRetailArticles: ConsumerRetailArticle[] = [
     excerpt: "Ardent Capital voluntarily recalled a product line in several markets following an internal safety review.",
     author: AUTHOR,
     publishedAt: "2026-09-26T08:00:00Z",
-    image: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1779517226271-72b1e4ff0884?q=80&w=493&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "4 min read",
     highlights: [
       "Ardent Capital has joined a wider run of product-safety reviews across consumer markets.",

@@ -138,7 +138,7 @@ export const healthcarePharmaArticles: HealthcarePharmaArticle[] = [
     location: "São Paulo",
     author: AUTHOR,
     publishedAt: "2026-09-26T08:00:00Z",
-    image: HC1Img,
+    image: "https://images.unsplash.com/photo-1578496480240-32d3e0c04525?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "4 min read",
     highlights: [
       "Yarrow Logistics received regulatory clearance for a new treatment.",
@@ -161,7 +161,7 @@ export const healthcarePharmaArticles: HealthcarePharmaArticle[] = [
     location: "Jakarta",
     author: AUTHOR,
     publishedAt: "2026-09-25T08:00:00Z",
-    image: HC2Img,
+    image: "https://images.unsplash.com/photo-1582560475093-ba66accbc424?q=80&w=420&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "4 min read",
     highlights: [
       "Yarrow Foods signed a licensing agreement for an experimental drug.",

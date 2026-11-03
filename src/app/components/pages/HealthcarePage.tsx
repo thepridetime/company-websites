@@ -49,7 +49,8 @@ type HealthItem = {
   title: string;
   lede: string;
   location?: string;
-  image: string;
+  // image: string;
+  image?: string;
   meta: string;
   keyFacts: { label: string; value: string }[];
 };
@@ -75,17 +76,20 @@ const specialHealthItems: HealthItem[] = specialArticles
     title: article.title,
     lede: article.dek,
     location: undefined,
-    image: article.image ?? HealthFallbackImg,
+    // image: article.image ?? HealthFallbackImg, (fallback)
+    image: article.image,
     meta: `${article.publishedAt} · ${article.readTime}`,
     keyFacts: article.keyFacts,
   }));
 
-const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems].map(
-  (item, index) => ({
-    ...item,
-    image: healthImagePool[index % healthImagePool.length],
-  })
-);
+const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems];
+// const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems].map(
+//   (item, index) => ({
+//     ...item,
+//     // image: healthImagePool[index % healthImagePool.length],
+//     image?: string;
+//   })
+// );
 
 const leadStory = healthItems[0];
 const otherStories = healthItems.slice(1);
@@ -142,9 +146,7 @@ function AdSlot({
           data-ad-client="ca-pub-2331501617441941"
           data-ad-slot={slot}
           data-ad-format={format}
-          data-full-width-responsive={
-            format === "auto" ? "true" : undefined
-          }
+          data-full-width-responsive={format === "auto" ? "true" : undefined}
           data-ad-layout={layout}
           data-ad-layout-key={layoutKey}
         />
@@ -155,12 +157,7 @@ function AdSlot({
 
 function SidebarAd() {
   return (
-    <AdSlot
-      slot="5373718974"
-      format="auto"
-      minHeight={250}
-      className="mt-6"
-    />
+    <AdSlot slot="5373718974" format="auto" minHeight={250} className="mt-6" />
   );
 }
 
@@ -191,7 +188,6 @@ export function HealthcarePage() {
     <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <main className="pt-4 md:pt-6 pb-16">
-
           {/* PAGE TITLE */}
 
           <header className="border-t-[3px] border-red-600 pt-4 mb-6">
@@ -224,18 +220,28 @@ export function HealthcarePage() {
           {leadStory && (
             <section className="pb-8 mb-8 border-b border-gray-300">
               <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-6">
-
                 {/* LEAD STORY */}
 
                 <Link
                   to={leadStory.href}
                   className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
                 >
-                  <ImageWithFallback
+                  {/* <ImageWithFallback
                     src={leadStory.image}
                     alt={leadStory.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
+                  /> */}
+                  {leadStory.image ? (
+                    <ImageWithFallback
+                      src={leadStory.image}
+                      alt={leadStory.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-700 flex items-center justify-center text-xs uppercase tracking-wide text-gray-300">
+                      No image
+                    </div>
+                  )}
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
