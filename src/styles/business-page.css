@@ -833,10 +833,7 @@
 
 @media (min-width: 1024px) {
   .bz-edition {
-    grid-template-columns: 1.4fr 1fr 1fr;
-  }
-  .bz-edition-card:first-child {
-    grid-row: span 2;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -855,9 +852,6 @@
   background: #f2f2f2;
 }
 
-.bz-edition-card:first-child .bz-card-img {
-  aspect-ratio: 16 / 11;
-}
 
 .bz-card-img img {
   width: 100%;
@@ -881,9 +875,6 @@
   transition: color 0.2s ease;
 }
 
-.bz-edition-card:first-child .bz-card-title {
-  font-size: 26px;
-}
 
 .bz-card-lede {
   font-size: 13px;
