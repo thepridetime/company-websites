@@ -1,14 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
-import {
-  ArrowRight,
-  Clock,
-  Globe2,
-  MapPin,
-  TrendingDown,
-  TrendingUp,
-} from "lucide-react";
-
+import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 import MagazineImg from "../../../imports/pt30image.png";
@@ -18,18 +10,7 @@ import digitalEconomy from "../../../imports/pt-digital-economy.png";
 import supplyChainMap from "../../../imports/supply-chain-map.png";
 import coverStory from "../../../imports/Coverstory.png";
 
-import globalTradePortImg from "../../../imports/global-trade-port.jpg";
-import tajMahalImg from "../../../imports/taj-mahal-india.jpg";
-import euUsFlagsImg from "../../../imports/eu-us-trade-flags.jpg";
-import shippingCostsImg from "../../../imports/shipping-costs-route.jpg";
-import euParliamentImg from "../../../imports/eu-parliament-flags.jpg";
-import europeIndustryImg from "../../../imports/europe-industry-clean.jpg";
-import ukMobilityImg from "../../../imports/uk-youth-mobility.jpg";
-import italyParliamentImg from "../../../imports/italy-parliament.jpg";
-import aseanSupplyChainImg from "../../../imports/asean-supply-chain.jpg";
-
 import { MarketSnapshot } from "../market/MarketSnapshot";
-
 import {
   specialArticles,
   specialArticlePath,
@@ -42,13 +23,6 @@ import {
 /* =========================================================
    TYPES
 ========================================================= */
-
-type MarketItem = {
-  symbol: string;
-  value: string | number;
-  change: string;
-  up: boolean;
-};
 
 /* One card shape for every international story, whichever data
    file it comes from, so the page can use the homepage layout. */
@@ -123,15 +97,13 @@ function PrideTimesAd({
 }
 
 /* =========================================================
-   STORY LIST
-   International stories only:
+   STORY DATA (unchanged sources)
    1. International Business (specialArticleData "international-*")
    2. Regional desks: Europe, Asia-Pacific, Americas, Middle East
-      & Africa (specialArticleData "international-*")
+      and Africa (specialArticleData "international-*")
    3. Regional Roundup from the Global Corporate News Digest
-      (the section that links to /international-news)
-   The technology-company stories that carry an "international-"
-   id are not international news and are left out.
+   Technology-company stories are not international news and are
+   left out.
 ========================================================= */
 
 const REGION_NAMES: Record<string, string> = {
@@ -203,8 +175,10 @@ const allCards: NewsCard[] = Array.from(
 ========================================================= */
 
 const leadStory = allCards[0];
-const majorStories = [allCards[1], allCards[2]];
-const editorsPick = allCards[3];
+const majorStories = [allCards[1], allCards[2]].filter(
+  Boolean
+) as NewsCard[];
+const editorsPick = allCards[3] ?? allCards[0];
 
 const featuredIds = new Set(
   [leadStory, ...majorStories, editorsPick]
@@ -216,7 +190,7 @@ const sidebarStories = allCards
   .filter((card) => !featuredIds.has(card.id))
   .slice(0, 6);
 
-/* Region order for the filter tabs and the headline groups. */
+/* Region order for the filter tabs and the region groups. */
 const tabOrder = [
   "International Business",
   "Europe",
@@ -251,25 +225,8 @@ const magazinePreview = {
 };
 
 /* =========================================================
-   SMALL PARTS
+   SMALL UI PIECES (same as homepage)
 ========================================================= */
-
-function ChangeChip({ change, up }: { change: string; up: boolean }) {
-  return (
-    <span
-      className={`text-[10px] font-semibold tabular-nums flex items-center gap-1 ${
-        up ? "text-green-600" : "text-red-600"
-      }`}
-    >
-      {up ? (
-        <TrendingUp size={10} strokeWidth={2.25} />
-      ) : (
-        <TrendingDown size={10} strokeWidth={2.25} />
-      )}
-      {change}
-    </span>
-  );
-}
 
 function SectionHeader({
   title,
@@ -281,21 +238,38 @@ function SectionHeader({
   linkText?: string;
 }) {
   return (
-    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+    <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
         {title}
       </h2>
 
       {link && (
         <Link
           to={link}
-          className="text-[9px] font-semibold text-red-600 flex items-center gap-1"
+          className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
         >
           {linkText}
-          <ArrowRight size={9} />
+          <ArrowRight size={10} />
         </Link>
       )}
     </div>
+  );
+}
+
+function Kicker({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+      {children}
+    </span>
+  );
+}
+
+function TimeStamp({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+      <Clock size={9} />
+      {children}
+    </span>
   );
 }
 
@@ -309,9 +283,7 @@ export function InternationalNewsPage() {
 
   const newsListRef = useRef<HTMLDivElement | null>(null);
 
-  /* =======================================================
-     LATEST NEWS FILTERING
-  ======================================================= */
+  /* ---------- Latest news filtering ---------- */
 
   const filteredStories = useMemo(
     () =>
@@ -334,407 +306,189 @@ export function InternationalNewsPage() {
     setVisibleCount(PAGE_SIZE);
   };
 
-  const tabCount = (tab: string) =>
-    tab === "All"
-      ? allCards.length
-      : allCards.filter((card) => card.tab === tab).length;
+  const openRegionFeed = (tab: string) => {
+    selectTab(tab);
 
-  /* =======================================================
-     EMPTY STATE
-  ======================================================= */
+    window.requestAnimationFrame(() => {
+      newsListRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
 
   if (!leadStory) {
     return (
-      <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
-        <div className="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
-          <Globe2 size={38} className="mx-auto mb-4 text-gray-400" />
-          <h1 className="font-serif text-3xl font-bold">International News</h1>
-          <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-gray-600">
-            International stories are being updated. Please check back
-            shortly.
-          </p>
-        </div>
+      <div className="mx-auto max-w-7xl px-4 py-16 text-center text-gray-400">
+        No international stories available right now.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <main className="pt-4 md:pt-6 pb-16">
+    <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
-              PAGE HEADER (PRIDE TIMES EDITORIAL BRANDING)
+              1. TOP SECTION
           ================================================= */}
-          <header className="border-t-[3px] border-red-600 pt-4 mb-7 sm:mb-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
-              <div>
-                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight tracking-normal text-gray-900">
-                  International Business
-                </h1>
-                <p className="mt-1.5 text-[11px] md:text-[13px] text-gray-500 font-normal">
-                  Global markets, trade, economies and policy shaping the world.
-                </p>
-              </div>
 
-              <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-gray-400 font-semibold pb-1">
-                TRADE · ECONOMY · POLICY · MARKETS
-              </div>
-            </div>
-          </header>
+          <section className="mb-10 border-b border-gray-300 pb-8">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
+              {/* LEFT: top headlines (text only) */}
 
-          {/* =================================================
-              TOP STORIES / NEWSROOM THREE-COLUMN LAYOUT
-          ================================================= */}
-          <section className="pb-10 mb-10 border-b border-gray-200">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.12fr_1.42fr_1fr] gap-6 lg:gap-7 items-stretch">
-              {/* =============================================
-                  COLUMN 1: FEATURED INTERNATIONAL STORY
-              ============================================= */}
-              <div className="flex flex-col h-full min-h-[580px] lg:min-h-[660px]">
-                <Link
-                  to="/article/international-global-trade-asia-growth"
-                  className="group relative flex flex-col justify-end overflow-hidden rounded-lg border border-gray-200/80 bg-black h-full"
-                >
-                  <ImageWithFallback
-                    src={globalTradePortImg}
-                    alt="Global Trade Realigns as Asia Leads the Next Growth Wave"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
+              <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
+                <div className="mb-1 border-t-[3px] border-black pt-2">
+                  <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                    Top Stories
+                  </h2>
+                </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
+                <ul className="divide-y divide-gray-200">
+                  {sidebarStories.slice(0, 4).map((story) => (
+                    <li key={story.id}>
+                      <Link to={story.path} className="group block py-3.5">
+                        <Kicker>{story.label}</Kicker>
 
-                  <span className="absolute top-4 left-4 bg-red-600 text-white px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] uppercase rounded-none z-10">
-                    INTERNATIONAL BUSINESS | GLOBAL TRADE
-                  </span>
+                        <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
 
-                  <div className="relative z-10 p-5 sm:p-6">
-                    <h2 className="font-serif text-2xl sm:text-[26px] lg:text-[28px] xl:text-[30px] font-bold leading-[1.14] text-white group-hover:text-red-400 transition-colors">
-                      Global Trade Realigns as Asia Leads the Next Growth Wave
-                    </h2>
+                        <div className="mt-1.5">
+                          <TimeStamp>{story.when}</TimeStamp>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
 
-                    <p className="text-[12px] sm:text-[12.5px] text-gray-200 leading-[1.55] mt-2.5 line-clamp-3">
-                      Manufacturing investment, stronger domestic demand and new trade alliances are shifting global growth momentum toward Asia.
+              {/* CENTER: lead story */}
+
+              <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
+                <Link to={leadStory.path} className="group block">
+                  <div className="relative overflow-hidden rounded-sm bg-black">
+                    <ImageWithFallback
+                      src={leadStory.image}
+                      alt={leadStory.title}
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
+                  </div>
+
+                  <div className="mt-4">
+                    <Kicker>
+                      {leadStory.label}
+                      {leadStory.location ? ` · ${leadStory.location}` : ""}
+                    </Kicker>
+
+                    <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
+                      {leadStory.title}
+                    </h1>
+
+                    <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
+                      {leadStory.lede}
                     </p>
 
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wider mt-4 border-b border-white/60 pb-0.5 group-hover:border-white transition-colors">
-                      READ FULL STORY →
-                    </span>
+                    <div className="mt-3">
+                      <TimeStamp>
+                        {leadStory.when}
+                        {leadStory.readTime ? ` · ${leadStory.readTime}` : ""}
+                      </TimeStamp>
+                    </div>
                   </div>
                 </Link>
+
+                <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
+                  {majorStories.map((story) => (
+                    <Link key={story.id} to={story.path} className="group block">
+                      <div className="overflow-hidden rounded-sm">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </div>
+
+                      <div className="mt-2.5">
+                        <Kicker>{story.label}</Kicker>
+
+                        <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>{story.when}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
 
-              {/* =============================================
-                  COLUMN 2: MAIN COVERAGE + MARKET SNAPSHOT
-              ============================================= */}
-              <div className="flex flex-col justify-between min-w-0 lg:border-x lg:border-gray-200 lg:px-6">
-                <div>
-                  {/* SECTION HEADER */}
-                  <div className="flex items-center justify-between pb-2 mb-3.5 border-b border-gray-200">
-                    <h2 className="text-[11.5px] sm:text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
-                      Top International Business Stories
-                    </h2>
+              {/* RIGHT: regions panel + editor's pick */}
 
-                    <Link
-                      to="/world"
-                      className="text-[9.5px] font-bold uppercase tracking-wider text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
-                    >
-                      <span>View More</span>
-                      <ArrowRight size={10} />
-                    </Link>
+              <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
+                <div className="rounded-sm bg-black p-4 text-white">
+                  <div className="flex items-center justify-between border-b border-white/20 pb-2">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                      Regions
+                    </h2>
                   </div>
 
-                  {/* STORY 1 (TAJ MAHAL) */}
-                  <Link
-                    to="/article/international-india-third-largest-economy"
-                    className="group flex gap-3.5 sm:gap-4 items-start"
-                  >
-                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
-                      <ImageWithFallback
-                        src={tajMahalImg}
-                        alt="India Overtakes Germany as World's 3rd Largest Economy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <span className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.14em] text-red-600">
-                        ECONOMY | INDIA
-                      </span>
-
-                      <h3 className="font-serif text-[15px] sm:text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
-                        India Overtakes Germany as World's 3rd Largest Economy
-                      </h3>
-
-                      <p className="text-[11.5px] sm:text-[12px] text-gray-500 leading-[1.45] line-clamp-2 mt-1">
-                        India's expanding domestic market and investment cycle are reshaping the global economic landscape.
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1">
-                        <Clock size={9} />
-                        7 October 2026 · 4 min read
-                      </span>
-                    </div>
-                  </Link>
-
-                  {/* DIVIDER */}
-                  <div className="border-t border-gray-200/80 my-3" />
-
-                  {/* STORY 2 (EU-US FLAGS) */}
-                  <Link
-                    to="/article/international-eu-us-digital-trade"
-                    className="group flex gap-3.5 sm:gap-4 items-start"
-                  >
-                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
-                      <ImageWithFallback
-                        src={euUsFlagsImg}
-                        alt="EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <span className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.14em] text-red-600">
-                        TRADE | EU-US
-                      </span>
-
-                      <h3 className="font-serif text-[15px] sm:text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
-                        EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce
-                      </h3>
-
-                      <p className="text-[11.5px] sm:text-[12px] text-gray-500 leading-[1.45] line-clamp-2 mt-1">
-                        New framework to reduce friction across technology, services and data flows.
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1">
-                        <Clock size={9} />
-                        7 October 2026 · 3 min read
-                      </span>
-                    </div>
-                  </Link>
-
-                  {/* DIVIDER */}
-                  <div className="border-t border-gray-200/80 my-3" />
-
-                  {/* STORY 3 (SHIPPING COSTS) */}
-                  <Link
-                    to="/article/international-shipping-costs-routes"
-                    className="group flex gap-3.5 sm:gap-4 items-start"
-                  >
-                    <div className="w-[115px] sm:w-[130px] h-[82px] sm:h-[88px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
-                      <ImageWithFallback
-                        src={shippingCostsImg}
-                        alt="Shipping Costs Decline as Key Trade Routes Stabilize"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <span className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.14em] text-red-600">
-                        SUPPLY CHAIN | GLOBAL
-                      </span>
-
-                      <h3 className="font-serif text-[15px] sm:text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
-                        Shipping Costs Decline as Key Trade Routes Stabilize
-                      </h3>
-
-                      <p className="text-[11.5px] sm:text-[12px] text-gray-500 leading-[1.45] line-clamp-2 mt-1">
-                        Easing freight rates offer relief to global manufacturers after months of volatility.
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1">
-                        <Clock size={9} />
-                        7 October 2026 · 3 min read
-                      </span>
-                    </div>
-                  </Link>
+                  <div className="divide-y divide-white/10">
+                    {regionGroups.map((group) => (
+                      <button
+                        key={group.name}
+                        type="button"
+                        onClick={() => openRegionFeed(group.name)}
+                        className="flex w-full items-center justify-between py-2.5 text-left"
+                      >
+                        <span className="text-[12px] font-semibold text-gray-100">
+                          {group.name}
+                        </span>
+                        <span className="text-[11px] tabular-nums text-gray-400">
+                          {group.stories.length}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
-                {/* ENHANCED MARKET SNAPSHOT */}
-                <div className="mt-4 pt-3 border-t border-gray-200">
-                  <MarketSnapshot tabs={["Indices", "Commodities", "Currencies"]} />
-                </div>
-              </div>
-
-              {/* =============================================
-                  COLUMN 3: EDITOR'S PICK + LATEST NEWS
-              ============================================= */}
-              <aside className="min-w-0 flex flex-col justify-between">
-                {/* EDITOR'S PICK */}
-                <div>
-                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-gray-200">
-                    <h2 className="font-serif text-[16px] sm:text-[17px] font-bold text-gray-950">
+                <div className="mt-6">
+                  <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
                       Editor's Pick
                     </h2>
 
                     <Link
-                      to="/world"
-                      className="text-[9.5px] font-bold uppercase tracking-wider text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                      to={editorsPick.path}
+                      className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
                     >
-                      <span>Explore More</span>
-                      <ArrowRight size={10} />
+                      Read more
                     </Link>
                   </div>
 
-                  <Link
-                    to="/article/international-europe-fiscal-buffer"
-                    className="group block"
-                  >
-                    <div className="w-full h-[160px] sm:h-[172px] overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
+                  <Link to={editorsPick.path} className="group block">
+                    <div className="overflow-hidden rounded-sm">
                       <ImageWithFallback
-                        src={euParliamentImg}
-                        alt="EU finance ministers agree on joint fiscal buffer"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        src={editorsPick.image}
+                        alt={editorsPick.title}
+                        className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       />
                     </div>
 
-                    <span className="block text-[9px] sm:text-[9.5px] font-bold text-red-600 uppercase tracking-[0.14em] mt-2.5">
-                      EUROPE
-                    </span>
+                    <div className="mt-2.5">
+                      <Kicker>{editorsPick.label}</Kicker>
 
-                    <h3 className="font-serif text-[14px] sm:text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:text-red-600 transition-colors mt-1">
-                      EU finance ministers agree on joint fiscal buffer to shield eurozone from future energy-price shocks.
-                    </h3>
+                      <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                        {editorsPick.title}
+                      </h3>
 
-                    <p className="mt-1 text-[11px] sm:text-[11.5px] leading-[1.45] text-gray-500 line-clamp-3">
-                      The mechanism aims to reduce the impact of future energy-price volatility and strengthen economic resilience across the bloc.
-                    </p>
-
-                    <span className="flex items-center gap-1 text-[10px] text-gray-400 mt-1.5">
-                      <Clock size={9} />
-                      7 October 2026 · 3 min read
-                    </span>
+                      <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
+                        {editorsPick.lede}
+                      </p>
+                    </div>
                   </Link>
-                </div>
-
-                {/* LATEST NEWS */}
-                <div className="mt-4 pt-3.5 border-t border-gray-200">
-                  <div className="flex items-center justify-between pb-1.5 mb-2.5 border-b border-gray-200">
-                    <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-                      Latest News
-                    </h2>
-
-                    <Link
-                      to="/all-news"
-                      className="text-[9px] font-bold uppercase tracking-wider text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
-                    >
-                      <span>View All</span>
-                      <ArrowRight size={9} />
-                    </Link>
-                  </div>
-
-                  <div className="divide-y divide-gray-100">
-                    {/* ITEM 1 */}
-                    <Link
-                      to="/article/international-france-germany-industrial-policy"
-                      className="group flex gap-2.5 py-2.5 first:pt-1 last:pb-0 items-start"
-                    >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
-                        <ImageWithFallback
-                          src={europeIndustryImg}
-                          alt="France and Germany industrial policy"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
-                          EUROPE
-                        </span>
-
-                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
-                          France and Germany unveil joint industrial policy to counter Chinese overcapacity.
-                        </h4>
-
-                        <span className="block text-[9.5px] text-gray-400 mt-1">
-                          7 October 2026 · 3 min read
-                        </span>
-                      </div>
-                    </Link>
-
-                    {/* ITEM 2 */}
-                    <Link
-                      to="/article/international-uk-eu-youth-mobility"
-                      className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
-                    >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
-                        <ImageWithFallback
-                          src={ukMobilityImg}
-                          alt="UK-EU youth mobility scheme"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
-                          UK & EUROPE
-                        </span>
-
-                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
-                          UK-EU youth mobility scheme enters final negotiation stage.
-                        </h4>
-
-                        <span className="block text-[9.5px] text-gray-400 mt-1">
-                          7 October 2026 · 3 min read
-                        </span>
-                      </div>
-                    </Link>
-
-                    {/* ITEM 3 */}
-                    <Link
-                      to="/article/international-italy-no-confidence"
-                      className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
-                    >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
-                        <ImageWithFallback
-                          src={italyParliamentImg}
-                          alt="Italy government survives vote"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
-                          ITALY
-                        </span>
-
-                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
-                          Italy's government survives no-confidence vote.
-                        </h4>
-
-                        <span className="block text-[9.5px] text-gray-400 mt-1">
-                          7 October 2026 · 2 min read
-                        </span>
-                      </div>
-                    </Link>
-
-                    {/* ITEM 4 */}
-                    <Link
-                      to="/article/international-asean-supply-chain-pact"
-                      className="group flex gap-2.5 py-2.5 last:pb-0 items-start"
-                    >
-                      <div className="w-[60px] h-[60px] shrink-0 overflow-hidden rounded-lg border border-gray-200/70 bg-gray-100">
-                        <ImageWithFallback
-                          src={aseanSupplyChainImg}
-                          alt="ASEAN supply-chain resilience pact"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <span className="block text-[8.5px] font-bold text-red-600 uppercase tracking-wide">
-                          ASIA-PACIFIC
-                        </span>
-
-                        <h4 className="text-[11px] sm:text-[11.5px] font-semibold leading-[1.3] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 mt-0.5">
-                          ASEAN bloc finalizes regional supply-chain resilience pact.
-                        </h4>
-
-                        <span className="block text-[9.5px] text-gray-400 mt-1">
-                          7 October 2026 · 3 min read
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
                 </div>
               </aside>
             </div>
@@ -743,36 +497,224 @@ export function InternationalNewsPage() {
           <PrideTimesAd slot="8042854193" format="fluid" layout="in-article" />
 
           {/* =================================================
-              HEADLINES BY REGION
+              2. LATEST NEWS
           ================================================= */}
 
-          <section
-            aria-label="International headlines by region"
-            className="mb-12 border-b border-gray-300 pb-10"
-          >
-            <SectionHeader title="International Headlines by Region" />
+          <section aria-label="Latest international news" className="mb-12">
+            <SectionHeader title="Latest International News" />
+
+            <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
+              {allCards.slice(0, 6).map((story, index) => (
+                <li key={story.id} className="border-b border-gray-200">
+                  <Link to={story.path} className="group flex gap-3 py-3.5">
+                    <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                      {index + 1}
+                    </span>
+
+                    <div className="min-w-0">
+                      <Kicker>
+                        {story.label}
+                        {story.location ? ` · ${story.location}` : ""}
+                      </Kicker>
+
+                      <span className="mt-1 block font-serif text-[16px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                        {story.title}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+
+            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+              {/* ---------- Feed ---------- */}
+
+              <div ref={newsListRef} className="scroll-mt-24 min-w-0">
+                <SectionHeader title="More International Stories" />
+
+                <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
+                  {latestNewsTabs.map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => selectTab(tab)}
+                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                        activeNewsTab === tab
+                          ? "border-b-2 border-black pb-1 text-black"
+                          : "pb-1 text-gray-400 hover:text-gray-800"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="divide-y divide-gray-200">
+                  {latestStories.length === 0 && (
+                    <p className="py-6 text-[12px] text-gray-400">
+                      No stories in this region yet.
+                    </p>
+                  )}
+
+                  {latestStories.map((story) => (
+                    <Link
+                      key={story.id}
+                      to={story.path}
+                      className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                    >
+                      <div className="h-[80px] w-full overflow-hidden rounded-sm sm:h-[126px]">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-2">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                            {story.label}
+                          </span>
+
+                          {story.location && (
+                            <>
+                              <span className="text-[10px] text-gray-300">•</span>
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                                <MapPin size={9} />
+                                {story.location}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                          {story.title}
+                        </h3>
+
+                        <p className="mt-1.5 hidden text-[13px] leading-[1.5] text-gray-500 line-clamp-2 sm:block">
+                          {story.lede}
+                        </p>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>
+                            {story.when}
+                            {story.readTime ? ` · ${story.readTime}` : ""}
+                          </TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setVisibleCount((count) =>
+                          Math.min(count + PAGE_SIZE, filteredStories.length)
+                        )
+                      }
+                      className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                    >
+                      Show more stories
+                    </button>
+
+                    <span className="text-[10px] text-gray-400">
+                      Showing {latestStories.length} of {filteredStories.length}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* ---------- Magazine (sticky) ---------- */}
+
+              <div className="min-w-0">
+                <div className="lg:sticky lg:top-24">
+                  <SectionHeader title="Magazine" link="/magazine" />
+
+                  <Link
+                    to="/magazine"
+                    className="group block overflow-hidden rounded-sm bg-black"
+                  >
+                    <div className="overflow-hidden">
+                      <ImageWithFallback
+                        src={magazinePreview.image}
+                        alt={magazinePreview.title}
+                        className="h-[210px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      />
+                    </div>
+
+                    <div className="p-4">
+                      <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-gray-500">
+                        Pride Times Magazine
+                      </span>
+
+                      <h3 className="mt-1 font-serif text-xl font-bold text-white">
+                        {magazinePreview.title}
+                      </h3>
+
+                      <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-400">
+                        {magazinePreview.subtitle}
+                      </p>
+
+                      <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/50 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                        Read Digital Edition
+                        <ArrowRight size={10} />
+                      </span>
+                    </div>
+                  </Link>
+
+                  <div className="mt-8">
+                    <PrideTimesAd slot="6810700989" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* =================================================
+              3. GLOBAL MARKETS (shared component)
+          ================================================= */}
+
+          <section aria-label="Global markets" className="mb-12">
+            <SectionHeader title="Global Markets" link="/markets" linkText="All Markets" />
+
+            <MarketSnapshot
+              tabs={["Indices", "Commodities", "Currencies"]}
+              title="Market Snapshot"
+            />
+          </section>
+
+          {/* =================================================
+              4. REGIONAL COVERAGE (one group per region)
+          ================================================= */}
+
+          <section aria-label="Regional coverage" className="mb-12">
+            <SectionHeader title="Regional Coverage" />
 
             <div className="space-y-10">
               {regionGroups.map((group) => (
                 <div key={group.name}>
-                  <div className="mb-4 flex items-center justify-between border-b border-gray-300 pb-2">
-                    <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-gray-900">
+                  <div className="mb-4 flex items-baseline justify-between border-b border-gray-300 pb-2">
+                    <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-950">
                       {group.name}
                     </h3>
 
-                    <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400">
-                      {group.stories.length} stories
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => openRegionFeed(group.name)}
+                      className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+                    >
+                      {group.stories.length}{" "}
+                      {group.stories.length === 1 ? "story" : "stories"}
+                    </button>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
-                    {group.stories.map((story) => (
-                      <Link
-                        key={story.id}
-                        to={story.path}
-                        className="group block"
-                      >
-                        <div className="aspect-[16/10] w-full overflow-hidden rounded-md bg-gray-100">
+                  <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+                    {group.stories.slice(0, 4).map((story) => (
+                      <Link key={story.id} to={story.path} className="group block">
+                        <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
                           <ImageWithFallback
                             src={story.image}
                             alt={story.title}
@@ -780,17 +722,13 @@ export function InternationalNewsPage() {
                           />
                         </div>
 
-                        <span className="mt-3 block text-[11px] font-bold uppercase tracking-[0.12em] text-red-600">
-                          {story.location ?? story.label}
+                        <span className="mt-2.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400">
+                          {story.when}
                         </span>
 
-                        <h4 className="mt-1.5 font-serif text-xl font-bold leading-[1.25] text-gray-900 transition-colors group-hover:text-red-600 md:text-[22px]">
+                        <h4 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
                           {story.title}
                         </h4>
-
-                        <p className="mt-1.5 text-[12px] leading-[1.55] text-gray-500 line-clamp-2">
-                          {story.lede}
-                        </p>
                       </Link>
                     ))}
                   </div>
@@ -799,185 +737,63 @@ export function InternationalNewsPage() {
             </div>
           </section>
 
-          <PrideTimesAd
-            slot="5608262547"
-            format="fluid"
-            layoutKey="-ef+6k-30-ac+ty"
-          />
+          <PrideTimesAd slot="5373718974" />
 
           {/* =================================================
-              ALL INTERNATIONAL NEWS + MAGAZINE
+              5. BROWSE BY REGION
           ================================================= */}
 
-          <section className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-7 mb-12">
-            {/* LATEST NEWS (every international story) */}
+          <section>
+            <SectionHeader title="Browse by Region" />
 
-            <div ref={newsListRef} className="scroll-mt-24">
-              <SectionHeader title="All International News" />
+            <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-5">
+              {regionGroups.map((group) => {
+                const top = group.stories[0];
 
-              {/* FILTER TABS */}
-
-              <div className="flex items-center gap-5 overflow-x-auto no-scrollbar border-b border-gray-200 pb-3 mb-1">
-                {latestNewsTabs.map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => selectTab(tab)}
-                    className={`text-[10px] font-semibold whitespace-nowrap uppercase tracking-wide transition-colors ${
-                      activeNewsTab === tab
-                        ? "text-red-600"
-                        : "text-gray-400 hover:text-gray-700"
-                    }`}
+                return (
+                  <div
+                    key={group.name}
+                    className="flex flex-col border-b border-gray-200 py-4"
                   >
-                    {tab}
-                    <span className="ml-1 font-normal text-gray-300">
-                      {tabCount(tab)}
-                    </span>
-                  </button>
-                ))}
-              </div>
+                    <button
+                      type="button"
+                      onClick={() => openRegionFeed(group.name)}
+                      className="w-fit text-left text-[12px] font-bold uppercase tracking-[0.12em] text-gray-950 hover:underline"
+                    >
+                      {group.name}
+                    </button>
 
-              {/* STORY LIST */}
-
-              <div className="divide-y divide-gray-200">
-                {latestStories.length === 0 && (
-                  <p className="py-6 text-[11px] text-gray-400">
-                    No stories in this category yet.
-                  </p>
-                )}
-
-                {latestStories.map((story) => (
-                  <Link
-                    key={story.id}
-                    to={story.path}
-                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
-                  >
-                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
-                      <ImageWithFallback
-                        src={story.image}
-                        alt={story.title}
-                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2">
-                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {story.label}
+                    {top && (
+                      <Link to={top.path} className="group mt-2 block">
+                        <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
+                          {top.title}
                         </span>
+                      </Link>
+                    )}
 
-                        {story.location && (
-                          <>
-                            <span className="text-[8px] text-gray-300">•</span>
-
-                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
-                              <MapPin size={8} />
-                              {story.location}
-                            </span>
-                          </>
-                        )}
-                      </div>
-
-                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {story.title}
-                      </h3>
-
-                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
-                        {story.lede}
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
-                        <Clock size={8} />
-                        {story.when}
-                        {story.readTime ? ` · ${story.readTime}` : ""}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              {hasMore && (
-                <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVisibleCount((count) =>
-                        Math.min(count + PAGE_SIZE, filteredStories.length)
-                      )
-                    }
-                    className="rounded-full border border-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-800 transition-colors hover:border-red-600 hover:text-red-600"
-                  >
-                    Show more stories
-                  </button>
-
-                  <span className="text-[9px] text-gray-400">
-                    Showing {latestStories.length} of {filteredStories.length}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* MAGAZINE */}
-
-            <div>
-              <SectionHeader title="Magazine" link="/magazine" />
-
-              <Link
-                to="/magazine"
-                className="group block overflow-hidden rounded-md bg-black"
-              >
-                <div className="overflow-hidden">
-                  <ImageWithFallback
-                    src={magazinePreview.image}
-                    alt={magazinePreview.title}
-                    className="w-full h-[210px] object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                </div>
-
-                <div className="p-4">
-                  <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-gray-500">
-                    Pride Times Magazine
-                  </span>
-
-                  <h3 className="font-serif text-xl font-bold text-white mt-1">
-                    {magazinePreview.title}
-                  </h3>
-
-                  <p className="text-[11px] text-gray-400 leading-[1.5] mt-1.5">
-                    {magazinePreview.subtitle}
-                  </p>
-
-                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wide text-white border-b border-white/50 pb-1 mt-4">
-                    Read Digital Edition
-                    <ArrowRight size={10} />
-                  </span>
-                </div>
-              </Link>
+                    <button
+                      type="button"
+                      onClick={() => openRegionFeed(group.name)}
+                      className="mt-3 w-fit text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
+                    >
+                      {group.stories.length}{" "}
+                      {group.stories.length === 1 ? "story" : "stories"}
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </section>
-
-          <PrideTimesAd slot="6810700989" />
         </main>
       </div>
 
-      {/* =====================================================
-          LOCAL PAGE UTILITIES
-      ===================================================== */}
+      {/* Local page utilities */}
 
       <style>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        ::selection {
-          background: rgba(227, 27, 35, 0.12);
-          color: inherit;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        html { scroll-behavior: smooth; }
+        ::selection { background: rgba(227, 27, 35, 0.12); color: inherit; }
       `}</style>
     </div>
   );
