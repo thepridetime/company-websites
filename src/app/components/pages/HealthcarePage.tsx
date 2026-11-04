@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -19,8 +19,8 @@ import AiHealthcareImg from "../../../imports/ai-healthcare.png";
 import BiotechLabImg from "../../../imports/biotech-drug-lab.jpg";
 import HealthTechImg from "../../../imports/health-tech-discovery.jpg";
 
-/* Image pool for the healthcare cards. Each card takes the next image in the
-   list, so neighbouring headlines never share a picture. */
+/* Image pool for stories that have no image of their own.
+   Each such card takes the next picture, so neighbours never match. */
 const healthImagePool = [
   HealthFallbackImg,
   HC2Img,
@@ -33,6 +33,7 @@ const healthImagePool = [
 
 /* Display label for this section (page title, cards and feed). */
 const SECTION_LABEL = "Healthcare and Pharma";
+const PAGE_SIZE = 8;
 
 /* =========================================================
    HEALTHCARE ITEMS
@@ -41,169 +42,238 @@ const SECTION_LABEL = "Healthcare and Pharma";
    - Healthcare articles from src/app/data/specialArticleData.ts
      (section "Healthcare")
    The October edition story comes first (most recent).
-========================================================= */
+   ========================================================= */
 
 type HealthItem = {
   id: string;
   href: string;
   title: string;
   lede: string;
+  kicker: string;
   location?: string;
-  // image: string;
-  image?: string;
+  image: string;
   meta: string;
   keyFacts: { label: string; value: string }[];
 };
 
-const octHealthItems: HealthItem[] = octEditionArticles
+const octHealthItems = octEditionArticles
   .filter((article) => article.section === "Healthcare and Pharma")
   .map((article) => ({
     id: article.id,
     href: octEditionArticlePath(article),
     title: article.title,
     lede: article.lede,
+    kicker: article.section,
     location: article.location,
     image: article.image,
     meta: `${article.publishedAt} · ${article.readTime}`,
     keyFacts: article.keyFacts,
   }));
 
-const specialHealthItems: HealthItem[] = specialArticles
+const specialHealthItems = specialArticles
   .filter((article) => article.section === "Healthcare")
   .map((article) => ({
     id: article.id,
     href: specialArticlePath(article.id),
     title: article.title,
     lede: article.dek,
+    kicker: article.category,
     location: undefined,
-    // image: article.image ?? HealthFallbackImg, (fallback)
     image: article.image,
     meta: `${article.publishedAt} · ${article.readTime}`,
     keyFacts: article.keyFacts,
   }));
 
-const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems];
-// const healthItems: HealthItem[] = [...octHealthItems, ...specialHealthItems].map(
-//   (item, index) => ({
-//     ...item,
-//     // image: healthImagePool[index % healthImagePool.length],
-//     image?: string;
-//   })
-// );
+const healthItems: HealthItem[] = [
+  ...octHealthItems,
+  ...specialHealthItems,
+].map((item, index) => ({
+  ...item,
+  image: item.image || healthImagePool[index % healthImagePool.length],
+}));
 
-const leadStory = healthItems[0];
-const otherStories = healthItems.slice(1);
+/* Homepage-style layout slots */
+const leadStory: HealthItem | undefined = healthItems[0];
+const majorStories = healthItems.slice(1, 3);
+const editorsPick: HealthItem | undefined = healthItems[3];
+const sideHeadlines = healthItems.slice(4, 8);
+
+const categoryTabs = [
+  "All",
+  ...Array.from(new Set(healthItems.map((item) => item.kicker))),
+];
 
 /* =========================================================
-   GOOGLE ADSENSE SLOTS
-========================================================= */
+   SMALL UI PIECES (same as homepage)
+   - Headlines: serif. Hover = underline (not colour change).
+   - Red is ONLY for category labels and "view" links.
+   - Black top rule on every section header.
+   ========================================================= */
 
-type AdSlotProps = {
-  slot: string;
-  format?: "auto" | "fluid";
-  layout?: string;
-  layoutKey?: string;
-  className?: string;
-  minHeight?: number;
-};
+function SectionHeader({
+  title,
+  rightLabel = "The Pride Times",
+}: {
+  title: string;
+  rightLabel?: string;
+}) {
+  return (
+    <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+        {title}
+      </h2>
+      <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
+        {rightLabel}
+      </span>
+    </div>
+  );
+}
 
-function AdSlot({
-  slot,
-  format = "auto",
-  layout,
-  layoutKey,
-  className = "",
-  minHeight = 90,
-}: AdSlotProps) {
-  useEffect(() => {
-    try {
-      const w = window as Window & {
-        adsbygoogle?: unknown[];
-      };
+function Kicker({ children }: { children: ReactNode }) {
+  return (
+    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+      {children}
+    </span>
+  );
+}
 
-      w.adsbygoogle = w.adsbygoogle || [];
-      w.adsbygoogle.push({});
-    } catch {
-      // AdSense may be unavailable because of an ad blocker,
-      // development environment, consent settings, or no inventory.
-    }
-  }, []);
+function TimeStamp({ children }: { children: ReactNode }) {
+  return (
+    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+      <Clock size={9} />
+      {children}
+    </span>
+  );
+}
+
+/* =========================================================
+   KEY FIGURES (dark panel, same style as homepage Markets)
+   Uses the lead story's key facts.
+   ========================================================= */
+
+function KeyFiguresPanel({
+  title,
+  facts,
+}: {
+  title: string;
+  facts: { label: string; value: string }[];
+}) {
+  if (facts.length === 0) {
+    return null;
+  }
 
   return (
-    <div className={`w-full overflow-hidden ${className}`}>
-      <div className="mb-1 text-center text-[7px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-        Advertisement
+    <div className="rounded-sm bg-black p-4 text-white">
+      <div className="flex items-center justify-between border-b border-white/20 pb-2">
+        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+          {title}
+        </h2>
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+          {facts.length} facts
+        </span>
       </div>
 
-      <div className="w-full overflow-hidden" style={{ minHeight }}>
-        <ins
-          className="adsbygoogle"
-          style={{
-            display: "block",
-            width: "100%",
-            minHeight,
-          }}
-          data-ad-client="ca-pub-2331501617441941"
-          data-ad-slot={slot}
-          data-ad-format={format}
-          data-full-width-responsive={format === "auto" ? "true" : undefined}
-          data-ad-layout={layout}
-          data-ad-layout-key={layoutKey}
-        />
+      <div className="divide-y divide-white/10">
+        {facts.map((fact) => (
+          <div
+            key={fact.label}
+            className="flex items-start justify-between gap-3 py-2.5"
+          >
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+              {fact.label}
+            </span>
+            <span className="text-right text-[12px] tabular-nums text-gray-100">
+              {fact.value}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function SidebarAd() {
-  return (
-    <AdSlot slot="5373718974" format="auto" minHeight={250} className="mt-6" />
-  );
-}
-
 /* =========================================================
-   SECTION HEADER (same style as homepage)
-========================================================= */
+   SIDEBAR: NUMBERS
+   ========================================================= */
 
-function SectionHeader({ title }: { title: string }) {
+function HealthNumbers() {
+  const stats = [
+    { label: "Total stories", value: String(healthItems.length) },
+    { label: "Edition stories", value: String(octHealthItems.length) },
+    { label: "Special articles", value: String(specialHealthItems.length) },
+    { label: "Categories", value: String(categoryTabs.length - 1) },
+  ];
+
   return (
-    <div className="flex items-center justify-between border-b-2 border-black pb-2.5 mb-5">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-        {title}
-      </h2>
-
-      <span className="hidden sm:block text-[8px] uppercase tracking-[0.16em] text-gray-400">
-        The Pride Times
-      </span>
+    <div>
+      <SectionHeader title="Numbers at a Glance" rightLabel="Desk" />
+      <div className="grid grid-cols-2 gap-x-4 gap-y-5">
+        {stats.map((stat) => (
+          <div key={stat.label}>
+            <div className="font-serif text-[24px] font-bold leading-none text-gray-950">
+              {stat.value}
+            </div>
+            <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
 /* =========================================================
    HEALTHCARE AND PHARMA PAGE
-========================================================= */
+   ========================================================= */
 
 export function HealthcarePage() {
-  return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <main className="pt-4 md:pt-6 pb-16">
-          {/* PAGE TITLE */}
+  const [activeTab, setActiveTab] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const feedRef = useRef<HTMLDivElement | null>(null);
 
-          <header className="border-t-[3px] border-red-600 pt-4 mb-6">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
+  const filteredItems = useMemo(
+    () =>
+      activeTab === "All"
+        ? healthItems
+        : healthItems.filter((item) => item.kicker === activeTab),
+    [activeTab]
+  );
+
+  const visibleItems = filteredItems.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredItems.length;
+
+  const selectTab = (tab: string) => {
+    setActiveTab(tab);
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  const openCategoryFeed = (tab: string) => {
+    selectTab(tab);
+
+    window.requestAnimationFrame(() => {
+      feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <main className="pb-16 pt-4 md:pt-6">
+          {/* PAGE TITLE */}
+          <header className="mb-6 border-t-[3px] border-black pt-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
+                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                  Pharma &amp; Care
+                </span>
+                <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 md:text-[38px]">
                   {SECTION_LABEL}
                 </h1>
-
-                <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
+                <p className="mt-2 text-[12px] leading-[1.5] text-gray-500 md:text-[13px]">
                   Drugs, medtech, healthcare services and pharmaceutical
                   business from The Pride Times.
                 </p>
               </div>
-
-              <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
                 Pharma • Medtech • Care
               </span>
             </div>
@@ -212,209 +282,318 @@ export function HealthcarePage() {
           <PrideTimesAd variant="first" />
 
           {!leadStory && (
-            <p className="py-10 text-center text-[11px] text-gray-400">
+            <p className="py-10 text-center text-[12px] text-gray-400">
               No healthcare and pharma stories yet.
             </p>
           )}
 
           {leadStory && (
-            <section className="pb-8 mb-8 border-b border-gray-300">
-              <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 lg:gap-6">
-                {/* LEAD STORY */}
-
-                <Link
-                  to={leadStory.href}
-                  className="group relative block overflow-hidden rounded-lg border border-gray-200 min-h-[430px] lg:min-h-[500px] bg-black"
-                >
-                  {/* <ImageWithFallback
-                    src={leadStory.image}
-                    alt={leadStory.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  /> */}
-                  {leadStory.image ? (
-                    <ImageWithFallback
-                      src={leadStory.image}
-                      alt={leadStory.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gray-700 flex items-center justify-center text-xs uppercase tracking-wide text-gray-300">
-                      No image
-                    </div>
-                  )}
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-
-                  <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase rounded-[2px]">
-                    {SECTION_LABEL}
-                    {leadStory.location ? ` | ${leadStory.location}` : ""}
-                  </span>
-
-                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                    <h2 className="font-serif text-2xl md:text-[30px] lg:text-[34px] font-bold leading-[1.08] text-white">
-                      {leadStory.title}
-                    </h2>
-
-                    <p className="text-[12px] md:text-[13px] text-gray-200 leading-[1.6] mt-3 line-clamp-3">
-                      {leadStory.lede}
-                    </p>
-
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white uppercase tracking-wide mt-4 border-b border-white/60 pb-1">
-                      Read Full Story
-                      <ArrowRight size={12} />
-                    </span>
-                  </div>
-                </Link>
-
-                {/* RIGHT COLUMN */}
-
-                <aside className="min-w-0">
-                  <div className="pb-5 border-b border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <h2 className="font-serif text-lg font-bold">
-                        Key Figures
+            <>
+              {/* =================================================
+                  1. TOP SECTION — 3 columns, like the homepage
+                     LEFT   : text-only Top Stories list
+                     CENTER : lead story + 2 secondary stories
+                     RIGHT  : Key Figures panel + Editor's Pick
+              ================================================= */}
+              <section className="mb-10 border-b border-gray-300 pb-8">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
+                  {/* LEFT: Top stories (text only) */}
+                  <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
+                    <div className="mb-1 border-t-[3px] border-black pt-2">
+                      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                        Top Stories
                       </h2>
-
-                      <span className="border border-gray-300 rounded-full px-3 py-1 text-[9px] font-medium">
-                        {healthItems.length} stories
-                      </span>
                     </div>
 
-                    <div className="divide-y divide-gray-100">
-                      {leadStory.keyFacts.map((fact) => (
-                        <div
-                          key={fact.label}
-                          className="py-2 flex items-start justify-between gap-3"
-                        >
-                          <span className="text-[10px] font-semibold text-gray-800">
-                            {fact.label}
-                          </span>
+                    <ul className="divide-y divide-gray-200">
+                      {sideHeadlines.map((story) => (
+                        <li key={story.id}>
+                          <Link to={story.href} className="group block py-3.5">
+                            <Kicker>{story.kicker}</Kicker>
 
-                          <span className="text-[10px] text-gray-500 text-right tabular-nums">
-                            {fact.value}
-                          </span>
-                        </div>
+                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                              {story.title}
+                            </h3>
+
+                            <div className="mt-1.5">
+                              <TimeStamp>{story.meta}</TimeStamp>
+                            </div>
+                          </Link>
+                        </li>
                       ))}
-                    </div>
-                  </div>
+                    </ul>
+                  </aside>
 
-                  <div className="pt-5">
-                    <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-1">
-                      <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-red-600">
-                        More Healthcare News
-                      </h2>
+                  {/* CENTER: lead story */}
+                  <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
+                    <Link to={leadStory.href} className="group block">
+                      <div className="relative overflow-hidden rounded-sm bg-black">
+                        <ImageWithFallback
+                          src={leadStory.image}
+                          alt={leadStory.title}
+                          loading="eager"
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                        />
+                      </div>
 
-                      <span className="text-[8px] uppercase tracking-wide text-gray-400">
-                        Newsroom
-                      </span>
-                    </div>
+                      <div className="mt-4">
+                        <Kicker>
+                          {SECTION_LABEL}
+                          {leadStory.location ? ` · ${leadStory.location}` : ""}
+                        </Kicker>
 
-                    {otherStories.length > 0 ? (
-                      <div className="divide-y divide-gray-100">
-                        {otherStories.slice(0, 6).map((item) => (
+                        <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
+                          {leadStory.title}
+                        </h1>
+
+                        <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
+                          {leadStory.lede}
+                        </p>
+
+                        <div className="mt-3">
+                          <TimeStamp>{leadStory.meta}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+
+                    {/* Two secondary stories under the lead */}
+                    {majorStories.length > 0 && (
+                      <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
+                        {majorStories.map((story) => (
                           <Link
-                            key={item.id}
-                            to={item.href}
-                            className="group block py-3"
+                            key={story.id}
+                            to={story.href}
+                            className="group block"
                           >
-                            <div className="flex gap-3">
-                              <span className="shrink-0 text-[9px] font-semibold text-red-600 w-[58px] truncate">
-                                {item.location ?? "Healthcare"}
-                              </span>
-
+                            <div className="overflow-hidden rounded-sm">
                               <ImageWithFallback
-                                src={item.image}
-                                alt={item.title}
-                                className="h-[60px] w-[84px] shrink-0 rounded-sm object-cover"
+                                src={story.image}
+                                alt={story.title}
+                                className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                               />
+                            </div>
 
-                              <div className="min-w-0">
-                                <span className="block text-[11px] font-medium leading-[1.4] text-gray-800 group-hover:text-red-600 transition-colors">
-                                  {item.title}
-                                </span>
+                            <div className="mt-2.5">
+                              <Kicker>{story.kicker}</Kicker>
 
-                                <span className="mt-1 block text-[10px] leading-[1.45] text-gray-500 line-clamp-2">
-                                  {item.lede}
-                                </span>
+                              <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
+                                {story.title}
+                              </h3>
+
+                              <div className="mt-1.5">
+                                <TimeStamp>{story.meta}</TimeStamp>
                               </div>
                             </div>
                           </Link>
                         ))}
                       </div>
-                    ) : (
-                      <p className="py-3 text-[10px] text-gray-400">
-                        More healthcare stories will appear here.
-                      </p>
                     )}
                   </div>
 
-                  <SidebarAd />
-                </aside>
-              </div>
-            </section>
-          )}
+                  {/* RIGHT: Key figures + Editor's Pick */}
+                  <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
+                    <KeyFiguresPanel
+                      title="Key Figures"
+                      facts={leadStory.keyFacts}
+                    />
 
-          {/* LATEST HEALTHCARE FEED */}
+                    {editorsPick && (
+                      <div className="mt-6">
+                        <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+                          <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                            Editor's Pick
+                          </h2>
+                        </div>
 
-          {healthItems.length > 0 && (
-            <section className="mb-12">
-              <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
+                        <Link to={editorsPick.href} className="group block">
+                          <div className="overflow-hidden rounded-sm">
+                            <ImageWithFallback
+                              src={editorsPick.image}
+                              alt={editorsPick.title}
+                              className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            />
+                          </div>
 
-              <div className="divide-y divide-gray-200">
-                {healthItems.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className="group grid grid-cols-[130px_1fr] sm:grid-cols-[280px_1fr] gap-4 sm:gap-6 py-6"
-                  >
-                    <div className="w-full h-[96px] sm:h-[185px] overflow-hidden rounded-md">
-                      <ImageWithFallback
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
-                      />
+                          <div className="mt-2.5">
+                            <Kicker>{editorsPick.kicker}</Kicker>
+
+                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                              {editorsPick.title}
+                            </h3>
+
+                            <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.5] text-gray-500">
+                              {editorsPick.lede}
+                            </p>
+                          </div>
+                        </Link>
+                      </div>
+                    )}
+                  </aside>
+                </div>
+              </section>
+
+              <PrideTimesAd variant="second" />
+
+              {/* =================================================
+                  2. LATEST HEALTHCARE NEWS
+                     LEFT  : tabs + filterable feed with "Show more"
+                     RIGHT : sticky numbers + browse by category
+              ================================================= */}
+              <section aria-label="Latest healthcare news" className="mb-12">
+                <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
+
+                <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+                  {/* Feed */}
+                  <div ref={feedRef} className="scroll-mt-24 min-w-0">
+                    <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
+                      {categoryTabs.map((tab) => (
+                        <button
+                          key={tab}
+                          type="button"
+                          onClick={() => selectTab(tab)}
+                          className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                            activeTab === tab
+                              ? "border-b-2 border-black pb-1 text-black"
+                              : "pb-1 text-gray-400 hover:text-gray-800"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
                     </div>
 
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2">
-                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-[0.14em]">
-                          {SECTION_LABEL}
+                    <div className="divide-y divide-gray-200">
+                      {visibleItems.length === 0 && (
+                        <p className="py-6 text-[12px] text-gray-400">
+                          No stories in this category yet.
+                        </p>
+                      )}
+
+                      {visibleItems.map((item) => (
+                        <Link
+                          key={item.id}
+                          to={item.href}
+                          className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                        >
+                          <div className="h-[80px] w-full overflow-hidden rounded-sm bg-gray-100 sm:h-[126px]">
+                            <ImageWithFallback
+                              src={item.image}
+                              alt={item.title}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-x-2">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                                {item.kicker}
+                              </span>
+
+                              {item.location && (
+                                <>
+                                  <span className="text-[10px] text-gray-300">•</span>
+                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                                    <MapPin size={9} />
+                                    {item.location}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+
+                            <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                              {item.title}
+                            </h3>
+
+                            <p className="mt-1.5 hidden text-[13px] leading-[1.5] text-gray-500 line-clamp-2 sm:block">
+                              {item.lede}
+                            </p>
+
+                            <div className="mt-1.5">
+                              <TimeStamp>{item.meta}</TimeStamp>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+
+                    {hasMore && (
+                      <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setVisibleCount((count) =>
+                              Math.min(count + PAGE_SIZE, filteredItems.length)
+                            )
+                          }
+                          className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                        >
+                          Show more stories
+                        </button>
+
+                        <span className="text-[10px] text-gray-400">
+                          Showing {visibleItems.length} of {filteredItems.length}
                         </span>
+                      </div>
+                    )}
+                  </div>
 
-                        {item.location && (
-                          <>
-                            <span className="text-[8px] text-gray-300">•</span>
+                  {/* Sidebar */}
+                  <div className="min-w-0">
+                    <div className="lg:sticky lg:top-24">
+                      <HealthNumbers />
 
-                            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-gray-400">
-                              <MapPin size={8} />
-                              {item.location}
-                            </span>
-                          </>
-                        )}
+                      <div className="mt-8">
+                        <SectionHeader
+                          title="Browse by Category"
+                          rightLabel="Sections"
+                        />
+
+                        <div className="divide-y divide-gray-200">
+                          {categoryTabs
+                            .filter((tab) => tab !== "All")
+                            .map((tab) => {
+                              const count = healthItems.filter(
+                                (item) => item.kicker === tab
+                              ).length;
+
+                              return (
+                                <button
+                                  key={tab}
+                                  type="button"
+                                  onClick={() => openCategoryFeed(tab)}
+                                  className="flex w-full items-center justify-between py-3 text-left"
+                                >
+                                  <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-gray-950 hover:underline">
+                                    {tab}
+                                  </span>
+                                  <span className="text-[10px] font-bold uppercase tracking-wide text-red-600">
+                                    {count} {count === 1 ? "story" : "stories"}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                        </div>
                       </div>
 
-                      <h3 className="font-serif text-base sm:text-2xl font-bold leading-[1.2] mt-1 text-gray-900 group-hover:text-red-600 transition-colors">
-                        {item.title}
-                      </h3>
-
-                      <p className="hidden sm:block text-[13px] text-gray-500 leading-[1.55] mt-2 line-clamp-3">
-                        {item.lede}
-                      </p>
-
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400 mt-1.5">
-                        <Clock size={8} />
-                        {item.meta}
-                      </span>
+                      <div className="mt-8">
+                        <PrideTimesAd variant="third" />
+                      </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
+                  </div>
+                </div>
+              </section>
+            </>
           )}
-
-          <PrideTimesAd variant="second" />
         </main>
       </div>
+
+      {/* Local page utilities (same as homepage) */}
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        html { scroll-behavior: smooth; }
+        ::selection { background: rgba(227, 27, 35, 0.12); color: inherit; }
+      `}</style>
     </div>
   );
 }
