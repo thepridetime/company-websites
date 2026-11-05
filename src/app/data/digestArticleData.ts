@@ -221,7 +221,7 @@ export const digestArticles: DigestArticle[] = [
     author: "Sagar Kumar",
     publishedAt: digestEdition,
     readTime: "3 min read",
-    image: img_FIN4,
+    image: "https://images.unsplash.com/photo-1645226880663-81561dcab0ae?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     body: [
       "Speaking at a briefing in Mumbai, Mateo Laurent, chairperson of Ironwood Foods, said the decision reflected a long-term view. \"We are not reacting to a single quarter,\" Mateo said. \"We are positioning the company for the next decade of demand, and that requires patient capital and clear priorities.\"",
       "Financial terms were disclosed in part. The programme is expected to require capital expenditure of roughly $36.7 billion over three years, funded through a combination of operating cash flow and existing credit facilities. Management said it did not expect the plan to affect its dividend policy or its investment-grade credit rating.",

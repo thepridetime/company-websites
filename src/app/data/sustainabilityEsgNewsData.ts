@@ -42,7 +42,7 @@ export const sustainabilityEsgArticles: SustainabilityEsgArticle[] = [
     location: "Sydney",
     author: AUTHOR,
     publishedAt: "2026-09-30T08:00:00Z",
-    image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1400&q=80",
+    image: "https://images.unsplash.com/photo-1704793027965-da6e888e89fd?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "4 min read",
     highlights: [
       "Verdant Resources published its first full climate-risk disclosure.",
@@ -134,7 +134,7 @@ export const sustainabilityEsgArticles: SustainabilityEsgArticle[] = [
     location: "Chicago",
     author: AUTHOR,
     publishedAt: "2026-09-26T08:00:00Z",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1400&q=80",
+    image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "5 min read",
     highlights: [
       "Pioneer Foods will report Scope 3 emissions from suppliers.",
@@ -180,7 +180,7 @@ export const sustainabilityEsgArticles: SustainabilityEsgArticle[] = [
     location: "Dubai",
     author: AUTHOR,
     publishedAt: "2026-09-24T08:00:00Z",
-    image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1400&q=80",
+    image: "https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "4 min read",
     highlights: [
       "Helio Retail signed a sustainability-linked credit facility.",
@@ -203,7 +203,7 @@ export const sustainabilityEsgArticles: SustainabilityEsgArticle[] = [
     location: "Brussels",
     author: AUTHOR,
     publishedAt: "2026-09-23T08:00:00Z",
-    image: "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?auto=format&fit=crop&w=1400&q=80",
+    image: "https://images.unsplash.com/photo-1791093283904-83c9045547fd?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     readTime: "5 min read",
     highlights: [
       "A regulator opened an inquiry into Ember Motors' marketing claims.",

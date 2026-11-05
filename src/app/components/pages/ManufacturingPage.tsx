@@ -168,7 +168,25 @@ export function ManufacturingPage() {
       {/* Header and footer are intentionally owned by the existing app layout. */}
       <div className="mx-auto w-full max-w-[1480px] px-4 pb-12 pt-3 sm:px-6 lg:px-8">
         <main>
-          <header className="mb-4 border-t-[3px] border-red-600 pt-3">
+          <header className="border-t-[3px] border-red-600 pt-4 mb-6">
+  <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-2">
+    <div>
+      <h1 className="font-serif text-[28px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold leading-tight">
+        {SECTION_LABEL}
+      </h1>
+
+      <p className="mt-1 text-[11px] md:text-[13px] text-gray-500">
+        Reshoring, robotics, smart factories and industrial technology from
+        The Pride Times.
+      </p>
+    </div>
+
+    <span className="text-[8px] uppercase tracking-[0.18em] text-gray-400">
+      Factories • Robotics • Production
+    </span>
+  </div>
+</header>
+          {/* <header className="mb-4 border-t-[3px] border-red-600 pt-3">
             <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
               <div>
                 <p className="mb-1 text-[8px] font-bold uppercase tracking-[0.2em] text-red-700">
@@ -185,7 +203,7 @@ export function ManufacturingPage() {
                 Factories • Robotics • Production
               </span>
             </div>
-          </header>
+          </header> */}
 
           <PrideTimesAd variant="first" />
 

@@ -52,7 +52,7 @@ export const defaultFeaturedInnovation: InnovationFeaturedStoryData = {
   title: "AI Hardware Demand Raises the Importance of Advanced Manufacturing Quality Control",
   summary:
     "The expansion of AI hardware production increases pressure on manufacturers to improve process visibility, defect detection and yield management.",
-  image: img_innovation_hero_ai,
+  image: "https://images.unsplash.com/photo-1785522318345-67f8549614f6?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   url: "/article/manufacturing-ai-hardware-production",
 };
 
@@ -90,7 +90,7 @@ export const defaultTopInnovationStories: InnovationStory[] = [
       "Smart manufacturing combines artificial intelligence, robotics and digital-twin technology to improve production planning, maintenance, quality control and factory simulation.",
     publishedAt: "September 29, 2026",
     readTime: "8 min read",
-    image: img_semiconductor_ai_chip,
+    image: "https://images.unsplash.com/photo-1684369176170-463e84248b70?q=80&w=484&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     url: "/article/manufacturing-ai-robotics-digital-twins",
   },
 ];
