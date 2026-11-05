@@ -172,7 +172,7 @@ export const innovationExtraArticles: SpecialArticle[] = [
     category: "SMART MANUFACTURING",
     title: "Digital Twins Shift From Showcase Projects to Daily Plant Operations",
     dek: "Virtual replicas of factories are moving out of innovation labs and into the routine work of scheduling, maintenance and quality control.",
-    image: digitalTwinImg,
+    image: "https://images.unsplash.com/photo-1581094798398-153528d38b8f?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     author: "The Pride Times Editorial",
     publishedAt: "October 12, 2026",
     readTime: "6 MIN READ",
