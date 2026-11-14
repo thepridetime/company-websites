@@ -85,6 +85,7 @@ export function MarketsTicker() {
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const isPausedRef = useRef(false);
+  const pausedUntilRef = useRef(0);
   const rafRef = useRef<number | null>(null);
 
   // Fetch live market data.
@@ -175,47 +176,73 @@ export function MarketsTicker() {
     };
   }, [showSecurities]);
 
-  // Manually scroll the market ticker.
-  const scrollByAmount = (direction: "left" | "right") => {
+  /* ---------- Ticker track helpers ----------
+     offsetRef is the track's position in px (0 .. halfway).
+     Only setTrackX writes the transform, so the auto-scroll loop
+     and the arrow buttons never fight over it.                  */
+
+  const setTrackX = (x: number) => {
     const el = trackRef.current;
-
     if (!el) return;
-
-    const amount = (172 + 16) * 2;
-    const halfway = el.scrollWidth / 2;
-
-    if (halfway <= 0) return;
-
-    offsetRef.current += direction === "left" ? -amount : amount;
-
-    if (offsetRef.current < 0) {
-      offsetRef.current += halfway;
-    }
-
-    if (offsetRef.current >= halfway) {
-      offsetRef.current -= halfway;
-    }
-
-    el.style.transition = "transform 0.4s ease";
-    el.style.transform = `translateX(-${offsetRef.current}px)`;
-
-    window.setTimeout(() => {
-      if (trackRef.current) {
-        trackRef.current.style.transition = "none";
-      }
-    }, 400);
+    el.style.transform = `translateX(${-x}px)`;
   };
 
-  // Continuous auto-scroll.
+  /* Pause auto-scroll for a fixed time (used after an arrow click). */
+  const pauseFor = (ms: number) => {
+    pausedUntilRef.current = Math.max(
+      pausedUntilRef.current,
+      performance.now() + ms
+    );
+  };
+
+  /* One arrow click moves exactly one card (plus its gap). */
+  const scrollByAmount = (direction: "left" | "right") => {
+    const el = trackRef.current;
+    if (!el) return;
+
+    const halfway = el.scrollWidth / 2;
+    if (halfway <= 0) return;
+
+    const firstCard = el.children[0] as HTMLElement | undefined;
+    const gap = 16; // matches gap-4 on the track
+    const step = (firstCard?.offsetWidth ?? 180) + gap;
+
+    pauseFor(4000);
+
+    // Move to the next position without wrapping, so the slide is smooth.
+    const target = offsetRef.current + (direction === "left" ? -step : step);
+
+    el.style.transition = "transform 0.4s ease";
+    setTrackX(target);
+    offsetRef.current = target;
+
+    // After the slide finishes, wrap back into [0, halfway) silently.
+    window.setTimeout(() => {
+      const track = trackRef.current;
+      if (!track) return;
+
+      let wrapped = offsetRef.current % halfway;
+      if (wrapped < 0) wrapped += halfway;
+
+      track.style.transition = "none";
+      offsetRef.current = wrapped;
+      setTrackX(wrapped);
+    }, 420);
+  };
+
+  /* Continuous auto-scroll. Paused while hovered, touched,
+     or within the window after an arrow click.               */
   useEffect(() => {
     if (cards.length === 0) return;
 
     const speed = 0.5;
 
-    const step = () => {
+    const step = (now: number) => {
       const el = trackRef.current;
+      const paused =
+        isPausedRef.current || now < pausedUntilRef.current;
 
-      if (el && !isPausedRef.current) {
+      if (el && !paused) {
         const halfway = el.scrollWidth / 2;
 
         offsetRef.current += speed;
@@ -224,7 +251,7 @@ export function MarketsTicker() {
           offsetRef.current -= halfway;
         }
 
-        el.style.transform = `translateX(-${offsetRef.current}px)`;
+        setTrackX(offsetRef.current);
       }
 
       rafRef.current = requestAnimationFrame(step);
