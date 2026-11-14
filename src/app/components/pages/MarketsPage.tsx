@@ -249,6 +249,19 @@ export function MarketsPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
+              PAGE HEADING
+          ================================================= */}
+
+          <header className="mb-6 border-b border-gray-200 pb-4">
+            <h1 className="text-[36px] font-extrabold leading-[1.05] tracking-[-0.01em] text-gray-950 md:text-[44px]">
+              Markets
+            </h1>
+            <p className="mt-2 text-[13px] text-gray-500">
+              {octEditionMeta.edition} · {octEditionMeta.date}
+            </p>
+          </header>
+
+          {/* =================================================
               1. TOP BAND — 3 columns
                  LEFT   : feature story + Related
                  CENTRE : lead story + Related
@@ -300,9 +313,9 @@ export function MarketsPage() {
                   {leadStory.industry} · {leadStory.location}
                 </Kicker>
 
-                <h1 className="mt-2 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                <h2 className="mt-2 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
                   {leadStory.title}
-                </h1>
+                </h2>
 
                 <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
                   {leadStory.lede}
