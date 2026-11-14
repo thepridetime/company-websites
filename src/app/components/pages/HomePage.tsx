@@ -123,10 +123,26 @@ const interviewRelated = at(18);
 const trendingStrip = [at(19), at(22), at(23), at(24)];
 const editorsPick = at(25);
 
+/* Newsletter strip: only the site's own sections and stories */
 const newsletterPromos = [
-  { name: "Bloomberg Weekend", headline: "There's a Chatbot in My Marriage", image: at(2).image },
-  { name: "Merryn Talks Money", headline: "Why Wealth Taxes Usually Don't Work", image: at(3).image },
-  { name: "On Books", headline: "The Year's Best Books, Unstoppable Technology, Alternate Reality TV", image: at(4).image },
+  {
+    label: "Magazine",
+    headline: "The 2026 Global Industry Outlook",
+    image: MagazineImg,
+    to: "/magazine",
+  },
+  {
+    label: "Markets",
+    headline: at(2).title,
+    image: at(2).image,
+    to: "/markets",
+  },
+  {
+    label: "Editor's Pick",
+    headline: editorsPick.title,
+    image: editorsPick.image,
+    to: digestArticlePath(editorsPick),
+  },
 ];
 
 const sectionNames = Array.from(
@@ -438,21 +454,21 @@ export function HomePage() {
             <div className="grid min-w-0 flex-1 grid-cols-1 gap-6 md:grid-cols-3">
               {newsletterPromos.map((promo) => (
                 <Link
-                  key={promo.name}
-                  to="/premium"
+                  key={promo.label}
+                  to={promo.to}
                   className="group flex items-center gap-3"
                 >
                   <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-100">
                     <ImageWithFallback
                       src={promo.image}
-                      alt={promo.name}
+                      alt={promo.label}
                       className="h-full w-full object-cover"
                     />
                   </div>
 
                   <div className="min-w-0">
                     <p className="text-[12px] text-gray-500">
-                      Newsletter: {promo.name}
+                      {promo.label}
                     </p>
                     <p className="line-clamp-1 text-[13px] font-semibold text-gray-950 group-hover:underline">
                       {promo.headline}
