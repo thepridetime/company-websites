@@ -7,7 +7,6 @@ import {
   TrendingUp,
   TrendingDown,
   MapPin,
-  Play,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -116,14 +115,13 @@ const at = (index: number): OctEditionArticle =>
 
 const leadStory = at(0);          // centre column
 const featureStory = at(1);       // left column
-const videoStories = [at(10), at(20), at(21)];
+const todaysNews = [at(10), at(20), at(21)];
 const latestList = [at(11), at(12), at(13), at(14), at(15), at(16)];
 const interviewStory = at(17);
 const interviewRelated = at(18);
 const trendingStrip = [at(19), at(22), at(23), at(24)];
 const editorsPick = at(25);
 
-/* Newsletter strip: only the site's own sections and stories */
 const newsletterPromos = [
   {
     label: "Magazine",
@@ -251,8 +249,8 @@ const prideTimes30 = [
    Layout rules used on this page:
    - Top band: three columns. Left and centre are story cards
      (image, bold headline, dek, "Related" box). Right is a
-     Today's Videos panel above a Latest list with All / Your News tabs.
-   - Below: a wide interview row with a video frame and player bar.
+     Today's News list above a Latest list with All / Your News tabs.
+   - Below: a wide interview row with an image and headline.
    - Headlines are bold sans-serif, left-aligned, clamped to fixed lines.
    - Red is used only for category labels and the section title.
    - Thin grey rules separate items; no boxes except the Related panel.
@@ -320,6 +318,8 @@ function TimeStamp({ children }: { children: React.ReactNode }) {
   );
 }
 
+/* Related box used under feature stories */
+
 function RelatedBox({ items }: { items: OctEditionArticle[] }) {
   return (
     <div className="mt-4 border border-gray-200">
@@ -356,8 +356,6 @@ export function HomePage() {
 
   const [activeLatestTab, setActiveLatestTab] =
     useState<"All" | "Your News">("All");
-
-  const [videoIndex, setVideoIndex] = useState(0);
 
   const newsListRef = useRef<HTMLDivElement | null>(null);
 
@@ -440,8 +438,6 @@ export function HomePage() {
   const currentLatest =
     activeLatestTab === "All" ? latestList : yourNewsList;
 
-  const currentVideo = videoStories[videoIndex];
-
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -500,7 +496,7 @@ export function HomePage() {
               1. TOP BAND — 3 columns
                  LEFT   : feature story + Related
                  CENTRE : lead story + Related
-                 RIGHT  : Today's Videos + Latest list
+                 RIGHT  : Today's News + Latest list
           ================================================= */}
 
           <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
@@ -556,90 +552,52 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* ---------- RIGHT: videos + latest ---------- */}
+            {/* ---------- RIGHT: today's news + latest ---------- */}
 
             <aside className="flex flex-col p-4 md:col-span-2 lg:col-span-4">
-              {/* Today's Videos */}
+              {/* Today's News */}
 
               <div className="flex items-center justify-between">
                 <h2 className="text-[15px] font-extrabold text-gray-950">
-                  Today's Videos
+                  Today's News
                 </h2>
 
                 <Link
-                  to="/markets"
+                  to="/business-news"
                   className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
                 >
                   Explore More
                 </Link>
               </div>
 
-              <Link
-                to={digestArticlePath(currentVideo)}
-                className="group mt-3 block"
-              >
-                <div className="relative overflow-hidden bg-black">
-                  <ImageWithFallback
-                    src={currentVideo.image}
-                    alt={currentVideo.title}
-                    className="aspect-[16/10] w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.02]"
-                  />
+              <ul className="mt-3 divide-y divide-gray-200">
+                {todaysNews.map((story) => (
+                  <li key={story.id}>
+                    <Link
+                      to={digestArticlePath(story)}
+                      className="group flex items-start gap-3 py-3"
+                    >
+                      <div className="h-[64px] w-[96px] shrink-0 overflow-hidden bg-gray-100">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
 
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-black">
-                      <Play size={20} fill="currentColor" />
-                    </span>
-                  </div>
-                </div>
-
-                <p className="mt-2 text-[11px] text-gray-500">
-                  Video
-                </p>
-                <p className="text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-2">
-                  {currentVideo.title}
-                </p>
-              </Link>
-
-              <div className="mt-3 flex items-center justify-between">
-                <div className="flex gap-1.5">
-                  {videoStories.map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      aria-label={`Video ${i + 1}`}
-                      onClick={() => setVideoIndex(i)}
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        videoIndex === i ? "bg-black" : "bg-gray-300"
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex gap-1">
-                  <button
-                    type="button"
-                    aria-label="Previous video"
-                    onClick={() =>
-                      setVideoIndex((i) =>
-                        i === 0 ? videoStories.length - 1 : i - 1
-                      )
-                    }
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
-                  >
-                    <ChevronLeft size={13} />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Next video"
-                    onClick={() =>
-                      setVideoIndex((i) => (i + 1) % videoStories.length)
-                    }
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
-                  >
-                    <ChevronRight size={13} />
-                  </button>
-                </div>
-              </div>
+                      <div className="min-w-0 flex-1">
+                        <Kicker>{story.section}</Kicker>
+                        <p className="mt-1 line-clamp-2 text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </p>
+                        <div className="mt-1">
+                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
 
               {/* Latest */}
 
@@ -698,27 +656,19 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              2. WEEKEND INTERVIEW — video frame left, story right
+              2. WEEKEND INTERVIEW — image left, story right
           ================================================= */}
 
           <section className="mt-0 grid grid-cols-1 items-stretch gap-0 border-x border-b border-gray-200 lg:grid-cols-12">
             <Link
               to={digestArticlePath(interviewStory)}
-              className="group relative block overflow-hidden bg-black lg:col-span-6"
+              className="group block overflow-hidden bg-gray-100 lg:col-span-6"
             >
               <ImageWithFallback
                 src={interviewStory.image}
                 alt={interviewStory.title}
-                className="aspect-[16/9] w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.02]"
+                className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
               />
-
-              <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-gradient-to-t from-black/80 to-transparent px-3 pb-2 pt-8 text-white">
-                <Play size={14} fill="currentColor" />
-                <div className="h-[3px] flex-1 bg-white/30">
-                  <div className="h-full w-[18%] bg-white" />
-                </div>
-                <span className="text-[11px] tabular-nums">1:10</span>
-              </div>
             </Link>
 
             <div className="flex flex-col justify-center p-5 lg:col-span-6 lg:p-8">
