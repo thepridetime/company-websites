@@ -54,6 +54,8 @@ type MarketItem = {
 
 /* =========================================================
    GOOGLE ADSENSE
+   Kept exported because other pages import this component.
+   It is no longer rendered on the homepage.
 ========================================================= */
 
 declare global {
@@ -199,8 +201,12 @@ const prideTimes30 = [
 
 /* =========================================================
    SMALL UI PIECES
-   Design rules used on this page (matched to the reference):
-   - Headlines: bold sans-serif. Big lead headline, medium cards, small list items.
+   Headline rules used on this page:
+   - Headlines are bold sans-serif, left-aligned, never centred.
+   - Every headline is clamped to a fixed number of lines
+     (2 in cards and lists, 3 for the lead) so rows line up.
+   - Cards in the same row are full height, so the image
+     and headline start at the same y-position across the row.
    - Red is used only for category labels and "view all" links.
    - Hover on a headline = underline.
    - Thick black top rule on every section header.
@@ -387,7 +393,7 @@ export function HomePage() {
                       >
                         <Kicker>{story.industry}</Kicker>
 
-                        <h3 className="mt-1 text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                        <h3 className="mt-1 line-clamp-2 min-h-[2.6em] text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
                           {story.title}
                         </h3>
 
@@ -417,11 +423,11 @@ export function HomePage() {
                       {leadStory.industry} · {leadStory.location}
                     </Kicker>
 
-                    <h1 className="mt-1.5 text-[30px] font-extrabold leading-[1.08] tracking-[-0.01em] text-gray-950 group-hover:underline md:text-[40px]">
+                    <h1 className="mt-1.5 line-clamp-3 text-[30px] font-extrabold leading-[1.08] tracking-[-0.01em] text-gray-950 group-hover:underline md:text-[40px]">
                       {leadStory.title}
                     </h1>
 
-                    <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
+                    <p className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-gray-600">
                       {leadStory.lede}
                     </p>
 
@@ -435,12 +441,12 @@ export function HomePage() {
 
                 {/* Two secondary stories under the lead */}
 
-                <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
+                <div className="mt-6 grid grid-cols-1 items-stretch gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
                   {majorStories.map((story) => (
                     <Link
                       key={story.id}
                       to={digestArticlePath(story)}
-                      className="group block"
+                      className="group flex h-full flex-col"
                     >
                       <div className="overflow-hidden bg-gray-100">
                         <ImageWithFallback
@@ -450,14 +456,14 @@ export function HomePage() {
                         />
                       </div>
 
-                      <div className="mt-2.5">
+                      <div className="mt-2.5 flex flex-1 flex-col">
                         <Kicker>{story.section}</Kicker>
 
-                        <h3 className="mt-1 text-[19px] font-bold leading-[1.22] text-gray-950 group-hover:underline">
+                        <h3 className="mt-1 line-clamp-2 min-h-[2.44em] text-[19px] font-bold leading-[1.22] text-gray-950 group-hover:underline">
                           {story.title}
                         </h3>
 
-                        <div className="mt-1.5">
+                        <div className="mt-auto pt-1.5">
                           <TimeStamp>{story.publishedAt}</TimeStamp>
                         </div>
                       </div>
@@ -569,7 +575,7 @@ export function HomePage() {
                     <div className="mt-2.5">
                       <Kicker>{editorsPick.section}</Kicker>
 
-                      <h3 className="mt-1 text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                      <h3 className="mt-1 line-clamp-2 min-h-[2.5em] text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
                         {editorsPick.title}
                       </h3>
 
@@ -584,18 +590,19 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              2. TOP STORIES STRIP — 4 image cards in a row
+              2. TRENDING NOW — 4 image cards in a row
+                 All cards are full height so headlines align.
           ================================================= */}
 
           <section className="mb-12">
             <SectionHeader title="Trending Now" link="/business-news" />
 
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 items-stretch gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {topStrip.map((story) => (
                 <Link
                   key={story.id}
                   to={digestArticlePath(story)}
-                  className="group block"
+                  className="group flex h-full flex-col"
                 >
                   <div className="overflow-hidden bg-gray-100">
                     <ImageWithFallback
@@ -605,21 +612,21 @@ export function HomePage() {
                     />
                   </div>
 
-                  <Kicker>{story.section}</Kicker>
+                  <div className="mt-2.5 flex flex-1 flex-col">
+                    <Kicker>{story.section}</Kicker>
 
-                  <h3 className="mt-1 text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
-                    {story.title}
-                  </h3>
+                    <h3 className="mt-1 line-clamp-2 min-h-[2.56em] text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
+                      {story.title}
+                    </h3>
 
-                  <div className="mt-1.5">
-                    <TimeStamp>{story.publishedAt}</TimeStamp>
+                    <div className="mt-auto pt-1.5">
+                      <TimeStamp>{story.publishedAt}</TimeStamp>
+                    </div>
                   </div>
                 </Link>
               ))}
             </div>
           </section>
-
-          <PrideTimesAd />
 
           {/* =================================================
               3. LATEST NEWS
@@ -633,12 +640,12 @@ export function HomePage() {
               link="/business-news"
             />
 
-            <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
+            <ol className="grid grid-cols-1 items-stretch gap-x-8 md:grid-cols-2 lg:grid-cols-3">
               {techLaunchArticles.map((story, index) => (
                 <li key={story.id} className="border-b border-gray-200">
                   <Link
                     to={digestArticlePath(story)}
-                    className="group flex gap-3 py-3.5"
+                    className="group flex h-full gap-3 py-3.5"
                   >
                     <span className="w-6 shrink-0 text-[22px] font-extrabold leading-none tabular-nums text-gray-300">
                       {index + 1}
@@ -649,7 +656,7 @@ export function HomePage() {
                         {story.industry} · {story.location}
                       </Kicker>
 
-                      <span className="mt-1 block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                      <span className="mt-1 line-clamp-2 block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
                         {story.title}
                       </span>
                     </div>
@@ -692,7 +699,7 @@ export function HomePage() {
                     <Link
                       key={story.id}
                       to={digestArticlePath(story)}
-                      className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                      className="group grid grid-cols-[110px_1fr] items-start gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
                     >
                       <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
                         <ImageWithFallback
@@ -718,7 +725,7 @@ export function HomePage() {
                           </span>
                         </div>
 
-                        <h3 className="mt-1 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                        <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
                           {story.title}
                         </h3>
 
@@ -780,7 +787,7 @@ export function HomePage() {
                         Pride Times Magazine
                       </span>
 
-                      <h3 className="mt-1 text-[20px] font-extrabold leading-[1.2] text-white">
+                      <h3 className="mt-1 line-clamp-2 text-[20px] font-extrabold leading-[1.2] text-white">
                         {magazinePreview.title}
                       </h3>
 
@@ -794,11 +801,6 @@ export function HomePage() {
                       </span>
                     </div>
                   </Link>
-
-                  {/* Sidebar ad */}
-                  <div className="mt-8 lg:sticky lg:top-24">
-                    <PrideTimesAd />
-                  </div>
                 </div>
               </div>
             </div>
@@ -821,16 +823,16 @@ export function HomePage() {
               {globalSectorReport.subheadline}
             </p>
 
-            <div className="grid grid-cols-1 gap-x-8 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
               {globalSectorItems.map((item) => (
                 <Link
                   key={item.sector}
                   to={`/article/${globalSectorItemArticleId(item)}`}
-                  className="group block border-b border-gray-200 py-4"
+                  className="group flex h-full flex-col border-b border-gray-200 py-4"
                 >
                   <Kicker>{item.sector}</Kicker>
 
-                  <h4 className="mt-1 text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                  <h4 className="mt-1 line-clamp-2 min-h-[2.5em] text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
                     {item.headline}
                   </h4>
 
@@ -880,7 +882,7 @@ export function HomePage() {
                   {editionLead.section} · {maEdition1Meta.edition}
                 </span>
 
-                <h3 className="mt-2 max-w-3xl text-2xl font-extrabold leading-[1.15] text-white group-hover:underline sm:text-[30px]">
+                <h3 className="mt-2 line-clamp-3 max-w-3xl text-2xl font-extrabold leading-[1.15] text-white group-hover:underline sm:text-[30px]">
                   {editionLead.title}
                 </h3>
 
@@ -905,7 +907,7 @@ export function HomePage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="grid grid-cols-1 items-stretch gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
                     {group.stories.map((story) => {
                       const chip = editionDealChip(story);
 
@@ -913,7 +915,7 @@ export function HomePage() {
                         <Link
                           key={story.id}
                           to={maEdition1ArticlePath(story)}
-                          className="group block"
+                          className="group flex h-full flex-col"
                         >
                           <div className="aspect-[16/10] w-full overflow-hidden bg-gray-100">
                             <ImageWithFallback
@@ -923,15 +925,15 @@ export function HomePage() {
                             />
                           </div>
 
-                          {chip && (
-                            <span className="mt-2.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-red-600">
-                              {chip.value}
+                          <div className="flex flex-1 flex-col">
+                            <span className="mt-2.5 block min-h-[1.2em] text-[11px] font-bold uppercase tracking-[0.1em] text-red-600">
+                              {chip ? chip.value : ""}
                             </span>
-                          )}
 
-                          <h4 className="mt-1 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                            {story.title}
-                          </h4>
+                            <h4 className="mt-1 line-clamp-2 min-h-[2.5em] text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                              {story.title}
+                            </h4>
+                          </div>
                         </Link>
                       );
                     })}
@@ -986,14 +988,14 @@ export function HomePage() {
           <section className="mb-12">
             <SectionHeader title="Browse by Section" />
 
-            <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="grid grid-cols-1 items-stretch gap-x-6 sm:grid-cols-2 lg:grid-cols-5">
               {digestSections.map((section) => {
                 const top = sectionHeadlines.get(section.number);
 
                 return (
                   <div
                     key={section.slug}
-                    className="flex flex-col border-b border-gray-200 py-4"
+                    className="flex h-full flex-col border-b border-gray-200 py-4"
                   >
                     <Link
                       to={section.path}
@@ -1007,7 +1009,7 @@ export function HomePage() {
                         to={digestArticlePath(top)}
                         className="group mt-2 block"
                       >
-                        <span className="block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
+                        <span className="block min-h-[5.2em] text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
                           {top.title}
                         </span>
                       </Link>
@@ -1016,7 +1018,7 @@ export function HomePage() {
                     <button
                       type="button"
                       onClick={() => openSectionFeed(section.name)}
-                      className="mt-3 w-fit text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
+                      className="mt-auto w-fit pt-3 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
                     >
                       {sectionStoryCounts.get(section.number) ?? 0} stories
                     </button>
