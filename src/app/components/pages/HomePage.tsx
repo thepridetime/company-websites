@@ -7,6 +7,9 @@ import {
   TrendingUp,
   TrendingDown,
   MapPin,
+  Play,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 import MagazineImg from "../../../imports/pt30image.png";
@@ -106,12 +109,25 @@ const octoberStories: OctEditionArticle[] = [
   ...oct13EditionArticles,
   ...octEditionArticles,
 ];
-const leadStory = octoberStories[0];
 
-const heroTiles = [octoberStories[1], octoberStories[2], octoberStories[3]];
-const latestList = octoberStories.slice(4, 9);
-const trendingStrip = octoberStories.slice(9, 14);
-const editorsPick = octoberStories[14] ?? octoberStories[3];
+/* Safe accessor: wraps around if the data set is short */
+const at = (index: number): OctEditionArticle =>
+  octoberStories[index % octoberStories.length];
+
+const leadStory = at(0);          // centre column
+const featureStory = at(1);       // left column
+const videoStories = [at(10), at(20), at(21)];
+const latestList = [at(11), at(12), at(13), at(14), at(15), at(16)];
+const interviewStory = at(17);
+const interviewRelated = at(18);
+const trendingStrip = [at(19), at(22), at(23), at(24)];
+const editorsPick = at(25);
+
+const newsletterPromos = [
+  { name: "Bloomberg Weekend", headline: "There's a Chatbot in My Marriage", image: at(2).image },
+  { name: "Merryn Talks Money", headline: "Why Wealth Taxes Usually Don't Work", image: at(3).image },
+  { name: "On Books", headline: "The Year's Best Books, Unstoppable Technology, Alternate Reality TV", image: at(4).image },
+];
 
 const sectionNames = Array.from(
   new Set(octoberStories.map((article) => article.section))
@@ -167,8 +183,6 @@ const sectionStoryCounts = new Map<number, number>(
   ])
 );
 
-/* Section modules: one large story + a stack of smaller ones per section */
-
 const sectionModules = digestSections
   .slice(0, 4)
   .map((section) => {
@@ -219,16 +233,13 @@ const prideTimes30 = [
 /* =========================================================
    SMALL UI PIECES
    Layout rules used on this page:
-   - Image and headline are distributed in three patterns:
-       a) Lead: one large image with headline below, beside a
-          numbered list of small thumbnails (thumb left, text right).
-       b) Tile rows: image on top, headline below, equal height.
-       c) Section modules: one large story on the left, a stack
-          of small thumbnail + headline rows on the right.
-   - Headlines are bold sans-serif, left-aligned, clamped to fixed
-     line counts so rows line up.
-   - Red is used only for category labels and "view all" links.
-   - Thick black top rule on every section header.
+   - Top band: three columns. Left and centre are story cards
+     (image, bold headline, dek, "Related" box). Right is a
+     Today's Videos panel above a Latest list with All / Your News tabs.
+   - Below: a wide interview row with a video frame and player bar.
+   - Headlines are bold sans-serif, left-aligned, clamped to fixed lines.
+   - Red is used only for category labels and the section title.
+   - Thin grey rules separate items; no boxes except the Related panel.
 ========================================================= */
 
 function ChangeChip({ change, up }: { change: string; up: boolean }) {
@@ -278,7 +289,7 @@ function SectionHeader({
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
+    <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
       {children}
     </span>
   );
@@ -286,10 +297,33 @@ function Kicker({ children }: { children: React.ReactNode }) {
 
 function TimeStamp({ children }: { children: React.ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
+  );
+}
+
+function RelatedBox({ items }: { items: OctEditionArticle[] }) {
+  return (
+    <div className="mt-4 border border-gray-200">
+      <div className="border-b border-gray-200 px-3 py-1.5 text-[11px] text-gray-500">
+        Related
+      </div>
+
+      <ul className="divide-y divide-gray-200">
+        {items.map((item) => (
+          <li key={item.id}>
+            <Link
+              to={digestArticlePath(item)}
+              className="block px-3 py-2.5 text-[14px] font-bold leading-[1.3] text-gray-950 hover:underline"
+            >
+              {item.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -303,6 +337,11 @@ export function HomePage() {
 
   const [activeNewsTab, setActiveNewsTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const [activeLatestTab, setActiveLatestTab] =
+    useState<"All" | "Your News">("All");
+
+  const [videoIndex, setVideoIndex] = useState(0);
 
   const newsListRef = useRef<HTMLDivElement | null>(null);
 
@@ -381,137 +420,325 @@ export function HomePage() {
 
   const marketRows = marketSnapshotData[activeMarketTab] || [];
 
+  const yourNewsList = interleavedArticles.slice(0, 6);
+  const currentLatest =
+    activeLatestTab === "All" ? latestList : yourNewsList;
+
+  const currentVideo = videoStories[videoIndex];
+
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
-              1. LEAD BAND
-                 LEFT  (8 cols): big lead image + headline below,
-                                 then 3 tiles in a row
-                 RIGHT (4 cols): numbered list with small thumbnails
+              0. NEWSLETTER STRIP
           ================================================= */}
 
-          <section className="mb-10 border-b border-gray-200 pb-8">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-              {/* ---------- LEFT: lead + tiles ---------- */}
-
-              <div className="order-1 min-w-0 lg:col-span-8">
-                <Link to={digestArticlePath(leadStory)} className="group block">
-                  <div className="overflow-hidden bg-gray-100">
+          <div className="mb-5 flex items-stretch gap-6 border-y border-gray-200 py-3">
+            <div className="grid min-w-0 flex-1 grid-cols-1 gap-6 md:grid-cols-3">
+              {newsletterPromos.map((promo) => (
+                <Link
+                  key={promo.name}
+                  to="/premium"
+                  className="group flex items-center gap-3"
+                >
+                  <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-100">
                     <ImageWithFallback
-                      src={leadStory.image}
-                      alt={leadStory.title}
-                      className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      src={promo.image}
+                      alt={promo.name}
+                      className="h-full w-full object-cover"
                     />
                   </div>
 
-                  <div className="mt-3">
-                    <Kicker>
-                      {leadStory.industry} · {leadStory.location}
-                    </Kicker>
-
-                    <h1 className="mt-1.5 line-clamp-2 text-[30px] font-extrabold leading-[1.08] tracking-[-0.01em] text-gray-950 group-hover:underline md:text-[38px]">
-                      {leadStory.title}
-                    </h1>
-
-                    <p className="mt-2.5 line-clamp-2 text-[15px] leading-[1.55] text-gray-600">
-                      {leadStory.lede}
+                  <div className="min-w-0">
+                    <p className="text-[12px] text-gray-500">
+                      Newsletter: {promo.name}
                     </p>
-
-                    <div className="mt-2.5">
-                      <TimeStamp>
-                        {leadStory.publishedAt} · {leadStory.readTime}
-                      </TimeStamp>
-                    </div>
+                    <p className="line-clamp-1 text-[13px] font-semibold text-gray-950 group-hover:underline">
+                      {promo.headline}
+                    </p>
                   </div>
                 </Link>
+              ))}
+            </div>
 
-                {/* Three tiles: image on top, headline below */}
+            <div className="hidden items-center gap-2 pl-2 md:flex">
+              <button
+                type="button"
+                aria-label="Previous"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label="Next"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
 
-                <div className="mt-7 grid grid-cols-1 items-stretch gap-6 border-t border-gray-200 pt-6 sm:grid-cols-3">
-                  {heroTiles.map((story) => (
-                    <Link
-                      key={story.id}
-                      to={digestArticlePath(story)}
-                      className="group flex h-full flex-col"
-                    >
-                      <div className="overflow-hidden bg-gray-100">
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      </div>
+          {/* =================================================
+              1. TOP BAND — 3 columns
+                 LEFT   : feature story + Related
+                 CENTRE : lead story + Related
+                 RIGHT  : Today's Videos + Latest list
+          ================================================= */}
 
-                      <div className="mt-2.5 flex flex-1 flex-col">
-                        <Kicker>{story.section}</Kicker>
+          <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
+            {/* ---------- LEFT: feature story ---------- */}
 
-                        <h3 className="mt-1 line-clamp-2 min-h-[2.44em] text-[17px] font-bold leading-[1.22] text-gray-950 group-hover:underline">
-                          {story.title}
-                        </h3>
+            <div className="flex flex-col border-b border-gray-200 p-4 lg:col-span-4 lg:border-b-0 lg:border-r">
+              <Link to={digestArticlePath(featureStory)} className="group block">
+                <div className="overflow-hidden bg-gray-100">
+                  <ImageWithFallback
+                    src={featureStory.image}
+                    alt={featureStory.title}
+                    className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+                </div>
 
-                        <div className="mt-auto pt-1.5">
-                          <TimeStamp>{story.publishedAt}</TimeStamp>
-                        </div>
-                      </div>
-                    </Link>
+                <h2 className="mt-4 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
+                  {featureStory.title}
+                </h2>
+
+                <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                  {featureStory.lede}
+                </p>
+              </Link>
+
+              <div className="mt-auto">
+                <RelatedBox items={[at(6), at(7)]} />
+              </div>
+            </div>
+
+            {/* ---------- CENTRE: lead story ---------- */}
+
+            <div className="flex flex-col border-b border-gray-200 p-4 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
+              <Link to={digestArticlePath(leadStory)} className="group block">
+                <div className="overflow-hidden bg-gray-100">
+                  <ImageWithFallback
+                    src={leadStory.image}
+                    alt={leadStory.title}
+                    className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+                </div>
+
+                <h1 className="mt-4 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                  {leadStory.title}
+                </h1>
+
+                <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                  {leadStory.lede}
+                </p>
+              </Link>
+
+              <div className="mt-auto">
+                <RelatedBox items={[at(8), at(9)]} />
+              </div>
+            </div>
+
+            {/* ---------- RIGHT: videos + latest ---------- */}
+
+            <aside className="flex flex-col p-4 md:col-span-2 lg:col-span-4">
+              {/* Today's Videos */}
+
+              <div className="flex items-center justify-between">
+                <h2 className="text-[15px] font-extrabold text-gray-950">
+                  Today's Videos
+                </h2>
+
+                <Link
+                  to="/markets"
+                  className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
+                >
+                  Explore More
+                </Link>
+              </div>
+
+              <Link
+                to={digestArticlePath(currentVideo)}
+                className="group mt-3 block"
+              >
+                <div className="relative overflow-hidden bg-black">
+                  <ImageWithFallback
+                    src={currentVideo.image}
+                    alt={currentVideo.title}
+                    className="aspect-[16/10] w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-black">
+                      <Play size={20} fill="currentColor" />
+                    </span>
+                  </div>
+                </div>
+
+                <p className="mt-2 text-[11px] text-gray-500">
+                  Video
+                </p>
+                <p className="text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-2">
+                  {currentVideo.title}
+                </p>
+              </Link>
+
+              <div className="mt-3 flex items-center justify-between">
+                <div className="flex gap-1.5">
+                  {videoStories.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      aria-label={`Video ${i + 1}`}
+                      onClick={() => setVideoIndex(i)}
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        videoIndex === i ? "bg-black" : "bg-gray-300"
+                      }`}
+                    />
                   ))}
+                </div>
+
+                <div className="flex gap-1">
+                  <button
+                    type="button"
+                    aria-label="Previous video"
+                    onClick={() =>
+                      setVideoIndex((i) =>
+                        i === 0 ? videoStories.length - 1 : i - 1
+                      )
+                    }
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
+                  >
+                    <ChevronLeft size={13} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next video"
+                    onClick={() =>
+                      setVideoIndex((i) => (i + 1) % videoStories.length)
+                    }
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
+                  >
+                    <ChevronRight size={13} />
+                  </button>
                 </div>
               </div>
 
-              {/* ---------- RIGHT: numbered list with thumbnails ---------- */}
+              {/* Latest */}
 
-              <aside className="order-2 min-w-0 lg:col-span-4">
-                <SectionHeader title="Top Stories" link="/business-news" />
+              <div className="mt-6 border-t border-gray-200 pt-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-serif text-[20px] font-bold text-red-600">
+                    Latest
+                  </h2>
 
-                <ol className="divide-y divide-gray-200">
-                  {latestList.map((story, index) => (
+                  <div className="flex gap-1.5">
+                    {(["All", "Your News"] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        type="button"
+                        onClick={() => setActiveLatestTab(tab)}
+                        className={`rounded-full px-3 py-1 text-[11px] font-semibold transition-colors ${
+                          activeLatestTab === tab
+                            ? "bg-black text-white"
+                            : "border border-gray-300 text-gray-700 hover:border-black"
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <ul className="mt-3 divide-y divide-gray-200">
+                  {currentLatest.map((story) => (
                     <li key={story.id}>
                       <Link
                         to={digestArticlePath(story)}
-                        className="group flex items-start gap-3 py-3"
+                        className="group flex items-start gap-3 py-2.5"
                       >
-                        <span className="w-5 shrink-0 pt-0.5 text-[18px] font-extrabold leading-none tabular-nums text-gray-300">
-                          {index + 1}
+                        <span className="w-14 shrink-0 pt-0.5 text-[11px] font-semibold text-red-600">
+                          {story.publishedAt}
                         </span>
 
-                        <div className="min-w-0 flex-1">
-                          <h3 className="line-clamp-2 min-h-[2.6em] text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
-                            {story.title}
-                          </h3>
-
-                          <div className="mt-1.5 flex items-center gap-2">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
-                              {story.industry}
-                            </span>
-                            <TimeStamp>{story.publishedAt}</TimeStamp>
-                          </div>
-                        </div>
-
-                        <div className="h-[56px] w-[72px] shrink-0 overflow-hidden bg-gray-100">
-                          <ImageWithFallback
-                            src={story.image}
-                            alt={story.title}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        </div>
+                        <span className="text-[14px] font-semibold leading-[1.3] text-gray-950 group-hover:underline line-clamp-2">
+                          {story.title}
+                        </span>
                       </Link>
                     </li>
                   ))}
-                </ol>
-              </aside>
+                </ul>
+
+                <Link
+                  to="/business-news"
+                  className="mt-2 flex items-center justify-end gap-1 text-[12px] font-semibold text-gray-600 hover:underline"
+                >
+                  See all latest
+                  <ChevronRight size={12} />
+                </Link>
+              </div>
+            </aside>
+          </section>
+
+          {/* =================================================
+              2. WEEKEND INTERVIEW — video frame left, story right
+          ================================================= */}
+
+          <section className="mt-0 grid grid-cols-1 items-stretch gap-0 border-x border-b border-gray-200 lg:grid-cols-12">
+            <Link
+              to={digestArticlePath(interviewStory)}
+              className="group relative block overflow-hidden bg-black lg:col-span-6"
+            >
+              <ImageWithFallback
+                src={interviewStory.image}
+                alt={interviewStory.title}
+                className="aspect-[16/9] w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-[1.02]"
+              />
+
+              <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-gradient-to-t from-black/80 to-transparent px-3 pb-2 pt-8 text-white">
+                <Play size={14} fill="currentColor" />
+                <div className="h-[3px] flex-1 bg-white/30">
+                  <div className="h-full w-[18%] bg-white" />
+                </div>
+                <span className="text-[11px] tabular-nums">1:10</span>
+              </div>
+            </Link>
+
+            <div className="flex flex-col justify-center p-5 lg:col-span-6 lg:p-8">
+              <Kicker>{interviewStory.section}</Kicker>
+
+              <Link to={digestArticlePath(interviewStory)} className="group block">
+                <h2 className="mt-2 line-clamp-3 text-[28px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[32px]">
+                  {interviewStory.title}
+                </h2>
+
+                <p className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-gray-600">
+                  {interviewStory.lede}
+                </p>
+              </Link>
+
+              <div className="mt-5 border-t border-gray-200 pt-4">
+                <Link
+                  to={digestArticlePath(interviewRelated)}
+                  className="group block"
+                >
+                  <span className="block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-2">
+                    {interviewRelated.title}
+                  </span>
+                </Link>
+              </div>
             </div>
           </section>
 
           {/* =================================================
-              2. TRENDING STRIP — 5 small image cards in a row
+              3. TRENDING NOW — 4 image cards
           ================================================= */}
 
-          <section className="mb-12">
+          <section className="mt-12 mb-12">
             <SectionHeader title="Trending Now" link="/business-news" />
 
-            <div className="grid grid-cols-2 items-stretch gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-5">
+            <div className="grid grid-cols-1 items-stretch gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {trendingStrip.map((story) => (
                 <Link
                   key={story.id}
@@ -522,16 +749,18 @@ export function HomePage() {
                     <ImageWithFallback
                       src={story.image}
                       alt={story.title}
-                      className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                   </div>
 
-                  <div className="mt-2 flex flex-1 flex-col">
-                    <h3 className="line-clamp-2 min-h-[2.5em] text-[14px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                  <div className="mt-2.5 flex flex-1 flex-col">
+                    <Kicker>{story.section}</Kicker>
+
+                    <h3 className="mt-1 line-clamp-2 min-h-[2.56em] text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
                       {story.title}
                     </h3>
 
-                    <div className="mt-auto pt-1">
+                    <div className="mt-auto pt-1.5">
                       <TimeStamp>{story.publishedAt}</TimeStamp>
                     </div>
                   </div>
@@ -541,7 +770,7 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              3. SECTION MODULES — one large story left,
+              4. SECTION MODULES — one large story left,
                  stacked thumbnail rows right (one per section)
           ================================================= */}
 
@@ -554,8 +783,6 @@ export function HomePage() {
               />
 
               <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
-                {/* Large story */}
-
                 <Link
                   to={digestArticlePath(lead)}
                   className="group flex h-full flex-col lg:col-span-7"
@@ -582,8 +809,6 @@ export function HomePage() {
                     </div>
                   </div>
                 </Link>
-
-                {/* Stacked small stories */}
 
                 <div className="lg:col-span-5">
                   {rest.length === 0 ? (
@@ -626,9 +851,7 @@ export function HomePage() {
           ))}
 
           {/* =================================================
-              4. LATEST NEWS
-                 a) compact numbered list of the latest report
-                 b) filterable feed + magazine (sticky)
+              5. LATEST NEWS FEED + MAGAZINE
           ================================================= */}
 
           <section aria-label="Latest news" className="mb-12">
@@ -663,8 +886,6 @@ export function HomePage() {
             </ol>
 
             <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
-              {/* ---------- Feed ---------- */}
-
               <div ref={newsListRef} className="scroll-mt-24 min-w-0">
                 <SectionHeader title="More Latest News" />
 
@@ -761,8 +982,6 @@ export function HomePage() {
                 )}
               </div>
 
-              {/* ---------- Magazine (sticky) ---------- */}
-
               <div className="min-w-0">
                 <div className="lg:sticky lg:top-24">
                   <SectionHeader title="Magazine" link="/magazine" />
@@ -804,12 +1023,10 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              5. MARKETS + EDITOR'S PICK
+              6. MARKETS + EDITOR'S PICK
           ================================================= */}
 
           <section className="mb-12 grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
-            {/* Markets panel */}
-
             <div className="bg-black p-5 text-white lg:col-span-5">
               <div className="flex items-center justify-between border-b border-white/20 pb-2">
                 <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em]">
@@ -874,8 +1091,6 @@ export function HomePage() {
               </Link>
             </div>
 
-            {/* Editor's pick */}
-
             <div className="lg:col-span-7">
               <SectionHeader
                 title="Editor's Pick"
@@ -911,10 +1126,8 @@ export function HomePage() {
           </section>
 
           {/* =================================================
-              6. PREVIOUS COVERAGE
+              7. PREVIOUS COVERAGE
           ================================================= */}
-
-          {/* ---------- Global Sector News Report ---------- */}
 
           <section
             id={globalSectorAnchorId}
@@ -948,8 +1161,6 @@ export function HomePage() {
             </div>
           </section>
 
-          {/* ---------- M&A digest ---------- */}
-
           <section
             aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
             className="mb-12"
@@ -966,8 +1177,6 @@ export function HomePage() {
                 {maEdition1Meta.prepared}. {maEdition1Meta.note}
               </span>
             </p>
-
-            {/* Edition lead */}
 
             <Link
               to={maEdition1ArticlePath(editionLead)}
@@ -995,8 +1204,6 @@ export function HomePage() {
                 </p>
               </div>
             </Link>
-
-            {/* By industry */}
 
             <div className="mt-8 space-y-8">
               {editionIndustries.map((group) => (
@@ -1046,8 +1253,6 @@ export function HomePage() {
               ))}
             </div>
 
-            {/* Deal status table (collapsed by default) */}
-
             <details className="mt-6 border border-gray-300">
               <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.12em] text-gray-900">
                 Deal status table (as of the early August 2026 tracker update)
@@ -1086,8 +1291,6 @@ export function HomePage() {
               </p>
             </details>
           </section>
-
-          {/* ---------- Section briefings (one card per digest section) ---------- */}
 
           <section className="mb-12">
             <SectionHeader title="Browse by Section" />
@@ -1132,8 +1335,6 @@ export function HomePage() {
             </div>
           </section>
 
-          {/* ---------- Pride Times 30 ---------- */}
-
           <section>
             <SectionHeader
               title="Industry Leaders Shaping the 2026 Transition"
@@ -1170,8 +1371,6 @@ export function HomePage() {
           </section>
         </main>
       </div>
-
-      {/* Local page utilities */}
 
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
