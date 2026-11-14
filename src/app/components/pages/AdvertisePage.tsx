@@ -1,43 +1,46 @@
-/* ─────────────────────────────────────────────────────────
-   ADVERTISE — matches the provided reference screenshot:
-   masthead-style heading + subtitle, a 3x2 grid of ad
-   product cards (emoji icon, title, description), and a
-   dark "Get a Media Kit" CTA banner with a red button.
+import {
+  Layout,
+  Newspaper,
+  Mail,
+  Video,
+  Smartphone,
+  CalendarDays,
+} from "lucide-react";
 
-   Uses the site's existing design tokens (pt-red #e31b23,
-   pt-navy #071a2d, pt-black #111111, Times New Roman
-   masthead, Arial body) so it stays consistent with the
-   rest of the publication.
+/* ─────────────────────────────────────────────────────────
+   ADVERTISE — The Pride Times Advertising & Partnerships
+   Professional editorial display, sponsored content, and
+   corporate sponsorship packages.
 ───────────────────────────────────────────────────────── */
 
 const products = [
   {
-    icon: "📊",
+    icon: Layout,
     title: "Digital Display",
     text: "Banner and native ads across all Pride Times digital properties. Leaderboard, rectangle, and inline formats.",
   },
   {
-    icon: "📰",
+    icon: Newspaper,
     title: "Sponsored Content",
     text: "Thought leadership articles published under your brand alongside our editorial content.",
   },
   {
-    icon: "📧",
+    icon: Mail,
     title: "Newsletter Sponsorship",
     text: "Exclusive placement in our daily business briefing sent to 800K+ subscribers.",
   },
   {
-    icon: "🎥",
+    icon: Video,
     title: "Video Sponsorship",
     text: "Pre-roll and mid-roll integration with our market analysis and CEO interview video series.",
   },
   {
-    icon: "📱",
+    icon: Smartphone,
     title: "Mobile & App",
     text: "Reach readers through our iOS and Android apps with contextual ad formats.",
   },
   {
-    icon: "🎪",
+    icon: CalendarDays,
     title: "Events & Conferences",
     text: "Sponsor the Pride Times CEO Summit, Innovation Forum, and Global Finance Conference.",
   },
@@ -57,39 +60,45 @@ export function AdvertisePage() {
         </h1>
 
         <p className="text-[14px] sm:text-[15px] text-[#666666] mb-8">
-          Reach 2M+ business decision-makers, executives, and investors
-          worldwide.
+          Reach 2M+ business decision-makers, executives, and investors worldwide.
         </p>
 
         {/* ── Product grid ────────────────────────────────── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-          {products.map((p) => (
-            <div
-              key={p.title}
-              className="border border-[#e2e2e2] rounded-md p-6"
-            >
-              <div className="text-[26px] mb-4">{p.icon}</div>
+          {products.map((p) => {
+            const Icon = p.icon;
+            return (
+              <div
+                key={p.title}
+                className="border border-[#e2e2e2] rounded-md p-6 bg-white hover:border-[#071a2d] transition-colors"
+              >
+                <div className="w-10 h-10 rounded-md bg-[#071a2d]/5 text-[#071a2d] flex items-center justify-center mb-4">
+                  <Icon size={20} strokeWidth={2} />
+                </div>
 
-              <h3 className="text-[16px] font-bold text-[#111111] mb-2">
-                {p.title}
-              </h3>
+                <h3 className="text-[16px] font-bold text-[#111111] mb-2 font-serif">
+                  {p.title}
+                </h3>
 
-              <p className="text-[13px] sm:text-[14px] text-[#555555] leading-[1.65]">
-                {p.text}
-              </p>
-            </div>
-          ))}
+                <p className="text-[13px] sm:text-[14px] text-[#555555] leading-[1.65]">
+                  {p.text}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         {/* ── Media kit CTA ────────────────────────────────── */}
-        <section className="bg-[#071a2d] rounded-md py-12 px-6 flex flex-col items-center text-center">
+        <section
+          id="media-kit"
+          className="bg-[#071a2d] rounded-md py-12 px-6 flex flex-col items-center text-center"
+        >
           <h2 className="font-serif text-[26px] sm:text-[30px] font-bold text-white mb-3">
             Get a Media Kit
           </h2>
 
           <p className="text-[14px] sm:text-[15px] text-gray-300 mb-6 max-w-xl">
-            Our advertising team will build a custom proposal for your
-            brand goals.
+            Our advertising team will build a custom proposal for your brand goals.
           </p>
 
           <a

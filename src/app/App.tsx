@@ -62,9 +62,12 @@ import {
 
 import { Privacy } from "./components/pages/Privacy";
 import { Terms } from "./components/pages/Terms";
+import { DisclaimerPage } from "./components/pages/DisclaimerPage";
 import { CookiePolicy } from "./components/pages/CookiePolicy";
 import { Accessibility } from "./components/pages/Accessibility";
 import { ResetPasswordPage } from "./components/pages/ResetPasswordPage";
+import { NotFoundPage } from "./components/pages/NotFoundPage";
+import { SitemapPage } from "./components/pages/SitemapPage";
 
 // ============================================================
 // AUTH PAGES
@@ -78,6 +81,9 @@ import { NotificationSettingsPage } from "./components/auth/NotificationSettings
 import { PrivacyDataPage } from "./components/auth/PrivacyDataPage";
 import { SearchResultsPage } from "./context/SearchResultsPage";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { NewsroomDashboard } from "./components/admin/NewsroomDashboard";
+import { ArticleEditorPage } from "./components/admin/ArticleEditorPage";
+import { DynamicArticlePage } from "./components/pages/DynamicArticlePage";
 
 // ============================================================
 // MAGAZINE LAYOUT
@@ -150,15 +156,23 @@ export default function App() {
               LEGAL PAGES
               ================================================== */}
 
-          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/privacy" element={<MagazineLayout><Privacy /></MagazineLayout>} />
+          <Route path="/Privacy" element={<MagazineLayout><Privacy /></MagazineLayout>} />
 
-          <Route path="/terms" element={<Terms />} />
+          <Route path="/terms" element={<MagazineLayout><Terms /></MagazineLayout>} />
+          <Route path="/Terms" element={<MagazineLayout><Terms /></MagazineLayout>} />
+          <Route path="/terms-of-service" element={<MagazineLayout><Terms /></MagazineLayout>} />
 
-          <Route path="/cookiepolicy" element={<CookiePolicy />} />
+          <Route path="/disclaimer" element={<MagazineLayout><DisclaimerPage /></MagazineLayout>} />
+          <Route path="/Disclaimer" element={<MagazineLayout><DisclaimerPage /></MagazineLayout>} />
 
+          <Route path="/cookiepolicy" element={<MagazineLayout><CookiePolicy /></MagazineLayout>} />
+          <Route path="/cookie-policy" element={<MagazineLayout><CookiePolicy /></MagazineLayout>} />
+
+          <Route path="/sitemap" element={<MagazineLayout><SitemapPage /></MagazineLayout>} />
           <Route
             path="/accessibility"
-            element={<Accessibility />}
+            element={<MagazineLayout><Accessibility /></MagazineLayout>}
           />
 
           {/* ==================================================
@@ -579,6 +593,118 @@ export default function App() {
             element={
               <MagazineLayout>
                 <FeaturedPage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* ==================================================
+              NEWSROOM EDITORIAL CMS
+              ================================================== */}
+          <Route path="/newsroom" element={<NewsroomDashboard />} />
+          <Route path="/newsroom/new" element={<ArticleEditorPage />} />
+          <Route path="/newsroom/edit/:id" element={<ArticleEditorPage />} />
+
+          {/* ==================================================
+              DYNAMIC ARTICLE READER
+              ================================================== */}
+          <Route
+            path="/news/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/world/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/business-news/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/markets/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/tech/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/manufacturing/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/healthcare/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/energy/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/sustainability/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/leadership/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+          <Route
+            path="/startups/:slug"
+            element={
+              <MagazineLayout>
+                <DynamicArticlePage />
+              </MagazineLayout>
+            }
+          />
+
+          {/* ==================================================
+              404 CATCH-ALL (NOT FOUND)
+              ================================================== */}
+
+          <Route
+            path="*"
+            element={
+              <MagazineLayout>
+                <NotFoundPage />
               </MagazineLayout>
             }
           />

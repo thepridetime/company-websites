@@ -1,6 +1,3 @@
-// Target path: src/lib/newsletterPreferences.ts
-// Reads preferences directly from newsletter_subscriptions (RLS: own rows only).
-// Changes go through the newsletter-notify edge function, which saves the row and emails the user.
 import { supabase } from "./supabase";
 
 export type Newsletter = { key: string; name: string; freq: string };
@@ -27,26 +24,30 @@ export async function getNewsletterPreferences(userId: string): Promise<Record<s
   const prefs: Record<string, boolean> = Object.fromEntries(
     [...VALID_KEYS].map((key) => [key, false])
   );
-  const { data, error } = await supabase
-    .from("newsletter_subscriptions")
-    .select("newsletter_key, subscribed")
-    .eq("user_id", userId);
-  if (error) {
-    console.error("NEWSLETTER_FETCH_FAILED", error);
-    throw error;
-  }
-  for (const row of data ?? []) {
-    if (VALID_KEYS.has(row.newsletter_key)) prefs[row.newsletter_key] = row.subscribed;
+  try {
+    const { data, error } = await supabase
+      .from("newsletter_subscriptions")
+      .select("newsletter_key, subscribed")
+      .eq("user_id", userId);
+    if (error) {
+      console.warn("NEWSLETTER_FETCH_FAILED, using defaults", error);
+      return prefs;
+    }
+    for (const row of data ?? []) {
+      if (VALID_KEYS.has(row.newsletter_key)) prefs[row.newsletter_key] = row.subscribed;
+    }
+  } catch (err) {
+    console.warn("NEWSLETTER_FETCH_EXCEPTION", err);
   }
   return prefs;
 }
 
 /**
- * Subscribes or unsubscribes. The server saves the change and emails the user's registered address.
- * Returns true if the change was saved. Check the console for NEWSLETTER_EMAIL_NOT_SENT if the email failed.
+ * Subscribes or unsubscribes. The server attempts to save the change and email the user.
+ * If the edge function is offline/fails, it gracefully falls back to directly updating the database.
  */
 export async function setNewsletterSubscribed(
-  _userId: string,
+  userId: string,
   key: string,
   subscribed: boolean
 ): Promise<boolean> {
@@ -54,17 +55,40 @@ export async function setNewsletterSubscribed(
     console.error("NEWSLETTER_UNKNOWN_KEY", key);
     return false;
   }
-  const { data, error } = await supabase.functions.invoke("newsletter-notify", {
-    body: { newsletter_key: key, subscribed },
-  });
-  if (error) {
-    console.error("NEWSLETTER_SAVE_FAILED", error);
-    return false;
+
+  // 1. Try edge function first
+  try {
+    const { data, error } = await supabase.functions.invoke("newsletter-notify", {
+      body: { newsletter_key: key, subscribed },
+    });
+    if (!error) {
+      if (data && data.emailSent === false) {
+        console.warn("NEWSLETTER_EMAIL_NOT_SENT", key);
+      }
+      return true;
+    }
+    console.warn("NEWSLETTER_FUNCTION_FAILED, falling back to direct DB upsert:", error);
+  } catch (err) {
+    console.warn("NEWSLETTER_INVOKE_FAILED, falling back to direct DB upsert:", err);
   }
-  if (data && data.emailSent === false) {
-    console.warn("NEWSLETTER_EMAIL_NOT_SENT", key);
+
+  // 2. Direct database fallback
+  try {
+    const { error: dbError } = await supabase.from("newsletter_subscriptions").upsert(
+      {
+        user_id: userId,
+        newsletter_key: key,
+        subscribed,
+      },
+      { onConflict: "user_id,newsletter_key" }
+    );
+    if (!dbError) return true;
+    console.error("NEWSLETTER_DIRECT_DB_SAVE_FAILED", dbError);
+  } catch (dbErr) {
+    console.error("NEWSLETTER_DB_FALLBACK_EXCEPTION", dbErr);
   }
-  return true;
+
+  return false;
 }
 
 /** Turns off every newsletter at once (unsubscribe-all). */

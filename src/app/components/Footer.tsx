@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router";
 import logoImg from "../../imports/logo.png";
 
@@ -8,19 +9,20 @@ import logoImg from "../../imports/logo.png";
 const primaryNavRow = [
   { label: "About Us", path: "/about-us" },
   { label: "Contact Us", path: "/contact" },
-  { label: "Privacy Policy", path: "/Privacy" },
-  { label: "Terms of Use", path: "/Terms" },
+  { label: "Privacy Policy", path: "/privacy" },
+  { label: "Terms of Service", path: "/terms" },
+  { label: "News Disclaimer & Copyright", path: "/disclaimer" },
   { label: "Cookie Settings", path: "/cookiepolicy" },
   { label: "Accessibility", path: "/accessibility" },
 ];
 
 const secondaryNavRow = [
   { label: "Advertise", path: "/advertise" },
-  { label: "Media Kit", path: "/advertise" },
-  { label: "News Tips", path: "/contact" },
+  { label: "Media Kit", path: "/advertise#media-kit" },
+  { label: "News Tips", path: "/contact#news-tips" },
   { label: "Careers", path: "/careers" },
-  { label: "Reprints & Permissions", path: "/Terms" },
-  { label: "Sitemap", path: "/markets" },
+  { label: "Reprints & Permissions", path: "/disclaimer#permissions" },
+  { label: "Sitemap", path: "/sitemap" },
 ];
 
 /* =========================================================
@@ -31,7 +33,7 @@ export function Footer() {
   return (
     <footer className="w-full bg-[#000000] text-white">
       {/* =====================================================
-          1. BRANDING SECTION (approx 180–220 px high)
+          1. BRANDING SECTION
           Centered stack: Logo -> Brand Title -> Tagline -> Copyright
       ====================================================== */}
       <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10">
@@ -50,7 +52,7 @@ export function Footer() {
             />
           </Link>
 
-          {/* Brand Name: 42–48px (44px), bold serif, PRIDE red (#ED1C24), THE & TIMES white */}
+          {/* Brand Name */}
           <Link
             to="/"
             className="pt-footer-brand-title font-serif font-bold tracking-tight whitespace-nowrap leading-none block"
@@ -73,7 +75,7 @@ export function Footer() {
             TIMES
           </Link>
 
-          {/* Tagline: centered directly beneath, 12–13px, subtle letter spacing, muted blue-grey #8B9BB3 */}
+          {/* Tagline */}
           <p
             className="mt-2.5 text-[12px] sm:text-[12.5px] font-semibold uppercase tracking-[1.5px] leading-tight text-[#8B9BB3]"
             style={{
@@ -85,7 +87,7 @@ export function Footer() {
             THE GLOBAL VOICE OF INNOVATION, LEADERSHIP &amp; SUCCESS
           </p>
 
-          {/* Copyright: centered beneath tagline, 10–14px vertical spacing, 15–16px, muted blue-grey #8B9BB3 */}
+          {/* Copyright */}
           <p
             className="text-[15px] sm:text-[15.5px] text-[#8B9BB3] leading-none"
             style={{
@@ -100,19 +102,16 @@ export function Footer() {
       </div>
 
       {/* =====================================================
-          2. DIVIDER (Full-width grey line #303030, 1px)
+          2. DIVIDER
       ====================================================== */}
       <div className="w-full border-t border-[#303030]" />
 
       {/* =====================================================
-          3. NAVIGATION SECTION (approx 130–160 px high)
-          - Row 1: 38–48px below divider, 15–16px #E5E7EB, subtle #454545 separators
-          - Row 2: 24–30px below row 1, 14–15px #8B9BB3
-          - Bottom padding: 30–36px
+          3. NAVIGATION SECTION
       ====================================================== */}
       <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10">
         <div className="pt-[38px] sm:pt-[42px] pb-[32px] sm:pb-[36px] flex flex-col items-center justify-center text-center">
-          {/* First Row: 15–16px, light grey/white #E5E7EB, on one line on desktop */}
+          {/* First Row */}
           <nav
             // className="flex flex-wrap items-center justify-center text-[15px] sm:text-[15.5px] text-[#E5E7EB]"
             className="flex flex-wrap items-center justify-center gap-y-3 text-[13px] sm:gap-0 sm:text-[15.5px] text-[#E5E7EB]"
@@ -144,10 +143,9 @@ export function Footer() {
             ))}
           </nav>
 
-          {/* Vertical distance between rows: around 24–30px */}
           <div className="h-[24px] sm:h-[26px]" />
 
-          {/* Second Row: 14–15px, muted blue-grey #8B9BB3 */}
+          {/* Second Row */}
           <nav
             // className="flex flex-wrap items-center justify-center text-[14px] sm:text-[14.5px] text-[#8B9BB3]"
             className="flex flex-wrap items-center justify-center gap-y-3 text-[14px] sm:gap-0 sm:text-[14.5px] text-[#8B9BB3]"
@@ -183,3 +181,5 @@ export function Footer() {
     </footer>
   );
 }
+
+export default Footer;

@@ -58,7 +58,9 @@ export function CareersPage() {
 
         {/* ── Why The Pride Times? ─────────────────────────── */}
         <div className="bg-[#f7f7f7] border border-[#eeeeee] rounded-md p-6 sm:p-7 flex items-start gap-5 mb-10">
-          <span className="text-[32px] shrink-0">🌟</span>
+          <div className="w-10 h-10 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+            <Sparkles size={22} />
+          </div>
 
           <div>
             <h2 className="text-[17px] sm:text-[18px] font-bold text-[#111111] mb-2">

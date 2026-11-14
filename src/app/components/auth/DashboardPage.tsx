@@ -17,11 +17,14 @@ import {
   Newspaper,
   Mail,
   Shield,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
 import { supabase } from "../../../lib/supabase";
 import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
+import { unsaveArticle } from "../../../lib/savedArticles";
+import { clearReadingHistory } from "../../../lib/readingHistory";
 
 type ReadItem = {
   title: string;
@@ -239,6 +242,25 @@ export function DashboardPage() {
     }
   };
 
+  
+  const handleUnsave = async (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user?.id) return;
+    setSavedArticles((prev) => prev.filter((a) => a.path !== path));
+    await unsaveArticle(user.id, path);
+  };
+
+  const handleClearHistory = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user?.id) return;
+    if (!window.confirm("Clear your reading history?")) return;
+    setRecentlyRead([]);
+    setArticlesThisMonth(0);
+    setStreak(0);
+    await clearReadingHistory(user.id);
+  };
+
   const scrollToNewsletters = () =>
     document
       .getElementById("newsletters")
@@ -438,7 +460,7 @@ export function DashboardPage() {
                 main- left column    
     -------------------------------------------- 
    */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-6 items-stretch mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-6 items-start mb-6">
           <div className="flex flex-col gap-6">
             <div className="bg-white border border-gray-300 rounded-sm p-6 flex flex-col flex-1">
               <div className="flex items-center justify-between pb-4 border-b border-gray-300">

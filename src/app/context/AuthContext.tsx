@@ -134,17 +134,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     /* If Google/Supabase could not finish the sign-in, they send the user
        back with ?error=...&error_description=... (or the same in the #hash).
        Read it once, show it on the login/sign-up page, and clean the URL. */
-    const params = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-    const description =
-      params.get("error_description") ||
-      hashParams.get("error_description") ||
-      params.get("error") ||
-      hashParams.get("error");
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const hashClean = window.location.hash.replace(/^#/, "");
+      const hashParams = new URLSearchParams(hashClean);
 
-    if (description) {
-      setAuthError(description.replace(/\+/g, " "));
-      window.history.replaceState(null, "", window.location.pathname);
+      const rawDescription =
+        searchParams.get("error_description") ||
+        hashParams.get("error_description") ||
+        searchParams.get("error") ||
+        hashParams.get("error") ||
+        searchParams.get("message") ||
+        hashParams.get("message");
+
+      if (rawDescription) {
+        const decoded = decodeURIComponent(rawDescription.replace(/\+/g, " "));
+        setAuthError(decoded);
+        // Clean URL to prevent repeated error states on re-render
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    } catch {
+      // Safe fallback if URL decoding fails
     }
   }, []);
 
@@ -287,13 +297,19 @@ const resetPassword = async (email: string) => {
   };
 };
 const signInWithGoogle = async () => {
+  const origin = window.location.origin.replace(/\/$/, "");
+  const redirectTo = `${origin}/dashboard`;
+
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
       /* Must be listed under Supabase > Authentication > URL Configuration
          > Redirect URLs (for localhost AND the live domain). */
-      redirectTo: `${window.location.origin}/dashboard`,
-      queryParams: { prompt: "select_account" },
+      redirectTo,
+      queryParams: {
+        access_type: "offline",
+        prompt: "select_account",
+      },
     },
   });
 

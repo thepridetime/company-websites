@@ -1,0 +1,12 @@
+User-agent: Mediapartners-Google
+Disallow:
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /reset-password
+
+Sitemap: https://thepridetime.com/sitemap.xml

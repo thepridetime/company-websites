@@ -14,7 +14,7 @@ function ArticleBody({ paragraphs }) {
           {index === 3 && (
 <AdSlot
 
-              slot="3333333333"
+              slot="8042854193"
 
               className="ad-in-article"
 

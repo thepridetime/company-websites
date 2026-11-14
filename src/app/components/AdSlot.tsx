@@ -27,28 +27,39 @@ function Inner({ type }: { type: SlotType }) {
 
   if (DEMO) {
     return (
-      <div
-        style={{
-          minHeight: 100, margin: "16px auto", maxWidth: 1200,
-          background: "#eee", color: "#666", border: "1px dashed #aaa",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}
-      >
-        Ad space
+      <div className="w-full my-6 flex flex-col items-center">
+        <span className="text-[10px] font-sans font-semibold tracking-[0.2em] text-gray-400 uppercase mb-1.5 select-none">
+          Advertisement
+        </span>
+        <div
+          style={{
+            minHeight: 100, width: "100%", maxWidth: 1200,
+            background: "#f4f4f5", color: "#71717a", border: "1px dashed #d4d4d8",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: "12px", textTransform: "uppercase", letterSpacing: "1px"
+          }}
+        >
+          Bloomberg Sponsored Slot
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: 100, margin: "16px auto", maxWidth: 1200, textAlign: "center" }}>
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block" }}
-        data-ad-client={CLIENT}
-        data-ad-slot={s.slot}
-        data-ad-format={s.format}
-        data-full-width-responsive="true"
-      />
+    <div className="w-full my-6 flex flex-col items-center">
+      <span className="text-[10px] font-sans font-semibold tracking-[0.2em] text-gray-400 uppercase mb-1.5 select-none">
+        Advertisement
+      </span>
+      <div style={{ minHeight: 100, width: "100%", maxWidth: 1200, textAlign: "center" }}>
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client={CLIENT}
+          data-ad-slot={s.slot}
+          data-ad-format={s.format}
+          data-full-width-responsive="true"
+        />
+      </div>
     </div>
   );
 }

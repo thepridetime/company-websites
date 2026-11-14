@@ -4,7 +4,7 @@
 // Security lists signed-in devices with per-device sign-out.
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router";
-import { Eye, EyeOff, Pencil } from "lucide-react";
+import { Eye, EyeOff, Pencil, ArrowLeft } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../../lib/supabase";
 import {
@@ -351,8 +351,8 @@ export function EditProfilePage() {
   return (
     <div className="min-h-screen bg-[#faf9f6]">
       <div className="max-w-4xl mx-auto px-4 py-10 pb-20">
-        <Link to="/dashboard" className="text-sm font-medium text-gray-500 hover:text-red-600">
-          ← Back to dashboard
+        <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-red-600 transition-colors">
+          <ArrowLeft size={14} /> Back to dashboard
         </Link>
         <h1 className="mt-4 text-2xl" style={sectionTitle}>
           Edit profile

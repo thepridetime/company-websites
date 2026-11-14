@@ -488,7 +488,7 @@ export function ContactPage() {
                 </div>
 
                 {/* General Contact Email */}
-                <div className="mb-5 pb-5 border-b border-[#e8e8e8]">
+                <div id="news-tips" className="mb-5 pb-5 border-b border-[#e8e8e8] scroll-mt-24">
                   <div className="flex items-center gap-2 text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#e31b23] mb-1.5">
                     <Mail size={13} />
                     Direct Publication Email

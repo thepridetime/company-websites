@@ -12,6 +12,8 @@ import {
   MapPin,
 } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { SaveArticleButton } from "./SaveArticleButton";
+import { ReadTracker } from "./ReadTracker";
 import { PrideTimesAd } from "../AdSenseSlots";
 import { NewsletterCTA } from "../NewsletterCTA";
 import {
@@ -596,6 +598,7 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
+      <ReadTracker title={article.title} category={article.category} />
       <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:py-10 lg:px-8">
         <Link
           to="/mergers-acquisitions"
@@ -629,6 +632,8 @@ function MAArticleDetail({ article }: { article: MAArticle }) {
               <Clock3 size={11} />
               {article.readTime}
             </span>
+            <span className="h-1 w-1 rounded-full bg-gray-300" />
+            <SaveArticleButton title={article.title} category={article.category} />
           </div>
         </header>
 

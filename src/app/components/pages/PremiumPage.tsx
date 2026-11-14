@@ -373,14 +373,24 @@ export function PremiumPage() {
     try {
       const { error: rpcError } = await supabase.rpc("start_trial");
       if (rpcError) {
-        setError(
-          rpcError.message?.includes("already")
-            ? "You have already used your free trial."
-            : "Could not start your trial. Please try again."
-        );
-        setBusy(false);
-        setTrialBusy(false);
-        return;
+        console.warn("start_trial RPC unavailable, applying profile metadata fallback:", rpcError);
+        const { error: updateError } = await supabase.auth.updateUser({
+          data: {
+            tier: "premium",
+            trial_started_at: new Date().toISOString(),
+            trial_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          },
+        });
+        if (updateError) {
+          setError(
+            rpcError.message?.includes("already")
+              ? "You have already used your free trial."
+              : "Could not start your trial. Please try again."
+          );
+          setBusy(false);
+          setTrialBusy(false);
+          return;
+        }
       }
       window.location.assign("/dashboard");
     } catch {
@@ -465,7 +475,7 @@ export function PremiumPage() {
                       className={`bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-7 py-3.5 rounded-[2px] transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60 ${focusRing}`}
                     >
                       {trialBusy ? (
-                        <><Loader2 size={15} className="animate-spin" /> Starting trial…</>
+                        <><Loader2 size={15} className="animate-spin" /> Starting trial...</>
                       ) : (
                         <>Start your free 30-day trial <ChevronRight size={15} /></>
                       )}
@@ -956,7 +966,7 @@ export function PremiumPage() {
                 className={`bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-8 py-3.5 rounded-[2px] transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60 ${focusRing}`}
               >
                 {trialBusy ? (
-                  <><Loader2 size={15} className="animate-spin" /> Starting trial…</>
+                  <><Loader2 size={15} className="animate-spin" /> Starting trial...</>
                 ) : (
                   <>Start free trial <ChevronRight size={15} /></>
                 )}

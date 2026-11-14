@@ -1,4 +1,5 @@
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import AdSlot from "../AdSlot";
 import {
   BookOpen,
   Download,
@@ -415,25 +416,25 @@ export function MagazinePage() {
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
 
       {/* =====================================================
-          MAGAZINE HEADER
+          MAGAZINE HEADER (BLOOMBERG EDITORIAL STYLE)
          ===================================================== */}
 
       <div className="mb-8 border-b-2 border-black pb-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <BookOpen size={16} className="text-gray-500" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-gray-500">
-                Digital &amp; Print
+              <span className="inline-block h-2 w-2 rounded-full bg-[#ED1C24]"></span>
+              <span className="text-[11px] font-sans font-bold uppercase tracking-[0.25em] text-[#ED1C24]">
+                The Pride Times • Global Edition
               </span>
             </div>
 
-            <h1 className="mt-1 font-serif text-3xl font-medium tracking-tight text-gray-900 md:text-4xl">
-              The Pride Times Magazine
+            <h1 className="mt-1.5 font-serif text-3xl font-bold tracking-tight text-gray-900 md:text-5xl">
+              Magazine &amp; Special Reports
             </h1>
 
-            <p className="mt-1 text-xs text-gray-500 md:text-sm">
-              In-depth stories, exclusive interviews and global insights for tomorrow's leaders.
+            <p className="mt-2 text-xs font-sans text-gray-600 md:text-sm max-w-2xl leading-relaxed">
+              Authoritative intelligence, flagship investigative reports, and in-depth executive interviews spanning global markets, emerging technology, and economic transformation.
             </p>
           </div>
 
@@ -444,39 +445,44 @@ export function MagazinePage() {
                 .getElementById("all-editions")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" })
             }
-            className="group flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:text-red-600 cursor-pointer"
+            className="group flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:text-[#ED1C24] cursor-pointer"
           >
-            <span>Explore Magazine</span>
-            <ArrowRight size={13} className="text-red-600 transition-transform group-hover:translate-x-1" />
+            <span>Explore Archive</span>
+            <ArrowRight size={13} className="text-[#ED1C24] transition-transform group-hover:translate-x-1" />
           </button>
         </div>
       </div>
 
       {/* =====================================================
-          1. LATEST ISSUE
+          1. LATEST ISSUE (BLOOMBERG FLAGSHIP LEAD)
          ===================================================== */}
 
-      <section className="mb-14">
+      <section className="mb-10">
 
         <div className="mb-3 flex items-center justify-between">
-          <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-red-600">
-            September 2026 Edition
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="bg-[#ED1C24] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white">
+              Cover Story
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-700">
+              {heroArticle.editionLabel}
+            </span>
+          </div>
 
-          <span className="hidden text-[11px] font-semibold uppercase tracking-widest text-gray-400 sm:block">
-            The Global Business Issue
+          <span className="hidden text-[11px] font-semibold uppercase tracking-widest text-gray-500 sm:block">
+            Volume 14 • Global Edition
           </span>
         </div>
 
         {/* Hero Magazine Card */}
-        <div className="overflow-hidden border border-zinc-800 bg-[#0c0d0e] text-white">
+        <div className="overflow-hidden border border-zinc-900 bg-[#090a0b] text-white shadow-xl">
           <div className="grid grid-cols-1 items-stretch lg:grid-cols-12">
 
             {/* Left: Magazine Cover */}
-            <div className="flex items-center justify-center p-6 sm:p-8 lg:col-span-5 lg:p-10">
+            <div className="flex items-center justify-center p-6 sm:p-8 lg:col-span-5 lg:p-10 bg-[#000000]">
               <div
                 onClick={() => openArticle(heroArticle)}
-                className="group relative aspect-[3/4] w-full max-w-[320px] cursor-pointer overflow-hidden border border-zinc-700/60 shadow-[0_20px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 transition-transform duration-500 ease-out hover:scale-105 hover:shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
+                className="group relative aspect-[3/4] w-full max-w-[320px] cursor-pointer overflow-hidden border border-zinc-700/80 shadow-[0_25px_60px_rgba(0,0,0,0.95)] ring-1 ring-white/10 transition-transform duration-500 ease-out hover:scale-105"
               >
                 <ImageWithFallback
                   src={heroArticle.image}
@@ -487,37 +493,39 @@ export function MagazinePage() {
             </div>
 
             {/* Right: Issue Details */}
-            <div className="flex flex-col justify-center p-6 sm:p-8 lg:col-span-7 lg:p-10 lg:pl-4">
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-red-500">
-                COVER STORY
+            <div className="flex flex-col justify-center p-6 sm:p-8 lg:col-span-7 lg:p-12">
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.25em] text-[#ED1C24]">
+                IN-DEPTH COVERAGE
               </p>
 
-              <h2 className="font-serif text-3xl leading-[1.15] text-white md:text-4xl">
+              <h2 className="font-serif text-3xl font-bold leading-[1.12] text-white md:text-5xl">
                 The Global Business Issue 2026
               </h2>
 
-              <p className="mt-2 text-base font-normal text-gray-300 md:text-lg">
+              <p className="mt-3 font-serif text-base italic text-gray-300 md:text-xl">
                 The Forces Reshaping Business, Technology and the World Economy
               </p>
 
-              <p className="mt-4 text-xs leading-6 text-gray-400 md:text-sm">
-                The September 2026 edition examines the forces transforming global business, technology, energy and the world economy, with exclusive interviews, data-driven insights and expert analysis.
+              <p className="mt-4 text-xs font-sans leading-relaxed text-gray-400 md:text-sm border-t border-zinc-800 pt-4">
+                The September 2026 edition of The Pride Times delivers rigorous, data-driven journalism examining shifting supply chains, AI-driven corporate transformation, and economic realignment across US, European, and Asian markets.
               </p>
 
-              <div className="mt-5 flex items-center gap-3 text-xs text-gray-400">
-                <span className="flex items-center gap-1.5 text-gray-300">
-                  <Clock size={13} className="text-red-500" />
+              <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-gray-400">
+                <span className="flex items-center gap-1.5 text-gray-300 font-medium">
+                  <Clock size={13} className="text-[#ED1C24]" />
                   12 min read
                 </span>
                 <span>•</span>
                 <span>The Pride Times Editorial Desk</span>
+                <span>•</span>
+                <span className="text-amber-400 font-semibold">Special Edition</span>
               </div>
 
-              <div className="mt-7 flex flex-wrap items-center gap-3">
+              <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button
                   type="button"
                   onClick={() => openArticle(heroArticle)}
-                  className="flex items-center gap-2 bg-red-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-700 cursor-pointer"
+                  className="flex items-center gap-2 bg-[#ED1C24] px-7 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-colors hover:bg-red-700 cursor-pointer"
                 >
                   Read Digital Edition
                   <ArrowRight size={14} />
@@ -525,9 +533,10 @@ export function MagazinePage() {
 
                 <button
                   type="button"
-                  className="border border-zinc-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-zinc-400 hover:bg-white/5 cursor-pointer"
+                  onClick={() => downloadReport(heroArticle.headline)}
+                  className="border border-zinc-700 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:border-zinc-400 hover:bg-white/5 cursor-pointer"
                 >
-                  Subscribe for Print
+                  Download Executive Brief (PDF)
                 </button>
               </div>
             </div>
@@ -538,43 +547,48 @@ export function MagazinePage() {
         {/* 3 Highlight Cards */}
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="flex items-start gap-3.5 border border-gray-200 bg-white p-4 shadow-sm">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-200/60">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-zinc-100 text-black">
               <Compass size={18} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-gray-900">Global Insights</h3>
-              <p className="mt-0.5 text-xs text-gray-500">
-                In-depth analysis from industry leaders
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900">Global Markets</h3>
+              <p className="mt-1 text-xs text-gray-600">
+                In-depth sector analysis and macro perspectives across 40+ countries.
               </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3.5 border border-gray-200 bg-white p-4 shadow-sm">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-200/60">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-zinc-100 text-black">
               <Users size={18} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-gray-900">Exclusive Interviews</h3>
-              <p className="mt-0.5 text-xs text-gray-500">
-                Conversations with global CEOs
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900">Executive Access</h3>
+              <p className="mt-1 text-xs text-gray-600">
+                Uncompromising discussions with CEOs, founders, and economic policymakers.
               </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3.5 border border-gray-200 bg-white p-4 shadow-sm">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600 ring-1 ring-amber-200/60">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-zinc-100 text-black">
               <TrendingUp size={18} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-gray-900">Future Trends</h3>
-              <p className="mt-0.5 text-xs text-gray-500">
-                Technology, markets and the next decade
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900">Predictive Intelligence</h3>
+              <p className="mt-1 text-xs text-gray-600">
+                Forecasts on semiconductors, clean energy, and applied agentic workflows.
               </p>
             </div>
           </div>
         </div>
 
       </section>
+
+      {/* =====================================================
+          BLOOMBERG SPONSORED EDITORIAL AD BREAK
+         ===================================================== */}
+      <AdSlot type="top" />
 
       {/* =====================================================
           2. ALL EDITIONS
@@ -625,33 +639,42 @@ export function MagazinePage() {
           })}
         </div>
 
-        {/* 4-Column Grid */}
+        {/* 4-Column Grid (Bloomberg Card Proportions) */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {filteredIssues.map((issue) => (
             <div
               key={issue.id}
-              className="group flex cursor-pointer flex-col"
+              className="group flex cursor-pointer flex-col border border-gray-100 bg-white p-3 shadow-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md"
               onClick={() => openArticle(issue)}
             >
               {/* Magazine Cover */}
-              <div className="relative aspect-[3/4] overflow-hidden border border-gray-200 bg-gray-100 shadow-md transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03] group-hover:shadow-xl">
+              <div className="relative aspect-[3/4] overflow-hidden border border-gray-200 bg-zinc-950 shadow-inner">
                 <ImageWithFallback
                   src={issue.image}
                   alt={issue.headline}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
               {/* Information below cover */}
-              <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-red-600">
-                {issue.editionLabel}
-              </p>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#ED1C24]">
+                  {issue.editionLabel}
+                </span>
+                <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-gray-400">
+                  {issue.category}
+                </span>
+              </div>
 
-              <h3 className="mt-1 line-clamp-3 font-serif text-sm font-medium leading-snug text-gray-900 transition-colors group-hover:text-red-600">
+              <h3 className="mt-1.5 line-clamp-3 font-serif text-base font-bold leading-snug text-gray-900 transition-colors group-hover:text-[#ED1C24]">
                 {issue.headline}
               </h3>
 
-              <div className="mt-2.5 flex items-center gap-1 text-red-600">
+              <p className="mt-1 line-clamp-2 text-xs font-sans text-gray-500 leading-relaxed">
+                {issue.dek}
+              </p>
+
+              <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2.5 text-[#ED1C24]">
                 <span className="text-[10px] font-bold uppercase tracking-wider">
                   Read Issue
                 </span>
@@ -844,6 +867,11 @@ export function MagazinePage() {
         </div>
 
       </section>
+
+      {/* =====================================================
+          BLOOMBERG FOOTER SPONSORED AD BREAK
+         ===================================================== */}
+      <AdSlot type="bottom" />
 
       {/* =====================================================
           5. PREMIUM SUBSCRIPTION BANNER
