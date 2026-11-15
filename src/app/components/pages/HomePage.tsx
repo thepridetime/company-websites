@@ -222,6 +222,9 @@ const sectionStoryCounts = new Map<number, number>(
   ])
 );
 
+/* Stories shown as headline-only rows (no image), so no image repeats. */
+const textOnlyIds = new Set<string>();
+
 const sectionModules = digestSections
   .slice(0, 4)
   .map((section) => {
@@ -230,18 +233,40 @@ const sectionModules = digestSections
     );
     const [lead, ...rest] = claimStories(pool, 4, false);
 
-    return { section, lead, rest };
+    const extras = pool
+      .filter(
+        (article) =>
+          article.id !== lead?.id &&
+          !rest.some((item) => item.id === article.id)
+      )
+      .slice(0, Math.max(0, 3 - rest.length));
+
+    extras.forEach((article) => textOnlyIds.add(article.id));
+
+    return { section, lead, rest: [...rest, ...extras] };
   })
   .filter((module) => Boolean(module.lead));
 
-/* Latest feed: the digest stories that are still unused. */
+/* Latest feed: unused digest stories (with image), then headline-only stories. */
 const feedStories: DigestArticle[] = digestArticles.filter(
   (article) => !claimedImages.has(article.image)
 );
 
+const feedExtras: DigestArticle[] = digestArticles
+  .filter(
+    (article) =>
+      !feedStories.some((item) => item.id === article.id) &&
+      !maEdition1Articles.some((item) => item.id === article.id)
+  )
+  .slice(0, 16);
+
+feedExtras.forEach((article) => textOnlyIds.add(article.id));
+
+const feedAll: DigestArticle[] = [...feedStories, ...feedExtras];
+
 const latestNewsTabs = [
   "All",
-  ...Array.from(new Set(feedStories.map((article) => article.section))),
+  ...Array.from(new Set(feedAll.map((article) => article.section))),
 ];
 
 function editionDealChip(article: EditionArticle) {
@@ -457,8 +482,8 @@ export function HomePage() {
   const filteredStories = useMemo(
     () =>
       activeNewsTab === "All"
-        ? feedStories
-        : feedStories.filter((article) => article.section === activeNewsTab),
+        ? feedAll
+        : feedAll.filter((article) => article.section === activeNewsTab),
     [activeNewsTab]
   );
 
@@ -570,7 +595,7 @@ export function HomePage() {
           <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
             {/* ---------- LEFT: feature story ---------- */}
 
-            <div className="flex flex-col border-b border-gray-200 p-4 lg:col-span-4 lg:border-b-0 lg:border-r">
+            <div className="flex flex-col border-b border-gray-200 p-6 lg:col-span-4 lg:border-b-0 lg:border-r">
               <Link to={digestArticlePath(featureStory)} className="group block">
                 <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
@@ -580,7 +605,7 @@ export function HomePage() {
                   />
                 </div>
 
-                <h2 className="mt-4 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
+                <h2 className="mt-5 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
                   {featureStory.title}
                 </h2>
 
@@ -596,7 +621,7 @@ export function HomePage() {
 
             {/* ---------- CENTRE: lead story ---------- */}
 
-            <div className="flex flex-col border-b border-gray-200 p-4 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
+            <div className="flex flex-col border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
               <Link to={digestArticlePath(leadStory)} className="group block">
                 <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
@@ -606,7 +631,7 @@ export function HomePage() {
                   />
                 </div>
 
-                <h1 className="mt-4 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                <h1 className="mt-5 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
                   {leadStory.title}
                 </h1>
 
@@ -622,7 +647,7 @@ export function HomePage() {
 
             {/* ---------- RIGHT: today's news + latest ---------- */}
 
-            <aside className="flex flex-col p-4 md:col-span-2 lg:col-span-4">
+            <aside className="flex flex-col p-6 md:col-span-2 lg:col-span-4">
               {/* Today's News */}
 
               <div className="flex items-center justify-between">
@@ -639,12 +664,12 @@ export function HomePage() {
                 </button>
               </div>
 
-              <ul className="mt-3 divide-y divide-gray-200">
+              <ul className="mt-4 divide-y divide-gray-200">
                 {todaysNews.map((story) => (
                   <li key={story.id}>
                     <Link
                       to={digestArticlePath(story)}
-                      className="group flex items-start gap-3 py-3"
+                      className="group flex items-start gap-3 py-4"
                     >
                       <div className="h-[64px] w-[96px] shrink-0 overflow-hidden rounded-md bg-gray-100">
                         <ImageWithFallback
@@ -670,7 +695,7 @@ export function HomePage() {
 
               {/* Latest */}
 
-              <div className="mt-6 border-t border-gray-200 pt-4">
+              <div className="mt-8 border-t border-gray-200 pt-6">
                 <div className="flex items-center justify-between">
                   <h2 className="font-serif text-[20px] font-bold text-red-600">
                     Latest
@@ -694,12 +719,12 @@ export function HomePage() {
                   </div>
                 </div>
 
-                <ul className="mt-3 divide-y divide-gray-200">
+                <ul className="mt-4 divide-y divide-gray-200">
                   {currentLatest.map((story) => (
                     <li key={story.id}>
                       <Link
                         to={digestArticlePath(story)}
-                        className="group flex items-start gap-3 py-2.5"
+                        className="group flex items-start gap-3 py-3.5"
                       >
                         <span className="w-14 shrink-0 pt-0.5 text-[11px] font-semibold text-red-600">
                           {story.publishedAt}
@@ -741,7 +766,7 @@ export function HomePage() {
               />
             </Link>
 
-            <div className="flex flex-col justify-center p-5 lg:col-span-6 lg:p-8">
+            <div className="flex flex-col justify-center p-6 lg:col-span-6 lg:p-12">
               <Kicker>{interviewStory.section}</Kicker>
 
               <Link to={digestArticlePath(interviewStory)} className="group block">
@@ -754,7 +779,7 @@ export function HomePage() {
                 </p>
               </Link>
 
-              <div className="mt-5 border-t border-gray-200 pt-4">
+              <div className="mt-8 border-t border-gray-200 pt-6">
                 <Link
                   to={digestArticlePath(interviewRelated)}
                   className="group block"
@@ -771,10 +796,10 @@ export function HomePage() {
               3. TRENDING NOW — 4 image cards
           ================================================= */}
 
-          <section className="mt-12 mb-12">
+          <section className="mt-16 mb-16">
             <SectionHeader title="Trending Now" link="/business-news" />
 
-            <div className="grid grid-cols-1 items-stretch gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
               {trendingStrip.map((story) => (
                 <Link
                   key={story.id}
@@ -811,14 +836,14 @@ export function HomePage() {
           ================================================= */}
 
           {sectionModules.map(({ section, lead, rest }) => (
-            <section key={section.slug} className="mb-12">
+            <section key={section.slug} className="mb-16">
               <SectionHeader
                 title={section.name}
                 link={section.path}
                 linkText={`${sectionStoryCounts.get(section.number) ?? 0} stories`}
               />
 
-              <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
+              <div className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-12">
                 <Link
                   to={digestArticlePath(lead)}
                   className="group flex h-full flex-col lg:col-span-7"
@@ -846,7 +871,7 @@ export function HomePage() {
                   </div>
                 </Link>
 
-                <div className="lg:col-span-5">
+                <div className="flex flex-col justify-center lg:col-span-5">
                   {rest.length === 0 ? (
                     <p className="text-[12px] text-gray-400">
                       More stories coming soon.
@@ -857,15 +882,17 @@ export function HomePage() {
                         <li key={story.id}>
                           <Link
                             to={digestArticlePath(story)}
-                            className="group flex items-start gap-4 py-4"
+                            className="group flex items-start gap-5 py-6"
                           >
-                            <div className="h-[72px] w-[104px] shrink-0 overflow-hidden rounded-md bg-gray-100">
-                              <ImageWithFallback
-                                src={story.image}
-                                alt={story.title}
-                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                              />
-                            </div>
+                            {!textOnlyIds.has(story.id) && (
+                              <div className="h-[72px] w-[104px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+                                <ImageWithFallback
+                                  src={story.image}
+                                  alt={story.title}
+                                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                              </div>
+                            )}
 
                             <div className="min-w-0 flex-1">
                               <h4 className="line-clamp-2 text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
@@ -890,19 +917,19 @@ export function HomePage() {
               5. LATEST NEWS FEED + MAGAZINE
           ================================================= */}
 
-          <section aria-label="Latest news" className="mb-12">
+          <section aria-label="Latest news" className="mb-16">
             <SectionHeader
               title="Latest News · 16 October 2026"
               onClick={scrollToLatestFeed}
               linkText="See all"
             />
 
-            <ol className="grid grid-cols-1 items-stretch gap-x-8 md:grid-cols-2 lg:grid-cols-3">
+            <ol className="grid grid-cols-1 items-stretch gap-x-10 md:grid-cols-2 lg:grid-cols-3">
               {techLaunchArticles.map((story, index) => (
                 <li key={story.id} className="border-b border-gray-200">
                   <Link
                     to={digestArticlePath(story)}
-                    className="group flex h-full gap-3 py-3.5"
+                    className="group flex h-full gap-4 py-5"
                   >
                     <span className="w-6 shrink-0 text-[22px] font-extrabold leading-none tabular-nums text-gray-300">
                       {index + 1}
@@ -922,7 +949,7 @@ export function HomePage() {
               ))}
             </ol>
 
-            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+            <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1.9fr_0.7fr]">
               <div ref={newsListRef} className="scroll-mt-24 min-w-0">
                 <SectionHeader title="More Latest News" />
 
@@ -954,15 +981,21 @@ export function HomePage() {
                     <Link
                       key={story.id}
                       to={digestArticlePath(story)}
-                      className="group grid grid-cols-[110px_1fr] items-start gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                      className={`group items-start gap-4 py-7 sm:gap-6 ${
+                        textOnlyIds.has(story.id)
+                          ? "block"
+                          : "grid grid-cols-[110px_1fr] sm:grid-cols-[200px_1fr]"
+                      }`}
                     >
-                      <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[126px]">
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
+                      {!textOnlyIds.has(story.id) && (
+                        <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
+                          <ImageWithFallback
+                            src={story.image}
+                            alt={story.title}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                      )}
 
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-x-2">
@@ -1020,7 +1053,7 @@ export function HomePage() {
               </div>
 
               <div className="min-w-0">
-                <div className="lg:sticky lg:top-24">
+                <div className="lg:sticky lg:top-24 lg:pt-1">
                   <SectionHeader title="Magazine" link="/magazine" />
 
                   <Link
@@ -1063,8 +1096,8 @@ export function HomePage() {
               6. MARKETS + EDITOR'S PICK
           ================================================= */}
 
-          <section className="mb-12 grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
-            <div className="bg-black p-5 text-white lg:col-span-5">
+          <section className="mb-16 grid grid-cols-1 items-stretch gap-10 lg:grid-cols-12">
+            <div className="bg-black p-6 text-white lg:col-span-5">
               <div className="flex items-center justify-between border-b border-white/20 pb-2">
                 <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em]">
                   Markets
@@ -1093,7 +1126,7 @@ export function HomePage() {
                   ? Array.from({ length: 6 }).map((_, i) => (
                       <div
                         key={i}
-                        className="flex items-center justify-between py-2.5"
+                        className="flex items-center justify-between py-3.5"
                       >
                         <span className="h-3 w-20 animate-pulse rounded bg-white/10" />
                         <span className="h-3 w-24 animate-pulse rounded bg-white/10" />
@@ -1102,7 +1135,7 @@ export function HomePage() {
                   : marketRows.slice(0, 6).map((market) => (
                       <div
                         key={market.symbol}
-                        className="flex items-center justify-between py-2.5"
+                        className="flex items-center justify-between py-3.5"
                       >
                         <span className="text-[12px] font-semibold text-gray-100">
                           {market.symbol}
@@ -1137,7 +1170,7 @@ export function HomePage() {
 
               <Link
                 to={digestArticlePath(editorsPick)}
-                className="group grid grid-cols-1 items-start gap-5 sm:grid-cols-2"
+                className="group grid grid-cols-1 items-start gap-8 sm:grid-cols-2"
               >
                 <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
@@ -1169,7 +1202,7 @@ export function HomePage() {
           <section
             id={globalSectorAnchorId}
             aria-label="Global Sector News Report 2026"
-            className="mb-12 scroll-mt-24"
+            className="mb-16 scroll-mt-24"
           >
             <SectionHeader title={globalSectorReport.kicker} />
 
@@ -1177,12 +1210,12 @@ export function HomePage() {
               {globalSectorReport.subheadline}
             </p>
 
-            <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 items-stretch gap-x-10 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
               {globalSectorItems.map((item) => (
                 <Link
                   key={item.sector}
                   to={`/article/${globalSectorItemArticleId(item)}`}
-                  className="group flex h-full flex-col border-b border-gray-200 py-4"
+                  className="group flex h-full flex-col border-b border-gray-200 py-6"
                 >
                   <Kicker>{item.sector}</Kicker>
 
@@ -1200,7 +1233,7 @@ export function HomePage() {
 
           <section
             aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
-            className="mb-12"
+            className="mb-16"
           >
             <SectionHeader
               title={`Global Corporate News Digest · ${maEdition1Meta.edition}`}
@@ -1242,7 +1275,7 @@ export function HomePage() {
               </div>
             </Link>
 
-            <div className="mt-8 space-y-8">
+            <div className="mt-10 space-y-12">
               {editionIndustries.map((group) => (
                 <div key={group.name}>
                   <div className="mb-4 flex items-baseline justify-between border-b border-gray-300 pb-2">
@@ -1255,7 +1288,7 @@ export function HomePage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 items-stretch gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="grid grid-cols-1 items-stretch gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
                     {group.stories.map((story) => {
                       const chip = editionDealChip(story);
 
@@ -1290,7 +1323,7 @@ export function HomePage() {
               ))}
             </div>
 
-            <details className="mt-6 border border-gray-300">
+            <details className="mt-8 border border-gray-300">
               <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.12em] text-gray-900">
                 Deal status table (as of the early August 2026 tracker update)
               </summary>
@@ -1329,17 +1362,17 @@ export function HomePage() {
             </details>
           </section>
 
-          <section className="mb-12">
+          <section className="mb-16">
             <SectionHeader title="Browse by Section" />
 
-            <div className="grid grid-cols-1 items-stretch gap-x-6 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="grid grid-cols-1 items-stretch gap-x-8 sm:grid-cols-2 lg:grid-cols-5">
               {digestSections.map((section) => {
                 const top = sectionHeadlines.get(section.number);
 
                 return (
                   <div
                     key={section.slug}
-                    className="flex h-full flex-col border-b border-gray-200 py-4"
+                    className="flex h-full flex-col border-b border-gray-200 py-6"
                   >
                     <Link
                       to={section.path}
@@ -1379,11 +1412,11 @@ export function HomePage() {
               linkText="Full List"
             />
 
-            <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-x-12 sm:grid-cols-2">
               {prideTimes30.map((leader) => (
                 <div
                   key={leader.rank}
-                  className="flex items-start gap-4 border-b border-gray-200 py-3.5"
+                  className="flex items-start gap-5 border-b border-gray-200 py-6"
                 >
                   <span className="w-8 shrink-0 text-[22px] font-extrabold leading-none tabular-nums text-gray-300">
                     {String(leader.rank).padStart(2, "0")}
