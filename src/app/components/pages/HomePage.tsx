@@ -103,77 +103,77 @@ export function PrideTimesAd() {
    DATA (unchanged logic)
 ========================================================= */
 
+/* ---------- Image allocation: no image appears twice on the page ----------
+   1. The Mergers & Acquisitions images are reserved first (that section is fixed).
+   2. The top band, newsletter, trending and related slots claim stories in order.
+   3. Section modules claim from the remaining digest stories.
+   4. The latest feed uses whatever is left.                                      */
+
+const claimedImages = new Set<string>();
+
+maEdition1Articles.forEach((article) => claimedImages.add(article.image));
+
+function claimStories<T extends { image: string }>(
+  pool: T[],
+  count: number,
+  allowRepeat = true
+): T[] {
+  const out: T[] = [];
+
+  for (const story of pool) {
+    if (out.length === count) break;
+    if (claimedImages.has(story.image)) continue;
+    claimedImages.add(story.image);
+    out.push(story);
+  }
+
+  // Only used where a repeat is acceptable, so the page never crashes.
+  while (allowRepeat && out.length < count && pool.length > 0) {
+    out.push(pool[out.length % pool.length]);
+  }
+
+  return out;
+}
+
 const octoberStories: OctEditionArticle[] = [
   ...techLaunchArticles,
   ...oct13EditionArticles,
   ...octEditionArticles,
 ];
 
-/* Safe accessor: wraps around if the data set is short */
-const at = (index: number): OctEditionArticle =>
-  octoberStories[index % octoberStories.length];
+const [featureStory, leadStory] = claimStories(octoberStories, 2);
+const relatedFeature = claimStories(octoberStories, 2);
+const relatedLead = claimStories(octoberStories, 2);
+const todaysNews = claimStories(octoberStories, 3);
+const latestList = claimStories(octoberStories, 6);
+const [interviewStory, interviewRelated] = claimStories(octoberStories, 2);
+const trendingStrip = claimStories(octoberStories, 4);
+const [editorsPick] = claimStories(octoberStories, 1);
 
-const leadStory = at(0);          // centre column
-const featureStory = at(1);       // left column
-const todaysNews = [at(10), at(20), at(21)];
-const latestList = [at(11), at(12), at(13), at(14), at(15), at(16)];
-const interviewStory = at(17);
-const interviewRelated = at(18);
-const trendingStrip = [at(19), at(22), at(23), at(24)];
-const editorsPick = at(25);
-
-/* Newsletter strip: six of the site's own items.
-   Three are shown at a time and the arrows step through them. */
-const newsletterPromos = [
-  {
-    label: "Magazine",
-    headline: "The 2026 Global Industry Outlook",
-    image: MagazineImg,
-    to: "/magazine",
-  },
-  {
-    label: "Markets",
-    headline: at(2).title,
-    image: at(2).image,
-    to: "/markets",
-  },
-  {
-    label: "Editor's Pick",
-    headline: editorsPick.title,
-    image: editorsPick.image,
-    to: digestArticlePath(editorsPick),
-  },
-  {
-    label: "Trending Now",
-    headline: at(3).title,
-    image: at(3).image,
-    to: digestArticlePath(at(3)),
-  },
-  {
-    label: "Latest",
-    headline: at(4).title,
-    image: at(4).image,
-    to: digestArticlePath(at(4)),
-  },
-  {
-    label: "Today's News",
-    headline: at(5).title,
-    image: at(5).image,
-    to: digestArticlePath(at(5)),
-  },
+/* Newsletter strip: six different stories, three shown at a time.
+   The arrows step through them. */
+const newsletterLabels = [
+  "Magazine",
+  "Markets",
+  "Editor's Pick",
+  "Trending Now",
+  "Latest",
+  "Today's News",
 ];
+const newsletterStories = claimStories(octoberStories, newsletterLabels.length);
+
+const newsletterPromos = newsletterLabels.map((label, i) => {
+  const story = newsletterStories[i];
+
+  return {
+    label,
+    headline: story.title,
+    image: story.image,
+    to: label === "Magazine" ? "/magazine" : digestArticlePath(story),
+  };
+});
 
 const PROMO_VISIBLE = 3;
-
-const sectionNames = Array.from(
-  new Set(octoberStories.map((article) => article.section))
-);
-const latestNewsTabs = ["All", ...sectionNames];
-
-const interleavedArticles: DigestArticle[] = [
-  ...oct13EditionArticles,
-  ...octEditionArticles,
-];
 
 const PAGE_SIZE = 8;
 
@@ -187,7 +187,10 @@ const editionLead = maEdition1Articles[0];
 const editionIndustries = maEdition1IndustryOrder
   .map((name) => ({
     name,
-    stories: maEdition1Articles.filter((article) => article.industry === name),
+    stories: maEdition1Articles.filter(
+      (article) =>
+        article.industry === name && article.id !== editionLead.id
+    ),
   }))
   .filter((group) => group.stories.length > 0);
 
@@ -222,17 +225,24 @@ const sectionStoryCounts = new Map<number, number>(
 const sectionModules = digestSections
   .slice(0, 4)
   .map((section) => {
-    const stories = allSectionStories.filter(
-      (a) => a.sectionNumber === section.number
+    const pool = digestArticles.filter(
+      (article) => article.sectionNumber === section.number
     );
+    const [lead, ...rest] = claimStories(pool, 4, false);
 
-    return {
-      section,
-      lead: stories[0],
-      rest: stories.slice(1, 4),
-    };
+    return { section, lead, rest };
   })
   .filter((module) => Boolean(module.lead));
+
+/* Latest feed: the digest stories that are still unused. */
+const feedStories: DigestArticle[] = digestArticles.filter(
+  (article) => !claimedImages.has(article.image)
+);
+
+const latestNewsTabs = [
+  "All",
+  ...Array.from(new Set(feedStories.map((article) => article.section))),
+];
 
 function editionDealChip(article: EditionArticle) {
   return article.keyFacts.find((fact) =>
@@ -299,25 +309,34 @@ function SectionHeader({
   title,
   link,
   linkText = "View All",
+  onClick,
 }: {
   title: string;
   link?: string;
   linkText?: string;
+  onClick?: () => void;
 }) {
+  const linkClass =
+    "flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline";
+
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
       <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
 
-      {link && (
-        <Link
-          to={link}
-          className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
-        >
+      {onClick ? (
+        <button type="button" onClick={onClick} className={linkClass}>
           {linkText}
           <ArrowRight size={10} />
-        </Link>
+        </button>
+      ) : (
+        link && (
+          <Link to={link} className={linkClass}>
+            {linkText}
+            <ArrowRight size={10} />
+          </Link>
+        )
       )}
     </div>
   );
@@ -438,10 +457,8 @@ export function HomePage() {
   const filteredStories = useMemo(
     () =>
       activeNewsTab === "All"
-        ? interleavedArticles
-        : [...techLaunchArticles, ...interleavedArticles].filter(
-            (article) => article.section === activeNewsTab
-          ),
+        ? feedStories
+        : feedStories.filter((article) => article.section === activeNewsTab),
     [activeNewsTab]
   );
 
@@ -469,9 +486,20 @@ export function HomePage() {
     });
   };
 
+  const scrollToLatestFeed = () => {
+    selectTab("All");
+
+    window.requestAnimationFrame(() => {
+      newsListRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
+
   const marketRows = marketSnapshotData[activeMarketTab] || [];
 
-  const yourNewsList = interleavedArticles.slice(0, 6);
+  const yourNewsList = feedStories.slice(0, 6);
   const currentLatest =
     activeLatestTab === "All" ? latestList : yourNewsList;
 
@@ -562,7 +590,7 @@ export function HomePage() {
               </Link>
 
               <div className="mt-auto">
-                <RelatedBox items={[at(6), at(7)]} />
+                <RelatedBox items={relatedFeature} />
               </div>
             </div>
 
@@ -588,7 +616,7 @@ export function HomePage() {
               </Link>
 
               <div className="mt-auto">
-                <RelatedBox items={[at(8), at(9)]} />
+                <RelatedBox items={relatedLead} />
               </div>
             </div>
 
@@ -602,12 +630,13 @@ export function HomePage() {
                   Today's News
                 </h2>
 
-                <Link
-                  to="/business-news"
+                <button
+                  type="button"
+                  onClick={scrollToLatestFeed}
                   className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
                 >
                   Explore More
-                </Link>
+                </button>
               </div>
 
               <ul className="mt-3 divide-y divide-gray-200">
@@ -684,13 +713,14 @@ export function HomePage() {
                   ))}
                 </ul>
 
-                <Link
-                  to="/business-news"
-                  className="mt-2 flex items-center justify-end gap-1 text-[12px] font-semibold text-gray-600 hover:underline"
+                <button
+                  type="button"
+                  onClick={scrollToLatestFeed}
+                  className="mt-2 flex w-full items-center justify-end gap-1 text-[12px] font-semibold text-gray-600 hover:underline"
                 >
                   See all latest
                   <ChevronRight size={12} />
-                </Link>
+                </button>
               </div>
             </aside>
           </section>
@@ -863,7 +893,8 @@ export function HomePage() {
           <section aria-label="Latest news" className="mb-12">
             <SectionHeader
               title="Latest News · 16 October 2026"
-              link="/business-news"
+              onClick={scrollToLatestFeed}
+              linkText="See all"
             />
 
             <ol className="grid grid-cols-1 items-stretch gap-x-8 md:grid-cols-2 lg:grid-cols-3">
@@ -925,7 +956,7 @@ export function HomePage() {
                       to={digestArticlePath(story)}
                       className="group grid grid-cols-[110px_1fr] items-start gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
                     >
-                      <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
+                      <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[126px]">
                         <ImageWithFallback
                           src={story.image}
                           alt={story.title}
