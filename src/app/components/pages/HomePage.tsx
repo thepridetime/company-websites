@@ -122,6 +122,8 @@ const interviewRelated = at(18);
 const trendingStrip = [at(19), at(22), at(23), at(24)];
 const editorsPick = at(25);
 
+/* Newsletter strip: six of the site's own items.
+   Three are shown at a time and the arrows step through them. */
 const newsletterPromos = [
   {
     label: "Magazine",
@@ -141,7 +143,27 @@ const newsletterPromos = [
     image: editorsPick.image,
     to: digestArticlePath(editorsPick),
   },
+  {
+    label: "Trending Now",
+    headline: at(3).title,
+    image: at(3).image,
+    to: digestArticlePath(at(3)),
+  },
+  {
+    label: "Latest",
+    headline: at(4).title,
+    image: at(4).image,
+    to: digestArticlePath(at(4)),
+  },
+  {
+    label: "Today's News",
+    headline: at(5).title,
+    image: at(5).image,
+    to: digestArticlePath(at(5)),
+  },
 ];
+
+const PROMO_VISIBLE = 3;
 
 const sectionNames = Array.from(
   new Set(octoberStories.map((article) => article.section))
@@ -357,6 +379,21 @@ export function HomePage() {
   const [activeLatestTab, setActiveLatestTab] =
     useState<"All" | "Your News">("All");
 
+  const [promoStart, setPromoStart] = useState(0);
+
+  const visiblePromos = Array.from(
+    { length: PROMO_VISIBLE },
+    (_, i) => newsletterPromos[(promoStart + i) % newsletterPromos.length]
+  );
+
+  const showPrevPromo = () =>
+    setPromoStart(
+      (start) => (start - 1 + newsletterPromos.length) % newsletterPromos.length
+    );
+
+  const showNextPromo = () =>
+    setPromoStart((start) => (start + 1) % newsletterPromos.length);
+
   const newsListRef = useRef<HTMLDivElement | null>(null);
 
   const [marketSnapshotData, setMarketSnapshotData] = useState<
@@ -440,7 +477,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
               0. NEWSLETTER STRIP
@@ -448,7 +485,7 @@ export function HomePage() {
 
           <div className="mb-5 flex items-stretch gap-6 border-y border-gray-200 py-3">
             <div className="grid min-w-0 flex-1 grid-cols-1 gap-6 md:grid-cols-3">
-              {newsletterPromos.map((promo) => (
+              {visiblePromos.map((promo) => (
                 <Link
                   key={promo.label}
                   to={promo.to}
@@ -474,18 +511,20 @@ export function HomePage() {
               ))}
             </div>
 
-            <div className="hidden items-center gap-2 pl-2 md:flex">
+            <div className="flex items-center gap-2 pl-2">
               <button
                 type="button"
-                aria-label="Previous"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
+                aria-label="Show previous stories"
+                onClick={showPrevPromo}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-black hover:text-black"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 type="button"
-                aria-label="Next"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-black"
+                aria-label="Show next stories"
+                onClick={showNextPromo}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-black hover:text-black"
               >
                 <ChevronRight size={16} />
               </button>
