@@ -475,6 +475,7 @@ export function HomePage() {
   const currentLatest =
     activeLatestTab === "All" ? latestList : yourNewsList;
 
+
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
       <div className="w-full px-4 md:px-6 xl:px-8">
@@ -543,7 +544,7 @@ export function HomePage() {
 
             <div className="flex flex-col border-b border-gray-200 p-4 lg:col-span-4 lg:border-b-0 lg:border-r">
               <Link to={digestArticlePath(featureStory)} className="group block">
-                <div className="overflow-hidden bg-gray-100">
+                <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
                     src={featureStory.image}
                     alt={featureStory.title}
@@ -569,7 +570,7 @@ export function HomePage() {
 
             <div className="flex flex-col border-b border-gray-200 p-4 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
               <Link to={digestArticlePath(leadStory)} className="group block">
-                <div className="overflow-hidden bg-gray-100">
+                <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
                     src={leadStory.image}
                     alt={leadStory.title}
@@ -616,7 +617,7 @@ export function HomePage() {
                       to={digestArticlePath(story)}
                       className="group flex items-start gap-3 py-3"
                     >
-                      <div className="h-[64px] w-[96px] shrink-0 overflow-hidden bg-gray-100">
+                      <div className="h-[64px] w-[96px] shrink-0 overflow-hidden rounded-md bg-gray-100">
                         <ImageWithFallback
                           src={story.image}
                           alt={story.title}
@@ -750,7 +751,7 @@ export function HomePage() {
                   to={digestArticlePath(story)}
                   className="group flex h-full flex-col"
                 >
-                  <div className="overflow-hidden bg-gray-100">
+                  <div className="overflow-hidden rounded-md bg-gray-100">
                     <ImageWithFallback
                       src={story.image}
                       alt={story.title}
@@ -792,7 +793,7 @@ export function HomePage() {
                   to={digestArticlePath(lead)}
                   className="group flex h-full flex-col lg:col-span-7"
                 >
-                  <div className="overflow-hidden bg-gray-100">
+                  <div className="overflow-hidden rounded-md bg-gray-100">
                     <ImageWithFallback
                       src={lead.image}
                       alt={lead.title}
@@ -828,7 +829,7 @@ export function HomePage() {
                             to={digestArticlePath(story)}
                             className="group flex items-start gap-4 py-4"
                           >
-                            <div className="h-[72px] w-[104px] shrink-0 overflow-hidden bg-gray-100">
+                            <div className="h-[72px] w-[104px] shrink-0 overflow-hidden rounded-md bg-gray-100">
                               <ImageWithFallback
                                 src={story.image}
                                 alt={story.title}
@@ -993,9 +994,9 @@ export function HomePage() {
 
                   <Link
                     to="/magazine"
-                    className="group block overflow-hidden bg-black"
+                    className="group block overflow-hidden rounded-md bg-black"
                   >
-                    <div className="overflow-hidden">
+                    <div className="overflow-hidden rounded-md">
                       <ImageWithFallback
                         src={magazinePreview.image}
                         alt={magazinePreview.title}
@@ -1107,7 +1108,7 @@ export function HomePage() {
                 to={digestArticlePath(editorsPick)}
                 className="group grid grid-cols-1 items-start gap-5 sm:grid-cols-2"
               >
-                <div className="overflow-hidden bg-gray-100">
+                <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
                     src={editorsPick.image}
                     alt={editorsPick.title}
@@ -1185,7 +1186,7 @@ export function HomePage() {
 
             <Link
               to={maEdition1ArticlePath(editionLead)}
-              className="group relative block min-h-[220px] overflow-hidden bg-black"
+              className="group relative block min-h-[220px] overflow-hidden rounded-md bg-black"
             >
               <ImageWithFallback
                 src={editionLead.image}
@@ -1233,7 +1234,7 @@ export function HomePage() {
                           to={maEdition1ArticlePath(story)}
                           className="group flex h-full flex-col"
                         >
-                          <div className="aspect-[16/10] w-full overflow-hidden bg-gray-100">
+                          <div className="aspect-[16/10] w-full overflow-hidden rounded-md bg-gray-100">
                             <ImageWithFallback
                               src={story.image}
                               alt={story.title}
