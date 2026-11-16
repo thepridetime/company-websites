@@ -109,8 +109,8 @@ export function TechnologyPage() {
             <h1 className="tc-title">Technology</h1>
 
             <p className="tc-title-sub">
-              Platforms, semiconductors, cloud infrastructure and the
-              enterprise race to deploy AI.
+              Platforms, semiconductors, cloud infrastructure and the enterprise
+              race to deploy AI.
             </p>
           </header>
 
@@ -183,7 +183,10 @@ export function TechnologyPage() {
               <p className="tc-lead-excerpt">{leadStory.excerpt}</p>
 
               <div className="tc-meta">
-                <span className="tc-meta-item" style={{ fontWeight: 600, color: "#6b6b6b" }}>
+                <span
+                  className="tc-meta-item"
+                  style={{ fontWeight: 600, color: "#6b6b6b" }}
+                >
                   By {leadStory.author}
                 </span>
 
@@ -230,7 +233,7 @@ export function TechnologyPage() {
             <SectionHeader title="Latest Technology News" to="/innovation" />
 
             <div className="tc-grid">
-              {latestStories.map((story, index) => (
+              {/* {latestStories.map((story, index) => (
                 <Link
                   key={story.id}
                   to={technologyArticlePath(story.id)}
@@ -239,6 +242,19 @@ export function TechnologyPage() {
                   <div className="tc-card-img">
                     <ImageWithFallback
                       src={sized(story.image, index === 0 ? 1100 : 700)}
+                      alt={story.title}
+                      className="w-full h-full"
+                    />
+                  </div> */}
+              {latestStories.map((story) => (
+                <Link
+                  key={story.id}
+                  to={technologyArticlePath(story.id)}
+                  className="tc-card"
+                >
+                  <div className="tc-card-img">
+                    <ImageWithFallback
+                      src={sized(story.image, 700)}
                       alt={story.title}
                       className="w-full h-full"
                     />
@@ -332,7 +348,10 @@ export function TechnologyPage() {
           <div className="tc-table-grid">
             {/* TECHNOLOGY MARKET WATCH */}
 
-            <section className="tc-section" style={{ marginTop: 0, borderBottom: "none", paddingBottom: 0 }}>
+            <section
+              className="tc-section"
+              style={{ marginTop: 0, borderBottom: "none", paddingBottom: 0 }}
+            >
               <SectionHeader title="Technology Market Watch" to="/markets" />
 
               <div className="tc-table-wrap">
@@ -358,8 +377,8 @@ export function TechnologyPage() {
                               /positive|improv/i.test(item.outlook)
                                 ? "is-up"
                                 : /neutral|cautious/i.test(item.outlook)
-                                ? "is-mid"
-                                : ""
+                                  ? "is-mid"
+                                  : ""
                             }`}
                           >
                             {item.outlook}
@@ -374,7 +393,10 @@ export function TechnologyPage() {
 
             {/* REGIONAL SNAPSHOT */}
 
-            <section className="tc-section" style={{ marginTop: 0, borderBottom: "none", paddingBottom: 0 }}>
+            <section
+              className="tc-section"
+              style={{ marginTop: 0, borderBottom: "none", paddingBottom: 0 }}
+            >
               <SectionHeader title="Regional Market Snapshot" to="/world" />
 
               <p className="tc-section-note">
@@ -407,8 +429,8 @@ export function TechnologyPage() {
                               /growing|strong|expan|increas/i.test(row.hiring)
                                 ? "is-up"
                                 : /stable|mixed|flat/i.test(row.hiring)
-                                ? "is-mid"
-                                : ""
+                                  ? "is-mid"
+                                  : ""
                             }`}
                           >
                             {row.hiring}
