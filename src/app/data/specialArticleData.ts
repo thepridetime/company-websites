@@ -851,7 +851,7 @@ const cybersecurityArticles: SpecialArticle[] = [
     category: "AI SECURITY",
     title: "AI Is Accelerating Both Offensive and Defensive Cybersecurity Capabilities",
     dek: "Cyber threats have escalated in sophistication and frequency in 2026 as artificial intelligence accelerates both offensive and defensive capabilities. Attackers are using AI to identify weaknesses and scale operations faster, while security teams are applying AI to detection, triage and response.",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85",
+    image: "https://images.unsplash.com/photo-1603985529862-9e12198c9a60?q=80&w=861&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     publishedAt: "September 29, 2026",
     readTime: "8 MIN READ",
     highlights: [

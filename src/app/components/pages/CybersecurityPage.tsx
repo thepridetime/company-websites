@@ -1,8 +1,18 @@
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { Link } from "react-router";
-import { ArrowRight, Clock, MapPin } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  MapPin,
+} from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { PrideTimesAd } from "../AdSenseSlots";
 import {
   octEditionArticles,
   octEditionArticlePath,
@@ -12,19 +22,17 @@ import {
   specialArticlePath,
 } from "../../data/specialArticleData";
 import CyberFallbackImg from "../../../imports/cyber-ops.png";
+import { PrideTimesAd } from "../AdSenseSlots";
 
-/* Display label for this section (page title, cards and feed). */
 const SECTION_LABEL = "Cybersecurity";
 const PAGE_SIZE = 8;
+const PROMO_VISIBLE = 3;
 
 /* =========================================================
-   CYBERSECURITY ITEMS
-   Combines:
-   - Cybersecurity stories from the October 2026 Global
-     Industry Edition (src/app/data/octEditionData.ts)
-   - Cybersecurity articles from src/app/data/specialArticleData.ts
-   The Oct edition stories come first (most recent).
-   ========================================================= */
+   DATA (same sources as before)
+   Oct 2026 edition Cybersecurity stories first, then special
+   articles in the Cybersecurity section.
+========================================================= */
 
 type CyberItem = {
   id: string;
@@ -34,7 +42,8 @@ type CyberItem = {
   kicker: string;
   location?: string;
   image: string;
-  meta: string;
+  publishedAt: string;
+  readTime: string;
   keyFacts: { label: string; value: string }[];
 };
 
@@ -48,7 +57,8 @@ const octCyberItems: CyberItem[] = octEditionArticles
     kicker: article.industry,
     location: article.location,
     image: article.image,
-    meta: `${article.publishedAt} · ${article.readTime}`,
+    publishedAt: article.publishedAt,
+    readTime: article.readTime,
     keyFacts: article.keyFacts,
   }));
 
@@ -62,17 +72,52 @@ const specialCyberItems: CyberItem[] = specialArticles
     kicker: article.category,
     location: undefined,
     image: article.image ?? CyberFallbackImg,
-    meta: `${article.publishedAt} · ${article.readTime}`,
+    publishedAt: article.publishedAt,
+    readTime: article.readTime,
     keyFacts: article.keyFacts,
   }));
 
 const cyberItems: CyberItem[] = [...octCyberItems, ...specialCyberItems];
 
-/* Homepage-style layout slots */
-const leadStory: CyberItem | undefined = cyberItems[0];
-const majorStories = cyberItems.slice(1, 3);
-const editorsPick: CyberItem | undefined = cyberItems[3];
-const sideHeadlines = cyberItems.slice(4, 8);
+/* ---------- Slot allocation ----------
+   Stories are handed out in order so the same story (and image)
+   is not reused across the top of the page. If the pool runs out,
+   it wraps around so the layout never breaks.                    */
+
+let cursor = 0;
+
+function take(count: number): CyberItem[] {
+  if (cyberItems.length === 0) return [];
+  const out: CyberItem[] = [];
+  for (let i = 0; i < count; i++) {
+    out.push(cyberItems[cursor % cyberItems.length]);
+    cursor += 1;
+  }
+  return out;
+}
+
+const [featureStory, leadStory] = take(2);
+const relatedFeature = take(2);
+const relatedLead = take(2);
+const todaysNews = take(3);
+const latestList = take(6);
+const [interviewStory, interviewRelated] = take(2);
+const trendingStrip = take(4);
+const [editorsPick] = take(1);
+
+const promoLabels = [
+  "Top Story",
+  "Trending Now",
+  "Editor's Pick",
+  "Latest",
+  "Today's News",
+  "Deep Dive",
+];
+const promoStories = take(promoLabels.length);
+const newsletterPromos = promoLabels.map((label, i) => ({
+  label,
+  story: promoStories[i],
+}));
 
 const categoryTabs = [
   "All",
@@ -80,34 +125,40 @@ const categoryTabs = [
 ];
 
 /* =========================================================
-   SMALL UI PIECES (same as homepage)
-   - Headlines: serif. Hover = underline (not colour change).
-   - Red is ONLY for category labels and "view" links.
-   - Black top rule on every section header.
-   ========================================================= */
+   SMALL UI PIECES (identical to the homepage)
+========================================================= */
 
 function SectionHeader({
   title,
-  rightLabel = "The Pride Times",
+  link,
+  linkText = "View All",
 }: {
   title: string;
-  rightLabel?: string;
+  link?: string;
+  linkText?: string;
 }) {
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
-      <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
-        {rightLabel}
-      </span>
+
+      {link && (
+        <Link
+          to={link}
+          className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
+        >
+          {linkText}
+          <ArrowRight size={10} />
+        </Link>
+      )}
     </div>
   );
 }
 
 function Kicker({ children }: { children: ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
       {children}
     </span>
   );
@@ -115,96 +166,57 @@ function Kicker({ children }: { children: ReactNode }) {
 
 function TimeStamp({ children }: { children: ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
   );
 }
 
-/* =========================================================
-   KEY FIGURES (dark panel, same style as homepage Markets)
-   Uses the lead story's key facts.
-   ========================================================= */
-
-function KeyFiguresPanel({
-  title,
-  facts,
-}: {
-  title: string;
-  facts: { label: string; value: string }[];
-}) {
-  if (facts.length === 0) {
-    return null;
-  }
-
+function RelatedBox({ items }: { items: CyberItem[] }) {
   return (
-    <div className="rounded-sm bg-black p-4 text-white">
-      <div className="flex items-center justify-between border-b border-white/20 pb-2">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-          {title}
-        </h2>
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-          {facts.length} facts
-        </span>
+    <div className="mt-4 border border-gray-200">
+      <div className="border-b border-gray-200 px-3 py-1.5 text-[11px] text-gray-500">
+        Related
       </div>
 
-      <div className="divide-y divide-white/10">
-        {facts.map((fact) => (
-          <div
-            key={fact.label}
-            className="flex items-start justify-between gap-3 py-2.5"
-          >
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
-              {fact.label}
-            </span>
-            <span className="text-right text-[12px] tabular-nums text-gray-100">
-              {fact.value}
-            </span>
-          </div>
+      <ul className="divide-y divide-gray-200">
+        {items.map((item) => (
+          <li key={item.id}>
+            <Link
+              to={item.href}
+              className="block px-3 py-2.5 text-[14px] font-bold leading-[1.3] text-gray-950 hover:underline"
+            >
+              {item.title}
+            </Link>
+          </li>
         ))}
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   SIDEBAR: NUMBERS
-   ========================================================= */
-
-function CyberNumbers() {
-  const stats = [
-    { label: "Total stories", value: String(cyberItems.length) },
-    { label: "Edition stories", value: String(octCyberItems.length) },
-    { label: "Special articles", value: String(specialCyberItems.length) },
-    { label: "Categories", value: String(categoryTabs.length - 1) },
-  ];
-
-  return (
-    <div>
-      <SectionHeader title="Numbers at a Glance" rightLabel="Desk" />
-      <div className="grid grid-cols-2 gap-x-4 gap-y-5">
-        {stats.map((stat) => (
-          <div key={stat.label}>
-            <div className="font-serif text-[24px] font-bold leading-none text-gray-950">
-              {stat.value}
-            </div>
-            <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
-          </div>
-        ))}
-      </div>
+      </ul>
     </div>
   );
 }
 
 /* =========================================================
    CYBERSECURITY PAGE
-   ========================================================= */
+========================================================= */
 
 export function CybersecurityPage() {
   const [activeTab, setActiveTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [promoStart, setPromoStart] = useState(0);
   const feedRef = useRef<HTMLDivElement | null>(null);
+
+  const visiblePromos = Array.from(
+    { length: Math.min(PROMO_VISIBLE, newsletterPromos.length) },
+    (_, i) => newsletterPromos[(promoStart + i) % newsletterPromos.length]
+  );
+
+  const showPrevPromo = () =>
+    setPromoStart(
+      (start) => (start - 1 + newsletterPromos.length) % newsletterPromos.length
+    );
+  const showNextPromo = () =>
+    setPromoStart((start) => (start + 1) % newsletterPromos.length);
 
   const filteredItems = useMemo(
     () =>
@@ -214,220 +226,341 @@ export function CybersecurityPage() {
     [activeTab]
   );
 
-  const visibleItems = filteredItems.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredItems.length;
+  const visibleItems =
+    activeTab === "All"
+      ? filteredItems.slice(0, visibleCount)
+      : filteredItems;
+
+  const hasMore = activeTab === "All" && visibleCount < filteredItems.length;
 
   const selectTab = (tab: string) => {
     setActiveTab(tab);
     setVisibleCount(PAGE_SIZE);
   };
 
-  const openCategoryFeed = (tab: string) => {
+  const scrollToFeed = (tab = "All") => {
     selectTab(tab);
-
     window.requestAnimationFrame(() => {
       feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
 
+  const keyFacts = leadStory?.keyFacts ?? [];
+
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
-          {/* PAGE TITLE */}
-          <header className="mb-6 border-t-[3px] border-black pt-3">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          {/* =================================================
+              PAGE TITLE
+          ================================================= */}
+          <header className="mb-5 border-t-[3px] border-black pt-3">
+            <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
-                  Security &amp; Infrastructure
-                </span>
-                <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 md:text-[38px]">
+                <Kicker>Security &amp; Infrastructure</Kicker>
+                <h1 className="mt-1 text-[30px] font-extrabold leading-[1.1] text-gray-950 md:text-[40px]">
                   {SECTION_LABEL}
                 </h1>
-                <p className="mt-2 text-[12px] leading-[1.5] text-gray-500 md:text-[13px]">
+                <p className="mt-2 text-[13px] leading-[1.5] text-gray-500">
                   Cyber threats, vulnerabilities, AI security and
                   infrastructure protection from The Pride Times.
                 </p>
               </div>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+
+              <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-gray-400">
                 Cybersecurity Desk · Edited by Sagar Kumar
               </span>
             </div>
           </header>
 
-          <PrideTimesAd variant="first" />
-
-          {!leadStory && (
+          {cyberItems.length === 0 && (
             <p className="py-10 text-center text-[12px] text-gray-400">
               No cybersecurity stories yet.
             </p>
           )}
 
-          {leadStory && (
+          {cyberItems.length > 0 && (
             <>
               {/* =================================================
-                  1. TOP SECTION — 3 columns, like the homepage
-                     LEFT   : text-only Top Stories list
-                     CENTER : lead story + 2 secondary stories
-                     RIGHT  : Key Figures panel + Editor's Pick
+                  0. PROMO STRIP
               ================================================= */}
-              <section className="mb-10 border-b border-gray-300 pb-8">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-                  {/* LEFT: Top stories (text only) */}
-                  <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
-                    <div className="mb-1 border-t-[3px] border-black pt-2">
-                      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                        Top Stories
-                      </h2>
+              <div className="mb-5 flex items-stretch gap-6 border-y border-gray-200 py-3">
+                <div className="grid min-w-0 flex-1 grid-cols-1 gap-6 md:grid-cols-3">
+                  {visiblePromos.map(({ label, story }) => (
+                    <Link
+                      key={label}
+                      to={story.href}
+                      className="group flex items-center gap-3"
+                    >
+                      <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-100">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={label}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="text-[12px] text-gray-500">{label}</p>
+                        <p className="line-clamp-1 text-[13px] font-semibold text-gray-950 group-hover:underline">
+                          {story.title}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2 pl-2">
+                  <button
+                    type="button"
+                    aria-label="Show previous stories"
+                    onClick={showPrevPromo}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-black hover:text-black"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Show next stories"
+                    onClick={showNextPromo}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-black hover:text-black"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* =================================================
+                  1. TOP BAND — 3 columns
+                     LEFT   : feature story + Related
+                     CENTRE : lead story + Related
+                     RIGHT  : Today's News + Latest
+              ================================================= */}
+              <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
+                {/* LEFT */}
+                <div className="flex flex-col border-b border-gray-200 p-6 lg:col-span-4 lg:border-b-0 lg:border-r">
+                  <Link to={featureStory.href} className="group block">
+                    <div className="overflow-hidden rounded-md bg-gray-100">
+                      <ImageWithFallback
+                        src={featureStory.image}
+                        alt={featureStory.title}
+                        className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      />
                     </div>
 
-                    <ul className="divide-y divide-gray-200">
-                      {sideHeadlines.map((story) => (
-                        <li key={story.id}>
-                          <Link to={story.href} className="group block py-3.5">
+                    <h2 className="mt-5 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
+                      {featureStory.title}
+                    </h2>
+
+                    <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                      {featureStory.lede}
+                    </p>
+                  </Link>
+
+                  <div className="mt-auto">
+                    <RelatedBox items={relatedFeature} />
+                  </div>
+                </div>
+
+                {/* CENTRE */}
+                <div className="flex flex-col border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
+                  <Link to={leadStory.href} className="group block">
+                    <div className="overflow-hidden rounded-md bg-gray-100">
+                      <ImageWithFallback
+                        src={leadStory.image}
+                        alt={leadStory.title}
+                        loading="eager"
+                        className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      />
+                    </div>
+
+                    <h2 className="mt-5 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                      {leadStory.title}
+                    </h2>
+
+                    <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                      {leadStory.lede}
+                    </p>
+                  </Link>
+
+                  <div className="mt-auto">
+                    <RelatedBox items={relatedLead} />
+                  </div>
+                </div>
+
+                {/* RIGHT */}
+                <aside className="flex flex-col p-6 md:col-span-2 lg:col-span-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-[15px] font-extrabold text-gray-950">
+                      Today's News
+                    </h2>
+
+                    <button
+                      type="button"
+                      onClick={() => scrollToFeed("All")}
+                      className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
+                    >
+                      Explore More
+                    </button>
+                  </div>
+
+                  <ul className="mt-4 divide-y divide-gray-200">
+                    {todaysNews.map((story) => (
+                      <li key={story.id}>
+                        <Link
+                          to={story.href}
+                          className="group flex items-start gap-3 py-4"
+                        >
+                          <div className="h-[64px] w-[96px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+                            <ImageWithFallback
+                              src={story.image}
+                              alt={story.title}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="min-w-0 flex-1">
                             <Kicker>{story.kicker}</Kicker>
-
-                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                            <p className="mt-1 line-clamp-2 text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
                               {story.title}
-                            </h3>
-
-                            <div className="mt-1.5">
-                              <TimeStamp>{story.meta}</TimeStamp>
+                            </p>
+                            <div className="mt-1">
+                              <TimeStamp>{story.publishedAt}</TimeStamp>
                             </div>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-8 border-t border-gray-200 pt-6">
+                    <h2 className="font-serif text-[20px] font-bold text-red-600">
+                      Latest
+                    </h2>
+
+                    <ul className="mt-4 divide-y divide-gray-200">
+                      {latestList.map((story) => (
+                        <li key={story.id}>
+                          <Link
+                            to={story.href}
+                            className="group flex items-start gap-3 py-3.5"
+                          >
+                            <span className="w-14 shrink-0 pt-0.5 text-[11px] font-semibold text-red-600">
+                              {story.publishedAt}
+                            </span>
+
+                            <span className="line-clamp-2 text-[14px] font-semibold leading-[1.3] text-gray-950 group-hover:underline">
+                              {story.title}
+                            </span>
                           </Link>
                         </li>
                       ))}
                     </ul>
-                  </aside>
 
-                  {/* CENTER: lead story */}
-                  <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
-                    <Link to={leadStory.href} className="group block">
-                      <div className="relative overflow-hidden rounded-sm bg-black">
-                        <ImageWithFallback
-                          src={leadStory.image}
-                          alt={leadStory.title}
-                          loading="eager"
-                          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                        />
-                      </div>
-
-                      <div className="mt-4">
-                        <Kicker>
-                          {leadStory.kicker}
-                          {leadStory.location ? ` · ${leadStory.location}` : ""}
-                        </Kicker>
-
-                        <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
-                          {leadStory.title}
-                        </h1>
-
-                        <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
-                          {leadStory.lede}
-                        </p>
-
-                        <div className="mt-3">
-                          <TimeStamp>{leadStory.meta}</TimeStamp>
-                        </div>
-                      </div>
-                    </Link>
-
-                    {/* Two secondary stories under the lead */}
-                    {majorStories.length > 0 && (
-                      <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
-                        {majorStories.map((story) => (
-                          <Link
-                            key={story.id}
-                            to={story.href}
-                            className="group block"
-                          >
-                            <div className="overflow-hidden rounded-sm">
-                              <ImageWithFallback
-                                src={story.image}
-                                alt={story.title}
-                                className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                              />
-                            </div>
-
-                            <div className="mt-2.5">
-                              <Kicker>{story.kicker}</Kicker>
-
-                              <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
-                                {story.title}
-                              </h3>
-
-                              <div className="mt-1.5">
-                                <TimeStamp>{story.meta}</TimeStamp>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => scrollToFeed("All")}
+                      className="mt-2 flex w-full items-center justify-end gap-1 text-[12px] font-semibold text-gray-600 hover:underline"
+                    >
+                      See all latest
+                      <ChevronRight size={12} />
+                    </button>
                   </div>
+                </aside>
+              </section>
 
-                  {/* RIGHT: Key figures + Editor's Pick */}
-                  <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
-                    <KeyFiguresPanel
-                      title="Key Figures"
-                      facts={leadStory.keyFacts}
-                    />
+              {/* =================================================
+                  2. INTERVIEW ROW — image left, story right
+              ================================================= */}
+              <section className="grid grid-cols-1 items-stretch gap-0 border-x border-b border-gray-200 lg:grid-cols-12">
+                <Link
+                  to={interviewStory.href}
+                  className="group block overflow-hidden bg-gray-100 lg:col-span-6"
+                >
+                  <ImageWithFallback
+                    src={interviewStory.image}
+                    alt={interviewStory.title}
+                    className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+                </Link>
 
-                    {editorsPick && (
-                      <div className="mt-6">
-                        <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-                          <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                            Editor's Pick
-                          </h2>
-                        </div>
+                <div className="flex flex-col justify-center p-6 lg:col-span-6 lg:p-12">
+                  <Kicker>{interviewStory.kicker}</Kicker>
 
-                        <Link to={editorsPick.href} className="group block">
-                          <div className="overflow-hidden rounded-sm">
-                            <ImageWithFallback
-                              src={editorsPick.image}
-                              alt={editorsPick.title}
-                              className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                            />
-                          </div>
+                  <Link to={interviewStory.href} className="group block">
+                    <h2 className="mt-2 line-clamp-3 text-[28px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[32px]">
+                      {interviewStory.title}
+                    </h2>
 
-                          <div className="mt-2.5">
-                            <Kicker>{editorsPick.kicker}</Kicker>
+                    <p className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-gray-600">
+                      {interviewStory.lede}
+                    </p>
+                  </Link>
 
-                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                              {editorsPick.title}
-                            </h3>
-
-                            <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.5] text-gray-500">
-                              {editorsPick.lede}
-                            </p>
-                          </div>
-                        </Link>
-                      </div>
-                    )}
-                  </aside>
+                  <div className="mt-8 border-t border-gray-200 pt-6">
+                    <Link to={interviewRelated.href} className="group block">
+                      <span className="line-clamp-2 block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                        {interviewRelated.title}
+                      </span>
+                    </Link>
+                  </div>
                 </div>
               </section>
 
-              <PrideTimesAd variant="second" />
+              {/* =================================================
+                  3. TRENDING NOW — 4 image cards
+              ================================================= */}
+              <section className="mb-16 mt-16">
+                <SectionHeader title="Trending Now" />
+
+                <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+                  {trendingStrip.map((story) => (
+                    <Link
+                      key={story.id}
+                      to={story.href}
+                      className="group flex h-full flex-col"
+                    >
+                      <div className="overflow-hidden rounded-md bg-gray-100">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </div>
+
+                      <div className="mt-2.5 flex flex-1 flex-col">
+                        <Kicker>{story.kicker}</Kicker>
+
+                        <h3 className="mt-1 line-clamp-2 min-h-[2.56em] text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
+
+                        <div className="mt-auto pt-1.5">
+                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+
+               <PrideTimesAd variant="first" className="my-8" />
 
               {/* =================================================
-                  2. LATEST CYBERSECURITY NEWS
-                     LEFT  : tabs + filterable feed with "Show more"
-                     RIGHT : sticky numbers + browse by category
+                  4. LATEST FEED (tabs + Show more) + SIDEBAR
               ================================================= */}
-              <section aria-label="Latest cybersecurity news" className="mb-12">
-                <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
+              <section aria-label="Latest cybersecurity news" className="mb-16">
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.9fr_0.7fr]">
+                  <div ref={feedRef} className="min-w-0 scroll-mt-24">
+                    <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
 
-                <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
-                  {/* Feed */}
-                  <div ref={feedRef} className="scroll-mt-24 min-w-0">
                     <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
                       {categoryTabs.map((tab) => (
                         <button
                           key={tab}
                           type="button"
                           onClick={() => selectTab(tab)}
-                          className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                          className={`whitespace-nowrap text-[11px] font-bold uppercase tracking-wide transition-colors ${
                             activeTab === tab
                               ? "border-b-2 border-black pb-1 text-black"
                               : "pb-1 text-gray-400 hover:text-gray-800"
@@ -449,9 +582,9 @@ export function CybersecurityPage() {
                         <Link
                           key={item.id}
                           to={item.href}
-                          className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                          className="group grid grid-cols-[110px_1fr] items-start gap-4 py-7 sm:grid-cols-[200px_1fr] sm:gap-6"
                         >
-                          <div className="h-[80px] w-full overflow-hidden rounded-sm bg-gray-100 sm:h-[126px]">
+                          <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
                             <ImageWithFallback
                               src={item.image}
                               alt={item.title}
@@ -461,14 +594,16 @@ export function CybersecurityPage() {
 
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-x-2">
-                              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
                                 {item.kicker}
                               </span>
 
                               {item.location && (
                                 <>
-                                  <span className="text-[10px] text-gray-300">•</span>
-                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                                  <span className="text-[10px] text-gray-300">
+                                    •
+                                  </span>
+                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
                                     <MapPin size={9} />
                                     {item.location}
                                   </span>
@@ -476,7 +611,7 @@ export function CybersecurityPage() {
                               )}
                             </div>
 
-                            <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                            <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
                               {item.title}
                             </h3>
 
@@ -485,7 +620,9 @@ export function CybersecurityPage() {
                             </p>
 
                             <div className="mt-1.5">
-                              <TimeStamp>{item.meta}</TimeStamp>
+                              <TimeStamp>
+                                {item.publishedAt} · {item.readTime}
+                              </TimeStamp>
                             </div>
                           </div>
                         </Link>
@@ -501,7 +638,7 @@ export function CybersecurityPage() {
                               Math.min(count + PAGE_SIZE, filteredItems.length)
                             )
                           }
-                          className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                          className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white"
                         >
                           Show more stories
                         </button>
@@ -513,16 +650,31 @@ export function CybersecurityPage() {
                     )}
                   </div>
 
-                  {/* Sidebar */}
+                  {/* Sidebar: numbers + browse by category */}
                   <div className="min-w-0">
-                    <div className="lg:sticky lg:top-24">
-                      <CyberNumbers />
+                    <div className="lg:sticky lg:top-24 lg:pt-1">
+                      <SectionHeader title="Numbers at a Glance" />
 
-                      <div className="mt-8">
-                        <SectionHeader
-                          title="Browse by Category"
-                          rightLabel="Sections"
-                        />
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-5">
+                        {[
+                          { label: "Total stories", value: cyberItems.length },
+                          { label: "Edition stories", value: octCyberItems.length },
+                          { label: "Special articles", value: specialCyberItems.length },
+                          { label: "Categories", value: categoryTabs.length - 1 },
+                        ].map((stat) => (
+                          <div key={stat.label}>
+                            <div className="text-[28px] font-extrabold leading-none tabular-nums text-gray-950">
+                              {stat.value}
+                            </div>
+                            <div className="mt-1.5 text-[12px] text-gray-500">
+                              {stat.label}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-10">
+                        <SectionHeader title="Browse by Category" />
 
                         <div className="divide-y divide-gray-200">
                           {categoryTabs
@@ -536,10 +688,10 @@ export function CybersecurityPage() {
                                 <button
                                   key={tab}
                                   type="button"
-                                  onClick={() => openCategoryFeed(tab)}
+                                  onClick={() => scrollToFeed(tab)}
                                   className="flex w-full items-center justify-between py-3 text-left"
                                 >
-                                  <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-gray-950 hover:underline">
+                                  <span className="text-[12px] font-extrabold uppercase tracking-[0.08em] text-gray-950 hover:underline">
                                     {tab}
                                   </span>
                                   <span className="text-[10px] font-bold uppercase tracking-wide text-red-600">
@@ -550,20 +702,94 @@ export function CybersecurityPage() {
                             })}
                         </div>
                       </div>
-
-                      <div className="mt-8">
-                        <PrideTimesAd variant="third" />
-                      </div>
                     </div>
                   </div>
                 </div>
               </section>
+
+              {/* =================================================
+                  5. KEY FIGURES + EDITOR'S PICK
+              ================================================= */}
+              <section className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-12">
+                {keyFacts.length > 0 && (
+                  <div className="bg-black p-6 text-white lg:col-span-5">
+                    <div className="flex items-center justify-between border-b border-white/20 pb-2">
+                      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em]">
+                        Key Figures
+                      </h2>
+                      <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+                        {keyFacts.length} facts
+                      </span>
+                    </div>
+
+                    <div className="divide-y divide-white/10">
+                      {keyFacts.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className="flex items-start justify-between gap-4 py-3.5"
+                        >
+                          <span className="text-[12px] font-semibold text-gray-100">
+                            {fact.label}
+                          </span>
+                          <span className="text-right text-[12px] tabular-nums text-gray-300">
+                            {fact.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Link
+                      to={leadStory.href}
+                      className="mt-2 flex w-fit items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-white hover:underline"
+                    >
+                      Read the full story
+                      <ArrowRight size={10} />
+                    </Link>
+                  </div>
+                )}
+
+                {editorsPick && (
+                  <div
+                    className={
+                      keyFacts.length > 0 ? "lg:col-span-7" : "lg:col-span-12"
+                    }
+                  >
+                    <SectionHeader title="Editor's Pick" />
+
+                    <Link
+                      to={editorsPick.href}
+                      className="group grid grid-cols-1 items-start gap-8 sm:grid-cols-2"
+                    >
+                      <div className="overflow-hidden rounded-md bg-gray-100">
+                        <ImageWithFallback
+                          src={editorsPick.image}
+                          alt={editorsPick.title}
+                          className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </div>
+
+                      <div>
+                        <Kicker>{editorsPick.kicker}</Kicker>
+
+                        <h3 className="mt-1.5 line-clamp-3 text-[20px] font-bold leading-[1.22] text-gray-950 group-hover:underline">
+                          {editorsPick.title}
+                        </h3>
+
+                        <p className="mt-2 line-clamp-3 text-[13px] leading-[1.5] text-gray-500">
+                          {editorsPick.lede}
+                        </p>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+              </section>
             </>
           )}
+
+          <PrideTimesAd variant="first" className="my-8" />
         </main>
       </div>
 
-      {/* Local page utilities (same as homepage) */}
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
