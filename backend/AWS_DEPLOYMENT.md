@@ -33,3 +33,4 @@ This backend service is containerized and ready for production deployment on AWS
 - `PORT`: `8080` (default)
 - `NODE_ENV`: `production`
 - `ALLOWED_ORIGINS`: Comma-separated list of allowed frontend domains (e.g. `https://thepridetime.com,http://localhost:5173`)
+
