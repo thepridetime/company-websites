@@ -352,6 +352,14 @@ export function StartupSuccessPage() {
                       );
                     })}
                   </div>
+
+                  <Link
+                    to="/markets"
+                    className="mt-2 flex w-fit items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-white hover:underline"
+                  >
+                    View all metrics
+                    <ArrowRight size={10} />
+                  </Link>
                 </div>
 
                 {/* Editor's pick */}
@@ -363,7 +371,7 @@ export function StartupSuccessPage() {
                     </h2>
 
                     <Link
-                      to="/technology"
+                      to="/startup-success"
                       className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
                     >
                       Explore more
@@ -386,9 +394,9 @@ export function StartupSuccessPage() {
                         {editorsPick.title}
                       </h3>
 
-                      <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
-                        {editorsPick.summary}
-                      </p>
+                      <div className="mt-1.5">
+                        <TimeStamp>{editorsPick.publishedAt}</TimeStamp>
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -403,7 +411,7 @@ export function StartupSuccessPage() {
           ================================================= */}
 
           <section aria-label="Latest startup news" className="mb-12">
-            <SectionHeader title="Latest Startup News" link="/technology" />
+            <SectionHeader title="Latest Startup News" link="/startup-success" />
 
             <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
               {defaultLatestStartupNews
@@ -587,7 +595,7 @@ export function StartupSuccessPage() {
           ================================================= */}
 
           <section aria-label="Startup deep dive" className="mb-12">
-            <SectionHeader title="Deep Dive" link="/technology" />
+            <SectionHeader title="Deep Dive" link="/startup-success" />
 
             <Link
               to={storyHref(deepDiveStory)}

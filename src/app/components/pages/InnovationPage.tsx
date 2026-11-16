@@ -82,9 +82,8 @@ const marketTableRows = (
 function ChangeChip({ change, up }: { change: string; up: boolean }) {
   return (
     <span
-      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
-        up ? "text-emerald-600" : "text-red-600"
-      }`}
+      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${up ? "text-emerald-600" : "text-red-600"
+        }`}
     >
       {up ? (
         <TrendingUp size={11} strokeWidth={2.25} />
@@ -188,11 +187,11 @@ export function InnovationPage() {
     liveRows.length > 0
       ? liveRows
       : defaultMarketSnapshot[activeMarketTab].map((item) => ({
-          symbol: item.symbol,
-          value: item.value,
-          change: item.change,
-          up: item.up,
-        }));
+        symbol: item.symbol,
+        value: item.value,
+        change: item.change,
+        up: item.up,
+      }));
 
   /* ---------- Latest news filtering ---------- */
 
@@ -288,6 +287,12 @@ export function InnovationPage() {
                     <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
                       {leadStory.summary}
                     </p>
+
+                    <div className="mt-3">
+                      <TimeStamp>
+                        {leadStory.publishedAt} · {leadStory.readTime || "4 min read"}
+                      </TimeStamp>
+                    </div>
                   </div>
                 </Link>
 
@@ -333,11 +338,10 @@ export function InnovationPage() {
                           key={tab}
                           type="button"
                           onClick={() => setActiveMarketTab(tab)}
-                          className={`text-[10px] font-semibold uppercase tracking-wide ${
-                            activeMarketTab === tab
+                          className={`text-[10px] font-semibold uppercase tracking-wide ${activeMarketTab === tab
                               ? "text-white underline underline-offset-4"
                               : "text-gray-500 hover:text-gray-200"
-                          }`}
+                            }`}
                         >
                           {tab}
                         </button>
@@ -382,7 +386,7 @@ export function InnovationPage() {
                     </h2>
 
                     <Link
-                      to="/technology"
+                      to="/innovation"
                       className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
                     >
                       Explore more
@@ -405,11 +409,9 @@ export function InnovationPage() {
                         {editorsPick.title}
                       </h3>
 
-                      {editorsPick.summary && (
-                        <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
-                          {editorsPick.summary}
-                        </p>
-                      )}
+                      <div className="mt-1.5">
+                        <TimeStamp>{editorsPick.publishedAt}</TimeStamp>
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -424,7 +426,7 @@ export function InnovationPage() {
           ================================================= */}
 
           <section aria-label="Latest innovation news" className="mb-12">
-            <SectionHeader title="Latest Innovation News" link="/technology" />
+            <SectionHeader title="Latest Innovation News" link="/innovation" />
 
             <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
               {defaultLatestInnovationNews.map((story, index) => (
@@ -461,11 +463,10 @@ export function InnovationPage() {
                       key={tab}
                       type="button"
                       onClick={() => selectTab(tab)}
-                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
-                        activeNewsTab === tab
+                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${activeNewsTab === tab
                           ? "border-b-2 border-black pb-1 text-black"
                           : "pb-1 text-gray-400 hover:text-gray-800"
-                      }`}
+                        }`}
                     >
                       {tab}
                     </button>
@@ -575,11 +576,10 @@ export function InnovationPage() {
 
                           <div className="shrink-0 text-right">
                             <span
-                              className={`block text-[12px] font-semibold tabular-nums ${
-                                metric.change.trim().startsWith("-")
+                              className={`block text-[12px] font-semibold tabular-nums ${metric.change.trim().startsWith("-")
                                   ? "text-red-400"
                                   : "text-emerald-400"
-                              }`}
+                                }`}
                             >
                               {metric.change}
                             </span>
@@ -605,7 +605,7 @@ export function InnovationPage() {
           ================================================= */}
 
           <section aria-label="Innovation deep dive" className="mb-12">
-            <SectionHeader title="Deep Dive" link="/technology" />
+            <SectionHeader title="Deep Dive" link="/innovation" />
 
             <Link
               to={storyHref(defaultTopInnovationStories[0])}
@@ -706,9 +706,8 @@ export function InnovationPage() {
                         <td className="px-4 py-2 font-medium text-gray-900">{row.symbol}</td>
                         <td className="px-4 py-2 tabular-nums text-gray-700">{row.value}</td>
                         <td
-                          className={`px-4 py-2 font-semibold tabular-nums ${
-                            row.up ? "text-emerald-600" : "text-red-600"
-                          }`}
+                          className={`px-4 py-2 font-semibold tabular-nums ${row.up ? "text-emerald-600" : "text-red-600"
+                            }`}
                         >
                           {row.change}
                         </td>

@@ -62,7 +62,13 @@ declare global {
   }
 }
 
-export function PrideTimesAd() {
+export function PrideTimesAd({
+  className = "my-8",
+  slot = "6033028012",
+}: {
+  className?: string;
+  slot?: string;
+} = {}) {
   useEffect(() => {
     try {
       window.adsbygoogle = window.adsbygoogle || [];
@@ -75,7 +81,7 @@ export function PrideTimesAd() {
   return (
     <section
       aria-label="Advertisement"
-      className="my-8 overflow-hidden border-y border-gray-100 bg-white py-4"
+      className={`${className} overflow-hidden border-y border-gray-100 bg-white py-4`}
     >
       <div className="mb-2 text-center text-[8px] font-medium uppercase tracking-[0.2em] text-gray-400">
         Advertisement
@@ -86,7 +92,7 @@ export function PrideTimesAd() {
           className="adsbygoogle"
           style={{ display: "block" }}
           data-ad-client="ca-pub-2331501617441941"
-          data-ad-slot="6033028012"
+          data-ad-slot={slot}
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
