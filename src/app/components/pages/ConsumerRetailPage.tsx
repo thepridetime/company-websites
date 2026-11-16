@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { ArrowRight, Clock } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -20,8 +20,11 @@ const SECTION_LABEL = "Consumer and Retail";
 
 const retailStories: ConsumerRetailArticle[] = consumerRetailArticles;
 
-const leadStory = retailStories[0];
-const otherStories = retailStories.slice(1);
+/* Top band, same split as the homepage:
+   left feature story | centre lead story | right "Today's News" list */
+const featureStory = retailStories[0];
+const leadStory = retailStories[1] ?? retailStories[0];
+const todaysNews = retailStories.slice(2, 6);
 
 function displayDate(value: string) {
   return isIsoTimestamp(value) ? formatTimestamp(value) : value;
@@ -116,14 +119,14 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
 
       {link && (
         <Link
           to={link}
-          className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+          className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
         >
           {linkText}
           <ArrowRight size={10} />
@@ -135,7 +138,7 @@ function SectionHeader({
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
       {children}
     </span>
   );
@@ -143,7 +146,7 @@ function Kicker({ children }: { children: React.ReactNode }) {
 
 function TimeStamp({ children }: { children: React.ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
@@ -152,141 +155,191 @@ function TimeStamp({ children }: { children: React.ReactNode }) {
 
 /* =========================================================
    CONSUMER AND RETAIL PAGE
-   Same layout and styling as the homepage:
-   1. Newsroom front: headlines | lead story | key figures
+   Same layout, image sizes and text sizes as the homepage:
+   1. Top band: feature | lead | Today's News + Key Figures
    2. Latest feed with a sticky ad column
 ========================================================= */
 
 export function ConsumerRetailPage() {
+  const feedRef = useRef<HTMLDivElement>(null);
+
+  const scrollToFeed = () => {
+    feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* ---------- PAGE TITLE ---------- */}
 
-          <header className="mb-6 border-t-[3px] border-black pt-3">
+          <header className="mb-5 border-t-[3px] border-black pt-3">
             <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h1 className="font-serif text-[28px] font-bold leading-[1.1] text-gray-950 md:text-[38px]">
+                <h1 className="text-[28px] font-extrabold leading-[1.15] text-gray-950 md:text-[32px]">
                   {SECTION_LABEL}
                 </h1>
 
-                <p className="mt-2 text-[15px] leading-[1.55] text-gray-600">
+                <p className="mt-2 text-[14px] leading-[1.5] text-gray-600">
                   Brands, retail strategy, online sales and product safety from
                   The Pride Times.
                 </p>
               </div>
 
-              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+              <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
                 Brands • Retail • E-commerce
               </span>
             </div>
           </header>
 
-          {!leadStory && (
+          {!featureStory && (
             <p className="py-10 text-center text-[12px] text-gray-400">
               No consumer and retail stories yet.
             </p>
           )}
 
-          {leadStory && (
+          {featureStory && (
             <>
               {/* =================================================
-                  1. TOP SECTION — 3 columns, like the homepage
-                     LEFT   : text-only headline list
-                     CENTER : lead story
-                     RIGHT  : Key Figures panel (dark)
+                  1. TOP BAND — 3 columns (same as homepage)
+                     LEFT   : feature story
+                     CENTRE : lead story
+                     RIGHT  : Today's News + Key Figures
               ================================================= */}
 
-              <section className="mb-10 border-b border-gray-300 pb-8">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-                  {/* ---------- LEFT: More Consumer and Retail News ---------- */}
+              <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
+                {/* ---------- LEFT: feature story ---------- */}
 
-                  <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
-                    <div className="mb-1 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-                      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                        More Consumer and Retail News
-                      </h2>
-
-                      <span className="text-[10px] uppercase tracking-wide text-gray-400">
-                        Newsroom
-                      </span>
+                <div className="flex flex-col border-b border-gray-200 p-6 lg:col-span-4 lg:border-b-0 lg:border-r">
+                  <Link
+                    to={consumerRetailArticlePath(featureStory.id)}
+                    className="group block"
+                  >
+                    <div className="overflow-hidden rounded-md bg-gray-100">
+                      <ImageWithFallback
+                        src={featureStory.image}
+                        alt={featureStory.title}
+                        className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      />
                     </div>
 
-                    {otherStories.length > 0 ? (
-                      <ul className="divide-y divide-gray-200">
-                        {otherStories.slice(0, 6).map((item) => (
-                          <li key={item.id}>
-                            <Link
-                              to={consumerRetailArticlePath(item.id)}
-                              className="group block py-3.5"
-                            >
-                              <Kicker>{item.category}</Kicker>
+                    <div className="mt-5">
+                      <Kicker>{featureStory.category}</Kicker>
+                    </div>
 
-                              <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                                {item.title}
-                              </h3>
+                    <h2 className="mt-1.5 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
+                      {featureStory.title}
+                    </h2>
 
-                              <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
-                                {item.excerpt}
-                              </p>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="py-3.5 text-[12px] text-gray-400">
-                        More consumer and retail stories will appear here.
-                      </p>
-                    )}
-                  </aside>
+                    <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                      {featureStory.excerpt}
+                    </p>
 
-                  {/* ---------- CENTER: lead story ---------- */}
+                    <div className="mt-3">
+                      <TimeStamp>
+                        {displayDate(featureStory.publishedAt)} ·{" "}
+                        {featureStory.readTime}
+                      </TimeStamp>
+                    </div>
+                  </Link>
+                </div>
 
-                  <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
-                    <Link
-                      to={consumerRetailArticlePath(leadStory.id)}
-                      className="group block"
+                {/* ---------- CENTRE: lead story ---------- */}
+
+                <div className="flex flex-col border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
+                  <Link
+                    to={consumerRetailArticlePath(leadStory.id)}
+                    className="group block"
+                  >
+                    <div className="overflow-hidden rounded-md bg-gray-100">
+                      <ImageWithFallback
+                        src={leadStory.image}
+                        alt={leadStory.title}
+                        className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      />
+                    </div>
+
+                    <div className="mt-5">
+                      <Kicker>{leadStory.category}</Kicker>
+                    </div>
+
+                    <h2 className="mt-1.5 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                      {leadStory.title}
+                    </h2>
+
+                    <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                      {leadStory.excerpt}
+                    </p>
+
+                    <div className="mt-3">
+                      <TimeStamp>
+                        {displayDate(leadStory.publishedAt)} ·{" "}
+                        {leadStory.readTime}
+                      </TimeStamp>
+                    </div>
+                  </Link>
+                </div>
+
+                {/* ---------- RIGHT: Today's News + Key Figures ---------- */}
+
+                <aside className="flex flex-col p-6 md:col-span-2 lg:col-span-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-[15px] font-extrabold text-gray-950">
+                      More Consumer and Retail News
+                    </h2>
+
+                    <button
+                      type="button"
+                      onClick={scrollToFeed}
+                      className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
                     >
-                      <div className="relative overflow-hidden rounded-sm bg-black">
-                        <ImageWithFallback
-                          src={leadStory.image}
-                          alt={leadStory.title}
-                          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                        />
-                      </div>
-
-                      <div className="mt-4">
-                        <Kicker>{leadStory.category}</Kicker>
-
-                        <h2 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
-                          {leadStory.title}
-                        </h2>
-
-                        <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
-                          {leadStory.excerpt}
-                        </p>
-
-                        <div className="mt-3">
-                          <TimeStamp>
-                            {displayDate(leadStory.publishedAt)} · {leadStory.readTime}
-                          </TimeStamp>
-                        </div>
-
-                        <span className="mt-4 inline-flex items-center gap-1.5 border-b border-black/60 pb-1 text-[10px] font-bold uppercase tracking-wide text-gray-950">
-                          Read Full Story
-                          <ArrowRight size={10} />
-                        </span>
-                      </div>
-                    </Link>
+                      Explore More
+                    </button>
                   </div>
 
-                  {/* ---------- RIGHT: key figures (dark panel) ---------- */}
+                  {todaysNews.length > 0 ? (
+                    <ul className="mt-4 divide-y divide-gray-200">
+                      {todaysNews.map((story) => (
+                        <li key={story.id}>
+                          <Link
+                            to={consumerRetailArticlePath(story.id)}
+                            className="group flex items-start gap-3 py-4"
+                          >
+                            <div className="h-[64px] w-[96px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+                              <ImageWithFallback
+                                src={story.image}
+                                alt={story.title}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                            </div>
 
-                  <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
-                    <div className="rounded-sm bg-black p-4 text-white">
+                            <div className="min-w-0 flex-1">
+                              <Kicker>{story.category}</Kicker>
+                              <p className="mt-1 line-clamp-2 text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                                {story.title}
+                              </p>
+                              <div className="mt-1">
+                                <TimeStamp>
+                                  {displayDate(story.publishedAt)}
+                                </TimeStamp>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="py-4 text-[12px] text-gray-400">
+                      More consumer and retail stories will appear here.
+                    </p>
+                  )}
+
+                  {/* Key Figures (dark panel, same as homepage black panel) */}
+
+                  <div className="mt-auto pt-6">
+                    <div className="bg-black p-6 text-white">
                       <div className="flex items-center justify-between border-b border-white/20 pb-2">
-                        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                        <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em]">
                           Key Figures
                         </h2>
 
@@ -296,38 +349,41 @@ export function ConsumerRetailPage() {
                       </div>
 
                       <div className="divide-y divide-white/10">
-                        {leadStory.keyFacts.map((fact) => (
+                        {featureStory.keyFacts.map((fact) => (
                           <div
                             key={fact.label}
                             className="flex items-start justify-between gap-3 py-2.5"
                           >
-                            <span className="text-[12px] font-semibold text-gray-100">
+                            <span className="text-[13px] font-semibold text-gray-100">
                               {fact.label}
                             </span>
 
-                            <span className="text-right text-[12px] tabular-nums text-gray-300">
+                            <span className="text-right text-[13px] tabular-nums text-gray-300">
                               {fact.value}
                             </span>
                           </div>
                         ))}
                       </div>
                     </div>
-                  </aside>
-                </div>
+                  </div>
+                </aside>
               </section>
 
               <PrideTimesAd variant="first" />
 
               {/* =================================================
-                  2. LATEST SUPPLY CHAIN NEWS
-                     feed + sticky ad column, like the homepage
+                  2. LATEST CONSUMER AND RETAIL NEWS
+                     feed + sticky ad column, same as homepage
               ================================================= */}
 
-              <section aria-label="Latest consumer and retail news" className="mb-12">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+              <section
+                aria-label="Latest consumer and retail news"
+                className="mb-16 mt-8"
+              >
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.9fr_0.7fr]">
                   {/* ---------- Feed ---------- */}
 
-                  <div className="min-w-0">
+                  <div ref={feedRef} className="min-w-0 scroll-mt-24">
                     <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
 
                     <div className="divide-y divide-gray-200">
@@ -335,9 +391,9 @@ export function ConsumerRetailPage() {
                         <Link
                           key={story.id}
                           to={consumerRetailArticlePath(story.id)}
-                          className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                          className="group grid grid-cols-[110px_1fr] items-start gap-4 py-7 sm:grid-cols-[200px_1fr] sm:gap-6"
                         >
-                          <div className="h-[80px] w-full overflow-hidden rounded-sm sm:h-[126px]">
+                          <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
                             <ImageWithFallback
                               src={story.image}
                               alt={story.title}
@@ -347,12 +403,12 @@ export function ConsumerRetailPage() {
 
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-x-2">
-                              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
                                 {story.category}
                               </span>
                             </div>
 
-                            <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                            <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
                               {story.title}
                             </h3>
 
@@ -362,7 +418,8 @@ export function ConsumerRetailPage() {
 
                             <div className="mt-1.5">
                               <TimeStamp>
-                                {displayDate(story.publishedAt)} · {story.readTime}
+                                {displayDate(story.publishedAt)} ·{" "}
+                                {story.readTime}
                               </TimeStamp>
                             </div>
                           </div>
@@ -374,7 +431,7 @@ export function ConsumerRetailPage() {
                   {/* ---------- Sticky ad column ---------- */}
 
                   <div className="min-w-0">
-                    <div className="lg:sticky lg:top-24">
+                    <div className="lg:sticky lg:top-24 lg:pt-1">
                       <SidebarAd />
                     </div>
                   </div>
