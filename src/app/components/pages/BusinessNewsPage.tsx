@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
-import { ArrowRight, Bookmark, Clock, MapPin } from "lucide-react";
-
-import "../../../styles/business-page.css"; // kept so MarketSnapshot styling is unaffected
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  MapPin,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 import MagazineImg from "../../../imports/pt30image.png";
@@ -103,7 +109,7 @@ function PrideTimesAd({
   return (
     <section
       aria-label="Advertisement"
-      className="my-8 overflow-hidden border-y border-gray-200 bg-white py-4"
+      className="my-8 overflow-hidden border-y border-gray-100 bg-white py-4"
     >
       <div className="mb-2 text-center text-[8px] font-medium uppercase tracking-[0.2em] text-gray-400">
         Advertisement
@@ -239,11 +245,12 @@ const allCards: NewsCard[] = Array.from(
 );
 
 /* =========================================================
-   FRONT-PAGE PICKS
+   FRONT-PAGE PICKS (same structure as the homepage)
 ========================================================= */
 
 const leadStory = octCards[0] ?? allCards[0];
-const majorStories = [octCards[1] ?? allCards[1], octCards[2] ?? allCards[2]];
+const featureStory = octCards[1] ?? allCards[1];
+
 const editorsPick: NewsCard = {
   id: "deals-and-moves-roundup",
   title: "Deals and Moves Roundup",
@@ -270,7 +277,7 @@ const latestNewsStories: NewsCard[] = maCards.slice(0, 5).map((card) => {
   };
 });
 
-/* Hard-coded corporate moves and earnings (unchanged content). */
+/* Hard-coded corporate moves (unchanged content). */
 
 const corporateMoves = [
   {
@@ -299,6 +306,8 @@ const corporateMoves = [
   },
 ];
 
+/* Hard-coded earnings and market figures (unchanged content). */
+
 const earningsWatch = [
   {
     id: "apple",
@@ -325,6 +334,10 @@ const earningsWatch = [
     note: "Mixed outlook after earnings",
   },
 ];
+
+/* Newsletter strip: business stories, three shown at a time. */
+const PROMO_VISIBLE = 3;
+const promoStories = allCards.slice(0, 6);
 
 /* Filter tabs: department order from the digest first, then any
    other tab that appears in the data. */
@@ -376,7 +389,7 @@ const magazinePreview = {
 ========================================================= */
 
 const earningsBadge: Record<string, string> = {
-  BEAT: "inline-block bg-green-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-green-700",
+  BEAT: "inline-block bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700",
   MISS: "inline-block bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-700",
 };
 
@@ -424,86 +437,106 @@ function logoFor(id: string) {
 }
 
 /* =========================================================
-   SPARKLINE
+   SMALL UI PIECES (same as homepage)
 ========================================================= */
 
-function EarningsSparkline({ up }: { up: boolean }) {
+function ChangeChip({ change, up }: { change: string; up: boolean }) {
   return (
-    <svg className="h-4 w-12 shrink-0 overflow-visible" viewBox="0 0 48 14" fill="none">
-      <path
-        d={up ? "M 2 11 Q 14 10, 24 7 T 46 2" : "M 2 3 Q 14 4, 24 7 T 46 12"}
-        stroke={up ? "#16a34a" : "#dc2626"}
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <span
+      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
+        up ? "text-emerald-500" : "text-red-500"
+      }`}
+    >
+      {up ? (
+        <TrendingUp size={11} strokeWidth={2.25} />
+      ) : (
+        <TrendingDown size={11} strokeWidth={2.25} />
+      )}
+      {change}
+    </span>
   );
 }
-
-/* =========================================================
-   SMALL PARTS (styled like the homepage)
-========================================================= */
 
 function SectionHeader({
   title,
   link,
   linkText = "View All",
+  onClick,
 }: {
   title: string;
   link?: string;
   linkText?: string;
+  onClick?: () => void;
 }) {
+  const linkClass =
+    "flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline";
+
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
       <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
 
-      {link && (
-        <Link
-          to={link}
-          className="flex items-center gap-1 text-[11px] font-semibold text-gray-600 hover:underline"
-        >
+      {onClick ? (
+        <button type="button" onClick={onClick} className={linkClass}>
           {linkText}
           <ArrowRight size={10} />
-        </Link>
+        </button>
+      ) : (
+        link && (
+          <Link to={link} className={linkClass}>
+            {linkText}
+            <ArrowRight size={10} />
+          </Link>
+        )
       )}
     </div>
   );
 }
 
-function Kicker({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Kicker({ children }: { children: React.ReactNode }) {
   return (
-    <span className={`block text-[11px] font-bold uppercase tracking-[0.08em] text-red-600 ${className}`}>
+    <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
       {children}
     </span>
   );
 }
 
-function BookmarkButton({ label = "Bookmark story" }: { label?: string }) {
+function TimeStamp({ children }: { children: React.ReactNode }) {
   return (
-    <button
-      type="button"
-      aria-label={label}
-      className="text-gray-400 transition-colors hover:text-black"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
-      <Bookmark size={12} strokeWidth={1.75} />
-    </button>
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
+      <Clock size={9} />
+      {children}
+    </span>
   );
 }
 
-function TimeRow({ when, readTime }: { when: string; readTime?: string }) {
+/* Related box used under feature stories (same as homepage). */
+
+function RelatedBox({
+  items,
+}: {
+  items: { id: string; title: string; href: string }[];
+}) {
   return (
-    <span className="flex items-center gap-1 text-[11px] text-gray-400">
-      <Clock size={10} />
-      {when}
-      {readTime ? ` · ${readTime}` : ""}
-    </span>
+    <div className="mt-4 border border-gray-200">
+      <div className="border-b border-gray-200 px-3 py-1.5 text-[11px] text-gray-500">
+        Related
+      </div>
+
+      <ul className="divide-y divide-gray-200">
+        {items.map((item) => (
+          <li key={item.id}>
+            <Link
+              to={item.href}
+              className="block px-3 py-2.5 text-[14px] font-bold leading-[1.3] text-gray-950 hover:underline"
+            >
+              {item.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -514,10 +547,28 @@ function TimeRow({ when, readTime }: { when: string; readTime?: string }) {
 export function BusinessNewsPage() {
   const [activeNewsTab, setActiveNewsTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [promoStart, setPromoStart] = useState(0);
+  const [activeMarketTab, setActiveMarketTab] = useState<"Indices" | "Crypto">(
+    "Indices"
+  );
 
   const newsListRef = useRef<HTMLDivElement | null>(null);
 
-  /* ---------- LATEST NEWS FILTERING ---------- */
+  /* ---------- Newsletter strip ---------- */
+
+  const visiblePromos = Array.from(
+    { length: Math.min(PROMO_VISIBLE, promoStories.length) },
+    (_, i) => promoStories[(promoStart + i) % promoStories.length]
+  );
+
+  const showPrevPromo = () =>
+    setPromoStart(
+      (s) => (s - 1 + promoStories.length) % promoStories.length
+    );
+  const showNextPromo = () =>
+    setPromoStart((s) => (s + 1) % promoStories.length);
+
+  /* ---------- Latest news filtering ---------- */
 
   const filteredStories = useMemo(
     () =>
@@ -540,10 +591,33 @@ export function BusinessNewsPage() {
     setVisibleCount(PAGE_SIZE);
   };
 
-  const tabCount = (tab: string) =>
-    tab === "All"
-      ? allCards.length
-      : allCards.filter((card) => card.tab === tab).length;
+  const scrollToLatestFeed = () => {
+    newsListRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  /* ---------- Section picks ---------- */
+
+  const relatedFeature = corporateMoves.map((m) => ({
+    id: m.id,
+    title: m.title,
+    href: m.href,
+  }));
+
+  const relatedLead = latestNewsStories.slice(0, 2).map((s) => ({
+    id: s.id,
+    title: s.title,
+    href: s.path,
+  }));
+
+  const todaysNews = latestNewsStories.slice(0, 3);
+  const interviewStory = corporateMoves[0];
+  const interviewRelated = corporateMoves[1];
+  const trendingStrip = octCards.slice(3, 7);
+  const industryLead = octCards[0];
+  const industryRest = octCards.slice(1, 5);
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
@@ -561,66 +635,93 @@ export function BusinessNewsPage() {
 
           <PrideTimesAd slot="5373718974" />
 
-          {/* MARKET SNAPSHOT BAR */}
-
-          <div className="mb-5">
-            <MarketSnapshot tabs={["Indices", "Commodities", "Crypto"]} />
-          </div>
-
           {/* =================================================
-              HERO — Top Business Stories | Lead + Corporate Moves | Editor's Pick + Latest
+              0. NEWSLETTER STRIP
           ================================================= */}
 
-          <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
-            {/* LEFT — TOP BUSINESS STORIES */}
-
-            <aside className="flex flex-col p-6 md:col-span-2 lg:col-span-4 lg:border-r lg:border-gray-200">
-              <SectionHeader
-                title="Top Business Stories"
-                link="/supply-chain"
-                linkText="View More"
-              />
-
-              {majorStories.map((story, index) => (
+          <div className="mb-5 flex items-stretch gap-6 border-y border-gray-200 py-3">
+            <div className="grid min-w-0 flex-1 grid-cols-1 gap-6 md:grid-cols-3">
+              {visiblePromos.map((promo) => (
                 <Link
-                  key={story.id}
-                  to={story.path}
-                  className={`group block ${
-                    index === 0 ? "border-b border-gray-200 pb-6 mb-6" : ""
-                  }`}
+                  key={promo.id}
+                  to={promo.path}
+                  className="group flex items-center gap-3"
                 >
-                  <div className="overflow-hidden rounded-md bg-gray-100">
+                  <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-100">
                     <ImageWithFallback
-                      src={story.image}
-                      alt={story.title}
-                      className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      src={promo.image}
+                      alt={promo.label}
+                      className="h-full w-full object-cover"
                     />
                   </div>
 
-                  <Kicker className="mt-4">
-                    {story.label}
-                    {story.location ? ` | ${story.location}` : ""}
-                  </Kicker>
-
-                  <h3 className="mt-2 line-clamp-2 text-[18px] font-extrabold leading-[1.2] text-gray-950 group-hover:underline">
-                    {story.title}
-                  </h3>
-
-                  <p className="mt-2 line-clamp-2 text-[14px] leading-[1.5] text-gray-600">
-                    {story.lede}
-                  </p>
-
-                  <div className="mt-3 flex items-center justify-between">
-                    <TimeRow when={story.when} readTime={story.readTime} />
-                    <BookmarkButton />
+                  <div className="min-w-0">
+                    <p className="text-[12px] text-gray-500">{promo.label}</p>
+                    <p className="line-clamp-1 text-[13px] font-semibold text-gray-950 group-hover:underline">
+                      {promo.title}
+                    </p>
                   </div>
                 </Link>
               ))}
-            </aside>
+            </div>
 
-            {/* CENTRE — LEAD + CORPORATE MOVES */}
+            <div className="flex items-center gap-2 pl-2">
+              <button
+                type="button"
+                aria-label="Show previous stories"
+                onClick={showPrevPromo}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-black hover:text-black"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label="Show next stories"
+                onClick={showNextPromo}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-black hover:text-black"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
 
-            <div className="flex flex-col border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r lg:border-gray-200">
+          {/* =================================================
+              1. TOP BAND — 3 columns
+                 LEFT   : feature story + Related
+                 CENTRE : lead story + Related
+                 RIGHT  : Today's News + Latest list
+          ================================================= */}
+
+          <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
+            {/* ---------- LEFT: feature story ---------- */}
+
+            <div className="flex flex-col border-b border-gray-200 p-6 lg:col-span-4 lg:border-b-0 lg:border-r">
+              <Link to={featureStory.path} className="group block">
+                <div className="overflow-hidden rounded-md bg-gray-100">
+                  <ImageWithFallback
+                    src={featureStory.image}
+                    alt={featureStory.title}
+                    className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
+                </div>
+
+                <h2 className="mt-5 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
+                  {featureStory.title}
+                </h2>
+
+                <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                  {featureStory.lede}
+                </p>
+              </Link>
+
+              <div className="mt-auto">
+                <RelatedBox items={relatedFeature} />
+              </div>
+            </div>
+
+            {/* ---------- CENTRE: lead story ---------- */}
+
+            <div className="flex flex-col border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
               <Link to={leadStory.path} className="group block">
                 <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
@@ -630,12 +731,7 @@ export function BusinessNewsPage() {
                   />
                 </div>
 
-                <Kicker className="mt-5">
-                  {leadStory.label}
-                  {leadStory.location ? ` | ${leadStory.location}` : ""}
-                </Kicker>
-
-                <h2 className="mt-2 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                <h2 className="mt-5 line-clamp-3 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
                   {leadStory.title}
                 </h2>
 
@@ -644,92 +740,61 @@ export function BusinessNewsPage() {
                 </p>
               </Link>
 
-              <div className="mt-auto border-t border-gray-200 pt-6">
-                {corporateMoves.map((move, index) => (
-                  <Link
-                    key={move.id}
-                    to={move.href}
-                    className={`group flex items-start gap-3 py-3.5 ${
-                      index === 0 ? "border-b border-gray-200" : ""
-                    }`}
-                  >
-                    <div className="h-[64px] w-[96px] shrink-0 overflow-hidden rounded-md bg-gray-100">
-                      <ImageWithFallback
-                        src={move.image}
-                        alt={move.alt}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <Kicker>
-                        {move.label} | {move.region}
-                      </Kicker>
-
-                      <h3 className="mt-1 line-clamp-2 text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
-                        {move.title}
-                      </h3>
-
-                      <p className="mt-1 line-clamp-2 text-[12px] leading-[1.5] text-gray-500">
-                        {move.lede}
-                      </p>
-
-                      <div className="mt-1.5">
-                        <TimeRow when={move.when} readTime={move.readTime} />
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+              <div className="mt-auto">
+                <RelatedBox items={relatedLead} />
               </div>
             </div>
 
-            {/* RIGHT — EDITOR'S PICK & LATEST NEWS */}
+            {/* ---------- RIGHT: today's news + latest ---------- */}
 
             <aside className="flex flex-col p-6 md:col-span-2 lg:col-span-4">
-              <div>
-                <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-                  <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
-                    Editor's Pick
-                  </h2>
+              <div className="flex items-center justify-between">
+                <h2 className="text-[15px] font-extrabold text-gray-950">
+                  Today's News
+                </h2>
 
-                  <Link
-                    to="/markets"
-                    className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
-                  >
-                    Explore More
-                  </Link>
-                </div>
-
-                <Link to={editorsPick.path} className="group block">
-                  <div className="overflow-hidden rounded-md bg-gray-100">
-                    <ImageWithFallback
-                      src={editorsPick.image}
-                      alt={editorsPick.title}
-                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                    />
-                  </div>
-
-                  <Kicker className="mt-3">{editorsPick.label}</Kicker>
-
-                  <h3 className="mt-1 line-clamp-2 text-[20px] font-extrabold leading-[1.2] text-gray-950 group-hover:underline">
-                    {editorsPick.title}
-                  </h3>
-
-                  <p className="mt-2 line-clamp-2 text-[13px] leading-[1.5] text-gray-600">
-                    {editorsPick.lede}
-                  </p>
-
-                  <div className="mt-3 flex items-center justify-between">
-                    <TimeRow when={editorsPick.when} readTime={editorsPick.readTime} />
-                    <BookmarkButton label="Bookmark" />
-                  </div>
-                </Link>
+                <button
+                  type="button"
+                  onClick={scrollToLatestFeed}
+                  className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
+                >
+                  Explore More
+                </button>
               </div>
 
+              <ul className="mt-4 divide-y divide-gray-200">
+                {todaysNews.map((story) => (
+                  <li key={story.id}>
+                    <Link
+                      to={story.path}
+                      className="group flex items-start gap-3 py-4"
+                    >
+                      <div className="h-[64px] w-[96px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <Kicker>{story.label}</Kicker>
+                        <p className="mt-1 line-clamp-2 text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                          {story.title}
+                        </p>
+                        <div className="mt-1">
+                          <TimeStamp>{story.when}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
               <div className="mt-8 border-t border-gray-200 pt-6">
-                <div className="mb-2 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-                  <h2 className="text-[20px] font-serif font-bold text-red-600">
-                    Latest News
+                <div className="flex items-center justify-between">
+                  <h2 className="font-serif text-[20px] font-bold text-red-600">
+                    Latest
                   </h2>
 
                   <span className="text-[11px] font-semibold text-gray-400">
@@ -737,107 +802,85 @@ export function BusinessNewsPage() {
                   </span>
                 </div>
 
-                <ul className="divide-y divide-gray-200">
+                <ul className="mt-4 divide-y divide-gray-200">
                   {latestNewsStories.map((item) => (
                     <li key={item.id}>
-                      <Link to={item.path} className="group flex items-start gap-3 py-3.5">
-                        <div className="h-[64px] w-[96px] shrink-0 overflow-hidden rounded-md bg-gray-100">
-                          <ImageWithFallback
-                            src={item.image}
-                            alt={item.title}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        </div>
+                      <Link
+                        to={item.path}
+                        className="group flex items-start gap-3 py-3.5"
+                      >
+                        <span className="w-24 shrink-0 pt-0.5 text-[11px] font-semibold text-red-600">
+                          {item.when}
+                        </span>
 
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between text-[11px] text-gray-400">
-                            <span className="font-semibold text-red-600">
-                              {item.location ?? item.label}
-                            </span>
-                            <span>October 2026</span>
-                          </div>
-
-                          <h4 className="mt-1 line-clamp-2 text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
-                            {item.title}
-                          </h4>
-
-                          <div className="mt-1.5 flex items-center justify-between text-[11px] text-gray-400">
-                            <span>{item.readTime || "3 min read"}</span>
-                            <BookmarkButton label="Bookmark story" />
-                          </div>
-                        </div>
+                        <span className="text-[14px] font-semibold leading-[1.3] text-gray-950 group-hover:underline line-clamp-2">
+                          {item.title}
+                        </span>
                       </Link>
                     </li>
                   ))}
                 </ul>
+
+                <button
+                  type="button"
+                  onClick={scrollToLatestFeed}
+                  className="mt-2 flex w-full items-center justify-end gap-1 text-[12px] font-semibold text-gray-600 hover:underline"
+                >
+                  See all latest
+                  <ChevronRight size={12} />
+                </button>
               </div>
             </aside>
           </section>
 
           {/* =================================================
-              EARNINGS WATCH
+              2. INTERVIEW ROW — image left, story right
           ================================================= */}
 
-          <section className="mt-16">
-            <SectionHeader title="Earnings Watch" link="/markets" linkText="See More" />
+          <section className="mt-0 grid grid-cols-1 items-stretch gap-0 border-x border-b border-gray-200 lg:grid-cols-12">
+            <Link
+              to={interviewStory.href}
+              className="group block overflow-hidden bg-gray-100 lg:col-span-6"
+            >
+              <ImageWithFallback
+                src={interviewStory.image}
+                alt={interviewStory.title}
+                className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+              />
+            </Link>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-              {earningsWatch.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col justify-between border border-gray-200 p-5"
-                >
-                  <div>
-                    <div className="mb-2.5 flex items-center gap-2 text-[12px] font-semibold text-gray-500">
-                      {logoFor(item.id)}
-                      <span>{item.name}</span>
-                    </div>
+            <div className="flex flex-col justify-center p-6 lg:col-span-6 lg:p-12">
+              <Kicker>{interviewStory.label}</Kicker>
 
-                    <div className="text-[26px] font-extrabold tabular-nums text-gray-950">
-                      {item.price}
-                    </div>
+              <Link to={interviewStory.href} className="group block">
+                <h2 className="mt-2 line-clamp-3 text-[28px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[32px]">
+                  {interviewStory.title}
+                </h2>
 
-                    <div className="mt-2 flex items-center justify-between">
-                      <span
-                        className={`text-[13px] font-bold ${
-                          item.up ? "text-green-600" : "text-red-600"
-                        }`}
-                      >
-                        {item.change}
-                      </span>
-                      <EarningsSparkline up={item.up} />
-                    </div>
-                  </div>
+                <p className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-gray-600">
+                  {interviewStory.lede}
+                </p>
+              </Link>
 
-                  <div className="mt-4 border-t border-gray-200 pt-3 text-[13px] text-gray-600">
-                    {item.note}
-                  </div>
-                </div>
-              ))}
+              <div className="mt-8 border-t border-gray-200 pt-6">
+                <Link to={interviewRelated.href} className="group block">
+                  <span className="block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-2">
+                    {interviewRelated.title}
+                  </span>
+                </Link>
+              </div>
             </div>
           </section>
 
-          <PrideTimesAd slot="8042854193" format="fluid" layout="in-article" />
-
           {/* =================================================
-              GLOBAL INDUSTRY EDITION — HEADLINES BY INDUSTRY
+              3. TRENDING NOW — 4 image cards
           ================================================= */}
 
-          <section
-            aria-label="Global Industry Edition business headlines"
-            className="mt-16"
-          >
-            <SectionHeader
-              title={`${octEditionMeta.title} · ${octEditionMeta.edition} · ${octEditionMeta.date}`}
-            />
-
-            <p className="-mt-2 mb-8 max-w-3xl text-[14px] leading-[1.5] text-gray-500">
-              Business stories from the edition: the global economy and finance,
-              corporate deals, and industry moves in automotive and aerospace.
-            </p>
+          <section className="mt-16 mb-16">
+            <SectionHeader title="Trending Now" link="/business-news" />
 
             <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-              {octCards.map((story) => (
+              {trendingStrip.map((story) => (
                 <Link
                   key={story.id}
                   to={story.path}
@@ -858,20 +901,100 @@ export function BusinessNewsPage() {
                       {story.title}
                     </h3>
 
-                    <p className="mt-2 line-clamp-2 text-[13px] leading-[1.5] text-gray-500">
-                      {story.lede}
-                    </p>
+                    <div className="mt-auto pt-1.5">
+                      <TimeStamp>{story.when}</TimeStamp>
+                    </div>
                   </div>
                 </Link>
               ))}
             </div>
           </section>
 
+          <PrideTimesAd slot="8042854193" format="fluid" layout="in-article" />
+
           {/* =================================================
-              NUMBERS AT A GLANCE
+              4. GLOBAL INDUSTRY EDITION — one large story left,
+                 stacked thumbnail rows right (homepage section module)
           ================================================= */}
 
-          <section className="mt-16">
+          {industryLead && (
+            <section
+              aria-label="Global Industry Edition business headlines"
+              className="mb-16"
+            >
+              <SectionHeader
+                title={`${octEditionMeta.title} · ${octEditionMeta.edition} · ${octEditionMeta.date}`}
+              />
+
+              <div className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-12">
+                <Link
+                  to={industryLead.path}
+                  className="group flex h-full flex-col lg:col-span-7"
+                >
+                  <div className="overflow-hidden rounded-md bg-gray-100">
+                    <ImageWithFallback
+                      src={industryLead.image}
+                      alt={industryLead.title}
+                      className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
+                  </div>
+
+                  <div className="mt-3">
+                    <Kicker>{industryLead.label}</Kicker>
+
+                    <h3 className="mt-1 line-clamp-2 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[28px]">
+                      {industryLead.title}
+                    </h3>
+
+                    <p className="mt-2 line-clamp-2 text-[14px] leading-[1.5] text-gray-500">
+                      {industryLead.lede}
+                    </p>
+
+                    <div className="mt-2">
+                      <TimeStamp>{industryLead.when}</TimeStamp>
+                    </div>
+                  </div>
+                </Link>
+
+                <div className="flex flex-col justify-center lg:col-span-5">
+                  <ul className="divide-y divide-gray-200">
+                    {industryRest.map((story) => (
+                      <li key={story.id}>
+                        <Link
+                          to={story.path}
+                          className="group flex items-start gap-5 py-6"
+                        >
+                          <div className="h-[72px] w-[104px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+                            <ImageWithFallback
+                              src={story.image}
+                              alt={story.title}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="min-w-0 flex-1">
+                            <h4 className="line-clamp-2 text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
+                              {story.title}
+                            </h4>
+
+                            <div className="mt-1.5">
+                              <TimeStamp>{story.when}</TimeStamp>
+                            </div>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* =================================================
+              5. NUMBERS AT A GLANCE
+          ================================================= */}
+
+          <section className="mb-16">
             <SectionHeader title="Numbers at a Glance" />
 
             <p className="-mt-2 mb-6 text-[12px] text-gray-400">
@@ -880,7 +1003,10 @@ export function BusinessNewsPage() {
 
             <div className="grid grid-cols-2 gap-x-8 gap-y-8 lg:grid-cols-4">
               {businessGlance.map((item) => (
-                <div key={item.indicator} className="border-t border-gray-200 pt-3">
+                <div
+                  key={item.indicator}
+                  className="border-t border-gray-200 pt-3"
+                >
                   <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
                     {item.indicator}
                   </span>
@@ -898,12 +1024,152 @@ export function BusinessNewsPage() {
           </section>
 
           {/* =================================================
-              GLOBAL CORPORATE NEWS DIGEST — EDITION 1: M&A
+              6. MARKETS + EDITOR'S PICK
+                 Black market panel left (earnings rows),
+                 Editor's Pick right (image + text)
+          ================================================= */}
+
+          <section className="mb-16 grid grid-cols-1 items-stretch gap-10 lg:grid-cols-12">
+            <div className="bg-black p-6 text-white lg:col-span-5">
+              <div className="flex items-center justify-between border-b border-white/20 pb-2">
+                <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em]">
+                  Markets
+                </h2>
+
+                <div className="flex gap-3">
+                  {(["Indices", "Crypto"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setActiveMarketTab(tab)}
+                      className={`text-[10px] font-semibold uppercase tracking-wide ${
+                        activeMarketTab === tab
+                          ? "text-white underline underline-offset-4"
+                          : "text-gray-500 hover:text-gray-200"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="divide-y divide-white/10">
+                {earningsWatch.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between py-3.5"
+                  >
+                    <div className="flex min-w-0 items-center gap-2">
+                      {logoFor(item.id)}
+                      <div className="min-w-0">
+                        <span className="block text-[12px] font-semibold text-gray-100">
+                          {item.name}
+                        </span>
+                        <span className="block text-[11px] text-gray-500">
+                          {item.note}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span className="text-[12px] tabular-nums text-gray-300">
+                        {item.price}
+                      </span>
+                      <ChangeChip change={item.change} up={item.up} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                to="/markets"
+                className="mt-2 flex w-fit items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-white hover:underline"
+              >
+                View all markets
+                <ArrowRight size={10} />
+              </Link>
+            </div>
+
+            <div className="lg:col-span-7">
+              <SectionHeader
+                title="Editor's Pick"
+                link="/markets"
+                linkText="Explore more"
+              />
+
+              <Link
+                to={editorsPick.path}
+                className="group grid grid-cols-1 items-start gap-8 sm:grid-cols-2"
+              >
+                <div className="overflow-hidden rounded-md bg-gray-100">
+                  <ImageWithFallback
+                    src={editorsPick.image}
+                    alt={editorsPick.title}
+                    className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+
+                <div>
+                  <Kicker>{editorsPick.label}</Kicker>
+
+                  <h3 className="mt-1.5 line-clamp-3 text-[20px] font-bold leading-[1.22] text-gray-950 group-hover:underline">
+                    {editorsPick.title}
+                  </h3>
+
+                  <p className="mt-2 line-clamp-3 text-[13px] leading-[1.5] text-gray-500">
+                    {editorsPick.lede}
+                  </p>
+                </div>
+              </Link>
+            </div>
+          </section>
+
+          {/* =================================================
+              7. LATEST NEWS (numbered list) — homepage pattern
+          ================================================= */}
+
+          <section aria-label="Latest news" className="mb-16">
+            <SectionHeader
+              title="Latest News"
+              onClick={scrollToLatestFeed}
+              linkText="See all"
+            />
+
+            <ol className="grid grid-cols-1 items-stretch gap-x-10 md:grid-cols-2 lg:grid-cols-3">
+              {maCards.slice(0, 6).map((story, index) => (
+                <li key={story.id} className="border-b border-gray-200">
+                  <Link
+                    to={story.path}
+                    className="group flex h-full gap-4 py-5"
+                  >
+                    <span className="w-6 shrink-0 text-[22px] font-extrabold leading-none tabular-nums text-gray-300">
+                      {index + 1}
+                    </span>
+
+                    <div className="min-w-0">
+                      <Kicker>
+                        {story.label}
+                        {story.location ? ` · ${story.location}` : ""}
+                      </Kicker>
+
+                      <span className="mt-1 line-clamp-2 block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                        {story.title}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          {/* =================================================
+              8. GLOBAL CORPORATE NEWS DIGEST — EDITION 1: M&A
           ================================================= */}
 
           <section
             aria-label="Global Corporate News Digest Edition 1: Mergers and Acquisitions"
-            className="mt-16"
+            className="mb-16"
           >
             <SectionHeader
               title={`Global Corporate News Digest · ${maEdition1Meta.edition} · Headlines by Industry`}
@@ -1037,159 +1303,158 @@ export function BusinessNewsPage() {
           <PrideTimesAd slot="5608262547" format="fluid" layoutKey="-ef+6k-30-ac+ty" />
 
           {/* =================================================
-              ALL BUSINESS NEWS + MAGAZINE
+              9. MORE BUSINESS NEWS FEED + MAGAZINE
           ================================================= */}
 
-          <section className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[1.9fr_0.7fr]">
-            {/* LATEST NEWS (every business story) */}
+          <section className="mb-16">
+            <SectionHeader
+              title="More Business News"
+              onClick={scrollToLatestFeed}
+              linkText="See all"
+            />
 
-            <div ref={newsListRef} className="min-w-0 scroll-mt-24">
-              <SectionHeader title="All Business News" />
-
-              <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
-                {latestNewsTabs.map((tab) => {
-                  const active = activeNewsTab === tab;
-                  return (
+            <div className="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-[1.9fr_0.7fr]">
+              <div ref={newsListRef} className="scroll-mt-24 min-w-0">
+                <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
+                  {latestNewsTabs.map((tab) => (
                     <button
                       key={tab}
                       type="button"
                       onClick={() => selectTab(tab)}
-                      className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 pb-2 text-[13px] font-semibold transition-colors ${
-                        active
-                          ? "border-black text-black"
-                          : "border-transparent text-gray-500 hover:text-black"
+                      className={`whitespace-nowrap text-[11px] font-bold uppercase tracking-wide transition-colors ${
+                        activeNewsTab === tab
+                          ? "border-b-2 border-black pb-1 text-black"
+                          : "pb-1 text-gray-400 hover:text-gray-800"
                       }`}
                     >
                       {tab}
-                      <span className="text-[10px] text-gray-400">{tabCount(tab)}</span>
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
+
+                <div className="divide-y divide-gray-200">
+                  {latestStories.length === 0 && (
+                    <p className="py-6 text-[12px] text-gray-400">
+                      No stories in this category yet.
+                    </p>
+                  )}
+
+                  {latestStories.map((story) => (
+                    <Link
+                      key={story.id}
+                      to={story.path}
+                      className="group grid grid-cols-[110px_1fr] items-start gap-4 py-7 sm:grid-cols-[200px_1fr] sm:gap-6"
+                    >
+                      <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[126px]">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-2">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
+                            {story.label}
+                          </span>
+
+                          {story.location && (
+                            <>
+                              <span className="text-[10px] text-gray-300">•</span>
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
+                                <MapPin size={9} />
+                                {story.location}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                          {story.title}
+                        </h3>
+
+                        <p className="mt-1.5 hidden text-[13px] leading-[1.5] text-gray-500 line-clamp-2 sm:block">
+                          {story.lede}
+                        </p>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>
+                            {story.when}
+                            {story.readTime ? ` · ${story.readTime}` : ""}
+                          </TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setVisibleCount((count) =>
+                          Math.min(count + PAGE_SIZE, filteredStories.length)
+                        )
+                      }
+                      className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white"
+                    >
+                      Show more stories
+                    </button>
+
+                    <span className="text-[10px] text-gray-400">
+                      Showing {latestStories.length} of {filteredStories.length}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <div className="divide-y divide-gray-200">
-                {latestStories.length === 0 && (
-                  <p className="py-6 text-[12px] text-gray-400">
-                    No stories in this category yet.
-                  </p>
-                )}
+              <div className="min-w-0">
+                <div className="lg:sticky lg:top-24 lg:pt-1">
+                  <SectionHeader title="Magazine" link="/magazine" />
 
-                {latestStories.map((story) => (
                   <Link
-                    key={story.id}
-                    to={story.path}
-                    className="group flex gap-4 py-6"
+                    to="/magazine"
+                    className="group block overflow-hidden rounded-md bg-black"
                   >
-                    <div className="h-[80px] w-[120px] shrink-0 overflow-hidden rounded-md bg-gray-100 sm:h-[126px] sm:w-[200px]">
+                    <div className="overflow-hidden rounded-md">
                       <ImageWithFallback
-                        src={story.image}
-                        alt={story.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        src={magazinePreview.image}
+                        alt={magazinePreview.title}
+                        className="h-[210px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                       />
                     </div>
 
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
-                          {story.label}
-                        </span>
+                    <div className="p-4">
+                      <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-500">
+                        Pride Times Magazine
+                      </span>
 
-                        {story.location && (
-                          <>
-                            <span className="text-[10px] text-gray-300">•</span>
-                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
-                              <MapPin size={9} />
-                              {story.location}
-                            </span>
-                          </>
-                        )}
-                      </div>
-
-                      <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
-                        {story.title}
+                      <h3 className="mt-1 line-clamp-2 text-[20px] font-extrabold leading-[1.2] text-white">
+                        {magazinePreview.title}
                       </h3>
 
-                      <p className="mt-1.5 hidden line-clamp-2 text-[13px] leading-[1.5] text-gray-500 sm:block">
-                        {story.lede}
+                      <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-400">
+                        {magazinePreview.subtitle}
                       </p>
 
-                      <div className="mt-1.5 flex items-center gap-1 text-[11px] text-gray-400">
-                        <Clock size={9} />
-                        <span>{story.when}</span>
-                        {story.readTime && <span>· {story.readTime}</span>}
-                      </div>
+                      <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/50 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                        Read Digital Edition
+                        <ArrowRight size={10} />
+                      </span>
                     </div>
                   </Link>
-                ))}
-              </div>
-
-              {hasMore && (
-                <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVisibleCount((count) =>
-                        Math.min(count + PAGE_SIZE, filteredStories.length)
-                      )
-                    }
-                    className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white"
-                  >
-                    Show more stories
-                  </button>
-
-                  <span className="text-[10px] text-gray-400">
-                    Showing {latestStories.length} of {filteredStories.length}
-                  </span>
                 </div>
-              )}
-            </div>
-
-            {/* MAGAZINE */}
-
-            <div>
-              <div className="lg:sticky lg:top-24">
-                <SectionHeader title="Magazine" link="/magazine" />
-
-                <Link
-                  to="/magazine"
-                  className="group block overflow-hidden rounded-md bg-black"
-                >
-                  <div className="overflow-hidden rounded-md">
-                    <ImageWithFallback
-                      src={magazinePreview.image}
-                      alt={magazinePreview.title}
-                      className="h-[210px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    />
-                  </div>
-
-                  <div className="p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-500">
-                      Pride Times Magazine
-                    </span>
-
-                    <h3 className="mt-1 line-clamp-2 text-[20px] font-extrabold leading-[1.2] text-white">
-                      {magazinePreview.title}
-                    </h3>
-
-                    <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-400">
-                      {magazinePreview.subtitle}
-                    </p>
-
-                    <span className="mt-4 inline-flex items-center gap-1.5 border-b border-white/50 pb-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                      Read Digital Edition
-                      <ArrowRight size={10} />
-                    </span>
-                  </div>
-                </Link>
               </div>
             </div>
           </section>
 
           {/* =================================================
-              EARNINGS + DEALS
+              10. THE NUMBERS BEHIND THE HEADLINES
           ================================================= */}
 
-          <section className="mt-16">
+          <section className="mb-16">
             <SectionHeader title="The Numbers Behind the Headlines" />
 
             <details className="group mb-4 border border-gray-200">
@@ -1219,7 +1484,7 @@ export function BusinessNewsPage() {
                         <td className="px-3 py-2.5 text-right text-gray-700">{e.eps}</td>
                         <td
                           className={`px-3 py-2.5 text-right ${
-                            e.status === "BEAT" ? "text-green-700" : "text-red-700"
+                            e.status === "BEAT" ? "text-emerald-600" : "text-red-600"
                           }`}
                         >
                           {e.beat}
