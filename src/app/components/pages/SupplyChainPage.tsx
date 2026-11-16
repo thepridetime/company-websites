@@ -10,38 +10,191 @@ import {
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { PrideTimesAd } from "../AdSenseSlots";
 import MagazineImg from "../../../imports/pt30image.png";
+import supplyChainMap from "../../../imports/supply-chain-map.png";
+import warehouseRobotics from "../../../imports/warehouse-robotics.png";
+import dataCentre from "../../../imports/data-centre.png";
+import businessStockDrop from "../../../imports/business-stock-drop.png";
+
 import {
   octEditionArticles,
   octEditionArticlePath,
   type OctEditionArticle,
 } from "../../data/octEditionData";
+import {
+  oct13EditionArticles,
+  oct13EditionArticlePath,
+} from "../../data/oct13EditionData";
+import {
+  digestArticles,
+  digestArticlePath,
+} from "../../data/digestArticleData";
+import {
+  industrySupplyChainArticles,
+  industrySupplyChainArticlePath,
+} from "../../data/industrySupplyChainNewsData";
+import {
+  specialArticles,
+  specialArticlePath,
+} from "../../data/specialArticleData";
 
 /* =========================================================
-   SUPPLY CHAIN STORIES (unchanged source)
-   Stories from the October 2026 Global Industry Edition
-   (src/app/data/octEditionData.ts) in the
-   "Industry and Supply Chain" section.
+   STORY CARD
+   One shape for every supply chain story, whichever data file
+   it comes from, so the whole page uses the same layout.
 ========================================================= */
 
-const supplyChainStories: OctEditionArticle[] = octEditionArticles.filter(
-  (article) => article.section === "Industry and Supply Chain"
+interface SupplyCard {
+  id: string;
+  title: string;
+  lede: string;
+  image?: string;
+  /* Red kicker above the headline (industry or category). */
+  kicker: string;
+  location?: string;
+  when: string;
+  readTime: string;
+  path: string;
+}
+
+/* =========================================================
+   SUPPLY CHAIN STORIES
+   Collected from every data file that carries supply chain
+   coverage. Duplicates (same id) are removed, and the first
+   source wins, so the October edition keeps the top slots.
+========================================================= */
+
+const SUPPLY_SECTIONS = new Set(["Industry and Supply Chain", "Supply Chain"]);
+
+/* Date helper: ISO dates (e.g. 2026-09-30T08:00:00Z) become
+   "30 September 2026"; other date strings are shown as written. */
+function formatDate(value: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}/.test(value)) return value;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/* 1. October 2026 Global Industry Edition (lead stories) */
+const octCards: SupplyCard[] = octEditionArticles
+  .filter((a) => a.section === "Industry and Supply Chain")
+  .map((a) => ({
+    id: a.id,
+    title: a.title,
+    lede: a.lede,
+    image: a.image,
+    kicker: a.industry,
+    location: a.location,
+    when: formatDate(a.publishedAt),
+    readTime: a.readTime,
+    path: octEditionArticlePath(a),
+  }));
+
+/* 2. 13 October 2026 edition */
+const oct13Cards: SupplyCard[] = oct13EditionArticles
+  .filter((a) => a.section === "Industry and Supply Chain")
+  .map((a) => ({
+    id: a.id,
+    title: a.title,
+    lede: a.lede,
+    image: a.image,
+    kicker: a.industry,
+    location: a.location,
+    when: formatDate(a.publishedAt),
+    readTime: a.readTime,
+    path: oct13EditionArticlePath(a),
+  }));
+
+/* 3. Global Corporate News Digest — Industry and Supply Chain */
+const digestCards: SupplyCard[] = digestArticles
+  .filter((a) => a.section === "Industry and Supply Chain")
+  .map((a) => ({
+    id: a.id,
+    title: a.title,
+    lede: a.lede,
+    image: a.image,
+    kicker: a.section,
+    location: a.location,
+    when: formatDate(a.publishedAt),
+    readTime: a.readTime,
+    path: digestArticlePath(a),
+  }));
+
+/* 4. Dedicated supply chain file (industrySupplyChainNewsData) */
+const industryCards: SupplyCard[] = industrySupplyChainArticles.map((a) => ({
+  id: a.id,
+  title: a.title,
+  lede: a.excerpt,
+  image: a.image,
+  kicker: a.category,
+  location: a.location,
+  when: formatDate(a.publishedAt),
+  readTime: a.readTime,
+  path: industrySupplyChainArticlePath(a.id),
+}));
+
+/* 5. Supply Chain desk in the special articles */
+const specialCards: SupplyCard[] = specialArticles
+  .filter((a) => SUPPLY_SECTIONS.has(a.section))
+  .map((a) => ({
+    id: a.id,
+    title: a.title,
+    lede: a.dek,
+    image: a.image,
+    kicker: a.category,
+    location: undefined,
+    when: formatDate(a.publishedAt),
+    readTime: a.readTime,
+    path: specialArticlePath(a.id),
+  }));
+
+const allStories: SupplyCard[] = Array.from(
+  new Map(
+    [...octCards, ...oct13Cards, ...digestCards, ...industryCards, ...specialCards]
+      .filter((card) => card.id)
+      .map((card) => [card.id, card] as const)
+  ).values()
 );
 
-const leadStory = supplyChainStories[0];
+/* The lead story and its key figures keep coming from the
+   October edition, as before. */
+const leadOct = octEditionArticles.find(
+  (a) => a.section === "Industry and Supply Chain"
+);
 
-/* Stories used in the layout. Missing slots fall back to the
-   lead story, and sections that have no stories are hidden. */
-const pickStory = (index: number) => supplyChainStories[index] ?? leadStory;
+const leadStory = leadOct;
+const featureStory = allStories[1] ?? allStories[0];
+const interviewStory = allStories[2] ?? allStories[0];
+const interviewRelated = allStories[3];
 
-const featureStory = pickStory(1);
-const interviewStory = pickStory(2);
-const interviewRelated = supplyChainStories[3];
-const trendingAll = supplyChainStories.slice(3);
+const trendingAll = allStories.slice(3);
+const TRENDING_DEFAULT = 4;
 
 const PROMO_VISIBLE = 3;
-const promoStories = supplyChainStories.slice(0, 6);
-const TRENDING_DEFAULT = 4;
+const promoStories = allStories.slice(0, 6);
 const PAGE_SIZE = 8;
+
+/* Fallback pictures for stories that have none. */
+const fallbackPool = [supplyChainMap, warehouseRobotics, dataCentre, businessStockDrop];
+const withImage = (card: SupplyCard, index: number): SupplyCard => ({
+  ...card,
+  image: card.image ?? fallbackPool[index % fallbackPool.length],
+});
+
+const cards = allStories.map(withImage);
+const promoCards = cards.slice(0, 6);
+const trendingCards = cards.slice(3);
+const feature = cards[1] ?? cards[0];
+const interview = cards[2] ?? cards[0];
+const interviewRel = cards[3];
+
+const relatedFeature = cards.slice(2, 4);
+const relatedLead = cards.slice(1, 3);
 
 const magazinePreview = {
   title: "The 2026 Global Industry Outlook",
@@ -182,11 +335,7 @@ function TimeStamp({ children }: { children: React.ReactNode }) {
 
 /* Related box used under feature stories (same as homepage). */
 
-function RelatedBox({
-  items,
-}: {
-  items: OctEditionArticle[];
-}) {
+function RelatedBox({ items }: { items: SupplyCard[] }) {
   if (items.length === 0) return null;
 
   return (
@@ -199,7 +348,7 @@ function RelatedBox({
         {items.map((item) => (
           <li key={item.id}>
             <Link
-              to={octEditionArticlePath(item)}
+              to={item.path}
               className="block px-3 py-2.5 text-[14px] font-bold leading-[1.3] text-gray-950 hover:underline"
             >
               {item.title}
@@ -219,7 +368,7 @@ function RelatedBox({
    2. Interview row
    3. Trending Now (expandable)
    4. Latest numbered list
-   5. Latest feed + sticky sidebar
+   5. Full feed with "Show more" + sticky sidebar
 ========================================================= */
 
 export function SupplyChainPage() {
@@ -232,27 +381,27 @@ export function SupplyChainPage() {
   /* ---------- Newsletter strip ---------- */
 
   const visiblePromos = Array.from(
-    { length: Math.min(PROMO_VISIBLE, promoStories.length) },
-    (_, i) => promoStories[(promoStart + i) % promoStories.length]
+    { length: Math.min(PROMO_VISIBLE, promoCards.length) },
+    (_, i) => promoCards[(promoStart + i) % promoCards.length]
   );
 
   const showPrevPromo = () =>
     setPromoStart(
-      (s) => (s - 1 + promoStories.length) % promoStories.length
+      (s) => (s - 1 + promoCards.length) % promoCards.length
     );
   const showNextPromo = () =>
-    setPromoStart((s) => (s + 1) % promoStories.length);
+    setPromoStart((s) => (s + 1) % promoCards.length);
 
-  /* ---------- Feed and trending ---------- */
+  /* ---------- Trending and feed ---------- */
 
   const trendingStrip = showAllTrending
-    ? trendingAll
-    : trendingAll.slice(0, TRENDING_DEFAULT);
+    ? trendingCards
+    : trendingCards.slice(0, TRENDING_DEFAULT);
 
-  const trendingHasMore = trendingAll.length > TRENDING_DEFAULT;
+  const trendingHasMore = trendingCards.length > TRENDING_DEFAULT;
 
-  const feedStories = supplyChainStories.slice(0, visibleCount);
-  const feedHasMore = visibleCount < supplyChainStories.length;
+  const feedStories = cards.slice(0, visibleCount);
+  const feedHasMore = visibleCount < cards.length;
 
   const scrollToFeed = () => {
     feedRef.current?.scrollIntoView({
@@ -260,11 +409,6 @@ export function SupplyChainPage() {
       block: "start",
     });
   };
-
-  /* ---------- Related boxes ---------- */
-
-  const relatedFeature = supplyChainStories.slice(2, 4);
-  const relatedLead = supplyChainStories.slice(1, 3);
 
   /* ---------- Empty state ---------- */
 
@@ -317,27 +461,25 @@ export function SupplyChainPage() {
               0. NEWSLETTER STRIP
           ================================================= */}
 
-          {promoStories.length > 0 && (
+          {promoCards.length > 0 && (
             <div className="mb-5 flex items-stretch gap-6 border-y border-gray-200 py-3">
               <div className="grid min-w-0 flex-1 grid-cols-1 gap-6 md:grid-cols-3">
                 {visiblePromos.map((promo) => (
                   <Link
                     key={promo.id}
-                    to={octEditionArticlePath(promo)}
+                    to={promo.path}
                     className="group flex items-center gap-3"
                   >
                     <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-100">
                       <ImageWithFallback
-                        src={promo.image}
-                        alt={promo.industry}
+                        src={promo.image ?? ""}
+                        alt={promo.kicker}
                         className="h-full w-full object-cover"
                       />
                     </div>
 
                     <div className="min-w-0">
-                      <p className="text-[12px] text-gray-500">
-                        {promo.industry}
-                      </p>
+                      <p className="text-[12px] text-gray-500">{promo.kicker}</p>
                       <p className="line-clamp-1 text-[13px] font-semibold text-gray-950 group-hover:underline">
                         {promo.title}
                       </p>
@@ -346,7 +488,7 @@ export function SupplyChainPage() {
                 ))}
               </div>
 
-              {promoStories.length > PROMO_VISIBLE && (
+              {promoCards.length > PROMO_VISIBLE && (
                 <div className="flex items-center gap-2 pl-2">
                   <button
                     type="button"
@@ -380,33 +522,32 @@ export function SupplyChainPage() {
             {/* ---------- LEFT: feature story ---------- */}
 
             <div className="flex flex-col border-b border-gray-200 p-6 lg:col-span-4 lg:border-b-0 lg:border-r">
-              <Link
-                to={octEditionArticlePath(featureStory)}
-                className="group block"
-              >
+              <Link to={feature.path} className="group block">
                 <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
-                    src={featureStory.image}
-                    alt={featureStory.title}
+                    src={feature.image ?? ""}
+                    alt={feature.title}
                     className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                   />
                 </div>
 
                 <Kicker className="mt-5">
-                  {featureStory.industry} · {featureStory.location}
+                  {feature.kicker}
+                  {feature.location ? ` · ${feature.location}` : ""}
                 </Kicker>
 
                 <h2 className="mt-2 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
-                  {featureStory.title}
+                  {feature.title}
                 </h2>
 
                 <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
-                  {featureStory.lede}
+                  {feature.lede}
                 </p>
 
                 <div className="mt-3">
                   <TimeStamp>
-                    {featureStory.publishedAt} · {featureStory.readTime}
+                    {feature.when}
+                    {feature.readTime ? ` · ${feature.readTime}` : ""}
                   </TimeStamp>
                 </div>
               </Link>
@@ -419,10 +560,7 @@ export function SupplyChainPage() {
             {/* ---------- CENTRE: lead story ---------- */}
 
             <div className="flex flex-col border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
-              <Link
-                to={octEditionArticlePath(leadStory)}
-                className="group block"
-              >
+              <Link to={octEditionArticlePath(leadStory)} className="group block">
                 <div className="overflow-hidden rounded-md bg-gray-100">
                   <ImageWithFallback
                     src={leadStory.image}
@@ -465,7 +603,7 @@ export function SupplyChainPage() {
                   </h2>
 
                   <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
-                    {supplyChainStories.length} stories
+                    {cards.length} stories
                   </span>
                 </div>
 
@@ -498,15 +636,12 @@ export function SupplyChainPage() {
                   </span>
                 </div>
 
-                {supplyChainStories.length > 1 ? (
+                {cards.length > 1 ? (
                   <ul className="mt-4 divide-y divide-gray-200">
-                    {supplyChainStories.slice(1, 4).map((item) => (
+                    {cards.slice(1, 4).map((item) => (
                       <li key={item.id}>
-                        <Link
-                          to={octEditionArticlePath(item)}
-                          className="group block py-3.5"
-                        >
-                          <Kicker>{item.location}</Kicker>
+                        <Link to={item.path} className="group block py-3.5">
+                          <Kicker>{item.location ?? item.kicker}</Kicker>
 
                           <span className="mt-1 line-clamp-2 block text-[14px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
                             {item.title}
@@ -514,7 +649,8 @@ export function SupplyChainPage() {
 
                           <div className="mt-1.5">
                             <TimeStamp>
-                              {item.publishedAt} · {item.readTime}
+                              {item.when}
+                              {item.readTime ? ` · ${item.readTime}` : ""}
                             </TimeStamp>
                           </div>
                         </Link>
@@ -539,43 +675,37 @@ export function SupplyChainPage() {
               2. INTERVIEW ROW — image left, story right
           ================================================= */}
 
-          {supplyChainStories.length >= 3 && (
+          {cards.length >= 3 && (
             <section className="grid grid-cols-1 items-stretch gap-0 border-x border-b border-gray-200 lg:grid-cols-12">
               <Link
-                to={octEditionArticlePath(interviewStory)}
+                to={interview.path}
                 className="group block overflow-hidden bg-gray-100 lg:col-span-6"
               >
                 <ImageWithFallback
-                  src={interviewStory.image}
-                  alt={interviewStory.title}
+                  src={interview.image ?? ""}
+                  alt={interview.title}
                   className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                 />
               </Link>
 
               <div className="flex flex-col justify-center p-6 lg:col-span-6 lg:p-12">
-                <Kicker>{interviewStory.industry}</Kicker>
+                <Kicker>{interview.kicker}</Kicker>
 
-                <Link
-                  to={octEditionArticlePath(interviewStory)}
-                  className="group block"
-                >
+                <Link to={interview.path} className="group block">
                   <h2 className="mt-2 line-clamp-3 text-[28px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[32px]">
-                    {interviewStory.title}
+                    {interview.title}
                   </h2>
 
                   <p className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-gray-600">
-                    {interviewStory.lede}
+                    {interview.lede}
                   </p>
                 </Link>
 
-                {interviewRelated && (
+                {interviewRel && (
                   <div className="mt-8 border-t border-gray-200 pt-6">
-                    <Link
-                      to={octEditionArticlePath(interviewRelated)}
-                      className="group block"
-                    >
+                    <Link to={interviewRel.path} className="group block">
                       <span className="block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-2">
-                        {interviewRelated.title}
+                        {interviewRel.title}
                       </span>
                     </Link>
                   </div>
@@ -588,7 +718,7 @@ export function SupplyChainPage() {
               3. TRENDING NOW — image cards, expandable
           ================================================= */}
 
-          {trendingAll.length > 0 && (
+          {trendingCards.length > 0 && (
             <section className="mt-16 mb-16">
               <SectionHeader
                 title="Trending Now"
@@ -604,26 +734,26 @@ export function SupplyChainPage() {
                 {trendingStrip.map((story) => (
                   <Link
                     key={story.id}
-                    to={octEditionArticlePath(story)}
+                    to={story.path}
                     className="group flex h-full flex-col"
                   >
                     <div className="overflow-hidden rounded-md bg-gray-100">
                       <ImageWithFallback
-                        src={story.image}
+                        src={story.image ?? ""}
                         alt={story.title}
                         className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       />
                     </div>
 
                     <div className="mt-2.5 flex flex-1 flex-col">
-                      <Kicker>{story.industry}</Kicker>
+                      <Kicker>{story.kicker}</Kicker>
 
                       <h3 className="mt-1 line-clamp-2 min-h-[2.56em] text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
                         {story.title}
                       </h3>
 
                       <div className="mt-auto pt-1.5">
-                        <TimeStamp>{story.publishedAt}</TimeStamp>
+                        <TimeStamp>{story.when}</TimeStamp>
                       </div>
                     </div>
                   </Link>
@@ -652,19 +782,17 @@ export function SupplyChainPage() {
             />
 
             <ol className="grid grid-cols-1 items-stretch gap-x-10 md:grid-cols-2 lg:grid-cols-3">
-              {supplyChainStories.slice(0, 6).map((story, index) => (
+              {cards.slice(0, 6).map((story, index) => (
                 <li key={story.id} className="border-b border-gray-200">
-                  <Link
-                    to={octEditionArticlePath(story)}
-                    className="group flex h-full gap-4 py-5"
-                  >
+                  <Link to={story.path} className="group flex h-full gap-4 py-5">
                     <span className="w-6 shrink-0 text-[22px] font-extrabold leading-none tabular-nums text-gray-300">
                       {index + 1}
                     </span>
 
                     <div className="min-w-0">
                       <Kicker>
-                        {story.industry} · {story.location}
+                        {story.kicker}
+                        {story.location ? ` · ${story.location}` : ""}
                       </Kicker>
 
                       <span className="mt-1 line-clamp-2 block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
@@ -678,7 +806,7 @@ export function SupplyChainPage() {
           </section>
 
           {/* =================================================
-              5. LATEST FEED + STICKY SIDEBAR
+              5. FULL FEED + STICKY SIDEBAR
           ================================================= */}
 
           <section ref={feedRef} aria-label="Supply chain feed" className="mb-12 scroll-mt-24">
@@ -692,12 +820,12 @@ export function SupplyChainPage() {
                   {feedStories.map((story) => (
                     <Link
                       key={story.id}
-                      to={octEditionArticlePath(story)}
+                      to={story.path}
                       className="group grid grid-cols-[110px_1fr] items-start gap-4 py-7 sm:grid-cols-[200px_1fr] sm:gap-6"
                     >
                       <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[126px]">
                         <ImageWithFallback
-                          src={story.image}
+                          src={story.image ?? ""}
                           alt={story.title}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
@@ -706,15 +834,19 @@ export function SupplyChainPage() {
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-x-2">
                           <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
-                            {story.industry}
+                            {story.kicker}
                           </span>
 
-                          <span className="text-[10px] text-gray-300">•</span>
+                          {story.location && (
+                            <>
+                              <span className="text-[10px] text-gray-300">•</span>
 
-                          <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
-                            <MapPin size={9} />
-                            {story.location}
-                          </span>
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
+                                <MapPin size={9} />
+                                {story.location}
+                              </span>
+                            </>
+                          )}
                         </div>
 
                         <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
@@ -727,7 +859,8 @@ export function SupplyChainPage() {
 
                         <div className="mt-1.5">
                           <TimeStamp>
-                            {story.publishedAt} · {story.readTime}
+                            {story.when}
+                            {story.readTime ? ` · ${story.readTime}` : ""}
                           </TimeStamp>
                         </div>
                       </div>
@@ -741,7 +874,7 @@ export function SupplyChainPage() {
                       type="button"
                       onClick={() =>
                         setVisibleCount((count) =>
-                          Math.min(count + PAGE_SIZE, supplyChainStories.length)
+                          Math.min(count + PAGE_SIZE, cards.length)
                         )
                       }
                       className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white"
@@ -750,7 +883,7 @@ export function SupplyChainPage() {
                     </button>
 
                     <span className="text-[10px] text-gray-400">
-                      Showing {feedStories.length} of {supplyChainStories.length}
+                      Showing {feedStories.length} of {cards.length}
                     </span>
                   </div>
                 )}
