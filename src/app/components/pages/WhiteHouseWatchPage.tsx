@@ -41,12 +41,30 @@ function storyMeta(story: WhiteHouseStory) {
 }
 
 /* =========================================================
-   SMALL UI PIECES (same as homepage)
-   - Headlines: serif. Hover = underline (not colour change).
-   - Red is ONLY for category labels and "view" links.
-   - Black top rule on every section header.
+   SMALL UI PIECES
    ========================================================= */
 
+// OLD (commented):
+// function SectionHeader({
+//   title,
+//   rightLabel = "The Pride Times",
+// }: {
+//   title: string;
+//   rightLabel?: string;
+// }) {
+//   return (
+//     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+//       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+//         {title}
+//       </h2>
+//       <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
+//         {rightLabel}
+//       </span>
+//     </div>
+//   );
+// }
+
+// NEW:
 function SectionHeader({
   title,
   rightLabel = "The Pride Times",
@@ -56,27 +74,48 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
-      <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
+      <span className="hidden text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400 sm:block">
         {rightLabel}
       </span>
     </div>
   );
 }
 
+// OLD (commented):
+// function Kicker({ children }: { children: ReactNode }) {
+//   return (
+//     <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+//       {children}
+//     </span>
+//   );
+// }
+
+// NEW (grey kicker):
 function Kicker({ children }: { children: ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
       {children}
     </span>
   );
 }
 
+// OLD (commented):
+// function TimeStamp({ children }: { children: ReactNode }) {
+//   return (
+//     <span className="flex items-center gap-1 text-[10px] text-gray-400">
+//       <Clock size={9} />
+//       {children}
+//     </span>
+//   );
+// }
+
+// NEW:
 function TimeStamp({ children }: { children: ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
@@ -84,10 +123,53 @@ function TimeStamp({ children }: { children: ReactNode }) {
 }
 
 /* =========================================================
-   KEY FIGURES (dark panel, same style as homepage Markets)
+   KEY FIGURES
    Uses the lead story's key facts.
    ========================================================= */
 
+// OLD (commented): dark panel
+// function KeyFiguresPanel({
+//   title,
+//   facts,
+// }: {
+//   title: string;
+//   facts: { label: string; value: string }[];
+// }) {
+//   if (facts.length === 0) {
+//     return null;
+//   }
+//
+//   return (
+//     <div className="rounded-sm bg-black p-4 text-white">
+//       <div className="flex items-center justify-between border-b border-white/20 pb-2">
+//         <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+//           {title}
+//         </h2>
+//         <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+//           {facts.length} facts
+//         </span>
+//       </div>
+//
+//       <div className="divide-y divide-white/10">
+//         {facts.map((fact) => (
+//           <div
+//             key={fact.label}
+//             className="flex items-start justify-between gap-3 py-2.5"
+//           >
+//             <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+//               {fact.label}
+//             </span>
+//             <span className="text-right text-[12px] tabular-nums text-gray-100">
+//               {fact.value}
+//             </span>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+// NEW: light bordered panel, square corners
 function KeyFiguresPanel({
   title,
   facts,
@@ -100,26 +182,26 @@ function KeyFiguresPanel({
   }
 
   return (
-    <div className="rounded-sm bg-black p-4 text-white">
-      <div className="flex items-center justify-between border-b border-white/20 pb-2">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+    <div className="border border-gray-300 p-4">
+      <div className="flex items-center justify-between border-b border-gray-300 pb-2">
+        <h2 className="text-[15px] font-bold tracking-tight text-gray-950">
           {title}
         </h2>
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+        <span className="text-[11px] font-semibold text-gray-500">
           {facts.length} facts
         </span>
       </div>
 
-      <div className="divide-y divide-white/10">
+      <div className="divide-y divide-gray-300">
         {facts.map((fact) => (
           <div
             key={fact.label}
             className="flex items-start justify-between gap-3 py-2.5"
           >
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            <span className="text-[13px] font-bold text-gray-950">
               {fact.label}
             </span>
-            <span className="text-right text-[12px] tabular-nums text-gray-100">
+            <span className="text-right text-[13px] tabular-nums text-gray-600">
               {fact.value}
             </span>
           </div>
@@ -153,10 +235,14 @@ function WhiteHouseNumbers() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-5">
         {stats.map((stat) => (
           <div key={stat.label}>
-            <div className="font-serif text-[24px] font-bold leading-none text-gray-950">
+            {/* OLD (commented): <div className="font-serif text-[24px] font-bold leading-none text-gray-950"> */}
+            {/* NEW: */}
+            <div className="text-[24px] font-bold leading-none tracking-tight text-gray-950">
               {stat.value}
             </div>
-            <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
+            {/* OLD (commented): <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div> */}
+            {/* NEW: */}
+            <div className="mt-1.5 text-[12px] text-gray-500">{stat.label}</div>
           </div>
         ))}
       </div>
@@ -179,9 +265,13 @@ export function WhiteHouseWatchPage({
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* OLD (commented): <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"> */}
+      {/* NEW: */}
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* PAGE TITLE */}
+
+          {/* OLD (commented):
           <header className="mb-6 border-t-[3px] border-black pt-3">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -201,6 +291,28 @@ export function WhiteHouseWatchPage({
               </span>
             </div>
           </header>
+          */}
+
+          {/* NEW: */}
+          <header className="mb-6 border-t-[3px] border-black pt-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                  Policy &amp; Executive
+                </span>
+                <h1 className="mt-1.5 text-[28px] font-bold leading-tight tracking-tight text-gray-950 md:text-[38px]">
+                  {section}
+                </h1>
+                <p className="mt-2 text-[13px] leading-snug text-gray-500">
+                  Executive actions, federal policy and government decisions
+                  shaping technology and business from The Pride Times.
+                </p>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400">
+                Policy • Executive • Federal
+              </span>
+            </div>
+          </header>
 
           <PrideTimesAd variant="first" />
 
@@ -212,15 +324,11 @@ export function WhiteHouseWatchPage({
 
           {leadStory && (
             <>
-              {/* =================================================
-                  1. TOP SECTION — 3 columns, like the homepage
-                     LEFT   : text-only Top Stories list
-                     CENTER : lead story + 2 secondary stories
-                     RIGHT  : Key Figures panel + Editor's Pick
-              ================================================= */}
+              {/* 1. TOP SECTION */}
+
+              {/* OLD (commented): 3-column homepage style, serif, rounded, gray-200 lines
               <section className="mb-10 border-b border-gray-300 pb-8">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-                  {/* LEFT: Top stories (text only) */}
                   <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
                     <div className="mb-1 border-t-[3px] border-black pt-2">
                       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
@@ -247,7 +355,6 @@ export function WhiteHouseWatchPage({
                     </ul>
                   </aside>
 
-                  {/* CENTER: lead story */}
                   <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
                     <Link to={leadStory.href} className="group block">
                       <div className="relative overflow-hidden rounded-sm bg-black">
@@ -276,7 +383,6 @@ export function WhiteHouseWatchPage({
                       </div>
                     </Link>
 
-                    {/* Two secondary stories under the lead */}
                     {majorStories.length > 0 && (
                       <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
                         {majorStories.map((story) => (
@@ -310,7 +416,6 @@ export function WhiteHouseWatchPage({
                     )}
                   </div>
 
-                  {/* RIGHT: Key figures + Editor's Pick */}
                   <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
                     <KeyFiguresPanel
                       title="Key Figures"
@@ -351,22 +456,156 @@ export function WhiteHouseWatchPage({
                   </aside>
                 </div>
               </section>
+              */}
+
+              {/* NEW: 3-column band inside one thin grey border, Bloomberg style */}
+              <section className="mb-10">
+                <div className="grid grid-cols-1 gap-0 border border-gray-300 lg:grid-cols-12">
+                  {/* LEFT: Top stories (text only) */}
+                  <aside className="order-2 min-w-0 border-b border-gray-300 p-4 lg:order-1 lg:col-span-3 lg:border-b-0 lg:border-r">
+                    <div className="mb-1 border-t-[3px] border-black pt-2">
+                      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
+                        Top Stories
+                      </h2>
+                    </div>
+
+                    <ul className="divide-y divide-gray-300">
+                      {sideHeadlines.map((story) => (
+                        <li key={story.id}>
+                          <Link to={story.href} className="group block py-3">
+                            <Kicker>{story.category}</Kicker>
+
+                            <h3 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
+                              {story.title}
+                            </h3>
+
+                            <div className="mt-1.5">
+                              <TimeStamp>{storyMeta(story)}</TimeStamp>
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </aside>
+
+                  {/* CENTER: lead story + 2 secondary stories */}
+                  <div className="order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:col-span-6 lg:border-b-0 lg:border-r">
+                    <Link to={leadStory.href} className="group block">
+                      <div className="relative overflow-hidden bg-black">
+                        <ImageWithFallback
+                          src={leadStory.image}
+                          alt={leadStory.title}
+                          loading="eager"
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                        />
+                      </div>
+
+                      <div className="mt-3">
+                        <Kicker>{leadStory.category}</Kicker>
+
+                        <h1 className="mt-1.5 text-[26px] font-bold leading-[1.1] tracking-tight text-gray-950 group-hover:underline md:text-[34px]">
+                          {leadStory.title}
+                        </h1>
+
+                        <p className="mt-2 text-[14px] leading-snug text-gray-700">
+                          {leadStory.summary}
+                        </p>
+
+                        <div className="mt-2">
+                          <TimeStamp>{storyMeta(leadStory)}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+
+                    {majorStories.length > 0 && (
+                      <div className="mt-5 grid grid-cols-1 gap-5 border-t border-gray-300 pt-4 sm:grid-cols-2">
+                        {majorStories.map((story) => (
+                          <Link
+                            key={story.id}
+                            to={story.href}
+                            className="group block"
+                          >
+                            <div className="overflow-hidden bg-gray-100">
+                              <ImageWithFallback
+                                src={story.image}
+                                alt={story.title}
+                                className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                              />
+                            </div>
+
+                            <div className="mt-2.5">
+                              <Kicker>{story.category}</Kicker>
+
+                              <h3 className="mt-1 text-[18px] font-bold leading-[1.15] tracking-tight text-gray-950 group-hover:underline">
+                                {story.title}
+                              </h3>
+
+                              <div className="mt-1.5">
+                                <TimeStamp>{storyMeta(story)}</TimeStamp>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* RIGHT: Key figures + Editor's Pick */}
+                  <aside className="order-3 min-w-0 p-4 lg:col-span-3">
+                    <KeyFiguresPanel
+                      title="Key Figures"
+                      facts={leadStory.keyFacts}
+                    />
+
+                    {editorsPick && (
+                      <div className="mt-5">
+                        <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+                          <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
+                            Editor's Pick
+                          </h2>
+                        </div>
+
+                        <Link to={editorsPick.href} className="group block">
+                          <div className="overflow-hidden bg-gray-100">
+                            <ImageWithFallback
+                              src={editorsPick.image}
+                              alt={editorsPick.title}
+                              className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                            />
+                          </div>
+
+                          <div className="mt-2.5">
+                            <Kicker>{editorsPick.category}</Kicker>
+
+                            <h3 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
+                              {editorsPick.title}
+                            </h3>
+
+                            <p className="mt-1.5 line-clamp-2 text-[12px] leading-snug text-gray-700">
+                              {editorsPick.summary}
+                            </p>
+                          </div>
+                        </Link>
+                      </div>
+                    )}
+                  </aside>
+                </div>
+              </section>
 
               <PrideTimesAd variant="second" />
 
-              {/* =================================================
-                  2. LATEST WHITE HOUSE NEWS
-                     LEFT  : filterable feed with "Show more"
-                     RIGHT : sticky numbers + latest updates list
-              ================================================= */}
+              {/* 2. LATEST WHITE HOUSE NEWS */}
               <section aria-label="Latest White House news" className="mb-12">
                 <SectionHeader title={`Latest ${section} News`} />
 
                 <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
                   {/* Feed */}
                   <div ref={feedRef} className="scroll-mt-24 min-w-0">
-                    <div className="divide-y divide-gray-200">
+                    {/* OLD (commented): <div className="divide-y divide-gray-200"> */}
+                    {/* NEW: */}
+                    <div className="divide-y divide-gray-300">
                       {visibleStories.map((story) => (
+                        /* OLD (commented):
                         <Link
                           key={story.id}
                           to={story.href}
@@ -396,11 +635,46 @@ export function WhiteHouseWatchPage({
                             </div>
                           </div>
                         </Link>
+                        */
+                        /* NEW: */
+                        <Link
+                          key={story.id}
+                          to={story.href}
+                          className="group grid grid-cols-[110px_1fr] items-start gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                        >
+                          <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
+                            <ImageWithFallback
+                              src={story.image}
+                              alt={story.title}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="min-w-0">
+                            <Kicker>{story.category}</Kicker>
+
+                            <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline sm:text-[19px]">
+                              {story.title}
+                            </h3>
+
+                            <p className="mt-1.5 hidden text-[13px] leading-snug text-gray-700 line-clamp-2 sm:block">
+                              {story.summary}
+                            </p>
+
+                            <div className="mt-1.5">
+                              <TimeStamp>{storyMeta(story)}</TimeStamp>
+                            </div>
+                          </div>
+                        </Link>
                       ))}
                     </div>
 
                     {hasMore && (
-                      <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                      /* OLD (commented): <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5"> */
+                      /* NEW: */
+                      <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-300 pt-5">
+                        {/* OLD (commented): className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white" */}
+                        {/* NEW: */}
                         <button
                           type="button"
                           onClick={() =>
@@ -408,12 +682,12 @@ export function WhiteHouseWatchPage({
                               Math.min(count + PAGE_SIZE, stories.length)
                             )
                           }
-                          className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                          className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-black transition-colors hover:bg-black hover:text-white"
                         >
                           Show more stories
                         </button>
 
-                        <span className="text-[10px] text-gray-400">
+                        <span className="text-[11px] text-gray-400">
                           Showing {visibleStories.length} of {stories.length}
                         </span>
                       </div>
@@ -432,19 +706,25 @@ export function WhiteHouseWatchPage({
                             rightLabel="Newsroom"
                           />
 
-                          <ol className="divide-y divide-gray-200">
+                          {/* OLD (commented): <ol className="divide-y divide-gray-200"> */}
+                          {/* NEW: */}
+                          <ol className="divide-y divide-gray-300">
                             {whiteHouseLatestNews.map((item, index) => (
                               <li key={item.id}>
                                 <Link
                                   to={item.href}
                                   className="group flex gap-3 py-3.5"
                                 >
-                                  <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                                  {/* OLD (commented): <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300"> */}
+                                  {/* NEW: */}
+                                  <span className="w-6 shrink-0 text-[22px] font-bold leading-none tracking-tight tabular-nums text-gray-300">
                                     {index + 1}
                                   </span>
 
                                   <div className="min-w-0">
-                                    <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                                    {/* OLD (commented): <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline"> */}
+                                    {/* NEW: */}
+                                    <span className="block text-[15px] font-bold leading-[1.25] tracking-tight text-gray-950 group-hover:underline">
                                       {item.title}
                                     </span>
                                     <div className="mt-1">

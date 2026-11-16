@@ -47,6 +47,27 @@ function storyMeta(story: SustainabilityEsgArticle) {
    - Black top rule on every section header.
    ========================================================= */
 
+// OLD (commented):
+// function SectionHeader({
+//   title,
+//   rightLabel = "The Pride Times",
+// }: {
+//   title: string;
+//   rightLabel?: string;
+// }) {
+//   return (
+//     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+//       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+//         {title}
+//       </h2>
+//       <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
+//         {rightLabel}
+//       </span>
+//     </div>
+//   );
+// }
+
+// NEW:
 function SectionHeader({
   title,
   rightLabel = "The Pride Times",
@@ -56,27 +77,48 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
-      <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
+      <span className="hidden text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400 sm:block">
         {rightLabel}
       </span>
     </div>
   );
 }
 
+// OLD (commented):
+// function Kicker({ children }: { children: ReactNode }) {
+//   return (
+//     <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+//       {children}
+//     </span>
+//   );
+// }
+
+// NEW (grey kicker):
 function Kicker({ children }: { children: ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
       {children}
     </span>
   );
 }
 
+// OLD (commented):
+// function TimeStamp({ children }: { children: ReactNode }) {
+//   return (
+//     <span className="flex items-center gap-1 text-[10px] text-gray-400">
+//       <Clock size={9} />
+//       {children}
+//     </span>
+//   );
+// }
+
+// NEW:
 function TimeStamp({ children }: { children: ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
@@ -88,6 +130,49 @@ function TimeStamp({ children }: { children: ReactNode }) {
    Uses the lead story's key facts.
    ========================================================= */
 
+// OLD (commented): dark panel
+// function KeyFiguresPanel({
+//   title,
+//   facts,
+// }: {
+//   title: string;
+//   facts: { label: string; value: string }[];
+// }) {
+//   if (facts.length === 0) {
+//     return null;
+//   }
+//
+//   return (
+//     <div className="rounded-sm bg-black p-4 text-white">
+//       <div className="flex items-center justify-between border-b border-white/20 pb-2">
+//         <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+//           {title}
+//         </h2>
+//         <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+//           {facts.length} facts
+//         </span>
+//       </div>
+//
+//       <div className="divide-y divide-white/10">
+//         {facts.map((fact) => (
+//           <div
+//             key={fact.label}
+//             className="flex items-start justify-between gap-3 py-2.5"
+//           >
+//             <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+//               {fact.label}
+//             </span>
+//             <span className="text-right text-[12px] tabular-nums text-gray-100">
+//               {fact.value}
+//             </span>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+// NEW: light bordered panel, square corners
 function KeyFiguresPanel({
   title,
   facts,
@@ -100,26 +185,26 @@ function KeyFiguresPanel({
   }
 
   return (
-    <div className="rounded-sm bg-black p-4 text-white">
-      <div className="flex items-center justify-between border-b border-white/20 pb-2">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+    <div className="border border-gray-300 p-4">
+      <div className="flex items-center justify-between border-b border-gray-300 pb-2">
+        <h2 className="text-[15px] font-bold tracking-tight text-gray-950">
           {title}
         </h2>
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+        <span className="text-[11px] font-semibold text-gray-500">
           {facts.length} facts
         </span>
       </div>
 
-      <div className="divide-y divide-white/10">
+      <div className="divide-y divide-gray-300">
         {facts.map((fact) => (
           <div
             key={fact.label}
             className="flex items-start justify-between gap-3 py-2.5"
           >
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            <span className="text-[13px] font-bold text-gray-950">
               {fact.label}
             </span>
-            <span className="text-right text-[12px] tabular-nums text-gray-100">
+            <span className="text-right text-[13px] tabular-nums text-gray-600">
               {fact.value}
             </span>
           </div>
@@ -153,10 +238,14 @@ function EsgNumbers() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-5">
         {stats.map((stat) => (
           <div key={stat.label}>
-            <div className="font-serif text-[24px] font-bold leading-none text-gray-950">
+            {/* OLD (commented): <div className="font-serif text-[24px] font-bold leading-none text-gray-950"> */}
+            {/* NEW: */}
+            <div className="text-[24px] font-bold leading-none tracking-tight text-gray-950">
               {stat.value}
             </div>
-            <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
+            {/* OLD (commented): <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div> */}
+            {/* NEW: */}
+            <div className="mt-1.5 text-[12px] text-gray-500">{stat.label}</div>
           </div>
         ))}
       </div>
@@ -199,9 +288,13 @@ export function SustainabilityEsgPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* OLD (commented): <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"> */}
+      {/* NEW: */}
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* PAGE TITLE */}
+
+          {/* OLD (commented):
           <header className="mb-6 border-t-[3px] border-black pt-3">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -217,6 +310,28 @@ export function SustainabilityEsgPage() {
                 </p>
               </div>
               <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                Climate • Governance • Disclosure
+              </span>
+            </div>
+          </header>
+          */}
+
+          {/* NEW: */}
+          <header className="mb-6 border-t-[3px] border-black pt-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                  Climate &amp; Governance
+                </span>
+                <h1 className="mt-1.5 text-[28px] font-bold leading-tight tracking-tight text-gray-950 md:text-[38px]">
+                  {SECTION_LABEL}
+                </h1>
+                <p className="mt-2 text-[13px] leading-snug text-gray-500">
+                  Climate disclosure, green finance, supply-chain ethics and
+                  net-zero targets from The Pride Times.
+                </p>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400">
                 Climate • Governance • Disclosure
               </span>
             </div>
@@ -238,9 +353,11 @@ export function SustainabilityEsgPage() {
                      CENTER : lead story + 2 secondary stories
                      RIGHT  : Key Figures panel + Editor's Pick
               ================================================= */}
+
+              {/* OLD (commented): homepage style, serif, rounded, gray-200 lines, red kickers
               <section className="mb-10 border-b border-gray-300 pb-8">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-                  {/* LEFT: Top stories (text only) */}
+                  LEFT: Top stories (text only)
                   <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
                     <div className="mb-1 border-t-[3px] border-black pt-2">
                       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
@@ -270,7 +387,7 @@ export function SustainabilityEsgPage() {
                     </ul>
                   </aside>
 
-                  {/* CENTER: lead story */}
+                  CENTER: lead story
                   <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
                     <Link
                       to={sustainabilityEsgArticlePath(leadStory.id)}
@@ -304,7 +421,7 @@ export function SustainabilityEsgPage() {
                       </div>
                     </Link>
 
-                    {/* Two secondary stories under the lead */}
+                    Two secondary stories under the lead
                     {majorStories.length > 0 && (
                       <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
                         {majorStories.map((story) => (
@@ -338,7 +455,7 @@ export function SustainabilityEsgPage() {
                     )}
                   </div>
 
-                  {/* RIGHT: Key figures + Editor's Pick */}
+                  RIGHT: Key figures + Editor's Pick
                   <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
                     <KeyFiguresPanel
                       title="Key Figures"
@@ -382,6 +499,153 @@ export function SustainabilityEsgPage() {
                   </aside>
                 </div>
               </section>
+              */}
+
+              {/* NEW: 3-column band inside one thin grey border, Bloomberg style */}
+              <section className="mb-10">
+                <div className="grid grid-cols-1 gap-0 border border-gray-300 lg:grid-cols-12">
+                  {/* LEFT: Top stories (text only) */}
+                  <aside className="order-2 min-w-0 border-b border-gray-300 p-4 lg:order-1 lg:col-span-3 lg:border-b-0 lg:border-r">
+                    <div className="mb-1 border-t-[3px] border-black pt-2">
+                      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
+                        Top Stories
+                      </h2>
+                    </div>
+
+                    <ul className="divide-y divide-gray-300">
+                      {sideHeadlines.map((story) => (
+                        <li key={story.id}>
+                          <Link
+                            to={sustainabilityEsgArticlePath(story.id)}
+                            className="group block py-3"
+                          >
+                            <Kicker>{story.category}</Kicker>
+
+                            <h3 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
+                              {story.title}
+                            </h3>
+
+                            <div className="mt-1.5">
+                              <TimeStamp>{storyMeta(story)}</TimeStamp>
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </aside>
+
+                  {/* CENTER: lead story */}
+                  <div className="order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:col-span-6 lg:border-b-0 lg:border-r">
+                    <Link
+                      to={sustainabilityEsgArticlePath(leadStory.id)}
+                      className="group block"
+                    >
+                      <div className="relative overflow-hidden bg-black">
+                        <ImageWithFallback
+                          src={leadStory.image}
+                          alt={leadStory.title}
+                          loading="eager"
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                        />
+                      </div>
+
+                      <div className="mt-3">
+                        <Kicker>
+                          {leadStory.category} · {leadStory.location}
+                        </Kicker>
+
+                        <h1 className="mt-1.5 text-[26px] font-bold leading-[1.1] tracking-tight text-gray-950 group-hover:underline md:text-[34px]">
+                          {leadStory.title}
+                        </h1>
+
+                        <p className="mt-2 text-[14px] leading-snug text-gray-700">
+                          {leadStory.excerpt}
+                        </p>
+
+                        <div className="mt-2">
+                          <TimeStamp>{storyMeta(leadStory)}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+
+                    {/* Two secondary stories under the lead */}
+                    {majorStories.length > 0 && (
+                      <div className="mt-5 grid grid-cols-1 gap-5 border-t border-gray-300 pt-4 sm:grid-cols-2">
+                        {majorStories.map((story) => (
+                          <Link
+                            key={story.id}
+                            to={sustainabilityEsgArticlePath(story.id)}
+                            className="group block"
+                          >
+                            <div className="overflow-hidden bg-gray-100">
+                              <ImageWithFallback
+                                src={story.image}
+                                alt={story.title}
+                                className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                              />
+                            </div>
+
+                            <div className="mt-2.5">
+                              <Kicker>{story.category}</Kicker>
+
+                              <h3 className="mt-1 text-[18px] font-bold leading-[1.15] tracking-tight text-gray-950 group-hover:underline">
+                                {story.title}
+                              </h3>
+
+                              <div className="mt-1.5">
+                                <TimeStamp>{storyMeta(story)}</TimeStamp>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* RIGHT: Key figures + Editor's Pick */}
+                  <aside className="order-3 min-w-0 p-4 lg:col-span-3">
+                    <KeyFiguresPanel
+                      title="Key Figures"
+                      facts={leadStory.keyFacts}
+                    />
+
+                    {editorsPick && (
+                      <div className="mt-5">
+                        <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+                          <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
+                            Editor's Pick
+                          </h2>
+                        </div>
+
+                        <Link
+                          to={sustainabilityEsgArticlePath(editorsPick.id)}
+                          className="group block"
+                        >
+                          <div className="overflow-hidden bg-gray-100">
+                            <ImageWithFallback
+                              src={editorsPick.image}
+                              alt={editorsPick.title}
+                              className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                            />
+                          </div>
+
+                          <div className="mt-2.5">
+                            <Kicker>{editorsPick.category}</Kicker>
+
+                            <h3 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
+                              {editorsPick.title}
+                            </h3>
+
+                            <p className="mt-1.5 line-clamp-2 text-[12px] leading-snug text-gray-700">
+                              {editorsPick.excerpt}
+                            </p>
+                          </div>
+                        </Link>
+                      </div>
+                    )}
+                  </aside>
+                </div>
+              </section>
 
               <PrideTimesAd variant="second" />
 
@@ -396,7 +660,9 @@ export function SustainabilityEsgPage() {
                 <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
                   {/* Feed */}
                   <div ref={feedRef} className="scroll-mt-24 min-w-0">
-                    <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
+                    {/* OLD (commented): <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3"> */}
+                    {/* NEW: */}
+                    <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-300 pb-3">
                       {categoryTabs.map((tab) => (
                         <button
                           key={tab}
@@ -413,7 +679,9 @@ export function SustainabilityEsgPage() {
                       ))}
                     </div>
 
-                    <div className="divide-y divide-gray-200">
+                    {/* OLD (commented): <div className="divide-y divide-gray-200"> */}
+                    {/* NEW: */}
+                    <div className="divide-y divide-gray-300">
                       {visibleStories.length === 0 && (
                         <p className="py-6 text-[12px] text-gray-400">
                           No stories in this category yet.
@@ -421,6 +689,7 @@ export function SustainabilityEsgPage() {
                       )}
 
                       {visibleStories.map((story) => (
+                        /* OLD (commented):
                         <Link
                           key={story.id}
                           to={sustainabilityEsgArticlePath(story.id)}
@@ -461,11 +730,57 @@ export function SustainabilityEsgPage() {
                             </div>
                           </div>
                         </Link>
+                        */
+                        /* NEW: */
+                        <Link
+                          key={story.id}
+                          to={sustainabilityEsgArticlePath(story.id)}
+                          className="group grid grid-cols-[110px_1fr] items-start gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                        >
+                          <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
+                            <ImageWithFallback
+                              src={story.image}
+                              alt={story.title}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-x-2">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                                {story.category}
+                              </span>
+
+                              <span className="text-[10px] text-gray-300">•</span>
+
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400">
+                                <MapPin size={9} />
+                                {story.location}
+                              </span>
+                            </div>
+
+                            <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline sm:text-[19px]">
+                              {story.title}
+                            </h3>
+
+                            <p className="mt-1.5 hidden text-[13px] leading-snug text-gray-700 line-clamp-2 sm:block">
+                              {story.excerpt}
+                            </p>
+
+                            <div className="mt-1.5">
+                              <TimeStamp>{storyMeta(story)}</TimeStamp>
+                            </div>
+                          </div>
+                        </Link>
                       ))}
                     </div>
 
                     {hasMore && (
-                      <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                      /* OLD (commented): <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5"> */
+                      /* NEW: */
+                      <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-300 pt-5">
+                        {/* OLD (commented): className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white" */}
+                        {/* NEW: */}
                         <button
                           type="button"
                           onClick={() =>
@@ -473,12 +788,14 @@ export function SustainabilityEsgPage() {
                               Math.min(count + PAGE_SIZE, filteredStories.length)
                             )
                           }
-                          className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                          className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-black transition-colors hover:bg-black hover:text-white"
                         >
                           Show more stories
                         </button>
 
-                        <span className="text-[10px] text-gray-400">
+                        {/* OLD (commented): <span className="text-[10px] text-gray-400"> */}
+                        {/* NEW: */}
+                        <span className="text-[11px] text-gray-400">
                           Showing {visibleStories.length} of {filteredStories.length}
                         </span>
                       </div>
@@ -496,7 +813,9 @@ export function SustainabilityEsgPage() {
                           rightLabel="Sections"
                         />
 
-                        <div className="divide-y divide-gray-200">
+                        {/* OLD (commented): <div className="divide-y divide-gray-200"> */}
+                        {/* NEW: */}
+                        <div className="divide-y divide-gray-300">
                           {categoryTabs
                             .filter((tab) => tab !== "All")
                             .map((tab) => {
@@ -511,10 +830,14 @@ export function SustainabilityEsgPage() {
                                   onClick={() => openCategoryFeed(tab)}
                                   className="flex w-full items-center justify-between py-3 text-left"
                                 >
-                                  <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-gray-950 hover:underline">
+                                  {/* OLD (commented): <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-gray-950 hover:underline"> */}
+                                  {/* NEW: */}
+                                  <span className="text-[13px] font-bold uppercase tracking-[0.04em] text-gray-950 hover:underline">
                                     {tab}
                                   </span>
-                                  <span className="text-[10px] font-bold uppercase tracking-wide text-red-600">
+                                  {/* OLD (commented): <span className="text-[10px] font-bold uppercase tracking-wide text-red-600"> */}
+                                  {/* NEW: */}
+                                  <span className="text-[11px] font-bold uppercase tracking-wide text-gray-500">
                                     {count} {count === 1 ? "story" : "stories"}
                                   </span>
                                 </button>
