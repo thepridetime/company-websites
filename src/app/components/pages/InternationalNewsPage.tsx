@@ -28,9 +28,8 @@ import {
 
 /* =========================================================
    AD SLOTS
-   Existing ad units are reused for the new placements below.
-   For best fill, create a new ad unit in AdSense for each
-   "extra" placement and paste its slot ID here.
+   Four ads per page: below the top band, after Trending Now,
+   after Regional Coverage, and at the bottom.
 ========================================================= */
 
 const AD_SLOTS = {
@@ -38,11 +37,6 @@ const AD_SLOTS = {
   inArticle: "8042854193",
   digest: "5608262547",
   bottom: "6810700989",
-  extra1: "5373718974", // after Latest International News
-  extra2: "6810700989", // after Global Markets
-  extra3: "8042854193", // after Regional Coverage
-  extra4: "5373718974", // beside the magazine
-  extra5: "6810700989", // after Browse by Region
 } as const;
 
 /* =========================================================
@@ -657,6 +651,7 @@ export function InternationalNewsPage() {
             </aside>
           </section>
 
+          {/* AD 1 of 4 — below the top band */}
           <PrideTimesAd slot={AD_SLOTS.topBand} />
 
           {/* =================================================
@@ -746,6 +741,7 @@ export function InternationalNewsPage() {
             </section>
           )}
 
+          {/* AD 2 of 4 — after Trending Now */}
           <PrideTimesAd slot={AD_SLOTS.inArticle} format="fluid" layout="in-article" />
 
           {/* =================================================
@@ -799,8 +795,6 @@ export function InternationalNewsPage() {
               title="Market Snapshot"
             />
           </section>
-
-          <PrideTimesAd slot={AD_SLOTS.extra1} format="fluid" layout="in-article" />
 
           {/* =================================================
               6. REGIONAL COVERAGE (one group per region)
@@ -857,7 +851,8 @@ export function InternationalNewsPage() {
             </div>
           </section>
 
-          <PrideTimesAd slot={AD_SLOTS.extra2} />
+          {/* AD 3 of 4 — after Regional Coverage */}
+          <PrideTimesAd slot={AD_SLOTS.digest} format="fluid" layout="in-article" />
 
           {/* =================================================
               7. MORE INTERNATIONAL STORIES + MAGAZINE
@@ -967,8 +962,6 @@ export function InternationalNewsPage() {
                     </span>
                   </div>
                 )}
-
-                <PrideTimesAd slot={AD_SLOTS.extra3} format="fluid" layout="in-article" />
               </div>
 
               {/* ---------- Magazine (sticky) ---------- */}
@@ -1008,10 +1001,6 @@ export function InternationalNewsPage() {
                       </span>
                     </div>
                   </Link>
-
-                  <div className="mt-8">
-                    <PrideTimesAd slot={AD_SLOTS.extra4} />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1063,8 +1052,7 @@ export function InternationalNewsPage() {
             </div>
           </section>
 
-          <PrideTimesAd slot={AD_SLOTS.extra5} />
-
+          {/* AD 4 of 4 — bottom of page */}
           <PrideTimesAd slot={AD_SLOTS.bottom} />
         </main>
       </div>
