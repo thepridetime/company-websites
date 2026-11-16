@@ -56,6 +56,25 @@ import {
 import { MarketSnapshot } from "../market/MarketSnapshot";
 
 /* =========================================================
+   AD SLOTS
+   Existing ad units are reused for the new placements below.
+   For best fill, create a new ad unit in AdSense for each
+   "extra" placement and paste its slot ID here.
+========================================================= */
+
+const AD_SLOTS = {
+  topBand: "5373718974",
+  inArticle: "8042854193",
+  digest: "5608262547",
+  bottom: "6810700989",
+  extra1: "5373718974", // after Global Industry Edition
+  extra2: "6810700989", // after Numbers at a Glance
+  extra3: "8042854193", // after Markets + Editor's Pick
+  extra4: "5373718974", // after Corporate News Digest
+  extra5: "6810700989", // after the news feed
+} as const;
+
+/* =========================================================
    TYPES
 ========================================================= */
 
@@ -339,6 +358,10 @@ const earningsWatch = [
 const PROMO_VISIBLE = 3;
 const promoStories = allCards.slice(0, 6);
 
+/* Trending Now: four shown by default, the rest on "View all". */
+const TRENDING_DEFAULT = 4;
+const trendingAll = octCards.slice(3);
+
 /* Filter tabs: department order from the digest first, then any
    other tab that appears in the data. */
 const tabOrder = [
@@ -406,7 +429,7 @@ const dealBadge: Record<string, string> = {
 function AppleLogo() {
   return (
     <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 170 170" fill="currentColor">
-      <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.050-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.970-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.69-7.79-11.97-14.24-6.3-9.52-11.19-20.4-14.67-32.64-3.48-12.24-5.22-23.77-5.22-34.59 0-14.97 3.8-27.42 11.41-37.35 7.6-9.93 17.06-15.010 28.38-15.24 4.58 0 9.8 1.25 15.66 3.76 5.86 2.5 9.77 3.8 11.73 3.91 1.74 0 5.8-1.36 12.18-4.07 6.38-2.71 11.75-3.96 16.11-3.76 12.06.63 21.72 5.09 28.98 13.38-10.45 6.32-15.56 15.23-15.34 26.74.22 9.02 3.65 16.63 10.29 22.83 6.64 6.2 14.59 9.68 23.85 10.44-2.28 6.84-4.89 13.59-7.83 20.25zM119.22 33.15c0-6.85 2.5-13.43 7.51-19.74 5.01-6.31 11.23-10.74 18.66-13.29.33 2.17.5 4.13.5 5.87 0 6.85-2.6 13.54-7.81 20.07-5.21 6.53-11.47 10.74-18.78 12.63-.08-1.85-.08-3.69-.08-5.54z" />
+      <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.050-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.970-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.69-7.79-11.97-14.24-6.3-9.52-11.19-20.4-14.67-32.64-3.48-12.24-5.22-23.77-5.22-34.59 0-14.97 3.8-27.42 11.41-37.35 7.6-9.930 17.06-15.010 28.38-15.24 4.58 0 9.8 1.25 15.66 3.76 5.86 2.5 9.77 3.8 11.73 3.91 1.74 0 5.8-1.36 12.18-4.07 6.38-2.71 11.75-3.96 16.11-3.76 12.06.63 21.72 5.09 28.98 13.38-10.45 6.32-15.56 15.23-15.34 26.74.22 9.02 3.65 16.63 10.29 22.83 6.64 6.2 14.59 9.68 23.85 10.44-2.28 6.84-4.89 13.59-7.83 20.25zM119.22 33.15c0-6.85 2.5-13.43 7.51-19.74 5.01-6.31 11.23-10.74 18.66-13.29.33 2.17.5 4.13.5 5.87 0 6.85-2.6 13.54-7.81 20.07-5.21 6.53-11.47 10.74-18.78 12.63-.08-1.85-.08-3.69-.08-5.54z" />
     </svg>
   );
 }
@@ -548,6 +571,7 @@ export function BusinessNewsPage() {
   const [activeNewsTab, setActiveNewsTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [promoStart, setPromoStart] = useState(0);
+  const [showAllTrending, setShowAllTrending] = useState(false);
   const [activeMarketTab, setActiveMarketTab] = useState<"Indices" | "Crypto">(
     "Indices"
   );
@@ -598,6 +622,14 @@ export function BusinessNewsPage() {
     });
   };
 
+  /* ---------- Trending Now ---------- */
+
+  const trendingStrip = showAllTrending
+    ? trendingAll
+    : trendingAll.slice(0, TRENDING_DEFAULT);
+
+  const trendingHasMore = trendingAll.length > TRENDING_DEFAULT;
+
   /* ---------- Section picks ---------- */
 
   const relatedFeature = corporateMoves.map((m) => ({
@@ -615,7 +647,6 @@ export function BusinessNewsPage() {
   const todaysNews = latestNewsStories.slice(0, 3);
   const interviewStory = corporateMoves[0];
   const interviewRelated = corporateMoves[1];
-  const trendingStrip = octCards.slice(3, 7);
   const industryLead = octCards[0];
   const industryRest = octCards.slice(1, 5);
 
@@ -632,8 +663,6 @@ export function BusinessNewsPage() {
               Business News
             </h1>
           </header>
-
-          <PrideTimesAd slot="5373718974" />
 
           {/* =================================================
               0. NEWSLETTER STRIP
@@ -833,6 +862,8 @@ export function BusinessNewsPage() {
             </aside>
           </section>
 
+          <PrideTimesAd slot={AD_SLOTS.topBand} />
+
           {/* =================================================
               2. INTERVIEW ROW — image left, story right
           ================================================= */}
@@ -873,11 +904,19 @@ export function BusinessNewsPage() {
           </section>
 
           {/* =================================================
-              3. TRENDING NOW — 4 image cards
+              3. TRENDING NOW — image cards, expandable
           ================================================= */}
 
           <section className="mt-16 mb-16">
-            <SectionHeader title="Trending Now" link="/business-news" />
+            <SectionHeader
+              title="Trending Now"
+              onClick={
+                trendingHasMore
+                  ? () => setShowAllTrending((value) => !value)
+                  : undefined
+              }
+              linkText={showAllTrending ? "Show less" : "View all"}
+            />
 
             <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
               {trendingStrip.map((story) => (
@@ -910,7 +949,7 @@ export function BusinessNewsPage() {
             </div>
           </section>
 
-          <PrideTimesAd slot="8042854193" format="fluid" layout="in-article" />
+          <PrideTimesAd slot={AD_SLOTS.inArticle} format="fluid" layout="in-article" />
 
           {/* =================================================
               4. GLOBAL INDUSTRY EDITION — one large story left,
@@ -990,6 +1029,8 @@ export function BusinessNewsPage() {
             </section>
           )}
 
+          <PrideTimesAd slot={AD_SLOTS.extra1} format="fluid" layout="in-article" />
+
           {/* =================================================
               5. NUMBERS AT A GLANCE
           ================================================= */}
@@ -1023,10 +1064,10 @@ export function BusinessNewsPage() {
             </div>
           </section>
 
+          <PrideTimesAd slot={AD_SLOTS.extra2} />
+
           {/* =================================================
               6. MARKETS + EDITOR'S PICK
-                 Black market panel left (earnings rows),
-                 Editor's Pick right (image + text)
           ================================================= */}
 
           <section className="mb-16 grid grid-cols-1 items-stretch gap-10 lg:grid-cols-12">
@@ -1125,6 +1166,8 @@ export function BusinessNewsPage() {
             </div>
           </section>
 
+          <PrideTimesAd slot={AD_SLOTS.extra3} format="fluid" layout="in-article" />
+
           {/* =================================================
               7. LATEST NEWS (numbered list) — homepage pattern
           ================================================= */}
@@ -1162,6 +1205,8 @@ export function BusinessNewsPage() {
               ))}
             </ol>
           </section>
+
+          <PrideTimesAd slot={AD_SLOTS.digest} format="fluid" layoutKey="-ef+6k-30-ac+ty" />
 
           {/* =================================================
               8. GLOBAL CORPORATE NEWS DIGEST — EDITION 1: M&A
@@ -1300,7 +1345,7 @@ export function BusinessNewsPage() {
             </details>
           </section>
 
-          <PrideTimesAd slot="5608262547" format="fluid" layoutKey="-ef+6k-30-ac+ty" />
+          <PrideTimesAd slot={AD_SLOTS.extra4} format="fluid" layout="in-article" />
 
           {/* =================================================
               9. MORE BUSINESS NEWS FEED + MAGAZINE
@@ -1408,6 +1453,8 @@ export function BusinessNewsPage() {
                     </span>
                   </div>
                 )}
+
+                <PrideTimesAd slot={AD_SLOTS.extra5} />
               </div>
 
               <div className="min-w-0">
@@ -1535,7 +1582,7 @@ export function BusinessNewsPage() {
             </details>
           </section>
 
-          <PrideTimesAd slot="6810700989" />
+          <PrideTimesAd slot={AD_SLOTS.bottom} />
         </main>
       </div>
     </div>
