@@ -353,9 +353,33 @@ const earningsWatch = [
 const PROMO_VISIBLE = 3;
 const promoStories = allCards.slice(0, 6);
 
-/* Trending Now: four shown by default, the rest on "View all". */
-const TRENDING_DEFAULT = 4;
-const trendingAll = octCards.slice(3);
+/* Trending Now: eight shown by default, the rest on "View all".
+   Starts with the original picks (octCards.slice(3)), then adds more
+   business stories from the digest and M&A editions. Stories already used
+   in the top band are skipped, and no story or image repeats. */
+const TRENDING_DEFAULT = 8;
+const TRENDING_MAX = 16;
+
+const trendingTopBandIds = new Set(
+  [octCards[0], octCards[1]].filter(Boolean).map((card) => card.id)
+);
+
+const trendingAll: NewsCard[] = (() => {
+  const seenIds = new Set<string>(trendingTopBandIds);
+  const seenImages = new Set<string>();
+  const out: NewsCard[] = [];
+
+  for (const card of [...octCards.slice(3), ...digestCards, ...maCards]) {
+    if (!card.id || seenIds.has(card.id)) continue;
+    if (card.image && seenImages.has(card.image)) continue;
+    seenIds.add(card.id);
+    if (card.image) seenImages.add(card.image);
+    out.push(card);
+    if (out.length === TRENDING_MAX) break;
+  }
+
+  return out;
+})();
 
 /* Filter tabs: department order from the digest first, then any
    other tab that appears in the data. */
