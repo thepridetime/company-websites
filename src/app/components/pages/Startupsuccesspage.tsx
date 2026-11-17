@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import {
-  Clock,
-  ArrowRight,
-  TrendingUp,
-  TrendingDown,
-  MapPin,
-} from "lucide-react";
+import { Clock, ArrowRight, MapPin, ChevronRight } from "lucide-react";
 
 import { getQuotes } from "../../../services/marketApi";
 import { PrideTimesAd } from "./HomePage";
@@ -34,8 +28,10 @@ type MarketItem = {
 
 type MarketTab = "Indices" | "Crypto";
 
+type StoryLike = { id: string; title: string; url?: string };
+
 /* =========================================================
-   DATA (startup content, arranged like the homepage)
+   DATA (startup content, unchanged)
 ========================================================= */
 
 const storyHref = (story: { id: string; url?: string }) =>
@@ -74,25 +70,8 @@ const categoryGroups = categoryNames.map((name) => ({
 }));
 
 /* =========================================================
-   SMALL UI PIECES (same as homepage)
+   SMALL UI PIECES (same look as the homepage)
 ========================================================= */
-
-function ChangeChip({ change, up }: { change: string; up: boolean }) {
-  return (
-    <span
-      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
-        up ? "text-emerald-600" : "text-red-600"
-      }`}
-    >
-      {up ? (
-        <TrendingUp size={11} strokeWidth={2.25} />
-      ) : (
-        <TrendingDown size={11} strokeWidth={2.25} />
-      )}
-      {change}
-    </span>
-  );
-}
 
 function SectionHeader({
   title,
@@ -103,17 +82,17 @@ function SectionHeader({
   link?: string;
   linkText?: string;
 }) {
+  const linkClass =
+    "flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline";
+
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
 
       {link && (
-        <Link
-          to={link}
-          className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
-        >
+        <Link to={link} className={linkClass}>
           {linkText}
           <ArrowRight size={10} />
         </Link>
@@ -124,7 +103,7 @@ function SectionHeader({
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
       {children}
     </span>
   );
@@ -132,10 +111,35 @@ function Kicker({ children }: { children: React.ReactNode }) {
 
 function TimeStamp({ children }: { children: React.ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
+  );
+}
+
+/* Related box used under the feature story (homepage style) */
+
+function RelatedBox({ items }: { items: StoryLike[] }) {
+  return (
+    <div className="mt-4 border border-gray-200">
+      <div className="border-b border-gray-200 px-3 py-1.5 text-[11px] text-gray-500">
+        Related
+      </div>
+
+      <ul className="divide-y divide-gray-200">
+        {items.map((item) => (
+          <li key={item.id}>
+            <Link
+              to={storyHref(item)}
+              className="block px-3 py-2.5 text-[14px] font-bold leading-[1.3] text-gray-950 hover:underline"
+            >
+              {item.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -219,207 +223,192 @@ export function StartupSuccessPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
-              1. TOP SECTION
+              1. TOP BAND — 3 columns
+                 LEFT   : lead story + Related
+                 CENTRE : two major stories
+                 RIGHT  : Startup Metrics + Editor's Pick
           ================================================= */}
 
-          <section className="mb-10 border-b border-gray-300 pb-8">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-              {/* LEFT: top headlines (text only) */}
+          <section className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
+            {/* ---------- LEFT: lead story ---------- */}
 
-              <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
-                <div className="mb-1 border-t-[3px] border-black pt-2">
-                  <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                    Top Stories
-                  </h2>
+            <div className="flex flex-col border-b border-gray-200 p-6 lg:col-span-4 lg:border-b-0 lg:border-r">
+              <Link to={storyHref(leadStory)} className="group block">
+                <div className="overflow-hidden rounded-md bg-gray-100">
+                  <ImageWithFallback
+                    src={leadStory.image}
+                    alt={leadStory.title}
+                    className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  />
                 </div>
 
-                <ul className="divide-y divide-gray-200">
-                  {sideHeadlines.map((story) => (
-                    <li key={story.id}>
-                      <Link to={storyHref(story)} className="group block py-3.5">
-                        <Kicker>{story.category}</Kicker>
+                <div className="mt-5">
+                  <Kicker>{leadStory.category}</Kicker>
+                </div>
 
-                        <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                          {story.title}
-                        </h3>
+                <h1 className="mt-2 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
+                  {leadStory.title}
+                </h1>
 
-                        <div className="mt-1.5">
-                          <TimeStamp>{story.publishedAt}</TimeStamp>
-                        </div>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </aside>
+                <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                  {leadStory.summary}
+                </p>
 
-              {/* CENTER: lead story */}
+                <div className="mt-2">
+                  <TimeStamp>
+                    {leadStory.publishedAt} · {leadStory.readTime}
+                  </TimeStamp>
+                </div>
+              </Link>
 
-              <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
-                <Link to={storyHref(leadStory)} className="group block">
-                  <div className="relative overflow-hidden rounded-sm bg-black">
+              <div className="mt-auto">
+                <RelatedBox items={sideHeadlines} />
+              </div>
+            </div>
+
+            {/* ---------- CENTRE: major stories ---------- */}
+
+            <div className="flex flex-col gap-8 border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
+              {majorStories.map((story) => (
+                <Link key={story.id} to={storyHref(story)} className="group block">
+                  <div className="overflow-hidden rounded-md bg-gray-100">
                     <ImageWithFallback
-                      src={leadStory.image}
-                      alt={leadStory.title}
-                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      src={story.image}
+                      alt={story.title}
+                      className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                     />
                   </div>
 
                   <div className="mt-4">
-                    <Kicker>{leadStory.category}</Kicker>
+                    <Kicker>{story.category}</Kicker>
 
-                    <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
-                      {leadStory.title}
-                    </h1>
+                    <h3 className="mt-1.5 line-clamp-2 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                      {story.title}
+                    </h3>
 
-                    <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
-                      {leadStory.summary}
+                    <p className="mt-2 line-clamp-2 text-[14px] leading-[1.5] text-gray-500">
+                      {story.summary}
                     </p>
 
-                    <div className="mt-3">
-                      <TimeStamp>
-                        {leadStory.publishedAt} · {leadStory.readTime}
-                      </TimeStamp>
+                    <div className="mt-2">
+                      <TimeStamp>{story.publishedAt}</TimeStamp>
                     </div>
                   </div>
                 </Link>
+              ))}
+            </div>
 
-                <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
-                  {majorStories.map((story) => (
-                    <Link key={story.id} to={storyHref(story)} className="group block">
-                      <div className="overflow-hidden rounded-sm">
-                        <ImageWithFallback
-                          src={story.image}
-                          alt={story.title}
-                          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        />
-                      </div>
+            {/* ---------- RIGHT: startup metrics + editor's pick ---------- */}
 
-                      <div className="mt-2.5">
-                        <Kicker>{story.category}</Kicker>
+            <aside className="flex flex-col p-6 md:col-span-2 lg:col-span-4">
+              <div className="rounded-md bg-black p-5 text-white">
+                <div className="flex items-center justify-between border-b border-white/20 pb-2">
+                  <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em]">
+                    Startup Metrics
+                  </h2>
+                </div>
 
-                        <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
-                          {story.title}
-                        </h3>
+                <div className="divide-y divide-white/10">
+                  {defaultStartupMetrics.slice(0, 4).map((metric) => {
+                    const negative = metric.change.trim().startsWith("↓");
 
-                        <div className="mt-1.5">
-                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                    return (
+                      <div
+                        key={metric.id}
+                        className="flex items-center justify-between gap-3 py-3"
+                      >
+                        <div className="min-w-0">
+                          <span className="block text-[12px] font-semibold tabular-nums text-gray-100">
+                            {metric.value}
+                          </span>
+                          <span className="block text-[11px] leading-snug text-gray-400">
+                            {metric.label}
+                          </span>
                         </div>
+
+                        <span
+                          className={`shrink-0 text-[12px] font-semibold tabular-nums ${
+                            negative ? "text-red-400" : "text-emerald-400"
+                          }`}
+                        >
+                          {metric.change}
+                        </span>
                       </div>
-                    </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* RIGHT: startup metrics + editor's pick */}
+              {/* Editor's pick */}
 
-              <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
-                <div className="rounded-sm bg-black p-4 text-white">
-                  <div className="flex items-center justify-between border-b border-white/20 pb-2">
-                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                      Startup Metrics
-                    </h2>
-                  </div>
+              <div className="mt-8 border-t border-gray-200 pt-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-[15px] font-extrabold text-gray-950">
+                    Editor's Pick
+                  </h2>
 
-                  <div className="divide-y divide-white/10">
-                    {defaultStartupMetrics.slice(0, 4).map((metric) => {
-                      const negative = metric.change.trim().startsWith("↓");
-
-                      return (
-                        <div
-                          key={metric.id}
-                          className="flex items-center justify-between gap-3 py-2.5"
-                        >
-                          <div className="min-w-0">
-                            <span className="block text-[12px] font-semibold tabular-nums text-gray-100">
-                              {metric.value}
-                            </span>
-                            <span className="block text-[10px] leading-snug text-gray-400">
-                              {metric.label}
-                            </span>
-                          </div>
-
-                          <span
-                            className={`shrink-0 text-[11px] font-semibold tabular-nums ${
-                              negative ? "text-red-400" : "text-emerald-400"
-                            }`}
-                          >
-                            {metric.change}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Editor's pick */}
-
-                <div className="mt-6">
-                  <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-                    <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                      Editor's Pick
-                    </h2>
-
-                    <Link
-                      to="/technology"
-                      className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
-                    >
-                      Explore more
-                    </Link>
-                  </div>
-
-                  <Link to={storyHref(editorsPick)} className="group block">
-                    <div className="overflow-hidden rounded-sm">
-                      <ImageWithFallback
-                        src={editorsPick.image}
-                        alt={editorsPick.title}
-                        className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                    </div>
-
-                    <div className="mt-2.5">
-                      <Kicker>{editorsPick.category}</Kicker>
-
-                      <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                        {editorsPick.title}
-                      </h3>
-
-                      <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
-                        {editorsPick.summary}
-                      </p>
-                    </div>
+                  <Link
+                    to="/technology"
+                    className="border border-gray-300 px-3 py-1 text-[11px] font-semibold text-gray-700 hover:border-black hover:text-black"
+                  >
+                    Explore more
                   </Link>
                 </div>
-              </aside>
-            </div>
+
+                <Link to={storyHref(editorsPick)} className="group block">
+                  <div className="overflow-hidden rounded-md bg-gray-100">
+                    <ImageWithFallback
+                      src={editorsPick.image}
+                      alt={editorsPick.title}
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  </div>
+
+                  <div className="mt-3">
+                    <Kicker>{editorsPick.category}</Kicker>
+
+                    <h3 className="mt-1.5 line-clamp-3 text-[20px] font-bold leading-[1.22] text-gray-950 group-hover:underline">
+                      {editorsPick.title}
+                    </h3>
+
+                    <p className="mt-2 line-clamp-3 text-[13px] leading-[1.5] text-gray-500">
+                      {editorsPick.summary}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            </aside>
           </section>
 
-          <PrideTimesAd />
+          <div className="mt-10">
+            <PrideTimesAd />
+          </div>
 
           {/* =================================================
-              2. LATEST NEWS
+              2. LATEST NEWS — numbered list (homepage style)
           ================================================= */}
 
-          <section aria-label="Latest startup news" className="mb-12">
+          <section aria-label="Latest startup news" className="mb-16">
             <SectionHeader title="Latest Startup News" link="/technology" />
 
-            <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
+            <ol className="grid grid-cols-1 gap-x-10 md:grid-cols-2 lg:grid-cols-3">
               {defaultLatestStartupNews
                 .concat(defaultTopStartupStories)
                 .slice(0, 6)
                 .map((story, index) => (
                   <li key={story.id} className="border-b border-gray-200">
-                    <Link to={storyHref(story)} className="group flex gap-3 py-3.5">
-                      <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                    <Link to={storyHref(story)} className="group flex h-full gap-4 py-5">
+                      <span className="w-6 shrink-0 text-[22px] font-extrabold leading-none tabular-nums text-gray-300">
                         {index + 1}
                       </span>
 
                       <div className="min-w-0">
                         <Kicker>{story.category}</Kicker>
 
-                        <span className="mt-1 block font-serif text-[16px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                        <span className="mt-1 line-clamp-2 block text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
                           {story.title}
                         </span>
                       </div>
@@ -428,7 +417,7 @@ export function StartupSuccessPage() {
                 ))}
             </ol>
 
-            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+            <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1.9fr_0.7fr]">
               {/* Feed */}
 
               <div ref={newsListRef} className="scroll-mt-24 min-w-0">
@@ -440,7 +429,7 @@ export function StartupSuccessPage() {
                       key={tab}
                       type="button"
                       onClick={() => selectTab(tab)}
-                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                      className={`whitespace-nowrap text-[11px] font-bold uppercase tracking-wide transition-colors ${
                         activeNewsTab === tab
                           ? "border-b-2 border-black pb-1 text-black"
                           : "pb-1 text-gray-400 hover:text-gray-800"
@@ -462,9 +451,9 @@ export function StartupSuccessPage() {
                     <Link
                       key={story.id}
                       to={storyHref(story)}
-                      className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                      className="group grid grid-cols-[110px_1fr] items-start gap-4 py-7 sm:grid-cols-[200px_1fr] sm:gap-6"
                     >
-                      <div className="h-[80px] w-full overflow-hidden rounded-sm sm:h-[126px]">
+                      <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[126px]">
                         <ImageWithFallback
                           src={story.image}
                           alt={story.title}
@@ -474,14 +463,14 @@ export function StartupSuccessPage() {
 
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-x-2">
-                          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
                             {story.category}
                           </span>
 
                           {story.location && (
                             <>
                               <span className="text-[10px] text-gray-300">•</span>
-                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
                                 <MapPin size={9} />
                                 {story.location}
                               </span>
@@ -489,7 +478,7 @@ export function StartupSuccessPage() {
                           )}
                         </div>
 
-                        <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                        <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
                           {story.title}
                         </h3>
 
@@ -516,7 +505,7 @@ export function StartupSuccessPage() {
                           Math.min(count + PAGE_SIZE, filteredStories.length)
                         )
                       }
-                      className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                      className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white"
                     >
                       Show more stories
                     </button>
@@ -531,10 +520,10 @@ export function StartupSuccessPage() {
               {/* Funding watch (sticky sidebar) */}
 
               <div className="min-w-0">
-                <div className="lg:sticky lg:top-24">
+                <div className="lg:sticky lg:top-24 lg:pt-1">
                   <SectionHeader title="Funding Watch" link="/markets" />
 
-                  <div className="rounded-sm bg-black p-5 text-white">
+                  <div className="rounded-md bg-black p-5 text-white">
                     <div className="divide-y divide-white/10">
                       {defaultFundedStartups.map((company) => {
                         const row = (
@@ -549,7 +538,7 @@ export function StartupSuccessPage() {
                             </div>
 
                             <div className="shrink-0 text-right">
-                              <span className="block font-serif text-[17px] font-bold tabular-nums">
+                              <span className="block text-[18px] font-extrabold tabular-nums">
                                 {company.amount}
                               </span>
                               <span className="block text-[10px] uppercase tracking-wide text-gray-500">
@@ -574,7 +563,7 @@ export function StartupSuccessPage() {
                     </div>
                   </div>
 
-                  <div className="mt-8 lg:sticky lg:top-24">
+                  <div className="mt-8">
                     <PrideTimesAd />
                   </div>
                 </div>
@@ -583,48 +572,55 @@ export function StartupSuccessPage() {
           </section>
 
           {/* =================================================
-              3. DEEP DIVE + CATEGORY BRIEFINGS
+              3. DEEP DIVE — image left, story right (homepage interview style)
           ================================================= */}
 
-          <section aria-label="Startup deep dive" className="mb-12">
+          <section className="mb-16">
             <SectionHeader title="Deep Dive" link="/technology" />
 
-            <Link
-              to={storyHref(deepDiveStory)}
-              className="group relative block min-h-[220px] overflow-hidden rounded-sm bg-black"
+            <section
+              aria-label="Startup deep dive"
+              className="grid grid-cols-1 items-stretch gap-0 border-x border-b border-gray-200 lg:grid-cols-12"
             >
-              <ImageWithFallback
-                src={deepDiveStory.image}
-                alt={deepDiveStory.title}
-                className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-[1.03]"
-              />
+              <Link
+                to={storyHref(deepDiveStory)}
+                className="group block overflow-hidden bg-gray-100 lg:col-span-6"
+              >
+                <ImageWithFallback
+                  src={deepDiveStory.image}
+                  alt={deepDiveStory.title}
+                  className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                />
+              </Link>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              <div className="flex flex-col justify-center p-6 lg:col-span-6 lg:p-12">
+                <Kicker>{deepDiveStory.category}</Kicker>
 
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-400">
-                  {deepDiveStory.category}
-                </span>
+                <Link to={storyHref(deepDiveStory)} className="group block">
+                  <h2 className="mt-2 line-clamp-3 text-[28px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[32px]">
+                    {deepDiveStory.title}
+                  </h2>
 
-                <h3 className="mt-2 max-w-3xl font-serif text-2xl font-bold leading-[1.15] text-white group-hover:underline sm:text-[30px]">
-                  {deepDiveStory.title}
-                </h3>
-
-                <p className="mt-2 max-w-3xl text-[13px] leading-[1.5] text-gray-300 line-clamp-2">
-                  {deepDiveStory.summary}
-                </p>
+                  <p className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-gray-600">
+                    {deepDiveStory.summary}
+                  </p>
+                </Link>
               </div>
-            </Link>
+            </section>
           </section>
 
-          <section className="mb-12">
+          {/* =================================================
+              4. STORIES BY CATEGORY — 16:10 image cards (homepage style)
+          ================================================= */}
+
+          <section className="mb-16">
             <SectionHeader title="Stories by Category" />
 
-            <div className="space-y-8">
+            <div className="space-y-12">
               {categoryGroups.map((group) => (
                 <div key={group.name}>
-                  <div className="mb-4 flex items-baseline justify-between border-b border-gray-300 pb-2">
-                    <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-950">
+                  <div className="mb-5 flex items-baseline justify-between border-b border-gray-300 pb-2">
+                    <h3 className="text-[12px] font-extrabold uppercase tracking-[0.1em] text-gray-950">
                       {group.name}
                     </h3>
 
@@ -633,24 +629,32 @@ export function StartupSuccessPage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
                     {group.stories.map((story) => (
-                      <Link key={story.id} to={storyHref(story)} className="group block">
-                        <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
+                      <Link
+                        key={story.id}
+                        to={storyHref(story)}
+                        className="group flex h-full flex-col"
+                      >
+                        <div className="overflow-hidden rounded-md bg-gray-100">
                           <ImageWithFallback
                             src={story.image}
                             alt={story.title}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                           />
                         </div>
 
-                        <span className="mt-2.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400">
-                          {story.publishedAt}
-                        </span>
+                        <div className="mt-2.5 flex flex-1 flex-col">
+                          <Kicker>{story.category}</Kicker>
 
-                        <h4 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                          {story.title}
-                        </h4>
+                          <h4 className="mt-1 line-clamp-2 min-h-[2.56em] text-[16px] font-bold leading-[1.28] text-gray-950 group-hover:underline">
+                            {story.title}
+                          </h4>
+
+                          <div className="mt-auto pt-1.5">
+                            <TimeStamp>{story.publishedAt}</TimeStamp>
+                          </div>
+                        </div>
                       </Link>
                     ))}
                   </div>
@@ -660,8 +664,8 @@ export function StartupSuccessPage() {
 
             {/* Funding table (collapsed by default) */}
 
-            <details className="mt-6 rounded-sm border border-gray-300">
-              <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-900">
+            <details className="mt-8 border border-gray-300">
+              <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.12em] text-gray-900">
                 Full funding table
               </summary>
 
@@ -692,10 +696,10 @@ export function StartupSuccessPage() {
           </section>
 
           {/* =================================================
-              4. BROWSE BY CATEGORY + KEY FIGURES
+              5. BROWSE BY CATEGORY + KEY FIGURES
           ================================================= */}
 
-          <section className="mb-12">
+          <section className="mb-16">
             <SectionHeader title="Browse by Category" />
 
             <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-5">
@@ -703,18 +707,18 @@ export function StartupSuccessPage() {
                 const top = group.stories[0];
 
                 return (
-                  <div key={group.name} className="flex flex-col border-b border-gray-200 py-4">
+                  <div key={group.name} className="flex flex-col border-b border-gray-200 py-6">
                     <button
                       type="button"
                       onClick={() => openCategoryFeed(group.name)}
-                      className="w-fit text-left text-[12px] font-bold uppercase tracking-[0.12em] text-gray-950 hover:underline"
+                      className="w-fit text-left text-[12px] font-extrabold uppercase tracking-[0.08em] text-gray-950 hover:underline"
                     >
                       {group.name}
                     </button>
 
                     {top && (
                       <Link to={storyHref(top)} className="group mt-2 block">
-                        <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
+                        <span className="block min-h-[5.2em] text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
                           {top.title}
                         </span>
                       </Link>
@@ -723,9 +727,10 @@ export function StartupSuccessPage() {
                     <button
                       type="button"
                       onClick={() => openCategoryFeed(group.name)}
-                      className="mt-3 w-fit text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
+                      className="mt-auto flex w-fit items-center gap-1 pt-3 text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
                     >
                       {storyCount(group.stories.length)}
+                      <ChevronRight size={10} />
                     </button>
                   </div>
                 );
@@ -740,9 +745,9 @@ export function StartupSuccessPage() {
               {defaultStartupMetrics.map((metric, index) => (
                 <div
                   key={metric.id}
-                  className="flex items-start gap-4 border-b border-gray-200 py-3.5"
+                  className="flex items-start gap-4 border-b border-gray-200 py-4"
                 >
-                  <span className="w-8 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                  <span className="w-8 shrink-0 text-[22px] font-extrabold leading-none tabular-nums text-gray-300">
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
