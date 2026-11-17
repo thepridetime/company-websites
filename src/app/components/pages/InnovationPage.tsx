@@ -35,7 +35,7 @@ type MarketItem = {
 type MarketTab = "Indices" | "Crypto";
 
 /* =========================================================
-   DATA
+   DATA (unchanged)
 ========================================================= */
 
 const storyHref = (story: { id: string; url?: string }) =>
@@ -77,13 +77,18 @@ const marketTableRows = (
 
 /* =========================================================
    SMALL UI PIECES
+   - Bloomberg style: sans-serif headlines, grey kickers,
+     square corners, thin grey (gray-300) lines.
+   - Hover = underline (not colour change).
+   - Black top rule on every section header.
 ========================================================= */
 
 function ChangeChip({ change, up }: { change: string; up: boolean }) {
   return (
     <span
-      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${up ? "text-emerald-600" : "text-red-600"
-        }`}
+      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
+        up ? "text-emerald-600" : "text-red-600"
+      }`}
     >
       {up ? (
         <TrendingUp size={11} strokeWidth={2.25} />
@@ -95,6 +100,36 @@ function ChangeChip({ change, up }: { change: string; up: boolean }) {
   );
 }
 
+// OLD (commented):
+// function SectionHeader({
+//   title,
+//   link,
+//   linkText = "View All",
+// }: {
+//   title: string;
+//   link?: string;
+//   linkText?: string;
+// }) {
+//   return (
+//     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+//       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+//         {title}
+//       </h2>
+//
+//       {link && (
+//         <Link
+//           to={link}
+//           className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+//         >
+//           {linkText}
+//           <ArrowRight size={10} />
+//         </Link>
+//       )}
+//     </div>
+//   );
+// }
+
+// NEW:
 function SectionHeader({
   title,
   link,
@@ -106,14 +141,14 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
 
       {link && (
         <Link
           to={link}
-          className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
+          className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500 hover:text-gray-950 hover:underline"
         >
           {linkText}
           <ArrowRight size={10} />
@@ -123,17 +158,38 @@ function SectionHeader({
   );
 }
 
+// OLD (commented):
+// function Kicker({ children }: { children: React.ReactNode }) {
+//   return (
+//     <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+//       {children}
+//     </span>
+//   );
+// }
+
+// NEW (grey kicker):
 function Kicker({ children }: { children: React.ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
       {children}
     </span>
   );
 }
 
+// OLD (commented):
+// function TimeStamp({ children }: { children: React.ReactNode }) {
+//   return (
+//     <span className="flex items-center gap-1 text-[10px] text-gray-400">
+//       <Clock size={9} />
+//       {children}
+//     </span>
+//   );
+// }
+
+// NEW:
 function TimeStamp({ children }: { children: React.ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
@@ -187,11 +243,11 @@ export function InnovationPage() {
     liveRows.length > 0
       ? liveRows
       : defaultMarketSnapshot[activeMarketTab].map((item) => ({
-        symbol: item.symbol,
-        value: item.value,
-        change: item.change,
-        up: item.up,
-      }));
+          symbol: item.symbol,
+          value: item.value,
+          change: item.change,
+          up: item.up,
+        }));
 
   /* ---------- Latest news filtering ---------- */
 
@@ -229,16 +285,21 @@ export function InnovationPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* OLD (commented): <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"> */}
+      {/* NEW: */}
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
-              1. TOP SECTION
+              1. TOP SECTION — 3 columns
+                 LEFT   : image + news cards
+                 CENTER : lead story + 2 secondary stories
+                 RIGHT  : Markets panel + Editor's Pick
           ================================================= */}
 
+          {/* OLD (commented): serif, rounded, gray-200 lines, red kickers, dark Markets panel
           <section className="mb-10 border-b border-gray-300 pb-8">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-              {/* LEFT: top headlines (text only) */}
-
+              LEFT: top headlines (text only)
               <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
                 <div className="mb-1 border-t-[3px] border-black pt-2">
                   <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
@@ -265,8 +326,7 @@ export function InnovationPage() {
                 </ul>
               </aside>
 
-              {/* CENTER: lead story */}
-
+              CENTER: lead story
               <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
                 <Link to={storyHref(leadStory)} className="group block">
                   <div className="relative overflow-hidden rounded-sm bg-black">
@@ -287,12 +347,6 @@ export function InnovationPage() {
                     <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
                       {leadStory.summary}
                     </p>
-
-                    <div className="mt-3">
-                      <TimeStamp>
-                        {leadStory.publishedAt} · {leadStory.readTime || "4 min read"}
-                      </TimeStamp>
-                    </div>
                   </div>
                 </Link>
 
@@ -323,8 +377,7 @@ export function InnovationPage() {
                 </div>
               </div>
 
-              {/* RIGHT: markets + editor's pick */}
-
+              RIGHT: markets + editor's pick
               <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
                 <div className="rounded-sm bg-black p-4 text-white">
                   <div className="flex items-center justify-between border-b border-white/20 pb-2">
@@ -338,10 +391,11 @@ export function InnovationPage() {
                           key={tab}
                           type="button"
                           onClick={() => setActiveMarketTab(tab)}
-                          className={`text-[10px] font-semibold uppercase tracking-wide ${activeMarketTab === tab
+                          className={`text-[10px] font-semibold uppercase tracking-wide ${
+                            activeMarketTab === tab
                               ? "text-white underline underline-offset-4"
                               : "text-gray-500 hover:text-gray-200"
-                            }`}
+                          }`}
                         >
                           {tab}
                         </button>
@@ -386,7 +440,7 @@ export function InnovationPage() {
                     </h2>
 
                     <Link
-                      to="/innovation"
+                      to="/technology"
                       className="text-[10px] font-semibold uppercase tracking-wide text-red-600 hover:underline"
                     >
                       Explore more
@@ -409,9 +463,195 @@ export function InnovationPage() {
                         {editorsPick.title}
                       </h3>
 
-                      <div className="mt-1.5">
-                        <TimeStamp>{editorsPick.publishedAt}</TimeStamp>
+                      {editorsPick.summary && (
+                        <p className="mt-1.5 text-[12px] leading-[1.5] text-gray-500 line-clamp-2">
+                          {editorsPick.summary}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                </div>
+              </aside>
+            </div>
+          </section>
+          */}
+
+          {/* NEW: 3-column band inside one thin grey border, Bloomberg style */}
+          <section className="mb-10">
+            <div className="grid grid-cols-1 gap-0 border border-gray-300 lg:grid-cols-12">
+              {/* LEFT: image + news cards, no "Top Stories" heading */}
+              <aside className="order-2 min-w-0 border-b border-gray-300 p-4 lg:order-1 lg:col-span-3 lg:border-b-0 lg:border-r">
+                <ul className="divide-y divide-gray-300">
+                  {sideHeadlines.map((story) => (
+                    <li key={story.id} className="py-4 first:pt-0 last:pb-0">
+                      <Link to={storyHref(story)} className="group block">
+                        <div className="overflow-hidden bg-gray-100">
+                          <ImageWithFallback
+                            src={story.image}
+                            alt={story.title}
+                            className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                          />
+                        </div>
+
+                        <div className="mt-2.5">
+                          <Kicker>{story.category}</Kicker>
+
+                          <h3 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
+                            {story.title}
+                          </h3>
+
+                          <div className="mt-1.5">
+                            <TimeStamp>{story.publishedAt}</TimeStamp>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+
+              {/* CENTER: lead story + 2 secondary stories */}
+              <div className="order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:col-span-6 lg:border-b-0 lg:border-r">
+                <Link to={storyHref(leadStory)} className="group block">
+                  <div className="relative overflow-hidden bg-black">
+                    <ImageWithFallback
+                      src={leadStory.image}
+                      alt={leadStory.title}
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
+                  </div>
+
+                  <div className="mt-3">
+                    <Kicker>{leadStory.category}</Kicker>
+
+                    <h1 className="mt-1.5 text-[26px] font-bold leading-[1.1] tracking-tight text-gray-950 group-hover:underline md:text-[34px]">
+                      {leadStory.title}
+                    </h1>
+
+                    <p className="mt-2 text-[14px] leading-snug text-gray-700">
+                      {leadStory.summary}
+                    </p>
+                  </div>
+                </Link>
+
+                <div className="mt-5 grid grid-cols-1 gap-5 border-t border-gray-300 pt-4 sm:grid-cols-2">
+                  {majorStories.map((story) => (
+                    <Link key={story.id} to={storyHref(story)} className="group block">
+                      <div className="overflow-hidden bg-gray-100">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        />
                       </div>
+
+                      <div className="mt-2.5">
+                        <Kicker>{story.category}</Kicker>
+
+                        <h3 className="mt-1 text-[18px] font-bold leading-[1.15] tracking-tight text-gray-950 group-hover:underline">
+                          {story.title}
+                        </h3>
+
+                        <div className="mt-1.5">
+                          <TimeStamp>{story.publishedAt}</TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* RIGHT: markets (light panel) + editor's pick */}
+              <aside className="order-3 min-w-0 p-4 lg:col-span-3">
+                <div className="border border-gray-300 p-4">
+                  <div className="flex items-center justify-between border-b border-gray-300 pb-2">
+                    <h2 className="text-[15px] font-bold tracking-tight text-gray-950">
+                      Markets
+                    </h2>
+
+                    <div className="flex gap-3">
+                      {(["Indices", "Crypto"] as const).map((tab) => (
+                        <button
+                          key={tab}
+                          type="button"
+                          onClick={() => setActiveMarketTab(tab)}
+                          className={`text-[10px] font-bold uppercase tracking-[0.1em] ${
+                            activeMarketTab === tab
+                              ? "text-gray-950 underline underline-offset-4"
+                              : "text-gray-400 hover:text-gray-800"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="divide-y divide-gray-300">
+                    {marketRows.slice(0, 6).map((market) => (
+                      <div
+                        key={market.symbol}
+                        className="flex items-center justify-between py-2.5"
+                      >
+                        <span className="text-[13px] font-bold text-gray-950">
+                          {market.symbol}
+                        </span>
+
+                        <div className="flex items-center gap-3">
+                          <span className="text-[13px] tabular-nums text-gray-600">
+                            {market.value}
+                          </span>
+
+                          <ChangeChip change={market.change} up={market.up} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Link
+                    to="/markets"
+                    className="mt-2 flex w-fit items-center gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-950 hover:underline"
+                  >
+                    View all markets
+                    <ArrowRight size={10} />
+                  </Link>
+                </div>
+
+                <div className="mt-5">
+                  <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
+                    <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
+                      Editor's Pick
+                    </h2>
+
+                    <Link
+                      to="/technology"
+                      className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500 hover:text-gray-950 hover:underline"
+                    >
+                      Explore more
+                    </Link>
+                  </div>
+
+                  <Link to={storyHref(editorsPick)} className="group block">
+                    <div className="overflow-hidden bg-gray-100">
+                      <ImageWithFallback
+                        src={editorsPick.image}
+                        alt={editorsPick.title}
+                        className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                      />
+                    </div>
+
+                    <div className="mt-2.5">
+                      <Kicker>{editorsPick.category}</Kicker>
+
+                      <h3 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
+                        {editorsPick.title}
+                      </h3>
+
+                      {editorsPick.summary && (
+                        <p className="mt-1.5 text-[12px] leading-snug text-gray-700 line-clamp-2">
+                          {editorsPick.summary}
+                        </p>
+                      )}
                     </div>
                   </Link>
                 </div>
@@ -426,13 +666,19 @@ export function InnovationPage() {
           ================================================= */}
 
           <section aria-label="Latest innovation news" className="mb-12">
-            <SectionHeader title="Latest Innovation News" link="/innovation" />
+            <SectionHeader title="Latest Innovation News" link="/technology" />
 
+            {/* OLD (commented): <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3"> */}
+            {/* NEW: (same grid, same content) */}
             <ol className="grid grid-cols-1 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
               {defaultLatestInnovationNews.map((story, index) => (
-                <li key={story.id} className="border-b border-gray-200">
+                /* OLD (commented): <li key={story.id} className="border-b border-gray-200"> */
+                /* NEW: */
+                <li key={story.id} className="border-b border-gray-300">
                   <Link to={storyHref(story)} className="group flex gap-3 py-3.5">
-                    <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                    {/* OLD (commented): <span className="w-6 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300"> */}
+                    {/* NEW: */}
+                    <span className="w-6 shrink-0 text-[22px] font-bold leading-none tracking-tight tabular-nums text-gray-300">
                       {index + 1}
                     </span>
 
@@ -442,7 +688,9 @@ export function InnovationPage() {
                         {story.location ? ` · ${story.location}` : ""}
                       </Kicker>
 
-                      <span className="mt-1 block font-serif text-[16px] font-bold leading-[1.3] text-gray-950 group-hover:underline">
+                      {/* OLD (commented): <span className="mt-1 block font-serif text-[16px] font-bold leading-[1.3] text-gray-950 group-hover:underline"> */}
+                      {/* NEW: */}
+                      <span className="mt-1 block text-[15px] font-bold leading-[1.25] tracking-tight text-gray-950 group-hover:underline">
                         {story.title}
                       </span>
                     </div>
@@ -457,23 +705,30 @@ export function InnovationPage() {
               <div ref={newsListRef} className="scroll-mt-24 min-w-0">
                 <SectionHeader title="More Innovation Stories" />
 
-                <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
+                {/* OLD (commented): <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3"> */}
+                {/* NEW: */}
+                <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-300 pb-3">
                   {newsTabs.map((tab) => (
                     <button
                       key={tab}
                       type="button"
                       onClick={() => selectTab(tab)}
-                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${activeNewsTab === tab
+                      /* OLD (commented): text-[11px] font-semibold uppercase tracking-wide */
+                      /* NEW: */
+                      className={`whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.1em] transition-colors ${
+                        activeNewsTab === tab
                           ? "border-b-2 border-black pb-1 text-black"
                           : "pb-1 text-gray-400 hover:text-gray-800"
-                        }`}
+                      }`}
                     >
                       {tab}
                     </button>
                   ))}
                 </div>
 
-                <div className="divide-y divide-gray-200">
+                {/* OLD (commented): <div className="divide-y divide-gray-200"> */}
+                {/* NEW: */}
+                <div className="divide-y divide-gray-300">
                   {latestStories.length === 0 && (
                     <p className="py-6 text-[12px] text-gray-400">
                       No stories in this category yet.
@@ -481,6 +736,7 @@ export function InnovationPage() {
                   )}
 
                   {latestStories.map((story) => (
+                    /* OLD (commented):
                     <Link
                       key={story.id}
                       to={storyHref(story)}
@@ -528,11 +784,64 @@ export function InnovationPage() {
                         </div>
                       </div>
                     </Link>
+                    */
+                    /* NEW: */
+                    <Link
+                      key={story.id}
+                      to={storyHref(story)}
+                      className="group grid grid-cols-[110px_1fr] items-start gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                    >
+                      <div className="h-[80px] w-full overflow-hidden bg-gray-100 sm:h-[126px]">
+                        <ImageWithFallback
+                          src={story.image}
+                          alt={story.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-2">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
+                            {story.category}
+                          </span>
+
+                          {story.location && (
+                            <>
+                              <span className="text-[10px] text-gray-300">•</span>
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400">
+                                <MapPin size={9} />
+                                {story.location}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline sm:text-[19px]">
+                          {story.title}
+                        </h3>
+
+                        {story.summary && (
+                          <p className="mt-1.5 hidden text-[13px] leading-snug text-gray-700 line-clamp-2 sm:block">
+                            {story.summary}
+                          </p>
+                        )}
+
+                        <div className="mt-1.5">
+                          <TimeStamp>
+                            {story.publishedAt} · {story.readTime}
+                          </TimeStamp>
+                        </div>
+                      </div>
+                    </Link>
                   ))}
                 </div>
 
                 {hasMore && (
-                  <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
+                  /* OLD (commented): <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5"> */
+                  /* NEW: */
+                  <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-300 pt-5">
+                    {/* OLD (commented): className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white" */}
+                    {/* NEW: */}
                     <button
                       type="button"
                       onClick={() =>
@@ -540,12 +849,14 @@ export function InnovationPage() {
                           Math.min(count + PAGE_SIZE, filteredStories.length)
                         )
                       }
-                      className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                      className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-black transition-colors hover:bg-black hover:text-white"
                     >
                       Show more stories
                     </button>
 
-                    <span className="text-[10px] text-gray-400">
+                    {/* OLD (commented): <span className="text-[10px] text-gray-400"> */}
+                    {/* NEW: */}
+                    <span className="text-[11px] text-gray-400">
                       Showing {latestStories.length} of {filteredStories.length}
                     </span>
                   </div>
@@ -558,6 +869,7 @@ export function InnovationPage() {
                 <div className="lg:sticky lg:top-24">
                   <SectionHeader title="Numbers at a Glance" />
 
+                  {/* OLD (commented): dark panel
                   <div className="rounded-sm bg-black p-5 text-white">
                     <div className="divide-y divide-white/10">
                       {defaultInnovationMetrics.map((metric) => (
@@ -576,14 +888,52 @@ export function InnovationPage() {
 
                           <div className="shrink-0 text-right">
                             <span
-                              className={`block text-[12px] font-semibold tabular-nums ${metric.change.trim().startsWith("-")
+                              className={`block text-[12px] font-semibold tabular-nums ${
+                                metric.change.trim().startsWith("-")
                                   ? "text-red-400"
                                   : "text-emerald-400"
-                                }`}
+                              }`}
                             >
                               {metric.change}
                             </span>
                             <span className="block text-[10px] text-gray-500">
+                              {metric.changePeriod}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  */}
+
+                  {/* NEW: light bordered panel, square corners */}
+                  <div className="border border-gray-300 p-4">
+                    <div className="divide-y divide-gray-300">
+                      {defaultInnovationMetrics.map((metric) => (
+                        <div
+                          key={metric.id}
+                          className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                        >
+                          <div className="min-w-0">
+                            <span className="block text-[20px] font-bold leading-tight tracking-tight tabular-nums text-gray-950">
+                              {metric.value}
+                            </span>
+                            <span className="block text-[12px] leading-snug text-gray-500">
+                              {metric.label}
+                            </span>
+                          </div>
+
+                          <div className="shrink-0 text-right">
+                            <span
+                              className={`block text-[12px] font-semibold tabular-nums ${
+                                metric.change.trim().startsWith("-")
+                                  ? "text-red-600"
+                                  : "text-emerald-600"
+                              }`}
+                            >
+                              {metric.change}
+                            </span>
+                            <span className="block text-[11px] text-gray-400">
                               {metric.changePeriod}
                             </span>
                           </div>
@@ -605,11 +955,13 @@ export function InnovationPage() {
           ================================================= */}
 
           <section aria-label="Innovation deep dive" className="mb-12">
-            <SectionHeader title="Deep Dive" link="/innovation" />
+            <SectionHeader title="Deep Dive" link="/technology" />
 
             <Link
               to={storyHref(defaultTopInnovationStories[0])}
-              className="group relative block min-h-[220px] overflow-hidden rounded-sm bg-black"
+              /* OLD (commented): className="group relative block min-h-[220px] overflow-hidden rounded-sm bg-black" */
+              /* NEW: square corners */
+              className="group relative block min-h-[220px] overflow-hidden bg-black"
             >
               <ImageWithFallback
                 src={defaultTopInnovationStories[0].image}
@@ -620,19 +972,23 @@ export function InnovationPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
               <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-400">
+                {/* OLD (commented): <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-red-400"> */}
+                {/* NEW: grey kicker */}
+                <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-300">
                   {defaultTopInnovationStories[0].category}
                   {defaultTopInnovationStories[0].location
                     ? ` · ${defaultTopInnovationStories[0].location}`
                     : ""}
                 </span>
 
-                <h3 className="mt-2 max-w-3xl font-serif text-2xl font-bold leading-[1.15] text-white group-hover:underline sm:text-[30px]">
+                {/* OLD (commented): <h3 className="mt-2 max-w-3xl font-serif text-2xl font-bold leading-[1.15] text-white group-hover:underline sm:text-[30px]"> */}
+                {/* NEW: */}
+                <h3 className="mt-2 max-w-3xl text-2xl font-bold leading-[1.1] tracking-tight text-white group-hover:underline sm:text-[30px]">
                   {defaultTopInnovationStories[0].title}
                 </h3>
 
                 {defaultTopInnovationStories[0].summary && (
-                  <p className="mt-2 max-w-3xl text-[13px] leading-[1.5] text-gray-300 line-clamp-2">
+                  <p className="mt-2 max-w-3xl text-[13px] leading-snug text-gray-300 line-clamp-2">
                     {defaultTopInnovationStories[0].summary}
                   </p>
                 )}
@@ -646,12 +1002,15 @@ export function InnovationPage() {
             <div className="space-y-8">
               {categoryGroups.map((group) => (
                 <div key={group.name}>
+                  {/* OLD (commented): <div className="mb-4 flex items-baseline justify-between border-b border-gray-300 pb-2"> (unchanged) */}
                   <div className="mb-4 flex items-baseline justify-between border-b border-gray-300 pb-2">
-                    <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-950">
+                    {/* OLD (commented): <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-gray-950"> */}
+                    {/* NEW: */}
+                    <h3 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
                       {group.name}
                     </h3>
 
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400">
                       {storyCount(group.stories.length)}
                     </span>
                   </div>
@@ -659,7 +1018,9 @@ export function InnovationPage() {
                   <div className="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
                     {group.stories.map((story) => (
                       <Link key={story.id} to={storyHref(story)} className="group block">
-                        <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100">
+                        {/* OLD (commented): <div className="aspect-[16/10] w-full overflow-hidden rounded-sm bg-gray-100"> */}
+                        {/* NEW: */}
+                        <div className="aspect-[16/10] w-full overflow-hidden bg-gray-100">
                           <ImageWithFallback
                             src={story.image}
                             alt={story.title}
@@ -667,11 +1028,15 @@ export function InnovationPage() {
                           />
                         </div>
 
-                        <span className="mt-2.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400">
+                        {/* OLD (commented): <span className="mt-2.5 block text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400"> */}
+                        {/* NEW: */}
+                        <span className="mt-2.5 block text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500">
                           {story.publishedAt}
                         </span>
 
-                        <h4 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                        {/* OLD (commented): <h4 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline"> */}
+                        {/* NEW: */}
+                        <h4 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
                           {story.title}
                         </h4>
                       </Link>
@@ -683,12 +1048,16 @@ export function InnovationPage() {
 
             {/* Market data table (collapsed by default) */}
 
-            <details className="mt-6 rounded-sm border border-gray-300">
-              <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-900">
+            {/* OLD (commented): <details className="mt-6 rounded-sm border border-gray-300"> */}
+            {/* NEW: */}
+            <details className="mt-6 border border-gray-300">
+              <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-gray-900">
                 Full market snapshot
               </summary>
 
-              <div className="overflow-x-auto border-t border-gray-200">
+              {/* OLD (commented): <div className="overflow-x-auto border-t border-gray-200"> */}
+              {/* NEW: */}
+              <div className="overflow-x-auto border-t border-gray-300">
                 <table className="w-full min-w-[480px] text-left text-[12px]">
                   <thead className="bg-gray-50 text-[10px] uppercase tracking-wide text-gray-500">
                     <tr>
@@ -699,15 +1068,18 @@ export function InnovationPage() {
                     </tr>
                   </thead>
 
-                  <tbody className="divide-y divide-gray-100">
+                  {/* OLD (commented): <tbody className="divide-y divide-gray-100"> */}
+                  {/* NEW: */}
+                  <tbody className="divide-y divide-gray-300">
                     {marketTableRows.map((row) => (
                       <tr key={`${row.tab}-${row.symbol}`}>
                         <td className="px-4 py-2 text-gray-500">{row.tab}</td>
                         <td className="px-4 py-2 font-medium text-gray-900">{row.symbol}</td>
                         <td className="px-4 py-2 tabular-nums text-gray-700">{row.value}</td>
                         <td
-                          className={`px-4 py-2 font-semibold tabular-nums ${row.up ? "text-emerald-600" : "text-red-600"
-                            }`}
+                          className={`px-4 py-2 font-semibold tabular-nums ${
+                            row.up ? "text-emerald-600" : "text-red-600"
+                          }`}
                         >
                           {row.change}
                         </td>
@@ -731,27 +1103,35 @@ export function InnovationPage() {
                 const top = group.stories[0];
 
                 return (
-                  <div key={group.name} className="flex flex-col border-b border-gray-200 py-4">
+                  /* OLD (commented): <div key={group.name} className="flex flex-col border-b border-gray-200 py-4"> */
+                  /* NEW: */
+                  <div key={group.name} className="flex flex-col border-b border-gray-300 py-4">
+                    {/* OLD (commented): className="w-fit text-left text-[12px] font-bold uppercase tracking-[0.12em] text-gray-950 hover:underline" */}
+                    {/* NEW: */}
                     <button
                       type="button"
                       onClick={() => openCategoryFeed(group.name)}
-                      className="w-fit text-left text-[12px] font-bold uppercase tracking-[0.12em] text-gray-950 hover:underline"
+                      className="w-fit text-left text-[12px] font-extrabold uppercase tracking-[0.04em] text-gray-950 hover:underline"
                     >
                       {group.name}
                     </button>
 
                     {top && (
                       <Link to={storyHref(top)} className="group mt-2 block">
-                        <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4">
+                        {/* OLD (commented): <span className="block font-serif text-[15px] font-bold leading-[1.3] text-gray-950 group-hover:underline line-clamp-4"> */}
+                        {/* NEW: */}
+                        <span className="block text-[15px] font-bold leading-[1.25] tracking-tight text-gray-950 group-hover:underline line-clamp-4">
                           {top.title}
                         </span>
                       </Link>
                     )}
 
+                    {/* OLD (commented): className="mt-3 w-fit text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline" */}
+                    {/* NEW: */}
                     <button
                       type="button"
                       onClick={() => openCategoryFeed(group.name)}
-                      className="mt-3 w-fit text-[10px] font-bold uppercase tracking-wide text-red-600 hover:underline"
+                      className="mt-3 w-fit text-[10px] font-bold uppercase tracking-[0.1em] text-gray-500 hover:text-gray-950 hover:underline"
                     >
                       {storyCount(group.stories.length)}
                     </button>
@@ -766,11 +1146,15 @@ export function InnovationPage() {
 
             <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
               {defaultInnovationMetrics.map((metric, index) => (
+                /* OLD (commented): <div key={metric.id} className="flex items-start gap-4 border-b border-gray-200 py-3.5"> */
+                /* NEW: */
                 <div
                   key={metric.id}
-                  className="flex items-start gap-4 border-b border-gray-200 py-3.5"
+                  className="flex items-start gap-4 border-b border-gray-300 py-3.5"
                 >
-                  <span className="w-8 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300">
+                  {/* OLD (commented): <span className="w-8 shrink-0 font-serif text-[22px] font-bold leading-none tabular-nums text-gray-300"> */}
+                  {/* NEW: */}
+                  <span className="w-8 shrink-0 text-[22px] font-bold leading-none tracking-tight tabular-nums text-gray-300">
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
@@ -783,7 +1167,9 @@ export function InnovationPage() {
                       </span>
                     </p>
 
-                    <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-2">
+                    {/* OLD (commented): <p className="mt-1 text-[11px] leading-[1.5] text-gray-500 line-clamp-2"> */}
+                    {/* NEW: */}
+                    <p className="mt-1 text-[12px] leading-snug text-gray-500 line-clamp-2">
                       {metric.label}
                     </p>
                   </div>

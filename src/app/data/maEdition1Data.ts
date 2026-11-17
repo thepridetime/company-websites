@@ -121,7 +121,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "SpaceX announced on 2 February that it had acquired Elon Musk's AI company xAI. Neither company disclosed a price or structure.",
     location: "United States",
     readTime: "1 min read",
-    image: img_Smartc3,
+    image: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     body: [
       "SpaceX announced on 2 February that it had acquired Elon Musk's AI company xAI. Neither company disclosed a price or structure. The figures widely quoted, about $250 billion for xAI and about $1.25 trillion for the combined entity, come from unnamed sources cited by CNBC and Reuters and should be treated as press-reported. SpaceX listed publicly on 12 June.",
       "Four days after the listing, SpaceX agreed to acquire AI coding platform Cursor (Anysphere) in an all-stock deal reported at about $60 billion, with completion guided for the third quarter of 2026. Cursor had previously been raising money at a valuation of roughly $50 billion. The $60 billion figure has been reported from a regulatory filing rather than a company release.",
@@ -274,7 +274,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "TIAA's investment arm is paying 590p per share in cash, plus permitted dividends of up to 22p, a 29% premium to Schroders' 456p close on 11 February.",
     location: "United Kingdom",
     readTime: "1 min read",
-    image: img_FIN5,
+    image: "https://images.unsplash.com/photo-1672870153618-b369bcc8c55d?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     body: [
       "TIAA's investment arm is paying 590p per share in cash, plus permitted dividends of up to 22p, a 29% premium to Schroders' 456p close on 11 February. The combined platform would manage around $2.5 trillion. Shareholder risk has largely gone: irrevocable commitments cover about 42% of the shares, including the Schroder family trustees, and the 16 April meetings passed with 99.92% support. Court sanction and FCA change-of-control approval remain.",
     ],
@@ -289,7 +289,7 @@ export const maEdition1Articles: EditionArticle[] = [
     lede: "Santander is paying $75.59 per Webster share, $48.75 in cash plus 2.0548 Santander ADSs, as part of its push into US commercial banking and a stated goal of an 18% US return on tangible equity by 2028.",
     location: "United States",
     readTime: "1 min read",
-    image: img_FIN3,
+    image: "https://images.unsplash.com/photo-1684679674829-fc7b436ec8e8?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     body: [
       "Santander is paying $75.59 per Webster share, $48.75 in cash plus 2.0548 Santander ADSs, as part of its push into US commercial banking and a stated goal of an 18% US return on tangible equity by 2028. The OCC approved on 12 June, the ECB on 21 July and the Federal Reserve on 4 August. The two companies quote slightly different values ($12.2 billion and $12.3 billion). Readers should confirm completion, as the tracker used here predates the expected closing date.",
     ],

@@ -78,7 +78,7 @@ export const defaultTopStartupStories: StartupStory[] = [
       "The discount stockbroker tops India's unicorn list in the Hurun Global Unicorn Index 2026 on the strength of its own profits. Here is how the model works and where the risks sit.",
     publishedAt: "October 5, 2026",
     readTime: "6 min read",
-    image: img_fintech_expansion,
+    image: "https://images.unsplash.com/photo-1681505504714-4ded1bc247e7?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     url: "/article/market-zerodha-unicorn",
   },
   {
@@ -183,7 +183,7 @@ export const defaultLatestStartupNews: StartupStory[] = [
       "The partnership connects autonomous vehicle manufacturing, fleet deployment and the capital requirements of scaling a large robotaxi network.",
     publishedAt: "September 29, 2026",
     readTime: "8 min read",
-    image: img_ai_startups_hero,
+    image: "https://images.unsplash.com/photo-1562618817-253b06cf2b6e?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     url: "/article/manufacturing-uber-rivian-50000-robotaxis",
   },
 ];

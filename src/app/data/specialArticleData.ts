@@ -17,16 +17,6 @@ import Smartc4Img from "../../imports/Smartc4.png";
 import SC1Img from "../../imports/SC1.png";
 import SC2Img from "../../imports/SC2.png";
 import SC3Img from "../../imports/SC3.png";
-import globalTradePortImg from "../../imports/global-trade-port.jpg";
-import tajMahalIndiaImg from "../../imports/taj-mahal-india.jpg";
-import euUsTradeFlagsImg from "../../imports/eu-us-trade-flags.jpg";
-import shippingCostsRouteImg from "../../imports/shipping-costs-route.jpg";
-import euParliamentFlagsImg from "../../imports/eu-parliament-flags.jpg";
-import europeIndustryCleanImg from "../../imports/europe-industry-clean.jpg";
-import ukYouthMobilityImg from "../../imports/uk-youth-mobility.jpg";
-import italyParliamentImg from "../../imports/italy-parliament.jpg";
-import aseanSupplyChainImg from "../../imports/asean-supply-chain.jpg";
-import hormuzImg from "../../imports/hormuz.jpg";
 import { energyArticles as energyNewsArticles } from "./energyNewsData";
 import {
   healthcarePharmaArticles,
@@ -234,9 +224,9 @@ const innovationHero = makeArticle({
 });
 
 const innovationStories = [
-  ["innovation-climate-ai", "AI Model Predicts Climate Change Tipping Points 10 Years in Advance", "Research", "AI models are being explored as tools for identifying complex climate patterns and earlier warning signals.", "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80"],
+  ["innovation-climate-ai", "AI Model Predicts Climate Change Tipping Points 10 Years in Advance", "Research", "AI models are being explored as tools for identifying complex climate patterns and earlier warning signals.", "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80"],
   ["innovation-quantum-protein", "Quantum Computing and the Next Frontier of Protein Modeling", "Quantum Computing", "Researchers continue to investigate whether quantum methods can accelerate difficult scientific optimization and molecular problems.", "https://images.unsplash.com/photo-1760629863094-5b1e8d1aae74?auto=format&fit=crop&w=900&q=80"],
-  ["innovation-blackwell", "NVIDIA Blackwell Ultra and the Push Toward Faster AI Training", "AI and Computing", "New accelerator architectures are targeting higher training throughput, efficiency and scale for increasingly large AI workloads.", "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80"],
+  ["innovation-blackwell", "NVIDIA Blackwell Ultra and the Push Toward Faster AI Training", "AI and Computing", "New accelerator architectures are targeting higher training throughput, efficiency and scale for increasingly large AI workloads.", "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80"],
   ["innovation-mrna", "The Race to Build More Adaptable mRNA Cancer Vaccines", "Biotechnology", "Researchers are exploring personalized and broadly targeted mRNA approaches for difficult cancer treatment challenges.", "https://images.unsplash.com/photo-1766315746079-215ff5115e9f?auto=format&fit=crop&w=900&q=80"],
   ["innovation-starship", "Reusable Launch Systems and the Changing Economics of Space", "Space Technology", "Reusable launch architectures are changing how engineers think about turnaround time, payload economics and access to orbit.", "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80"],
   ["innovation-drug-discovery", "AI Drug Discovery Moves Deeper Into the Development Pipeline", "Biotechnology", "AI-assisted research is being used to prioritize targets, model molecules and reduce some of the search burden in drug discovery.", "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900"],
@@ -861,7 +851,7 @@ const cybersecurityArticles: SpecialArticle[] = [
     category: "AI SECURITY",
     title: "AI Is Accelerating Both Offensive and Defensive Cybersecurity Capabilities",
     dek: "Cyber threats have escalated in sophistication and frequency in 2026 as artificial intelligence accelerates both offensive and defensive capabilities. Attackers are using AI to identify weaknesses and scale operations faster, while security teams are applying AI to detection, triage and response.",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85",
+    image: "https://images.unsplash.com/photo-1603985529862-9e12198c9a60?q=80&w=861&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     publishedAt: "September 29, 2026",
     readTime: "8 MIN READ",
     highlights: [
@@ -1203,7 +1193,7 @@ const internationalSeeds: SectionArticleSeed[] = [
     category: "INTERNATIONAL BUSINESS",
     title: "Global Trade Realigns as Asia Leads the Next Growth Wave",
     dek: "Manufacturing investment, stronger domestic demand and new trade alliances are shifting global growth momentum toward Asia.",
-    image: globalTradePortImg,
+    image: "https://images.unsplash.com/photo-1781449273450-6834ddffc412?q=80&w=788&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
   },
   {
     id: "international-india-third-largest-economy",
@@ -1211,7 +1201,7 @@ const internationalSeeds: SectionArticleSeed[] = [
     category: "INTERNATIONAL BUSINESS",
     title: "India Overtakes Germany as World's 3rd Largest Economy",
     dek: "India's expanding domestic market and investment cycle are reshaping the global economic landscape.",
-    image: tajMahalIndiaImg,
+    image: "https://images.unsplash.com/photo-1565371767810-ef913a6c8315?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
   },
   {
     id: "international-eu-us-digital-trade",
@@ -1219,7 +1209,7 @@ const internationalSeeds: SectionArticleSeed[] = [
     category: "INTERNATIONAL BUSINESS",
     title: "EU-US Digital Trade Agreement Unlocks $800B in Annual Commerce",
     dek: "New framework to reduce friction across technology, services and data flows.",
-    image: euUsTradeFlagsImg,
+    image: "https://images.unsplash.com/photo-1718778449026-fc05939d7650?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
   },
   {
     id: "international-shipping-costs-routes",
@@ -1227,15 +1217,15 @@ const internationalSeeds: SectionArticleSeed[] = [
     category: "INTERNATIONAL BUSINESS",
     title: "Shipping Costs Decline as Key Trade Routes Stabilize",
     dek: "Easing freight rates offer relief to global manufacturers after months of volatility.",
-    image: shippingCostsRouteImg,
+    image: "https://images.unsplash.com/photo-1691591765923-3bd6f12f4209?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
   },
   {
     id: "international-china-manufacturing-pmi-542",
     section: "International Business",
     category: "INTERNATIONAL BUSINESS",
     title: "China's Manufacturing Sector Rebounds: PMI Hits 4-Year High of 54.2",
-    dek: "Factory activity surges as domestic consumption recovers and export orders from Global South nations accelerate, defying Western trade barriers.",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&auto=format&fit=crop&q=85",
+    dek: "Factory activity surges as domestic consumption recovers and export orders from Global South nations, accelerate, defying Western trade barriers.",
+    image: "https://images.unsplash.com/photo-1717386255773-a456c611dc4e?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
   },
   {
     id: "international-nvidia-humanoid-robot-push",
@@ -1285,133 +1275,76 @@ const internationalSeeds: SectionArticleSeed[] = [
     dek: "The latest satellite expansion is aimed at bringing higher-speed connectivity to remote regions across Africa, South Asia and Latin America.",
     image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1000&h=650&fit=crop",
   },
-  {
-    id: "international-europe-fiscal-buffer",
-    section: "International Business",
-    category: "EUROPE",
-    title: "EU finance ministers agree on joint fiscal buffer to shield eurozone from future energy-price shocks.",
+  { id: "international-europe-fiscal-buffer", 
+    section: "International Business", 
+    category: "EUROPE", 
+    title: "EU finance ministers agree on joint fiscal buffer to shield eurozone from future energy-price shocks.", 
     dek: "European finance ministers are working on a joint fiscal mechanism intended to reduce the impact of future energy-price volatility.",
-    image: euParliamentFlagsImg,
-  },
-  {
-    id: "international-france-germany-industrial-policy",
-    section: "International Business",
-    category: "EUROPE",
-    title: "France and Germany unveil joint industrial policy to counter Chinese overcapacity in green technology.",
+    image: "https://images.unsplash.com/photo-1653239869890-f253d0ecc007?q=80&w=873&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+   },
+
+  { id: "international-france-germany-industrial-policy", 
+    section: "International Business", 
+    category: "EUROPE", 
+    title: "France and Germany unveil joint industrial policy to counter Chinese overcapacity in green technology.", 
     dek: "France and Germany are outlining industrial measures focused on competitiveness, clean technology and strategic manufacturing capacity.",
-    image: europeIndustryCleanImg,
+    image: "https://images.unsplash.com/photo-1717386255777-ce60792a2a56?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-uk-eu-youth-mobility",
-    section: "International Business",
-    category: "EUROPE",
-    title: "UK-EU youth mobility scheme enters final negotiation stage after years of post-Brexit deadlock.",
-    dek: "Negotiators are discussing a youth mobility framework intended to shape travel, study and work opportunities between the UK and EU.",
-    image: ukYouthMobilityImg,
+
+  { id: "international-uk-eu-youth-mobility", section: "International Business", category: "EUROPE", title: "UK-EU youth mobility scheme enters final negotiation stage after years of post-Brexit deadlock.", dek: "Negotiators are discussing a youth mobility framework intended to shape travel, study and work opportunities between the UK and EU.",
+    image: "https://images.unsplash.com/photo-1579018229420-db0d7bd40490?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-italy-no-confidence",
-    section: "International Business",
-    category: "EUROPE",
-    title: "Italy's coalition government survives no-confidence vote tied to pension reform dispute.",
-    dek: "A parliamentary vote over pension reform has highlighted the political and fiscal pressures surrounding Italy's social-security policy.",
-    image: italyParliamentImg,
+
+  { id: "international-italy-no-confidence", section: "International Business", category: "EUROPE", title: "Italy's coalition government survives no-confidence vote tied to pension reform dispute.", dek: "A parliamentary vote over pension reform has highlighted the political and fiscal pressures surrounding Italy's social-security policy.",
+    image: "https://images.unsplash.com/photo-1596627116762-bb01a46c233b?q=80&w=863&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-asean-supply-chain-pact",
-    section: "International Business",
-    category: "ASIA-PACIFIC",
-    title: "ASEAN bloc finalizes regional supply-chain resilience pact covering semiconductors and critical minerals.",
-    dek: "ASEAN members are strengthening regional coordination around critical supply chains, semiconductors and minerals.",
-    image: aseanSupplyChainImg,
+
+  { id: "international-asean-supply-chain-pact", section: "International Business", category: "ASIA-PACIFIC", title: "ASEAN bloc finalizes regional supply-chain resilience pact covering semiconductors and critical minerals.", dek: "ASEAN members are strengthening regional coordination around critical supply chains, semiconductors and minerals.",
+    image: "https://images.unsplash.com/photo-1606964212858-c215029db704?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-japan-korea-trade-talks",
-    section: "International Business",
-    category: "ASIA-PACIFIC",
-    title: "Japan and South Korea restart high-level trade talks after three-year diplomatic freeze.",
-    dek: "The renewed talks focus on trade relations and the economic links connecting two major Asian economies.",
-    image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=900&auto=format&fit=crop&q=85",
+
+  { id: "international-japan-korea-trade-talks", section: "International Business", category: "ASIA-PACIFIC", title: "Japan and South Korea restart high-level trade talks after three-year diplomatic freeze.", dek: "The renewed talks focus on trade relations and the economic links connecting two major Asian economies.",
+    image: "https://images.unsplash.com/photo-1772110148205-e0993f63c91f?q=80&w=436&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-china-stimulus-property",
-    section: "International Business",
-    category: "ASIA-PACIFIC",
-    title: "China's central bank signals further stimulus as property-sector deleveraging drags on growth.",
-    dek: "Chinese policymakers are balancing growth support with the long process of reducing leverage in the property sector.",
-    image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=900&auto=format&fit=crop&q=85",
+
+  { id: "international-china-stimulus-property", section: "International Business", category: "ASIA-PACIFIC", title: "China's central bank signals further stimulus as property-sector deleveraging drags on growth.", dek: "Chinese policymakers are balancing growth support with the long process of reducing leverage in the property sector.",
+    image: "https://images.unsplash.com/photo-1696903619380-db0c500020d0?q=80&w=840&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-india-fourth-gdp",
-    section: "International Business",
-    category: "ASIA-PACIFIC",
-    title: "India overtakes Japan to become world's fourth-largest economy by nominal GDP.",
-    dek: "India's expanding economic output is changing the relative size of major economies in Asia and the global economy.",
-    image: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=900&auto=format&fit=crop&q=85",
+
+  { id: "international-india-fourth-gdp", section: "International Business", category: "ASIA-PACIFIC", title: "India overtakes Japan to become world's fourth-largest economy by nominal GDP.", dek: "India's expanding economic output is changing the relative size of major economies in Asia and the global economy.",
+    image: "https://images.unsplash.com/photo-1748335353650-989cd6fccb68?q=80&w=445&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+   },
+
+  { id: "international-mercosur-eu-trade", section: "International Business", category: "AMERICAS", title: "Mercosur-EU trade deal clears final ratification hurdle after 25 years of negotiation.", dek: "The long-running trade process between Mercosur and the European Union is moving through a decisive ratification stage.",
+    image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-mercosur-eu-trade",
-    section: "International Business",
-    category: "AMERICAS",
-    title: "Mercosur-EU trade deal clears final ratification hurdle after 25 years of negotiation.",
-    dek: "The long-running trade process between Mercosur and the European Union is moving through a decisive ratification stage.",
-    image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&auto=format&fit=crop&q=85",
+
+  { id: "international-mexico-nearshoring", section: "International Business", category: "AMERICAS", title: "Mexico's peso strengthens on record nearshoring investment inflows from US manufacturers.", dek: "Manufacturing investment linked to nearshoring is increasing Mexico's role in North American supply chains." ,
+    image: "https://images.unsplash.com/photo-1645921441680-37d664f930f2?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
   },
-  {
-    id: "international-mexico-nearshoring",
-    section: "International Business",
-    category: "AMERICAS",
-    title: "Mexico's peso strengthens on record nearshoring investment inflows from US manufacturers.",
-    dek: "Manufacturing investment linked to nearshoring is increasing Mexico's role in North American supply chains.",
-    image: "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=900&auto=format&fit=crop&q=85",
+  { id: "international-brazil-brics-expansion", section: "International Business", category: "AMERICAS", title: "Brazil hosts first-ever BRICS+ summit expansion talks, weighing new membership bids.", dek: "Brazil is hosting discussions around the future membership and economic agenda of the expanded BRICS grouping.",
+    image: "https://images.unsplash.com/photo-1700677866588-95226be09b39?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-brazil-brics-expansion",
-    section: "International Business",
-    category: "AMERICAS",
-    title: "Brazil hosts first-ever BRICS+ summit expansion talks, weighing new membership bids.",
-    dek: "Brazil is hosting discussions around the future membership and economic agenda of the expanded BRICS grouping.",
-    image: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=900&auto=format&fit=crop&q=85",
+
+  { id: "international-canada-us-lumber", section: "International Business", category: "AMERICAS", title: "Canada and US resolve softwood lumber dispute after a decade of intermittent tariffs.", dek: "The two North American economies are addressing a long-running dispute affecting lumber trade and producers.",
+    image: "https://images.unsplash.com/photo-1781751981449-d66647e47e30?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+   },
+
+  { id: "international-afcfta-trade-h1-2026", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "African Continental Free Trade Area reports record intra-African trade volumes for H1 2026.", dek: "The continental trade framework is reporting stronger internal trade flows as African markets deepen regional commercial links.",
+    image: "https://images.unsplash.com/photo-1655102718200-7230a1be8bfc?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   },
-  {
-    id: "international-canada-us-lumber",
-    section: "International Business",
-    category: "AMERICAS",
-    title: "Canada and US resolve softwood lumber dispute after a decade of intermittent tariffs.",
-    dek: "The two North American economies are addressing a long-running dispute affecting lumber trade and producers.",
-    image: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=900&auto=format&fit=crop&q=85",
+
+  { id: "international-gulf-africa-renewables", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "Gulf sovereign wealth funds pledge $40B toward African renewable-energy infrastructure.", dek: "Gulf investors are directing capital toward African renewable-energy projects, linking infrastructure needs with international investment.",
+    image: "https://images.unsplash.com/photo-1585306874600-bbaa4f36941f?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+   },
+
+  { id: "international-egypt-ethiopia-nile", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "Egypt and Ethiopia reach preliminary agreement on Nile water-sharing after decade-long dispute.", dek: "The preliminary understanding addresses one of the region's most closely watched water and development issues." ,
+    image: "https://images.unsplash.com/photo-1684100096410-fd39cdff91a3?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
   },
-  {
-    id: "international-afcfta-trade-h1-2026",
-    section: "International Business",
-    category: "MIDDLE EAST AND AFRICA",
-    title: "African Continental Free Trade Area reports record intra-African trade volumes for H1 2026.",
-    dek: "The continental trade framework is reporting stronger internal trade flows as African markets deepen regional commercial links.",
-    image: "https://images.unsplash.com/photo-1577948000111-9c970dfe3743?w=900&auto=format&fit=crop&q=85",
-  },
-  {
-    id: "international-gulf-africa-renewables",
-    section: "International Business",
-    category: "MIDDLE EAST AND AFRICA",
-    title: "Gulf sovereign wealth funds pledge $40B toward African renewable-energy infrastructure.",
-    dek: "Gulf investors are directing capital toward African renewable-energy projects, linking infrastructure needs with international investment.",
-    image: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=900&auto=format&fit=crop&q=85",
-  },
-  {
-    id: "international-egypt-ethiopia-nile",
-    section: "International Business",
-    category: "MIDDLE EAST AND AFRICA",
-    title: "Egypt and Ethiopia reach preliminary agreement on Nile water-sharing after decade-long dispute.",
-    dek: "The preliminary understanding addresses one of the region's most closely watched water and development issues.",
-    image: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=900&auto=format&fit=crop&q=85",
-  },
-  {
-    id: "international-uae-india-investment",
-    section: "International Business",
-    category: "MIDDLE EAST AND AFRICA",
-    title: "UAE and India expand investment corridor across logistics, technology and clean energy.",
-    dek: "The two economies are broadening commercial cooperation across infrastructure, technology and energy.",
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&auto=format&fit=crop&q=85",
+
+  { id: "international-uae-india-investment", section: "International Business", category: "MIDDLE EAST AND AFRICA", title: "UAE and India expand investment corridor across logistics, technology and clean energy.", dek: "The two economies are broadening commercial cooperation across infrastructure, technology and energy.", 
+    image: "https://images.unsplash.com/photo-1707761918029-1295034aa31e?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+
   },
 ];
 
@@ -1815,7 +1748,7 @@ const supplyChainArticles: SpecialArticle[] = [
     category: "LOGISTICS",
     title: "Shipping Companies Accelerate Digital Transformation Across Global Routes",
     dek: "Carriers and logistics providers are investing in visibility, automation and predictive analytics to make complex transport networks easier to manage.",
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
+    image: SC1Img,
     highlights: [
       "Digital visibility can improve ETA accuracy and exception management.",
       "Automation is being applied to routing, documentation and warehouse operations.",
@@ -1890,7 +1823,7 @@ const energyArticles: SpecialArticle[] = [
     category: "OIL AND GAS",
     title: "U.S.-Iran Negotiations Impasse Delays Flow Normalization Into 2027",
     dek: "The supplied energy briefing identifies the U.S.-Iran negotiations impasse as a factor delaying the normalization of disrupted flows into 2027.",
-    image: hormuzImg,
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
     author: "The Pride Times Editorial Desk",
     publishedAt: "2026-09-29T06:10:00Z",
     readTime: "5 min read",

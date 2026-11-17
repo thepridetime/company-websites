@@ -115,7 +115,7 @@ const redfernArticle: TechnologyArticle = {
   author: AUTHOR,
   publishedAt: "2026-10-02T05:00:00Z",
   image:
-    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1400&q=80",
+    "https://images.unsplash.com/photo-1760199789455-49098afd02f0?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   readTime: "4 min read",
   highlights: [
     "Redfern Retail agreed to buy a cybersecurity start-up in a $30.2M deal.",
@@ -242,7 +242,7 @@ const altamiraCapitalArticle: TechnologyArticle = {
   author: AUTHOR,
   publishedAt: "2026-10-02T03:00:00Z",
   image:
-    "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1400&q=80",
+    "https://images.unsplash.com/photo-1692448500924-7e8ea759b1be?q=80&w=385&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
   readTime: "5 min read",
   highlights: [
     "Altamira Capital is committing $34.1B to a hyperscale data-centre campus near Jakarta.",
