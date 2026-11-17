@@ -24,13 +24,18 @@ export interface WhiteHouseWatchPageProps {
    Stories from src/app/data/whiteHouseData.ts.
    ========================================================= */
 
-const stories: WhiteHouseStory[] = whiteHouseStories;
+// OLD (commented): computed once at module load. If the data was empty or
+// filled later, these stayed empty and the page showed "No stories yet".
+// const stories: WhiteHouseStory[] = whiteHouseStories;
+//
+// /* Homepage-style layout slots */
+// const leadStory: WhiteHouseStory | undefined = stories[0];
+// const majorStories = stories.slice(1, 3);
+// const editorsPick: WhiteHouseStory | undefined = stories[3];
+// const sideHeadlines = stories.slice(4, 8);
 
-/* Homepage-style layout slots */
-const leadStory: WhiteHouseStory | undefined = stories[0];
-const majorStories = stories.slice(1, 3);
-const editorsPick: WhiteHouseStory | undefined = stories[3];
-const sideHeadlines = stories.slice(4, 8);
+// NEW: the same values are now computed inside the page component (see below),
+// every time it renders, and they are safe if the data is undefined.
 
 function displayDate(value: string) {
   return isIsoTimestamp(value) ? formatTimestamp(value) : value;
@@ -41,7 +46,10 @@ function storyMeta(story: WhiteHouseStory) {
 }
 
 /* =========================================================
-   SMALL UI PIECES
+   SMALL UI PIECES (same as homepage)
+   - Headlines: serif. Hover = underline (not colour change).
+   - Red is ONLY for category labels and "view" links.
+   - Black top rule on every section header.
    ========================================================= */
 
 // OLD (commented):
@@ -123,7 +131,7 @@ function TimeStamp({ children }: { children: ReactNode }) {
 }
 
 /* =========================================================
-   KEY FIGURES
+   KEY FIGURES (dark panel, same style as homepage Markets)
    Uses the lead story's key facts.
    ========================================================= */
 
@@ -215,13 +223,40 @@ function KeyFiguresPanel({
    SIDEBAR: NUMBERS
    ========================================================= */
 
-function WhiteHouseNumbers() {
+// OLD (commented): read stories / leadStory / whiteHouseLatestNews directly
+// from module level.
+// function WhiteHouseNumbers() {
+//   const stats = [
+//     { label: "Total stories", value: String(stories.length) },
+//     { label: "Latest updates", value: String(whiteHouseLatestNews.length) },
+//     {
+//       label: "Key facts (lead)",
+//       value: String(leadStory?.keyFacts.length ?? 0),
+//     },
+//     {
+//       label: "With images",
+//       value: String(stories.filter((s) => Boolean(s.image)).length),
+//     },
+//   ];
+//   ...
+// }
+
+// NEW: gets the data as props from the page component.
+function WhiteHouseNumbers({
+  stories,
+  latestCount,
+  leadStory,
+}: {
+  stories: WhiteHouseStory[];
+  latestCount: number;
+  leadStory: WhiteHouseStory | undefined;
+}) {
   const stats = [
     { label: "Total stories", value: String(stories.length) },
-    { label: "Latest updates", value: String(whiteHouseLatestNews.length) },
+    { label: "Latest updates", value: String(latestCount) },
     {
       label: "Key facts (lead)",
-      value: String(leadStory?.keyFacts.length ?? 0),
+      value: String(leadStory?.keyFacts?.length ?? 0),
     },
     {
       label: "With images",
@@ -259,6 +294,19 @@ export function WhiteHouseWatchPage({
 }: WhiteHouseWatchPageProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const feedRef = useRef<HTMLDivElement | null>(null);
+
+  /* NEW: data is read inside the component, and is safe if undefined */
+  const stories: WhiteHouseStory[] = whiteHouseStories ?? [];
+  const latestNews = whiteHouseLatestNews ?? [];
+
+  /* Homepage-style layout slots */
+  const leadStory: WhiteHouseStory | undefined = stories[0];
+  const majorStories = stories.slice(1, 3);
+  const editorsPick: WhiteHouseStory | undefined = stories[3];
+  const sideHeadlines = stories.slice(4, 8);
+
+  /* NEW: only show the left column when it has stories */
+  const hasSide = sideHeadlines.length > 0;
 
   const visibleStories = stories.slice(0, visibleCount);
   const hasMore = visibleCount < stories.length;
@@ -324,11 +372,17 @@ export function WhiteHouseWatchPage({
 
           {leadStory && (
             <>
-              {/* 1. TOP SECTION */}
+              {/* =================================================
+                  1. TOP SECTION — 3 columns, like the homepage
+                     LEFT   : image + news cards
+                     CENTER : lead story + 2 secondary stories
+                     RIGHT  : Key Figures panel + Editor's Pick
+              ================================================= */}
 
-              {/* OLD (commented): 3-column homepage style, serif, rounded, gray-200 lines
+              {/* OLD (commented): homepage style, serif, rounded, gray-200 lines, red kickers
               <section className="mb-10 border-b border-gray-300 pb-8">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
+                  LEFT: Top stories (text only)
                   <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
                     <div className="mb-1 border-t-[3px] border-black pt-2">
                       <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
@@ -355,6 +409,7 @@ export function WhiteHouseWatchPage({
                     </ul>
                   </aside>
 
+                  CENTER: lead story
                   <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
                     <Link to={leadStory.href} className="group block">
                       <div className="relative overflow-hidden rounded-sm bg-black">
@@ -383,6 +438,7 @@ export function WhiteHouseWatchPage({
                       </div>
                     </Link>
 
+                    Two secondary stories under the lead
                     {majorStories.length > 0 && (
                       <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
                         {majorStories.map((story) => (
@@ -416,6 +472,7 @@ export function WhiteHouseWatchPage({
                     )}
                   </div>
 
+                  RIGHT: Key figures + Editor's Pick
                   <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
                     <KeyFiguresPanel
                       title="Key Figures"
@@ -462,6 +519,8 @@ export function WhiteHouseWatchPage({
               <section className="mb-10">
                 <div className="grid grid-cols-1 gap-0 border border-gray-300 lg:grid-cols-12">
                   {/* LEFT: Top stories (text only) */}
+
+                  {/* OLD (commented): text-only Top Stories list
                   <aside className="order-2 min-w-0 border-b border-gray-300 p-4 lg:order-1 lg:col-span-3 lg:border-b-0 lg:border-r">
                     <div className="mb-1 border-t-[3px] border-black pt-2">
                       <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
@@ -487,9 +546,50 @@ export function WhiteHouseWatchPage({
                       ))}
                     </ul>
                   </aside>
+                  */}
+
+                  {/* NEW: image + news cards, no "Top Stories" heading (hidden when empty) */}
+                  {hasSide && (
+                  <aside className="order-2 min-w-0 border-b border-gray-300 p-4 lg:order-1 lg:col-span-3 lg:border-b-0 lg:border-r">
+                    <ul className="divide-y divide-gray-300">
+                      {sideHeadlines.map((story) => (
+                        <li key={story.id} className="py-4 first:pt-0 last:pb-0">
+                          <Link to={story.href} className="group block">
+                            <div className="overflow-hidden bg-gray-100">
+                              <ImageWithFallback
+                                src={story.image}
+                                alt={story.title}
+                                className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                              />
+                            </div>
+
+                            <div className="mt-2.5">
+                              <Kicker>{story.category}</Kicker>
+
+                              <h3 className="mt-1 text-[16px] font-bold leading-[1.2] tracking-tight text-gray-950 group-hover:underline">
+                                {story.title}
+                              </h3>
+
+                              <div className="mt-1.5">
+                                <TimeStamp>{storyMeta(story)}</TimeStamp>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </aside>
+
+                  )}
 
                   {/* CENTER: lead story + 2 secondary stories */}
-                  <div className="order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:col-span-6 lg:border-b-0 lg:border-r">
+                  {/* OLD (commented): <div className="order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:col-span-6 lg:border-b-0 lg:border-r"> */}
+                  {/* NEW: 9 columns wide when there is no left column */}
+                  <div
+                    className={`order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:border-b-0 lg:border-r ${
+                      hasSide ? "lg:col-span-6" : "lg:col-span-9"
+                    }`}
+                  >
                     <Link to={leadStory.href} className="group block">
                       <div className="relative overflow-hidden bg-black">
                         <ImageWithFallback
@@ -517,6 +617,7 @@ export function WhiteHouseWatchPage({
                       </div>
                     </Link>
 
+                    {/* Two secondary stories under the lead */}
                     {majorStories.length > 0 && (
                       <div className="mt-5 grid grid-cols-1 gap-5 border-t border-gray-300 pt-4 sm:grid-cols-2">
                         {majorStories.map((story) => (
@@ -554,7 +655,7 @@ export function WhiteHouseWatchPage({
                   <aside className="order-3 min-w-0 p-4 lg:col-span-3">
                     <KeyFiguresPanel
                       title="Key Figures"
-                      facts={leadStory.keyFacts}
+                      facts={leadStory.keyFacts ?? []}
                     />
 
                     {editorsPick && (
@@ -594,7 +695,11 @@ export function WhiteHouseWatchPage({
 
               <PrideTimesAd variant="second" />
 
-              {/* 2. LATEST WHITE HOUSE NEWS */}
+              {/* =================================================
+                  2. LATEST WHITE HOUSE NEWS
+                     LEFT  : filterable feed with "Show more"
+                     RIGHT : sticky numbers + latest updates list
+              ================================================= */}
               <section aria-label="Latest White House news" className="mb-12">
                 <SectionHeader title={`Latest ${section} News`} />
 
@@ -687,6 +792,8 @@ export function WhiteHouseWatchPage({
                           Show more stories
                         </button>
 
+                        {/* OLD (commented): <span className="text-[10px] text-gray-400"> */}
+                        {/* NEW: */}
                         <span className="text-[11px] text-gray-400">
                           Showing {visibleStories.length} of {stories.length}
                         </span>
@@ -697,9 +804,15 @@ export function WhiteHouseWatchPage({
                   {/* Sidebar */}
                   <div className="min-w-0">
                     <div className="lg:sticky lg:top-24">
-                      <WhiteHouseNumbers />
+                      {/* OLD (commented): <WhiteHouseNumbers /> */}
+                      {/* NEW: */}
+                      <WhiteHouseNumbers
+                        stories={stories}
+                        latestCount={latestNews.length}
+                        leadStory={leadStory}
+                      />
 
-                      {whiteHouseLatestNews.length > 0 && (
+                      {latestNews.length > 0 && (
                         <div className="mt-8">
                           <SectionHeader
                             title="Latest Updates"
@@ -709,7 +822,7 @@ export function WhiteHouseWatchPage({
                           {/* OLD (commented): <ol className="divide-y divide-gray-200"> */}
                           {/* NEW: */}
                           <ol className="divide-y divide-gray-300">
-                            {whiteHouseLatestNews.map((item, index) => (
+                            {latestNews.map((item, index) => (
                               <li key={item.id}>
                                 <Link
                                   to={item.href}
