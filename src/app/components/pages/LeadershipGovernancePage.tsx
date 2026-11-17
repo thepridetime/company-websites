@@ -1,549 +1,459 @@
-import { useMemo, useRef, useState, type ReactNode } from "react";
-import { Link } from "react-router";
-import { ArrowRight, Clock, MapPin } from "lucide-react";
+import { TimeAgo } from "../../utils/timeAgo";
+import { Clock, Users, Award, ChevronRight, Quote } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { PrideTimesAd } from "../AdSenseSlots";
-import { formatTimestamp, isIsoTimestamp } from "../../utils/timeAgo";
-import {
-  leadershipGovernanceArticles,
-  leadershipGovernanceArticlePath,
-  type LeadershipGovernanceArticle,
-} from "../../data/leadershipGovernanceNewsData";
+import Lead1Img from "../../../imports/Lead1.png";
+import Lead2Img from "../../../imports/Lead2.png";
 
-/* Display label for this section (page title, cards and feed). */
-const SECTION_LABEL = "Leadership and Governance";
-const PAGE_SIZE = 8;
-
-/* =========================================================
-   LEADERSHIP AND GOVERNANCE ITEMS
-   Articles from src/app/data/leadershipGovernanceNewsData.ts.
-   ========================================================= */
-
-const govStories: LeadershipGovernanceArticle[] = leadershipGovernanceArticles;
-
-/* Homepage-style layout slots */
-const leadStory: LeadershipGovernanceArticle | undefined = govStories[0];
-const majorStories = govStories.slice(1, 3);
-const editorsPick: LeadershipGovernanceArticle | undefined = govStories[3];
-const sideHeadlines = govStories.slice(4, 8);
-
-const categoryTabs = [
-  "All",
-  ...Array.from(new Set(govStories.map((story) => story.category))),
-];
-
-function displayDate(value: string) {
-  return isIsoTimestamp(value) ? formatTimestamp(value) : value;
-}
-
-function storyMeta(story: LeadershipGovernanceArticle) {
-  return `${displayDate(story.publishedAt)} · ${story.readTime}`;
-}
-
-/* =========================================================
-   SMALL UI PIECES (same as homepage)
-   - Headlines: serif. Hover = underline (not colour change).
-   - Red is ONLY for category labels and "view" links.
-   - Black top rule on every section header.
-   ========================================================= */
-
-function SectionHeader({
-  title,
-  rightLabel = "The Pride Times",
-}: {
-  title: string;
-  rightLabel?: string;
-}) {
+/* Section header — hairline rule + uppercase eyebrow, consistent across every module */
+function SH({ title }: { title: string }) {
   return (
-    <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
-        {title}
-      </h2>
-      <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
-        {rightLabel}
-      </span>
+    <div className="flex items-center justify-between border-b-2 border-black pb-2 mb-5">
+      <h2 className="text-sm uppercase tracking-[0.2em]">{title}</h2>
+      <span className="hidden sm:block w-6 h-[2px] bg-red-600" />
     </div>
   );
 }
 
-function Kicker({ children }: { children: ReactNode }) {
+const hero = {
+  category: "Leadership Desk",
+  title: "The Intelligence Age: How CEOs Are Navigating Transformation",
+  excerpt:
+    "KPMG's Global Tech Report 2026 — subtitled 'Leading in the Intelligence Age: Excelling Today, Shaping Tomorrow' — draws on conversations with top executives including Dean Bortz, Director of AI Go-to-Market at Google; Zack Kass, former Head of Go-to-Market at OpenAI and now a global AI advisor; Noelle Russell, CEO of the AI Leadership Institute; and Seth Patton, General Manager of Microsoft 365 Copilot. Their collective perspectives reveal a leadership class grappling with the most consequential technology transition in corporate history.The common thread across executive conversations is the tension between the imperative for speed and the organizational reality of constraint. Technology plans are frequently becoming obsolete before implementation, as the pace of AI capability advancement outstrips enterprise planning cycles. Leading organizations are addressing this by adopting adaptive strategy frameworks — setting directional bets rather than fixed technology roadmaps, and building organizational capacity for rapid pivoting.",
+  author: "Sagar Kumar",
+  publishedAt: "June 2026",
+  image: Lead1Img,
+};
+
+const hero1 = {
+  category: "Investor Leadership",
+  title:
+    "Warren Buffett at 95: Berkshire's Housing Bet Signals Long-Term Confidence",
+  excerpt:
+    "Warren Buffett's Berkshire Hathaway has reaffirmed its status as one of the world's most disciplined capital allocators with the $6.8 billion acquisition of Taylor Morrison, one of America's leading homebuilders. The deal, announced June 1, is consistent with Berkshire's decades-long approach of deploying capital into businesses with durable competitive advantages, strong cash flows, and management teams with demonstrated operational excellence.The investment signals Berkshire's view that structural housing undersupply in the United States — driven by a decade of below-replacement-rate construction — will provide a long-term tailwind for well-positioned homebuilders. The acquisition also extends Berkshire's exposure to American residential real estate, complementing its existing position in Clayton Homes, the largest manufactured housing company in the United States.",
+  author: "Sagar Kumar",
+  publishedAt: "June 2026",
+  image: Lead2Img,
+};
+
+const ceoInterviews = [
+  {
+    id: 1,
+    name: "Satya Nadella",
+    title: "CEO, Microsoft",
+    company: "Microsoft",
+    quote:
+      "The next decade will be defined by how organizations use AI to augment human capability. Every tool we build is a collaboration engine.",
+    topic: "AI Strategy & the Future of Work",
+    duration: "35 min read",
+    image:
+      "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?w=400&h=300&fit=crop",
+  },
+  {
+    id: 2,
+    name: "Indra Nooyi",
+    title: "Former CEO, PepsiCo / Board Director",
+    company: "PepsiCo",
+    quote:
+      "Sustainable business is not charity. The companies that will win in the next 20 years are those that embed purpose into their P&L.",
+    topic: "Sustainable Leadership & Stakeholder Capitalism",
+    duration: "28 min read",
+    image:
+      "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?w=400&h=300&fit=crop",
+  },
+  {
+    id: 3,
+    name: "Jensen Huang",
+    title: "CEO, NVIDIA",
+    company: "NVIDIA",
+    quote:
+      "We are not a chip company. We are the engine of the AI industrial revolution. The opportunity is larger than the internet, cloud, and mobile combined.",
+    topic: "NVIDIA's AI Supremacy & the Chip Wars",
+    duration: "42 min read",
+    image:
+      "https://images.unsplash.com/photo-1760629863094-5b1e8d1aae74?w=400&h=300&fit=crop",
+  },
+];
+
+const womenLeaders = [
+  {
+    name: "Mary Barra",
+    title: "CEO, General Motors",
+    achievement: "Led GM's transformation to world's #3 EV maker",
+    rank: 1,
+  },
+  {
+    name: "Jane Fraser",
+    title: "CEO, Citigroup",
+    achievement: "Completed landmark $20B organizational transformation",
+    rank: 2,
+  },
+  {
+    name: "Gita Gopinath",
+    title: "First Deputy MD, IMF",
+    achievement: "Architect of IMF's post-pandemic recovery strategy",
+    rank: 3,
+  },
+  {
+    name: "Sunita Williams",
+    title: "NASA Astronaut / Engineer",
+    achievement: "Led India-US Space Cooperation Framework",
+    rank: 4,
+  },
+  {
+    name: "Nirmala Sitharaman",
+    title: "Finance Minister, India",
+    achievement:
+      "Delivered India's largest infrastructure budget at ₹11.1T",
+    rank: 5,
+  },
+];
+
+const leadershipOpinions = [
+  {
+    id: 1,
+    author: "Sagar Kumar",
+    title:
+      "On AI and Investing: Why I Still Trust Human Judgment Over Algorithms",
+    publishedAt: "2026-09-20T10:19:00Z",
+  },
+  {
+    id: 2,
+    author: "Sagar Kumar",
+    title:
+      "The Debt Cycle Is Approaching Its Peak — And Leaders Must Prepare Now",
+    publishedAt: "2026-09-19T10:19:00Z",
+  },
+  {
+    id: 3,
+    author: "Sagar Kumar",
+    title:
+      "Why AGI Will Arrive Before 2030 — And Why That's Not Something to Fear",
+    publishedAt: "2026-09-18T10:19:00Z",
+  },
+  {
+    id: 4,
+    author: "Sagar Kumar",
+    title:
+      "India's Moment Has Arrived — The Next 25 Years Belong to Us",
+    publishedAt: "2026-09-17T10:19:00Z",
+  },
+];
+
+const executiveMoves = [
+  {
+    id: 1,
+    person: "Bob Iger",
+    move:
+      "Returns as Disney CEO for third term after activist investor pressure",
+    publishedAt: "2026-09-21T07:19:00Z",
+  },
+  {
+    id: 2,
+    person: "Christine Lagarde",
+    move:
+      "ECB President announces departure — 3 candidates shortlisted for successor",
+    publishedAt: "2026-09-21T05:19:00Z",
+  },
+  {
+    id: 3,
+    person: "Shantanu Narayen",
+    move:
+      "Adobe CEO receives $42M pay package after record year",
+    publishedAt: "2026-09-21T03:19:00Z",
+  },
+  {
+    id: 4,
+    person: "Arvind Krishna",
+    move:
+      "IBM CEO announces strategic review of $60B consulting division",
+    publishedAt: "2026-09-21T01:19:00Z",
+  },
+  {
+    id: 5,
+    person: "Brian Chesky",
+    move:
+      "Airbnb CEO launches $1B share buyback, hints at hospitality expansion",
+    publishedAt: "2026-09-20T23:19:00Z",
+  },
+];
+
+const pt30Features = [
+  {
+    rank: 1,
+    name: "Jensen Huang",
+    insight:
+      "Defining the AI infrastructure era at COMPUTEX 2026.",
+  },
+  {
+    rank: 2,
+    name: "Satya Nadella",
+    insight:
+      "Leading ethical AI adoption and enterprise digital transformation.",
+  },
+  {
+    rank: 3,
+    name: "Sundar Pichai",
+    insight:
+      "Driving AI integration across search, cloud, and automotive tech.",
+  },
+];
+
+/* Reusable hero card — used for both lead stories, side by side on desktop */
+function HeroCard({ story }: { story: typeof hero }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
-      {children}
-    </span>
-  );
-}
+    <article className="group cursor-pointer">
+      <div className="relative overflow-hidden mb-4">
+        <ImageWithFallback
+          src={story.image}
+          alt={story.title}
+          className="w-full h-64 lg:h-80 object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
 
-function TimeStamp({ children }: { children: ReactNode }) {
-  return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
-      <Clock size={9} />
-      {children}
-    </span>
-  );
-}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent" />
 
-/* =========================================================
-   KEY FIGURES (dark panel, same style as homepage Markets)
-   Uses the lead story's key facts.
-   ========================================================= */
-
-function KeyFiguresPanel({
-  title,
-  facts,
-}: {
-  title: string;
-  facts: { label: string; value: string }[];
-}) {
-  if (facts.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="rounded-sm bg-black p-4 text-white">
-      <div className="flex items-center justify-between border-b border-white/20 pb-2">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-          {title}
-        </h2>
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-          {facts.length} facts
+        <span className="absolute bottom-3 left-3 bg-red-600 text-white text-[10px] uppercase tracking-[0.15em] px-2 py-1">
+          {story.category}
         </span>
       </div>
 
-      <div className="divide-y divide-white/10">
-        {facts.map((fact) => (
-          <div
-            key={fact.label}
-            className="flex items-start justify-between gap-3 py-2.5"
-          >
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
-              {fact.label}
-            </span>
-            <span className="text-right text-[12px] tabular-nums text-gray-100">
-              {fact.value}
-            </span>
-          </div>
-        ))}
+      <h1 className="font-serif text-2xl lg:text-3xl leading-tight group-hover:text-red-600 transition-colors duration-300">
+        {story.title.trim()}
+      </h1>
+
+      <p className="text-gray-600 text-sm mt-3 leading-relaxed line-clamp-5">
+        {story.excerpt.trim()}
+      </p>
+
+      <div className="flex items-center gap-3 mt-4 pt-3 border-t border-gray-200 text-xs text-gray-400">
+        <span className="text-gray-700">
+          By {story.author}
+        </span>
+
+        <span className="w-1 h-1 rounded-full bg-gray-300" />
+
+        <span className="flex items-center gap-1">
+          <Clock size={11} />
+          <TimeAgo iso={story.publishedAt} />
+        </span>
       </div>
-    </div>
+    </article>
   );
 }
 
-/* =========================================================
-   SIDEBAR: NUMBERS
-   ========================================================= */
-
-function GovNumbers() {
-  const stats = [
-    { label: "Total stories", value: String(govStories.length) },
-    { label: "Categories", value: String(categoryTabs.length - 1) },
-    {
-      label: "Locations",
-      value: String(new Set(govStories.map((s) => s.location)).size),
-    },
-    {
-      label: "Authors",
-      value: String(new Set(govStories.map((s) => s.author)).size),
-    },
-  ];
-
+export function LeadershipPage() {
   return (
-    <div>
-      <SectionHeader title="Numbers at a Glance" rightLabel="Desk" />
-      <div className="grid grid-cols-2 gap-x-4 gap-y-5">
-        {stats.map((stat) => (
-          <div key={stat.label}>
-            <div className="font-serif text-[24px] font-bold leading-none text-gray-950">
-              {stat.value}
-            </div>
-            <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
-          </div>
-        ))}
+    <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
+
+      {/* Masthead */}
+      <div className="border-b-4 border-black mb-10 pb-3 flex items-center gap-3">
+        <Users size={22} />
+
+        <div>
+          <span className="text-xs text-gray-500 uppercase tracking-[0.25em]">
+            Executive Intelligence
+          </span>
+
+          <h1 className="font-serif text-3xl md:text-4xl mt-0.5">
+            Leadership &amp; Management
+          </h1>
+        </div>
       </div>
-    </div>
-  );
-}
 
-/* =========================================================
-   LEADERSHIP AND GOVERNANCE PAGE
-   ========================================================= */
+      {/* Hero — two lead stories, side by side on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14 pb-10 border-b border-gray-200">
+        <HeroCard story={hero} />
+        <HeroCard story={hero1} />
+      </div>
 
-export function LeadershipGovernancePage() {
-  const [activeTab, setActiveTab] = useState("All");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const feedRef = useRef<HTMLDivElement | null>(null);
+      {/* CEO interviews */}
+      <div className="mb-14">
+        <SH title="Exclusive CEO Interviews" />
 
-  const filteredStories = useMemo(
-    () =>
-      activeTab === "All"
-        ? govStories
-        : govStories.filter((story) => story.category === activeTab),
-    [activeTab]
-  );
-
-  const visibleStories = filteredStories.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredStories.length;
-
-  const selectTab = (tab: string) => {
-    setActiveTab(tab);
-    setVisibleCount(PAGE_SIZE);
-  };
-
-  const openCategoryFeed = (tab: string) => {
-    selectTab(tab);
-
-    window.requestAnimationFrame(() => {
-      feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  };
-
-  return (
-    <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <main className="pb-16 pt-4 md:pt-6">
-          {/* PAGE TITLE */}
-          <header className="mb-6 border-t-[3px] border-black pt-3">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
-                  Boards &amp; Oversight
-                </span>
-                <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 md:text-[38px]">
-                  {SECTION_LABEL}
-                </h1>
-                <p className="mt-2 text-[12px] leading-[1.5] text-gray-500 md:text-[13px]">
-                  CEO succession, board composition, executive pay and
-                  shareholder rights from The Pride Times.
-                </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {ceoInterviews.map((c) => (
+            <div
+              key={c.id}
+              className="group cursor-pointer border border-gray-200 hover:border-black overflow-hidden transition-colors duration-300 flex flex-col"
+            >
+              <div className="overflow-hidden">
+                <ImageWithFallback
+                  src={c.image}
+                  alt={c.name}
+                  className="w-full h-40 object-cover grayscale-[15%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"
+                />
               </div>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                Boards • Executives • Oversight
-              </span>
+
+              <div className="p-5 flex flex-col flex-1">
+                <p className="text-[11px] text-red-600 uppercase tracking-wider">
+                  {c.topic}
+                </p>
+
+                <h3 className="font-serif text-lg mt-1.5 leading-snug">
+                  {c.name}
+                </h3>
+
+                <p className="text-xs text-gray-500 mb-3">
+                  {c.title}
+                </p>
+
+                <blockquote className="relative text-xs text-gray-600 italic pl-4 border-l-2 border-red-600 leading-relaxed flex-1">
+                  <Quote
+                    size={12}
+                    className="absolute -left-[7px] -top-1 bg-white text-red-600"
+                  />
+
+                  {c.quote}
+                </blockquote>
+
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                  <span className="text-[11px] text-gray-400">
+                    {c.duration}
+                  </span>
+
+                  <button className="text-xs text-red-600 flex items-center gap-1 hover:gap-1.5 transition-all">
+                    Read Full Interview
+                    <ChevronRight size={10} />
+                  </button>
+                </div>
+              </div>
             </div>
-          </header>
-
-          <PrideTimesAd variant="first" />
-
-          {!leadStory && (
-            <p className="py-10 text-center text-[12px] text-gray-400">
-              No leadership and governance stories yet.
-            </p>
-          )}
-
-          {leadStory && (
-            <>
-              {/* =================================================
-                  1. TOP SECTION — 3 columns, like the homepage
-                     LEFT   : text-only Top Stories list
-                     CENTER : lead story + 2 secondary stories
-                     RIGHT  : Key Figures panel + Editor's Pick
-              ================================================= */}
-              <section className="mb-10 border-b border-gray-300 pb-8">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-                  {/* LEFT: Top stories (text only) */}
-                  <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
-                    <div className="mb-1 border-t-[3px] border-black pt-2">
-                      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                        Top Stories
-                      </h2>
-                    </div>
-
-                    <ul className="divide-y divide-gray-200">
-                      {sideHeadlines.map((story) => (
-                        <li key={story.id}>
-                          <Link
-                            to={leadershipGovernanceArticlePath(story.id)}
-                            className="group block py-3.5"
-                          >
-                            <Kicker>{story.category}</Kicker>
-
-                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                              {story.title}
-                            </h3>
-
-                            <div className="mt-1.5">
-                              <TimeStamp>{storyMeta(story)}</TimeStamp>
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </aside>
-
-                  {/* CENTER: lead story */}
-                  <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
-                    <Link
-                      to={leadershipGovernanceArticlePath(leadStory.id)}
-                      className="group block"
-                    >
-                      <div className="relative overflow-hidden rounded-sm bg-black">
-                        <ImageWithFallback
-                          src={leadStory.image}
-                          alt={leadStory.title}
-                          loading="eager"
-                          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                        />
-                      </div>
-
-                      <div className="mt-4">
-                        <Kicker>
-                          {leadStory.category} · {leadStory.location}
-                        </Kicker>
-
-                        <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
-                          {leadStory.title}
-                        </h1>
-
-                        <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
-                          {leadStory.excerpt}
-                        </p>
-
-                        <div className="mt-3">
-                          <TimeStamp>{storyMeta(leadStory)}</TimeStamp>
-                        </div>
-                      </div>
-                    </Link>
-
-                    {/* Two secondary stories under the lead */}
-                    {majorStories.length > 0 && (
-                      <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
-                        {majorStories.map((story) => (
-                          <Link
-                            key={story.id}
-                            to={leadershipGovernanceArticlePath(story.id)}
-                            className="group block"
-                          >
-                            <div className="overflow-hidden rounded-sm">
-                              <ImageWithFallback
-                                src={story.image}
-                                alt={story.title}
-                                className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                              />
-                            </div>
-
-                            <div className="mt-2.5">
-                              <Kicker>{story.category}</Kicker>
-
-                              <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
-                                {story.title}
-                              </h3>
-
-                              <div className="mt-1.5">
-                                <TimeStamp>{storyMeta(story)}</TimeStamp>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* RIGHT: Key figures + Editor's Pick */}
-                  <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
-                    <KeyFiguresPanel
-                      title="Key Figures"
-                      facts={leadStory.keyFacts}
-                    />
-
-                    {editorsPick && (
-                      <div className="mt-6">
-                        <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-                          <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                            Editor's Pick
-                          </h2>
-                        </div>
-
-                        <Link
-                          to={leadershipGovernanceArticlePath(editorsPick.id)}
-                          className="group block"
-                        >
-                          <div className="overflow-hidden rounded-sm">
-                            <ImageWithFallback
-                              src={editorsPick.image}
-                              alt={editorsPick.title}
-                              className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                            />
-                          </div>
-
-                          <div className="mt-2.5">
-                            <Kicker>{editorsPick.category}</Kicker>
-
-                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                              {editorsPick.title}
-                            </h3>
-
-                            <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.5] text-gray-500">
-                              {editorsPick.excerpt}
-                            </p>
-                          </div>
-                        </Link>
-                      </div>
-                    )}
-                  </aside>
-                </div>
-              </section>
-
-              <PrideTimesAd variant="second" />
-
-              {/* =================================================
-                  2. LATEST LEADERSHIP NEWS
-                     LEFT  : tabs + filterable feed with "Show more"
-                     RIGHT : sticky numbers + browse by category
-              ================================================= */}
-              <section aria-label="Latest leadership news" className="mb-12">
-                <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
-
-                <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
-                  {/* Feed */}
-                  <div ref={feedRef} className="scroll-mt-24 min-w-0">
-                    <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
-                      {categoryTabs.map((tab) => (
-                        <button
-                          key={tab}
-                          type="button"
-                          onClick={() => selectTab(tab)}
-                          className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
-                            activeTab === tab
-                              ? "border-b-2 border-black pb-1 text-black"
-                              : "pb-1 text-gray-400 hover:text-gray-800"
-                          }`}
-                        >
-                          {tab}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="divide-y divide-gray-200">
-                      {visibleStories.length === 0 && (
-                        <p className="py-6 text-[12px] text-gray-400">
-                          No stories in this category yet.
-                        </p>
-                      )}
-
-                      {visibleStories.map((story) => (
-                        <Link
-                          key={story.id}
-                          to={leadershipGovernanceArticlePath(story.id)}
-                          className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
-                        >
-                          <div className="h-[80px] w-full overflow-hidden rounded-sm bg-gray-100 sm:h-[126px]">
-                            <ImageWithFallback
-                              src={story.image}
-                              alt={story.title}
-                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          </div>
-
-                          <div className="min-w-0">
-                            <div className="flex flex-wrap items-center gap-x-2">
-                              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
-                                {story.category}
-                              </span>
-
-                              <span className="text-[10px] text-gray-300">•</span>
-
-                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-                                <MapPin size={9} />
-                                {story.location}
-                              </span>
-                            </div>
-
-                            <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
-                              {story.title}
-                            </h3>
-
-                            <p className="mt-1.5 hidden text-[13px] leading-[1.5] text-gray-500 line-clamp-2 sm:block">
-                              {story.excerpt}
-                            </p>
-
-                            <div className="mt-1.5">
-                              <TimeStamp>{storyMeta(story)}</TimeStamp>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-
-                    {hasMore && (
-                      <div className="mt-5 flex flex-col items-center gap-2 border-t border-gray-200 pt-5">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setVisibleCount((count) =>
-                              Math.min(count + PAGE_SIZE, filteredStories.length)
-                            )
-                          }
-                          className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
-                        >
-                          Show more stories
-                        </button>
-
-                        <span className="text-[10px] text-gray-400">
-                          Showing {visibleStories.length} of {filteredStories.length}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Sidebar */}
-                  <div className="min-w-0">
-                    <div className="lg:sticky lg:top-24">
-                      <GovNumbers />
-
-                      <div className="mt-8">
-                        <SectionHeader
-                          title="Browse by Category"
-                          rightLabel="Sections"
-                        />
-
-                        <div className="divide-y divide-gray-200">
-                          {categoryTabs
-                            .filter((tab) => tab !== "All")
-                            .map((tab) => {
-                              const count = govStories.filter(
-                                (story) => story.category === tab
-                              ).length;
-
-                              return (
-                                <button
-                                  key={tab}
-                                  type="button"
-                                  onClick={() => openCategoryFeed(tab)}
-                                  className="flex w-full items-center justify-between py-3 text-left"
-                                >
-                                  <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-gray-950 hover:underline">
-                                    {tab}
-                                  </span>
-                                  <span className="text-[10px] font-bold uppercase tracking-wide text-red-600">
-                                    {count} {count === 1 ? "story" : "stories"}
-                                  </span>
-                                </button>
-                              );
-                            })}
-                        </div>
-                      </div>
-
-                      <div className="mt-8">
-                        <PrideTimesAd variant="third" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </>
-          )}
-        </main>
+          ))}
+        </div>
       </div>
 
-      {/* Local page utilities (same as homepage) */}
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        html { scroll-behavior: smooth; }
-        ::selection { background: rgba(227, 27, 35, 0.12); color: inherit; }
-      `}</style>
+      {/* PT30 Leadership Insights */}
+      <div className="mb-14 bg-black text-white p-6 md:p-8">
+        <div className="flex items-center gap-2 mb-6">
+          <Award size={16} className="text-yellow-400" />
+
+          <h2 className="text-sm uppercase tracking-[0.2em] text-yellow-400">
+            Pride Times 30 — Leadership Profiles
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {pt30Features.map((p) => (
+            <div
+              key={p.rank}
+              className="group relative border border-gray-800 hover:border-yellow-400/60 p-5 transition-colors duration-300 overflow-hidden"
+            >
+              <span className="absolute -right-2 -top-3 font-serif text-6xl text-gray-800/70 select-none">
+                {String(p.rank).padStart(2, "0")}
+              </span>
+
+              <div className="relative">
+                <span className="text-xs text-gray-500">
+                  PT30
+                </span>
+
+                <h3 className="font-serif text-white text-lg mt-1">
+                  {p.name.trim()}
+                </h3>
+
+                <p className="text-gray-400 text-xs mt-1.5 leading-relaxed">
+                  {p.insight.trim()}
+                </p>
+
+                <button className="mt-4 text-xs text-yellow-400 hover:underline flex items-center gap-1">
+                  Full Profile
+                  <ChevronRight size={10} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Women in Leadership / Opinions / Executive Moves */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+
+        {/* Women in Leadership */}
+        <div>
+          <SH title="Women in Leadership" />
+
+          <div className="flex flex-col">
+            {womenLeaders.map((w) => (
+              <div
+                key={w.rank}
+                className="flex items-start gap-4 py-3 border-b border-gray-100 last:border-0 group cursor-pointer"
+              >
+                <span className="font-serif text-xl text-gray-300 w-6 flex-shrink-0 group-hover:text-red-600 transition-colors">
+                  {w.rank}
+                </span>
+
+                <div>
+                  <p className="text-sm group-hover:text-red-600 transition-colors">
+                    {w.name}
+                  </p>
+
+                  <p className="text-xs text-gray-500">
+                    {w.title}
+                  </p>
+
+                  <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+                    {w.achievement}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Opinions */}
+        <div>
+          <SH title="Leadership Opinion" />
+
+          <div className="divide-y divide-gray-100">
+            {leadershipOpinions.map((o) => (
+              <div
+                key={o.id}
+                className="py-3 group cursor-pointer"
+              >
+                <p className="text-[11px] text-gray-500 uppercase tracking-wider">
+                  {o.author}
+                </p>
+
+                <p className="text-sm group-hover:text-red-600 transition-colors mt-1 leading-snug">
+                  {o.title}
+                </p>
+
+                <span className="text-xs text-gray-400 flex items-center gap-1 mt-1.5">
+                  <Clock size={10} />
+                  <TimeAgo iso={o.publishedAt} />
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Executive moves */}
+        <div>
+          <SH title="Executive Moves" />
+
+          <div className="divide-y divide-gray-100">
+            {executiveMoves.map((m) => (
+              <div
+                key={m.id}
+                className="py-3 group cursor-pointer"
+              >
+                <p className="text-[11px] text-gray-700 uppercase tracking-wider">
+                  {m.person}
+                </p>
+
+                <p className="text-sm group-hover:text-red-600 transition-colors mt-1 leading-snug">
+                  {m.move}
+                </p>
+
+                <span className="text-xs text-gray-400 flex items-center gap-1 mt-1.5">
+                  <Clock size={10} />
+                  <TimeAgo iso={m.publishedAt} />
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
-
-export default LeadershipGovernancePage;
