@@ -190,7 +190,7 @@ function GovNumbers() {
    LEADERSHIP AND GOVERNANCE PAGE
 ========================================================= */
 
-export function LeadershipPage() {
+export function LeadershipGovernancePage() {
   const [activeTab, setActiveTab] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const feedRef = useRef<HTMLDivElement | null>(null);
@@ -544,4 +544,4 @@ export function LeadershipPage() {
   );
 }
 
-export default LeadershipPage;
+export default LeadershipGovernancePage;
