@@ -6,6 +6,7 @@ import { getQuotes } from "../../../services/marketApi";
 import { SaveArticleButton } from "./SaveArticleButton";
 import { ReadTracker } from "./ReadTracker";
 import { ReadingPromptPopup } from "./ReadingPromptPopup";
+import { ArticleFeedback } from "../feedback/ArticleFeedback";
 import {
   TimeAgo,
   estimateReadTime,
@@ -841,6 +842,11 @@ function ArticleShell({
               <ShareRow
                 title={share.title}
                 description={share.description}
+              />
+
+              <ArticleFeedback
+                articleTitle={title}
+                articleSlug={title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}
               />
             </main>
           </div>

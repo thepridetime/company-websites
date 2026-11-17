@@ -13,7 +13,9 @@ import {
   BookOpen,
   HelpCircle,
   ShieldAlert,
+  AlertCircle,
 } from "lucide-react";
+import { submitFeedback } from "../../../lib/feedbackApi";
 
 /* ─────────────────────────────────────────────────────────────
    THE PRIDE TIMES — CONTACT US
@@ -182,16 +184,34 @@ export function ContactPage() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [referenceId, setReferenceId] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate lightweight client submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmissionError(null);
+
+    const res = await submitFeedback({
+      name: fullName,
+      email,
+      category: subject,
+      subject,
+      message,
+      page_url: typeof window !== "undefined" ? window.location.href : undefined,
+    });
+
+    setIsSubmitting(false);
+
+    if (res.success) {
       setSubmitted(true);
-    }, 600);
+      setReferenceId(res.data?.id ? res.data.id.slice(0, 8).toUpperCase() : null);
+    } else {
+      setSubmissionError(
+        res.error || "Failed to transmit your message to our newsroom. Please check your network and try again."
+      );
+    }
   };
 
   const handleCategorySelect = (subjectValue: string) => {
@@ -334,32 +354,47 @@ export function ContactPage() {
               </div>
 
               {submitted ? (
-                <div className="p-6 bg-[#fafafa] border border-[#d4d4d4] text-center my-6">
+                <div className="p-8 bg-[#fafafa] border border-[#d4d4d4] text-center my-6">
                   <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-[#111111] text-white">
                     <CheckCircle2 size={24} className="text-[#ffffff]" />
                   </div>
-                  <h3 className="font-serif text-[20px] font-bold text-[#111111] mb-2">
-                    Message Dispatched
+                  <h3 className="font-serif text-[22px] font-bold text-[#111111] mb-2">
+                    Message Dispatched Successfully
                   </h3>
-                  <p className="text-[14px] text-[#555555] max-w-[420px] mx-auto mb-5 leading-relaxed">
+                  <p className="text-[14px] text-[#555555] max-w-[440px] mx-auto mb-3 leading-relaxed">
                     Thank you, <span className="font-semibold text-[#111111]">{fullName || "Reader"}</span>.
-                    Your dispatch has been logged. Our editorial or administrative desk will respond to your email.
+                    Your dispatch has been received and logged directly into our newsroom system.
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFullName("");
-                      setEmail("");
-                      setMessage("");
-                    }}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#111111] text-white text-[12px] font-bold uppercase tracking-[0.08em] hover:bg-[#e31b23] transition-colors"
-                  >
-                    Send Another Dispatch
-                  </button>
+                  {referenceId && (
+                    <div className="inline-block px-3 py-1 bg-white border border-[#e5e5e5] text-[12px] font-mono text-[#333333] mb-6">
+                      Dispatch Ref: <span className="font-bold text-[#111111]">PT-{referenceId}</span>
+                    </div>
+                  )}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFullName("");
+                        setEmail("");
+                        setMessage("");
+                        setReferenceId(null);
+                        setSubmissionError(null);
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#111111] text-white text-[12px] font-bold uppercase tracking-[0.08em] hover:bg-[#e31b23] transition-colors"
+                    >
+                      Send Another Dispatch
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {submissionError && (
+                    <div className="p-3.5 bg-red-50 border border-red-200 text-red-700 text-[13px] flex items-start gap-2.5">
+                      <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                      <div>{submissionError}</div>
+                    </div>
+                  )}
                   {/* Full Name */}
                   <div>
                     <label
@@ -464,11 +499,11 @@ export function ContactPage() {
                     </button>
                   </div>
 
-                  {/* Implementation Note Banner */}
-                  <div className="pt-4 border-t border-[#f0f0f0] text-[11.5px] leading-relaxed text-[#777777] flex items-start gap-2 bg-[#fbfbfb] p-3 border border-[#eeeeee]">
-                    <ShieldAlert size={14} className="text-[#888888] shrink-0 mt-0.5" />
+                  {/* Secure Editorial Dispatch Guarantee */}
+                  <div className="pt-4 border-t border-[#f0f0f0] text-[11.5px] leading-relaxed text-[#555555] flex items-start gap-2 bg-[#fcfcfc] p-3 border border-[#eeeeee]">
+                    <CheckCircle2 size={14} className="text-[#10b981] shrink-0 mt-0.5" />
                     <span>
-                      <strong className="font-semibold text-[#555555]">Prepare form implementation:</strong> This is a design preview. The form needs a connected backend or form service to deliver messages.
+                      <strong className="font-semibold text-[#111111]">Direct editorial routing:</strong> Inquiries are securely transmitted to The Pride Times newsroom desk and prioritized according to journalistic deadlines.
                     </span>
                   </div>
                 </form>

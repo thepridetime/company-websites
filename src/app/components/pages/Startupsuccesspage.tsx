@@ -80,9 +80,8 @@ const categoryGroups = categoryNames.map((name) => ({
 function ChangeChip({ change, up }: { change: string; up: boolean }) {
   return (
     <span
-      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
-        up ? "text-emerald-600" : "text-red-600"
-      }`}
+      className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${up ? "text-emerald-600" : "text-red-600"
+        }`}
     >
       {up ? (
         <TrendingUp size={11} strokeWidth={2.25} />
@@ -342,9 +341,8 @@ export function StartupSuccessPage() {
                           </div>
 
                           <span
-                            className={`shrink-0 text-[11px] font-semibold tabular-nums ${
-                              negative ? "text-red-400" : "text-emerald-400"
-                            }`}
+                            className={`shrink-0 text-[11px] font-semibold tabular-nums ${negative ? "text-red-400" : "text-emerald-400"
+                              }`}
                           >
                             {metric.change}
                           </span>
@@ -448,11 +446,10 @@ export function StartupSuccessPage() {
                       key={tab}
                       type="button"
                       onClick={() => selectTab(tab)}
-                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
-                        activeNewsTab === tab
-                          ? "border-b-2 border-black pb-1 text-black"
-                          : "pb-1 text-gray-400 hover:text-gray-800"
-                      }`}
+                      className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${activeNewsTab === tab
+                        ? "border-b-2 border-black pb-1 text-black"
+                        : "pb-1 text-gray-400 hover:text-gray-800"
+                        }`}
                     >
                       {tab}
                     </button>

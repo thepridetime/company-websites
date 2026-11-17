@@ -5,6 +5,7 @@ import { EditorialArticle, fetchArticleBySlug } from "../../../lib/editorialApi"
 import { ReadTracker } from "./ReadTracker";
 import { SaveArticleButton } from "./SaveArticleButton";
 import { PrideTimesAd } from "../AdSenseSlots";
+import { ArticleFeedback } from "../feedback/ArticleFeedback";
 
 export function DynamicArticlePage() {
   const { section, slug } = useParams<{ section: string; slug: string }>();
@@ -228,6 +229,12 @@ export function DynamicArticlePage() {
             </div>
           </div>
         )}
+
+        {/* Reader Feedback & Editorial Standards */}
+        <ArticleFeedback
+          articleTitle={article.title}
+          articleSlug={article.slug}
+        />
       </article>
     </main>
   );
