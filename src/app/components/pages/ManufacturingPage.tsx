@@ -49,7 +49,7 @@ const imageById: Record<string, string> = {
 };
 
 /* =========================================================
-   MANUFACTURING ITEMS
+   MANUFACTURING ITEMS (unchanged)
    Stories from src/app/data/specialArticleData.ts
    (section "Manufacturing").
    ========================================================= */
@@ -93,33 +93,32 @@ const categoryTabs = [
 
 /* =========================================================
    SMALL UI PIECES (same as homepage)
-   - Headlines: serif. Hover = underline (not colour change).
-   - Red is ONLY for category labels and "view" links.
-   - Black top rule on every section header.
-   ========================================================= */
+========================================================= */
 
 function SectionHeader({
   title,
-  rightLabel = "The Pride Times",
+  rightLabel,
 }: {
   title: string;
   rightLabel?: string;
 }) {
   return (
     <div className="mb-4 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-gray-950">
+      <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em] text-gray-950">
         {title}
       </h2>
-      <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
-        {rightLabel}
-      </span>
+      {rightLabel && (
+        <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:block">
+          {rightLabel}
+        </span>
+      )}
     </div>
   );
 }
 
 function Kicker({ children }: { children: ReactNode }) {
   return (
-    <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+    <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
       {children}
     </span>
   );
@@ -127,17 +126,42 @@ function Kicker({ children }: { children: ReactNode }) {
 
 function TimeStamp({ children }: { children: ReactNode }) {
   return (
-    <span className="flex items-center gap-1 text-[10px] text-gray-400">
+    <span className="flex items-center gap-1 text-[11px] text-gray-400">
       <Clock size={9} />
       {children}
     </span>
   );
 }
 
+/* Related box used under the lead story (homepage style) */
+
+function RelatedBox({ items }: { items: ManuItem[] }) {
+  return (
+    <div className="mt-4 border border-gray-200">
+      <div className="border-b border-gray-200 px-3 py-1.5 text-[11px] text-gray-500">
+        Top Stories
+      </div>
+
+      <ul className="divide-y divide-gray-200">
+        {items.map((item) => (
+          <li key={item.id}>
+            <Link
+              to={item.href}
+              className="block px-3 py-2.5 text-[14px] font-bold leading-[1.3] text-gray-950 hover:underline"
+            >
+              {item.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /* =========================================================
    KEY FIGURES (dark panel, same style as homepage Markets)
    Uses the lead story's key facts.
-   ========================================================= */
+========================================================= */
 
 function KeyFiguresPanel({
   title,
@@ -151,9 +175,9 @@ function KeyFiguresPanel({
   }
 
   return (
-    <div className="rounded-sm bg-black p-4 text-white">
+    <div className="rounded-md bg-black p-5 text-white">
       <div className="flex items-center justify-between border-b border-white/20 pb-2">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+        <h2 className="text-[13px] font-extrabold uppercase tracking-[0.04em]">
           {title}
         </h2>
         <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
@@ -165,7 +189,7 @@ function KeyFiguresPanel({
         {facts.map((fact) => (
           <div
             key={fact.label}
-            className="flex items-start justify-between gap-3 py-2.5"
+            className="flex items-start justify-between gap-3 py-3"
           >
             <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
               {fact.label}
@@ -182,7 +206,7 @@ function KeyFiguresPanel({
 
 /* =========================================================
    SIDEBAR: NUMBERS
-   ========================================================= */
+========================================================= */
 
 function ManuNumbers() {
   const stats = [
@@ -204,7 +228,7 @@ function ManuNumbers() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-5">
         {stats.map((stat) => (
           <div key={stat.label}>
-            <div className="font-serif text-[24px] font-bold leading-none text-gray-950">
+            <div className="text-[26px] font-extrabold leading-none text-gray-950">
               {stat.value}
             </div>
             <div className="mt-1.5 text-[11px] text-gray-500">{stat.label}</div>
@@ -217,7 +241,7 @@ function ManuNumbers() {
 
 /* =========================================================
    MANUFACTURING PAGE
-   ========================================================= */
+========================================================= */
 
 export function ManufacturingPage() {
   const [activeTab, setActiveTab] = useState("All");
@@ -250,19 +274,19 @@ export function ManufacturingPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* PAGE TITLE */}
           <header className="mb-6 border-t-[3px] border-black pt-3">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
                   Industry · The Future of Production
                 </span>
-                <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 md:text-[38px]">
+                <h1 className="mt-1.5 text-[26px] font-extrabold leading-[1.12] text-gray-950 md:text-[32px]">
                   {SECTION_LABEL}
                 </h1>
-                <p className="mt-2 text-[12px] leading-[1.5] text-gray-500 md:text-[13px]">
+                <p className="mt-2 text-[13px] leading-[1.5] text-gray-500">
                   Reshoring, robotics, smart factories and industrial technology
                   from The Pride Times.
                 </p>
@@ -285,119 +309,94 @@ export function ManufacturingPage() {
             <>
               {/* =================================================
                   1. TOP SECTION — 3 columns, like the homepage
-                     LEFT   : text-only Top Stories list
-                     CENTER : lead story + 2 secondary stories
+                     LEFT   : lead story + Top Stories
+                     CENTRE : two secondary stories
                      RIGHT  : Key Figures panel + Editor's Pick
               ================================================= */}
-              <section className="mb-10 border-b border-gray-300 pb-8">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-0">
-                  {/* LEFT: Top stories (text only) */}
-                  <aside className="order-2 min-w-0 lg:order-1 lg:col-span-3 lg:border-r lg:border-gray-200 lg:pr-6">
-                    <div className="mb-1 border-t-[3px] border-black pt-2">
-                      <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
-                        Top Stories
-                      </h2>
-                    </div>
-
-                    <ul className="divide-y divide-gray-200">
-                      {sideHeadlines.map((story) => (
-                        <li key={story.id}>
-                          <Link to={story.href} className="group block py-3.5">
-                            <Kicker>{story.kicker}</Kicker>
-
-                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
-                              {story.title}
-                            </h3>
-
-                            <div className="mt-1.5">
-                              <TimeStamp>{story.meta}</TimeStamp>
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </aside>
-
-                  {/* CENTER: lead story */}
-                  <div className="order-1 min-w-0 lg:order-2 lg:col-span-6 lg:px-6">
+              <section className="mb-10">
+                <div className="grid grid-cols-1 items-stretch gap-0 border border-gray-200 md:grid-cols-2 lg:grid-cols-12">
+                  {/* LEFT: lead story */}
+                  <div className="flex flex-col border-b border-gray-200 p-6 lg:col-span-4 lg:border-b-0 lg:border-r">
                     <Link to={leadStory.href} className="group block">
-                      <div className="relative overflow-hidden rounded-sm bg-black">
+                      <div className="overflow-hidden rounded-md bg-gray-100">
                         <ImageWithFallback
                           src={leadStory.image}
                           alt={leadStory.title}
                           loading="eager"
-                          className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                          className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                         />
                       </div>
 
-                      <div className="mt-4">
+                      <div className="mt-5">
                         <Kicker>{leadStory.kicker}</Kicker>
+                      </div>
 
-                        <h1 className="mt-1.5 font-serif text-[28px] font-bold leading-[1.1] text-gray-950 group-hover:underline md:text-[38px]">
-                          {leadStory.title}
-                        </h1>
+                      <h1 className="mt-2 line-clamp-3 text-[26px] font-extrabold leading-[1.12] text-gray-950 group-hover:underline md:text-[28px]">
+                        {leadStory.title}
+                      </h1>
 
-                        <p className="mt-3 text-[15px] leading-[1.55] text-gray-600">
-                          {leadStory.lede}
-                        </p>
+                      <p className="mt-2 line-clamp-3 text-[14px] leading-[1.5] text-gray-600">
+                        {leadStory.lede}
+                      </p>
 
-                        <div className="mt-3">
-                          <TimeStamp>{leadStory.meta}</TimeStamp>
-                        </div>
+                      <div className="mt-2">
+                        <TimeStamp>{leadStory.meta}</TimeStamp>
                       </div>
                     </Link>
 
-                    {/* Two secondary stories under the lead */}
-                    {majorStories.length > 0 && (
-                      <div className="mt-6 grid grid-cols-1 gap-6 border-t border-gray-200 pt-5 sm:grid-cols-2">
-                        {majorStories.map((story) => (
-                          <Link
-                            key={story.id}
-                            to={story.href}
-                            className="group block"
-                          >
-                            <div className="overflow-hidden rounded-sm">
-                              <ImageWithFallback
-                                src={story.image}
-                                alt={story.title}
-                                className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                              />
-                            </div>
+                    <div className="mt-auto">
+                      <RelatedBox items={sideHeadlines} />
+                    </div>
+                  </div>
 
-                            <div className="mt-2.5">
-                              <Kicker>{story.kicker}</Kicker>
+                  {/* CENTRE: two secondary stories */}
+                  <div className="flex flex-col gap-8 border-b border-gray-200 p-6 md:border-r lg:col-span-4 lg:border-b-0 lg:border-r">
+                    {majorStories.map((story) => (
+                      <Link key={story.id} to={story.href} className="group block">
+                        <div className="overflow-hidden rounded-md bg-gray-100">
+                          <ImageWithFallback
+                            src={story.image}
+                            alt={story.title}
+                            className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                          />
+                        </div>
 
-                              <h3 className="mt-1 font-serif text-[19px] font-bold leading-[1.2] text-gray-950 group-hover:underline">
-                                {story.title}
-                              </h3>
+                        <div className="mt-4">
+                          <Kicker>{story.kicker}</Kicker>
 
-                              <div className="mt-1.5">
-                                <TimeStamp>{story.meta}</TimeStamp>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                          <h3 className="mt-1.5 line-clamp-2 text-[24px] font-extrabold leading-[1.15] text-gray-950 group-hover:underline md:text-[26px]">
+                            {story.title}
+                          </h3>
+
+                          <p className="mt-2 line-clamp-2 text-[14px] leading-[1.5] text-gray-500">
+                            {story.lede}
+                          </p>
+
+                          <div className="mt-2">
+                            <TimeStamp>{story.meta}</TimeStamp>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
 
                   {/* RIGHT: Key figures + Editor's Pick */}
-                  <aside className="order-3 min-w-0 lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-6">
+                  <aside className="flex flex-col p-6 md:col-span-2 lg:col-span-4">
                     <KeyFiguresPanel
                       title="Key Figures"
                       facts={leadStory.keyFacts}
                     />
 
                     {editorsPick && (
-                      <div className="mt-6">
-                        <div className="mb-3 flex items-baseline justify-between border-t-[3px] border-black pt-2">
-                          <h2 className="text-[12px] font-bold uppercase tracking-[0.16em]">
+                      <div className="mt-8 border-t border-gray-200 pt-6">
+                        <div className="mb-4 flex items-center justify-between">
+                          <h2 className="text-[15px] font-extrabold text-gray-950">
                             Editor's Pick
                           </h2>
                         </div>
 
                         <Link to={editorsPick.href} className="group block">
-                          <div className="overflow-hidden rounded-sm">
+                          <div className="overflow-hidden rounded-md bg-gray-100">
                             <ImageWithFallback
                               src={editorsPick.image}
                               alt={editorsPick.title}
@@ -405,14 +404,14 @@ export function ManufacturingPage() {
                             />
                           </div>
 
-                          <div className="mt-2.5">
+                          <div className="mt-3">
                             <Kicker>{editorsPick.kicker}</Kicker>
 
-                            <h3 className="mt-1 font-serif text-[17px] font-bold leading-[1.25] text-gray-950 group-hover:underline">
+                            <h3 className="mt-1.5 line-clamp-3 text-[20px] font-bold leading-[1.22] text-gray-950 group-hover:underline">
                               {editorsPick.title}
                             </h3>
 
-                            <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.5] text-gray-500">
+                            <p className="mt-2 line-clamp-3 text-[13px] leading-[1.5] text-gray-500">
                               {editorsPick.lede}
                             </p>
                           </div>
@@ -433,7 +432,7 @@ export function ManufacturingPage() {
               <section aria-label="Latest manufacturing news" className="mb-12">
                 <SectionHeader title={`Latest ${SECTION_LABEL} News`} />
 
-                <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1.9fr_0.7fr]">
+                <div className="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-[1.9fr_0.7fr]">
                   {/* Feed */}
                   <div ref={feedRef} className="scroll-mt-24 min-w-0">
                     <div className="no-scrollbar mb-1 flex items-center gap-5 overflow-x-auto border-b border-gray-200 pb-3">
@@ -442,7 +441,7 @@ export function ManufacturingPage() {
                           key={tab}
                           type="button"
                           onClick={() => selectTab(tab)}
-                          className={`whitespace-nowrap text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                          className={`whitespace-nowrap text-[11px] font-bold uppercase tracking-wide transition-colors ${
                             activeTab === tab
                               ? "border-b-2 border-black pb-1 text-black"
                               : "pb-1 text-gray-400 hover:text-gray-800"
@@ -464,9 +463,9 @@ export function ManufacturingPage() {
                         <Link
                           key={item.id}
                           to={item.href}
-                          className="group grid grid-cols-[110px_1fr] gap-4 py-5 sm:grid-cols-[200px_1fr] sm:gap-5"
+                          className="group grid grid-cols-[110px_1fr] items-start gap-4 py-7 sm:grid-cols-[200px_1fr] sm:gap-6"
                         >
-                          <div className="h-[80px] w-full overflow-hidden rounded-sm bg-gray-100 sm:h-[126px]">
+                          <div className="h-[80px] w-full overflow-hidden rounded-md bg-gray-100 sm:h-[126px]">
                             <ImageWithFallback
                               src={item.image}
                               alt={item.title}
@@ -476,14 +475,14 @@ export function ManufacturingPage() {
 
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-x-2">
-                              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-red-600">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-red-600">
                                 {item.kicker}
                               </span>
 
                               {item.location && (
                                 <>
                                   <span className="text-[10px] text-gray-300">•</span>
-                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-400">
                                     <MapPin size={9} />
                                     {item.location}
                                   </span>
@@ -491,7 +490,7 @@ export function ManufacturingPage() {
                               )}
                             </div>
 
-                            <h3 className="mt-1 font-serif text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
+                            <h3 className="mt-1 line-clamp-2 text-[16px] font-bold leading-[1.25] text-gray-950 group-hover:underline sm:text-[21px]">
                               {item.title}
                             </h3>
 
@@ -516,7 +515,7 @@ export function ManufacturingPage() {
                               Math.min(count + PAGE_SIZE, filteredItems.length)
                             )
                           }
-                          className="rounded-sm border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                          className="border border-black px-6 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white"
                         >
                           Show more stories
                         </button>
@@ -530,7 +529,7 @@ export function ManufacturingPage() {
 
                   {/* Sidebar */}
                   <div className="min-w-0">
-                    <div className="lg:sticky lg:top-24">
+                    <div className="lg:sticky lg:top-24 lg:pt-1">
                       <ManuNumbers />
 
                       <div className="mt-8">
@@ -554,7 +553,7 @@ export function ManufacturingPage() {
                                   onClick={() => openCategoryFeed(tab)}
                                   className="flex w-full items-center justify-between py-3 text-left"
                                 >
-                                  <span className="text-[12px] font-bold uppercase tracking-[0.08em] text-gray-950 hover:underline">
+                                  <span className="text-[12px] font-extrabold uppercase tracking-[0.08em] text-gray-950 hover:underline">
                                     {tab}
                                   </span>
                                   <span className="text-[10px] font-bold uppercase tracking-wide text-red-600">
