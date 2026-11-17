@@ -24,18 +24,13 @@ export interface WhiteHouseWatchPageProps {
    Stories from src/app/data/whiteHouseData.ts.
    ========================================================= */
 
-// OLD (commented): computed once at module load. If the data was empty or
-// filled later, these stayed empty and the page showed "No stories yet".
-// const stories: WhiteHouseStory[] = whiteHouseStories;
-//
-// /* Homepage-style layout slots */
-// const leadStory: WhiteHouseStory | undefined = stories[0];
-// const majorStories = stories.slice(1, 3);
-// const editorsPick: WhiteHouseStory | undefined = stories[3];
-// const sideHeadlines = stories.slice(4, 8);
+const stories: WhiteHouseStory[] = whiteHouseStories;
 
-// NEW: the same values are now computed inside the page component (see below),
-// every time it renders, and they are safe if the data is undefined.
+/* Homepage-style layout slots */
+const leadStory: WhiteHouseStory | undefined = stories[0];
+const majorStories = stories.slice(1, 3);
+const editorsPick: WhiteHouseStory | undefined = stories[3];
+const sideHeadlines = stories.slice(4, 8);
 
 function displayDate(value: string) {
   return isIsoTimestamp(value) ? formatTimestamp(value) : value;
@@ -223,40 +218,13 @@ function KeyFiguresPanel({
    SIDEBAR: NUMBERS
    ========================================================= */
 
-// OLD (commented): read stories / leadStory / whiteHouseLatestNews directly
-// from module level.
-// function WhiteHouseNumbers() {
-//   const stats = [
-//     { label: "Total stories", value: String(stories.length) },
-//     { label: "Latest updates", value: String(whiteHouseLatestNews.length) },
-//     {
-//       label: "Key facts (lead)",
-//       value: String(leadStory?.keyFacts.length ?? 0),
-//     },
-//     {
-//       label: "With images",
-//       value: String(stories.filter((s) => Boolean(s.image)).length),
-//     },
-//   ];
-//   ...
-// }
-
-// NEW: gets the data as props from the page component.
-function WhiteHouseNumbers({
-  stories,
-  latestCount,
-  leadStory,
-}: {
-  stories: WhiteHouseStory[];
-  latestCount: number;
-  leadStory: WhiteHouseStory | undefined;
-}) {
+function WhiteHouseNumbers() {
   const stats = [
     { label: "Total stories", value: String(stories.length) },
-    { label: "Latest updates", value: String(latestCount) },
+    { label: "Latest updates", value: String(whiteHouseLatestNews.length) },
     {
       label: "Key facts (lead)",
-      value: String(leadStory?.keyFacts?.length ?? 0),
+      value: String(leadStory?.keyFacts.length ?? 0),
     },
     {
       label: "With images",
@@ -294,19 +262,6 @@ export function WhiteHouseWatchPage({
 }: WhiteHouseWatchPageProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const feedRef = useRef<HTMLDivElement | null>(null);
-
-  /* NEW: data is read inside the component, and is safe if undefined */
-  const stories: WhiteHouseStory[] = whiteHouseStories ?? [];
-  const latestNews = whiteHouseLatestNews ?? [];
-
-  /* Homepage-style layout slots */
-  const leadStory: WhiteHouseStory | undefined = stories[0];
-  const majorStories = stories.slice(1, 3);
-  const editorsPick: WhiteHouseStory | undefined = stories[3];
-  const sideHeadlines = stories.slice(4, 8);
-
-  /* NEW: only show the left column when it has stories */
-  const hasSide = sideHeadlines.length > 0;
 
   const visibleStories = stories.slice(0, visibleCount);
   const hasMore = visibleCount < stories.length;
@@ -374,7 +329,7 @@ export function WhiteHouseWatchPage({
             <>
               {/* =================================================
                   1. TOP SECTION — 3 columns, like the homepage
-                     LEFT   : image + news cards
+                     LEFT   : text-only Top Stories list
                      CENTER : lead story + 2 secondary stories
                      RIGHT  : Key Figures panel + Editor's Pick
               ================================================= */}
@@ -548,8 +503,7 @@ export function WhiteHouseWatchPage({
                   </aside>
                   */}
 
-                  {/* NEW: image + news cards, no "Top Stories" heading (hidden when empty) */}
-                  {hasSide && (
+                  {/* NEW: image + news cards, no "Top Stories" heading */}
                   <aside className="order-2 min-w-0 border-b border-gray-300 p-4 lg:order-1 lg:col-span-3 lg:border-b-0 lg:border-r">
                     <ul className="divide-y divide-gray-300">
                       {sideHeadlines.map((story) => (
@@ -580,16 +534,8 @@ export function WhiteHouseWatchPage({
                     </ul>
                   </aside>
 
-                  )}
-
                   {/* CENTER: lead story + 2 secondary stories */}
-                  {/* OLD (commented): <div className="order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:col-span-6 lg:border-b-0 lg:border-r"> */}
-                  {/* NEW: 9 columns wide when there is no left column */}
-                  <div
-                    className={`order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:border-b-0 lg:border-r ${
-                      hasSide ? "lg:col-span-6" : "lg:col-span-9"
-                    }`}
-                  >
+                  <div className="order-1 min-w-0 border-b border-gray-300 p-4 lg:order-2 lg:col-span-6 lg:border-b-0 lg:border-r">
                     <Link to={leadStory.href} className="group block">
                       <div className="relative overflow-hidden bg-black">
                         <ImageWithFallback
@@ -655,7 +601,7 @@ export function WhiteHouseWatchPage({
                   <aside className="order-3 min-w-0 p-4 lg:col-span-3">
                     <KeyFiguresPanel
                       title="Key Figures"
-                      facts={leadStory.keyFacts ?? []}
+                      facts={leadStory.keyFacts}
                     />
 
                     {editorsPick && (
@@ -804,15 +750,9 @@ export function WhiteHouseWatchPage({
                   {/* Sidebar */}
                   <div className="min-w-0">
                     <div className="lg:sticky lg:top-24">
-                      {/* OLD (commented): <WhiteHouseNumbers /> */}
-                      {/* NEW: */}
-                      <WhiteHouseNumbers
-                        stories={stories}
-                        latestCount={latestNews.length}
-                        leadStory={leadStory}
-                      />
+                      <WhiteHouseNumbers />
 
-                      {latestNews.length > 0 && (
+                      {whiteHouseLatestNews.length > 0 && (
                         <div className="mt-8">
                           <SectionHeader
                             title="Latest Updates"
@@ -822,7 +762,7 @@ export function WhiteHouseWatchPage({
                           {/* OLD (commented): <ol className="divide-y divide-gray-200"> */}
                           {/* NEW: */}
                           <ol className="divide-y divide-gray-300">
-                            {latestNews.map((item, index) => (
+                            {whiteHouseLatestNews.map((item, index) => (
                               <li key={item.id}>
                                 <Link
                                   to={item.href}
