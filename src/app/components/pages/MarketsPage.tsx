@@ -223,7 +223,7 @@ export function MarketsPage() {
   if (marketStories.length === 0) {
     return (
       <div className="min-h-screen bg-white font-sans text-gray-900">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="w-full px-4 py-16 md:px-6 xl:px-8">
           <h1 className="text-[32px] font-extrabold text-gray-950">Markets</h1>
           <p className="mt-3 text-[14px] text-gray-500">
             No markets stories are available yet.
@@ -246,7 +246,7 @@ export function MarketsPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
           {/* =================================================
               PAGE HEADING
