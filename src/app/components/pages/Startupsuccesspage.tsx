@@ -225,6 +225,25 @@ export function StartupSuccessPage() {
     <div className="min-h-screen bg-white font-sans text-gray-900 antialiased">
       <div className="w-full px-4 md:px-6 xl:px-8">
         <main className="pb-16 pt-4 md:pt-6">
+          {/* PAGE TITLE */}
+          <header className="mb-6 border-t-[3px] border-black pt-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.08em] text-red-600">
+                  Venture &amp; Growth
+                </span>
+                <h1 className="mt-1.5 text-[26px] font-extrabold leading-[1.12] text-gray-950 md:text-[32px]">
+                  Startup Success
+                </h1>
+                <p className="mt-2 text-[13px] leading-[1.5] text-gray-500">
+                  Funding rounds, founder stories and the startups shaping the next generation of business from The Pride Times.
+                </p>
+              </div>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                Startups • Funding • Growth
+              </span>
+            </div>
+          </header>
           {/* =================================================
               1. TOP BAND — 3 columns
                  LEFT   : lead story + Related
