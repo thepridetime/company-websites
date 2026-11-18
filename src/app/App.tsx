@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 
 import { AuthProvider } from "./context/AuthContext";
 import { Header } from "./components/Header";
@@ -35,7 +35,6 @@ import { CoverStoriesPage } from "./components/pages/CoverStoriesPage";
 import { WhiteHouseWatchPage } from "./components/pages/WhiteHouseWatchPage";
 import { BusinessNewsPage } from "./components/pages/BusinessNewsPage";
 import { ArticleDetailPage } from "./components/pages/ArticleDetailPage";
-import { LeadershipPage } from "./components/pages/LeadershipPage";
 import { LeadershipGovernancePage } from "./components/pages/LeadershipGovernancePage";
 import { SustainabilityEsgPage } from "./components/pages/SustainabilityEsgPage";
 import { InnovationPage } from "./components/pages/InnovationPage";
@@ -429,11 +428,7 @@ export default function App() {
 
           <Route
             path="/leadership"
-            element={
-              <MagazineLayout>
-                <LeadershipPage />
-              </MagazineLayout>
-            }
+            element={<Navigate to="/leadership-governance" replace />}
           />
 
           <Route
