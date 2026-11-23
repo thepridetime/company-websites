@@ -56,8 +56,9 @@ For more information on how Google collects and processes data when you visit pa
     title: "8. Contact Us",
     content: `If you have questions about this Privacy Policy or our data practices, please contact:
 The Pride Times Privacy Team
+Operating Entity: VIGOMERGE TECHNOLOGY (OPC) PRIVATE LIMITED
 Email: privacy@thepridetime.com
-Address: The Pride Times Inc., 1 Enterprise Plaza, New York, NY 10004, United States`
+Address: WeWork Forum, DLF Cyber City, DLF Phase 3, Sector 24, Gurugram, Haryana 122002, India`
   }
 ];
 
@@ -75,7 +76,7 @@ export function Privacy() {
           Last updated: October 2026 • Effective Date: October 2026 • The Pride Times Inc.
         </p>
         <p className="text-[#374151] text-sm mt-4 leading-relaxed">
-          The Pride Times Inc. ("The Pride Times," "we," "us," or "our") is committed to protecting your personal data and upholding your privacy rights. This Privacy Policy outlines our data handling practices and discloses our use of cookies and third-party advertising partners, including Google AdSense.
+          The Pride Times ("The Pride Times," "we," "us," or "our"), operated by VIGOMERGE TECHNOLOGY (OPC) PRIVATE LIMITED, is committed to protecting your personal data and upholding your privacy rights. This Privacy Policy outlines our data handling practices and discloses our use of cookies and third-party advertising partners, including Google AdSense.
         </p>
       </div>
 

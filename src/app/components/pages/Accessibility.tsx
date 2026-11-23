@@ -29,7 +29,7 @@ export function Accessibility() {
           },
           {
             title: "Feedback & Contact",
-            content: "We welcome your feedback on the accessibility of The Pride Times. Please let us know if you encounter accessibility barriers. We aim to respond to feedback within 2 business days.\n\nEmail: accessibility@thepridetime.com\nPostal address: Accessibility Team, The Pride Times, 1 Enterprise Plaza, New York, NY 10004",
+            content: "We welcome your feedback on the accessibility of The Pride Times. Please let us know if you encounter accessibility barriers. We aim to respond to feedback within 2 business days.\n\nEmail: accessibility@thepridetime.com\nPostal address: Accessibility Team, VIGOMERGE TECHNOLOGY (OPC) PRIVATE LIMITED, WeWork Forum, DLF Cyber City, DLF Phase 3, Sector 24, Gurugram, Haryana 122002, India",
           },
         ].map((s) => (
           <div key={s.title} className="bg-white rounded-xl border border-gray-200 p-6">

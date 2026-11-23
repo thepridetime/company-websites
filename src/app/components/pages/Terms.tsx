@@ -61,7 +61,7 @@ TO THE FULLEST EXTENT PERMITTED BY LAW, THE PRIDE TIMES INC., ITS DIRECTORS, EMP
   },
   {
     title: "10. Contact Us & Modifications",
-    content: `We may revise these Terms of Service periodically. We will post any updates here with the revised effective date. For legal questions or permissions requests, contact us at legal@thepridetime.com or by mail at The Pride Times Inc., 1 Enterprise Plaza, New York, NY 10004, United States.`
+    content: `We may revise these Terms of Service periodically. We will post any updates here with the revised effective date. For legal questions or permissions requests, contact us at legal@thepridetime.com or by mail at VIGOMERGE TECHNOLOGY (OPC) PRIVATE LIMITED, WeWork Forum, DLF Cyber City, DLF Phase 3, Sector 24, Gurugram, Haryana 122002, India.`
   }
 ];
 

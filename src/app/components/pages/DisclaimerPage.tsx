@@ -58,7 +58,7 @@ If you are a copyright owner or an authorized agent and believe in good faith th
 
 Please send all DMCA notices to our designated copyright agent:
 Email: dmca@thepridetime.com / legal@thepridetime.com
-Mailing Address: The Pride Times Legal Department, 1 Enterprise Plaza, New York, NY 10004, USA.`
+Mailing Address: Legal Department, VIGOMERGE TECHNOLOGY (OPC) PRIVATE LIMITED, WeWork Forum, DLF Cyber City, DLF Phase 3, Sector 24, Gurugram, Haryana 122002, India.`
   },
   {
     title: "7. Third-Party Links, Sponsored Content & Advertising Disclaimer",
@@ -76,9 +76,10 @@ If you notice a factual error or believe a correction is warranted, please conta
   {
     title: "9. Contact Information",
     content: `For legal inquiries, copyright questions, reprint permissions, or editorial licensing:
+• Operating Entity: VIGOMERGE TECHNOLOGY (OPC) PRIVATE LIMITED
 • General Editorial Desk: editorial@thepridetime.com
 • Legal & DMCA Inquiries: legal@thepridetime.com / dmca@thepridetime.com
-• Corporate Headquarters: The Pride Times Inc., 1 Enterprise Plaza, New York, NY 10004, United States`
+• Corporate Address: WeWork Forum, DLF Cyber City, DLF Phase 3, Sector 24, Gurugram, Haryana 122002, India`
   }
 ];
 
