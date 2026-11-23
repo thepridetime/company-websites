@@ -40,7 +40,7 @@ Automated data scraping, web scraping, content harvesting, data extraction, or i
 
 Third-party journalists, bloggers, scholars, and media outlets may quote limited excerpts of our original articles provided that:
 • Proper and prominent attribution is given to "The Pride Times";
-• A functional, direct hyperlink back to the original source article on thepridetimes.com is included;
+• A functional, direct hyperlink back to the original source article on thepridetime.com is included;
 • The excerpt does not exceed 100 words or constitute a substantive substitute for reading the original article;
 • The context and meaning of the reporting are accurately preserved without misleading distortions.`
   },
@@ -57,7 +57,7 @@ If you are a copyright owner or an authorized agent and believe in good faith th
 6. An electronic or physical signature of the person authorized to act on behalf of the copyright owner.
 
 Please send all DMCA notices to our designated copyright agent:
-Email: dmca@thepridetimes.com / legal@thepridetimes.com
+Email: dmca@thepridetime.com / legal@thepridetime.com
 Mailing Address: The Pride Times Legal Department, 1 Enterprise Plaza, New York, NY 10004, USA.`
   },
   {
@@ -71,13 +71,13 @@ We display advertisements served by third-party ad networks, including Google Ad
     title: "8. Corrections, Retractions & Editorial Standards",
     content: `The Pride Times adheres to strict journalistic integrity and accuracy standards. When factual errors, misquotes, or inaccuracies occur in our reporting, our editorial policy is to investigate promptly and issue clear, transparent corrections or clarifications at the top or bottom of the affected article.
 
-If you notice a factual error or believe a correction is warranted, please contact our editorial desk at editorial@thepridetimes.com with the article URL, specific details of the factual inaccuracy, and verifiable supporting documentation.`
+If you notice a factual error or believe a correction is warranted, please contact our editorial desk at editorial@thepridetime.com with the article URL, specific details of the factual inaccuracy, and verifiable supporting documentation.`
   },
   {
     title: "9. Contact Information",
     content: `For legal inquiries, copyright questions, reprint permissions, or editorial licensing:
-• General Editorial Desk: editorial@thepridetimes.com
-• Legal & DMCA Inquiries: legal@thepridetimes.com / dmca@thepridetimes.com
+• General Editorial Desk: editorial@thepridetime.com
+• Legal & DMCA Inquiries: legal@thepridetime.com / dmca@thepridetime.com
 • Corporate Headquarters: The Pride Times Inc., 1 Enterprise Plaza, New York, NY 10004, United States`
   }
 ];

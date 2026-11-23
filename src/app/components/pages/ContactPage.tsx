@@ -13,9 +13,7 @@ import {
   BookOpen,
   HelpCircle,
   ShieldAlert,
-  AlertCircle,
 } from "lucide-react";
-import { submitFeedback } from "../../../lib/feedbackApi";
 
 /* ─────────────────────────────────────────────────────────────
    THE PRIDE TIMES — CONTACT US
@@ -45,7 +43,7 @@ const contactCategories: ContactCategory[] = [
     title: "Editorial & Newsroom",
     description: "Story ideas, corrections, news tips, and editorial inquiries.",
     actionText: "Contact the editorial team",
-    email: "editorial@pridetimes.com",
+    email: "editorial@thepridetime.com",
     subjectValue: "Editorial & Story Pitch",
     icon: Newspaper,
   },
@@ -54,7 +52,7 @@ const contactCategories: ContactCategory[] = [
     title: "Advertising & Partnerships",
     description: "Advertising opportunities, sponsorships, and brand partnerships.",
     actionText: "Discuss a partnership",
-    email: "partnerships@pridetimes.com",
+    email: "partnerships@thepridetime.com",
     subjectValue: "Advertising & Partnerships",
     icon: Briefcase,
   },
@@ -63,7 +61,7 @@ const contactCategories: ContactCategory[] = [
     title: "Magazine & Subscriptions",
     description: "Digital editions, print subscriptions, and membership questions.",
     actionText: "Get subscription help",
-    email: "subscriptions@pridetimes.com",
+    email: "subscriptions@thepridetime.com",
     subjectValue: "Magazine & Subscriptions",
     icon: BookOpen,
   },
@@ -72,7 +70,7 @@ const contactCategories: ContactCategory[] = [
     title: "General Inquiries",
     description: "Questions about the publication, website, or other matters.",
     actionText: "Send an inquiry",
-    email: "contact@pridetimes.com",
+    email: "contact@thepridetime.com",
     subjectValue: "General Inquiry",
     icon: HelpCircle,
   },
@@ -97,12 +95,12 @@ const faqs = [
   {
     question: "How can I submit a news tip or story idea?",
     answer:
-      "We welcome pitches and verified tips from journalists, industry analysts, and insiders. Please send detailed story outlines with supporting documentation directly to our editorial team at editorial@pridetimes.com. For sensitive disclosures, our desk can coordinate encrypted or confidential communication.",
+      "We welcome pitches and verified tips from journalists, industry analysts, and insiders. Please send detailed story outlines with supporting documentation directly to our editorial team at editorial@thepridetime.com. For sensitive disclosures, our desk can coordinate encrypted or confidential communication.",
   },
   {
     question: "How do I report an error in an article?",
     answer:
-      "The Pride Times adheres to rigorous factual standards. If you believe a story contains a factual or contextual inaccuracy, please email corrections@pridetimes.com with the headline, published URL, and the specific correction needed. Our standards editor reviews all submissions in accordance with our correction policy.",
+      "The Pride Times adheres to rigorous factual standards. If you believe a story contains a factual or contextual inaccuracy, please email corrections@thepridetime.com with the headline, published URL, and the specific correction needed. Our standards editor reviews all submissions in accordance with our correction policy.",
   },
   {
     question: "How can I subscribe to the magazine?",
@@ -112,7 +110,7 @@ const faqs = [
   {
     question: "How can my company discuss advertising or partnerships?",
     answer:
-      "Our commercial team crafts bespoke executive content, newsletter sponsorships, display placements, and high-impact event partnerships. Email partnerships@pridetimes.com or select 'Advertising & Partnerships' in the message form above to request our media kit and editorial calendar.",
+      "Our commercial team crafts bespoke executive content, newsletter sponsorships, display placements, and high-impact event partnerships. Email partnerships@thepridetime.com or select 'Advertising & Partnerships' in the message form above to request our media kit and editorial calendar.",
   },
   {
     question: "How can I access premium content?",
@@ -184,34 +182,16 @@ export function ContactPage() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [submissionError, setSubmissionError] = useState<string | null>(null);
-  const [referenceId, setReferenceId] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmissionError(null);
-
-    const res = await submitFeedback({
-      name: fullName,
-      email,
-      category: subject,
-      subject,
-      message,
-      page_url: typeof window !== "undefined" ? window.location.href : undefined,
-    });
-
-    setIsSubmitting(false);
-
-    if (res.success) {
+    // Simulate lightweight client submission
+    setTimeout(() => {
+      setIsSubmitting(false);
       setSubmitted(true);
-      setReferenceId(res.data?.id ? res.data.id.slice(0, 8).toUpperCase() : null);
-    } else {
-      setSubmissionError(
-        res.error || "Failed to transmit your message to our newsroom. Please check your network and try again."
-      );
-    }
+    }, 600);
   };
 
   const handleCategorySelect = (subjectValue: string) => {
@@ -302,9 +282,9 @@ export function ContactPage() {
                     </p>
                   </div>
 
-                  <div 
-                  // className="pt-3 border-t border-[#f2f2f2] flex items-center justify-between"
-                  className="pt-3 border-t border-[#f2f2f2] flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                  <div
+                    // className="pt-3 border-t border-[#f2f2f2] flex items-center justify-between"
+                    className="pt-3 border-t border-[#f2f2f2] flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                   >
                     <button
                       type="button"
@@ -312,8 +292,8 @@ export function ContactPage() {
                       className="inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-[#111111] group-hover:text-[#e31b23] transition-colors"
                     >
                       {cat.actionText}
-                      <ArrowRight size={13} 
-                      className="shrink-0 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight size={13}
+                        className="shrink-0 transition-transform group-hover:translate-x-1" />
                     </button>
 
                     <a
@@ -338,7 +318,7 @@ export function ContactPage() {
           className="scroll-mt-8 mb-14 sm:mb-16 lg:mb-20"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-            
+
             {/* ── 3. MAIN CONTACT FORM (7 cols on desktop) ──────── */}
             <div className="lg:col-span-7 border border-[#e0e0e0] bg-[#ffffff] p-6 sm:p-8">
               <div className="border-b border-[#e5e5e5] pb-4 mb-6">
@@ -354,47 +334,32 @@ export function ContactPage() {
               </div>
 
               {submitted ? (
-                <div className="p-8 bg-[#fafafa] border border-[#d4d4d4] text-center my-6">
+                <div className="p-6 bg-[#fafafa] border border-[#d4d4d4] text-center my-6">
                   <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-[#111111] text-white">
                     <CheckCircle2 size={24} className="text-[#ffffff]" />
                   </div>
-                  <h3 className="font-serif text-[22px] font-bold text-[#111111] mb-2">
-                    Message Dispatched Successfully
+                  <h3 className="font-serif text-[20px] font-bold text-[#111111] mb-2">
+                    Message Dispatched
                   </h3>
-                  <p className="text-[14px] text-[#555555] max-w-[440px] mx-auto mb-3 leading-relaxed">
+                  <p className="text-[14px] text-[#555555] max-w-[420px] mx-auto mb-5 leading-relaxed">
                     Thank you, <span className="font-semibold text-[#111111]">{fullName || "Reader"}</span>.
-                    Your dispatch has been received and logged directly into our newsroom system.
+                    Your dispatch has been logged. Our editorial or administrative desk will respond to your email.
                   </p>
-                  {referenceId && (
-                    <div className="inline-block px-3 py-1 bg-white border border-[#e5e5e5] text-[12px] font-mono text-[#333333] mb-6">
-                      Dispatch Ref: <span className="font-bold text-[#111111]">PT-{referenceId}</span>
-                    </div>
-                  )}
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSubmitted(false);
-                        setFullName("");
-                        setEmail("");
-                        setMessage("");
-                        setReferenceId(null);
-                        setSubmissionError(null);
-                      }}
-                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#111111] text-white text-[12px] font-bold uppercase tracking-[0.08em] hover:bg-[#e31b23] transition-colors"
-                    >
-                      Send Another Dispatch
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFullName("");
+                      setEmail("");
+                      setMessage("");
+                    }}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#111111] text-white text-[12px] font-bold uppercase tracking-[0.08em] hover:bg-[#e31b23] transition-colors"
+                  >
+                    Send Another Dispatch
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
-                  {submissionError && (
-                    <div className="p-3.5 bg-red-50 border border-red-200 text-red-700 text-[13px] flex items-start gap-2.5">
-                      <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                      <div>{submissionError}</div>
-                    </div>
-                  )}
                   {/* Full Name */}
                   <div>
                     <label
@@ -499,11 +464,11 @@ export function ContactPage() {
                     </button>
                   </div>
 
-                  {/* Secure Editorial Dispatch Guarantee */}
-                  <div className="pt-4 border-t border-[#f0f0f0] text-[11.5px] leading-relaxed text-[#555555] flex items-start gap-2 bg-[#fcfcfc] p-3 border border-[#eeeeee]">
-                    <CheckCircle2 size={14} className="text-[#10b981] shrink-0 mt-0.5" />
+                  {/* Implementation Note Banner */}
+                  <div className="pt-4 border-t border-[#f0f0f0] text-[11.5px] leading-relaxed text-[#777777] flex items-start gap-2 bg-[#fbfbfb] p-3 border border-[#eeeeee]">
+                    <ShieldAlert size={14} className="text-[#888888] shrink-0 mt-0.5" />
                     <span>
-                      <strong className="font-semibold text-[#111111]">Direct editorial routing:</strong> Inquiries are securely transmitted to The Pride Times newsroom desk and prioritized according to journalistic deadlines.
+                      <strong className="font-semibold text-[#555555]">Prepare form implementation:</strong> This is a design preview. The form needs a connected backend or form service to deliver messages.
                     </span>
                   </div>
                 </form>
@@ -512,7 +477,7 @@ export function ContactPage() {
 
             {/* ── 4. EDITORIAL OFFICE INFORMATION (5 cols on desktop) ── */}
             <aside className="lg:col-span-5 flex flex-col gap-6">
-              
+
               {/* Bureau Information Panel */}
               <div className="border border-[#e0e0e0] bg-[#fafafa] p-6 sm:p-7">
                 <div className="border-b border-[#e5e5e5] pb-3 mb-5 flex items-center justify-between">
@@ -529,14 +494,14 @@ export function ContactPage() {
                     Direct Publication Email
                   </div>
                   <p className="text-[14px] text-[#111111] font-medium">
-                    <a href="mailto:contact@pridetimes.com" className="hover:text-[#e31b23] hover:underline">
-                      contact@pridetimes.com
+                    <a href="mailto:contact@thepridetime.com" className="hover:text-[#e31b23] hover:underline">
+                      contact@thepridetime.com
                     </a>
                   </p>
                   <p className="text-[12px] text-[#666666] mt-0.5">
                     News tips:{" "}
-                    <a href="mailto:editorial@pridetimes.com" className="text-[#111111] hover:underline font-medium">
-                      editorial@pridetimes.com
+                    <a href="mailto:editorial@thepridetime.com" className="text-[#111111] hover:underline font-medium">
+                      editorial@thepridetime.com
                     </a>
                   </p>
                 </div>
@@ -671,9 +636,8 @@ export function ContactPage() {
                     <span className="shrink-0 w-7 h-7 flex items-center justify-center border border-[#d9d9d9] group-hover:border-[#111111] transition-colors">
                       <ChevronDown
                         size={15}
-                        className={`text-[#555555] group-hover:text-[#111111] transition-transform duration-200 ${
-                          isOpen ? "rotate-180" : ""
-                        }`}
+                        className={`text-[#555555] group-hover:text-[#111111] transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+                          }`}
                       />
                     </span>
                   </button>

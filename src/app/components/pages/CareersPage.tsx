@@ -100,7 +100,7 @@ export function CareersPage() {
               </div>
 
               <a
-                href="mailto:careers@thepridetimes.com"
+                href="mailto:careers@thepridetime.com"
                 className="shrink-0 inline-flex items-center gap-1.5 bg-[#111111] text-white text-[13px] font-semibold px-4 py-2.5 rounded-md hover:bg-black transition-colors"
               >
                 Apply <span aria-hidden="true">→</span>
@@ -121,7 +121,7 @@ export function CareersPage() {
           </p>
 
           <a
-            href="mailto:careers@thepridetimes.com"
+            href="mailto:careers@thepridetime.com"
             className="pt-subscribe-btn inline-flex items-center justify-center px-6 py-3"
           >
             Send Open Application

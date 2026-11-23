@@ -102,7 +102,7 @@ export function AdvertisePage() {
           </p>
 
           <a
-            href="mailto:advertising@thepridetimes.com"
+            href="mailto:advertising@thepridetime.com"
             className="pt-subscribe-btn inline-flex items-center justify-center px-6 py-3"
           >
             Contact Advertising Team

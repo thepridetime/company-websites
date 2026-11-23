@@ -50,13 +50,13 @@ For more information on how Google collects and processes data when you visit pa
   },
   {
     title: "7. Your Privacy Rights (GDPR & CCPA/CPRA)",
-    content: `Depending on your jurisdiction, you may have rights to access, correct, delete, or export your personal information, or to restrict or object to certain processing. To exercise your rights, please reach out to our Privacy Office at privacy@thepridetimes.com.`
+    content: `Depending on your jurisdiction, you may have rights to access, correct, delete, or export your personal information, or to restrict or object to certain processing. To exercise your rights, please reach out to our Privacy Office at privacy@thepridetime.com.`
   },
   {
     title: "8. Contact Us",
     content: `If you have questions about this Privacy Policy or our data practices, please contact:
 The Pride Times Privacy Team
-Email: privacy@thepridetimes.com
+Email: privacy@thepridetime.com
 Address: The Pride Times Inc., 1 Enterprise Plaza, New York, NY 10004, United States`
   }
 ];

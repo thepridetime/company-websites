@@ -40,10 +40,10 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 {/*const MOCK_USERS: Record<string, User & { password: string }> = {
-  "demo@pridetimes.com": {
+  "demo@thepridetime.com": {
     id: "usr_001",
     name: "Alex Morgan",
-    email: "demo@pridetimes.com",
+    email: "demo@thepridetime.com",
     password: "demo123",
     tier: "premium",
     joinedDate: "January 2025",
@@ -51,10 +51,10 @@ const AuthContext = createContext<AuthContextType | null>(null);
     savedArticles: 47,
     readingStreak: 23,
   },
-  "free@pridetimes.com": {
+  "free@thepridetime.com": {
     id: "usr_002",
     name: "Jordan Lee",
-    email: "free@pridetimes.com",
+    email: "free@thepridetime.com",
     password: "free123",
     tier: "free",
     joinedDate: "March 2026",

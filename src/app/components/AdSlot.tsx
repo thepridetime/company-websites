@@ -39,7 +39,7 @@ function Inner({ type }: { type: SlotType }) {
             fontSize: "12px", textTransform: "uppercase", letterSpacing: "1px"
           }}
         >
-          Bloomberg Sponsored Slot
+          The Pride Times Sponsored Slot
         </div>
       </div>
     );

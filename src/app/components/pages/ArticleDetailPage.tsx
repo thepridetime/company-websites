@@ -6,7 +6,6 @@ import { getQuotes } from "../../../services/marketApi";
 import { SaveArticleButton } from "./SaveArticleButton";
 import { ReadTracker } from "./ReadTracker";
 import { ReadingPromptPopup } from "./ReadingPromptPopup";
-import { ArticleFeedback } from "../feedback/ArticleFeedback";
 import {
   TimeAgo,
   estimateReadTime,
@@ -74,18 +73,18 @@ function AdSenseUnit({
   side = false,
 }: {
   slot:
-    | "5373718974"
-    | "8042854193"
-    | "6033028012"
-    | "5608262547"
-    | "6810700989";
+  | "5373718974"
+  | "8042854193"
+  | "6033028012"
+  | "5608262547"
+  | "6810700989";
   inArticle?: boolean;
   /** Side ad box: 250px tall on mobile/tablet, fills the column height on desktop. */
   side?: boolean;
 }) {
   const insRef = useRef<HTMLModElement>(null);
 
-    const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const showAds = !isLoading && user?.tier !== "premium";
   useEffect(() => {
     const el = insRef.current;
@@ -93,7 +92,7 @@ function AdSenseUnit({
     /* Skip if this slot already received an ad (protects against
        StrictMode double-mounting and "already have ads" errors). */
     //if (!el || el.getAttribute("data-adsbygoogle-status") === "done") {
-        if (!showAds || !el || el.getAttribute("data-adsbygoogle-status") === "done") {
+    if (!showAds || !el || el.getAttribute("data-adsbygoogle-status") === "done") {
       return;
     }
 
@@ -105,8 +104,8 @@ function AdSenseUnit({
     } catch (error) {
       console.warn("AdSense could not initialize:", error);
     }
-  //}, [slot]);
-    }, [slot, showAds]);
+    //}, [slot]);
+  }, [slot, showAds]);
   if (!showAds) return null;
   if (side) {
     return (
@@ -146,13 +145,13 @@ function AdSenseUnit({
           data-ad-slot={slot}
           {...(inArticle
             ? {
-                "data-ad-layout": "in-article",
-                "data-ad-format": "fluid",
-              }
+              "data-ad-layout": "in-article",
+              "data-ad-format": "fluid",
+            }
             : {
-                "data-ad-format": "auto",
-                "data-full-width-responsive": "true",
-              })}
+              "data-ad-format": "auto",
+              "data-full-width-responsive": "true",
+            })}
         />
       </div>
     </div>
@@ -474,43 +473,43 @@ function BlogMeta({
   return (
     <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-y border-slate-200 py-2 text-left text-[9px] text-slate-500 sm:text-[10px] md:text-[11px]">
       <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1.5">
-      {location && (
-        <>
-          <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-slate-500 sm:text-[9px] md:text-[10px]">
-            <MapPin size={10} className="shrink-0 text-red-600" />
-            {location}
-          </span>
+        {location && (
+          <>
+            <span className="inline-flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-slate-500 sm:text-[9px] md:text-[10px]">
+              <MapPin size={10} className="shrink-0 text-red-600" />
+              {location}
+            </span>
 
-          <MetaDot />
-        </>
-      )}
+            <MetaDot />
+          </>
+        )}
 
-      <Byline author={author} />
+        <Byline author={author} />
 
-      <MetaDot />
+        <MetaDot />
 
-      <span>
-        <MetaTime value={date} />
-      </span>
+        <span>
+          <MetaTime value={date} />
+        </span>
 
-      {updatedAt && updatedAt !== date && (
-        <>
-          <MetaDot />
-          <span className="italic">
-            Updated <MetaTime value={updatedAt} />
-          </span>
-        </>
-      )}
+        {updatedAt && updatedAt !== date && (
+          <>
+            <MetaDot />
+            <span className="italic">
+              Updated <MetaTime value={updatedAt} />
+            </span>
+          </>
+        )}
 
-      {readTime && (
-        <>
-          <MetaDot />
-          <span className="inline-flex items-center gap-0.5 tabular-nums text-slate-400">
-            <Clock size={8} className="shrink-0" />
-            {readTime}
-          </span>
-        </>
-      )}
+        {readTime && (
+          <>
+            <MetaDot />
+            <span className="inline-flex items-center gap-0.5 tabular-nums text-slate-400">
+              <Clock size={8} className="shrink-0" />
+              {readTime}
+            </span>
+          </>
+        )}
       </div>
 
       <div className="flex shrink-0 items-center gap-1 text-slate-500">
@@ -843,11 +842,6 @@ function ArticleShell({
                 title={share.title}
                 description={share.description}
               />
-
-              <ArticleFeedback
-                articleTitle={title}
-                articleSlug={title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}
-              />
             </main>
           </div>
 
@@ -924,25 +918,24 @@ function BlogBody({
     <div className="blog-prose">
       {sections.map((section, index) => (
         <Fragment key={`${section.heading}-${index}`}>
-        <section className="scroll-mt-24">
-          <h2 className="break-words">
-            {formatSectionHeading(section.heading, category)}
-          </h2>
+          <section className="scroll-mt-24">
+            <h2 className="break-words">
+              {formatSectionHeading(section.heading, category)}
+            </h2>
 
-          {toParagraphs(section.body).map((paragraph, pIndex) => (
-            <p
-              key={pIndex}
-              className={`break-words${
-                ""
-              }`}
-            >
-              {paragraph}
-            </p>
-          ))}
-        </section>
+            {toParagraphs(section.body).map((paragraph, pIndex) => (
+              <p
+                key={pIndex}
+                className={`break-words${""
+                  }`}
+              >
+                {paragraph}
+              </p>
+            ))}
+          </section>
 
-        {/* One in-article ad, after the first section */}
-        {index === 0 && <AdSenseUnit slot="6033028012" inArticle />}
+          {/* One in-article ad, after the first section */}
+          {index === 0 && <AdSenseUnit slot="6033028012" inArticle />}
         </Fragment>
       ))}
     </div>
@@ -1045,40 +1038,39 @@ function MarketsPanel() {
       <div className="divide-y divide-white/10">
         {rows.length === 0
           ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex items-center justify-between py-3">
-                <span className="h-3 w-20 animate-pulse rounded bg-white/10" />
-                <span className="h-3 w-24 animate-pulse rounded bg-white/10" />
-              </div>
-            ))
+            <div key={i} className="flex items-center justify-between py-3">
+              <span className="h-3 w-20 animate-pulse rounded bg-white/10" />
+              <span className="h-3 w-24 animate-pulse rounded bg-white/10" />
+            </div>
+          ))
           : rows.map((row) => (
-              <div
-                key={row.symbol}
-                className="flex items-center justify-between py-3"
-              >
-                <span className="text-[12px] font-semibold text-gray-100">
-                  {row.symbol}
+            <div
+              key={row.symbol}
+              className="flex items-center justify-between py-3"
+            >
+              <span className="text-[12px] font-semibold text-gray-100">
+                {row.symbol}
+              </span>
+
+              <span className="flex items-center gap-3">
+                <span className="text-[12px] tabular-nums text-gray-300">
+                  {row.value}
                 </span>
 
-                <span className="flex items-center gap-3">
-                  <span className="text-[12px] tabular-nums text-gray-300">
-                    {row.value}
-                  </span>
-
-                  <span
-                    className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${
-                      row.up ? "text-emerald-400" : "text-red-400"
+                <span
+                  className={`flex items-center gap-1 text-[11px] font-semibold tabular-nums ${row.up ? "text-emerald-400" : "text-red-400"
                     }`}
-                  >
-                    {row.up ? (
-                      <TrendingUp size={11} aria-hidden="true" />
-                    ) : (
-                      <TrendingDown size={11} aria-hidden="true" />
-                    )}
-                    {row.change}
-                  </span>
+                >
+                  {row.up ? (
+                    <TrendingUp size={11} aria-hidden="true" />
+                  ) : (
+                    <TrendingDown size={11} aria-hidden="true" />
+                  )}
+                  {row.change}
                 </span>
-              </div>
-            ))}
+              </span>
+            </div>
+          ))}
       </div>
 
       <Link
@@ -1116,36 +1108,36 @@ function BlogSidebar({
   if (relatedItems?.length) {
     return (
       <div className="space-y-7">
-      <MarketsPanel />
+        <MarketsPanel />
 
-      <AdSenseUnit slot={adSlots.top} side />
+        <AdSenseUnit slot={adSlots.top} side />
 
-      <section aria-label="Related articles" className="border-t-[3px] border-slate-950 pt-3">
-        <p className="mb-4 font-sans text-[11px] font-bold uppercase leading-none tracking-[0.16em] text-slate-950">
-          {category ? `More in ${category}` : "More stories"}
-        </p>
+        <section aria-label="Related articles" className="border-t-[3px] border-slate-950 pt-3">
+          <p className="mb-4 font-sans text-[11px] font-bold uppercase leading-none tracking-[0.16em] text-slate-950">
+            {category ? `More in ${category}` : "More stories"}
+          </p>
 
-        <ul className="divide-y divide-slate-200">
-          {relatedItems.slice(0, 4).map((item) => (
-            <li key={item.href} className="py-3 first:pt-0">
-              <Link
-                to={item.href}
-                className={`group block rounded-sm ${focusRing}`}
-              >
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
-                  {item.category}
-                </p>
-                <h3 className="mt-1 break-words font-serif text-[15px] font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
-                  {item.title}
-                </h3>
-                <p className="mt-1 text-[10px] text-slate-400">
-                  {formatIsoDate(item.date)}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+          <ul className="divide-y divide-slate-200">
+            {relatedItems.slice(0, 4).map((item) => (
+              <li key={item.href} className="py-3 first:pt-0">
+                <Link
+                  to={item.href}
+                  className={`group block rounded-sm ${focusRing}`}
+                >
+                  <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-red-600">
+                    {item.category}
+                  </p>
+                  <h3 className="mt-1 break-words font-serif text-[15px] font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-red-700">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1 text-[10px] text-slate-400">
+                    {formatIsoDate(item.date)}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     );
   }
@@ -1342,9 +1334,9 @@ function RelatedPosts<
                 {plainTitles
                   ? item.title
                   : formatBlogTitle(
-                      item.title,
-                      item.category ?? "Business"
-                    )}
+                    item.title,
+                    item.category ?? "Business"
+                  )}
               </h3>
 
               {date && (
@@ -1680,11 +1672,11 @@ function MagazineBlog({
 
   const related = isBusiness
     ? getRelatedBusinessArticles(
-        article as BusinessArticle
-      )
+      article as BusinessArticle
+    )
     : getRelatedTechnologyArticles(
-        article as TechnologyArticle
-      );
+      article as TechnologyArticle
+    );
 
   const relatedPath = (story: EditorialArticle) =>
     isBusiness

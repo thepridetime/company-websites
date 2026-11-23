@@ -95,10 +95,10 @@ export function PressRoomPage() {
           </p>
 
           <a
-            href="mailto:press@thepridetimes.com"
+            href="mailto:press@thepridetime.com"
             className="pt-subscribe-btn inline-flex items-center justify-center px-6 py-3"
           >
-            press@pridetimes.com
+            press@thepridetime.com
           </a>
         </section>
 

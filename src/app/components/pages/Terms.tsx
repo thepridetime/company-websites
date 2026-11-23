@@ -4,7 +4,7 @@ import { Link } from "react-router";
 const sections = [
   {
     title: "1. Acceptance of Terms",
-    content: `By accessing or using The Pride Times website (thepridetimes.com), mobile applications, newsletters, feeds, or any of our digital products and services (collectively, the "Services"), you agree to be bound by these Terms of Service, our Privacy Policy, and our News Disclaimer & Copyright Notice. If you do not agree to these terms, you must discontinue using our services immediately.`
+    content: `By accessing or using The Pride Times website (thepridetime.com), mobile applications, newsletters, feeds, or any of our digital products and services (collectively, the "Services"), you agree to be bound by these Terms of Service, our Privacy Policy, and our News Disclaimer & Copyright Notice. If you do not agree to these terms, you must discontinue using our services immediately.`
   },
   {
     title: "2. News, Editorial & Market Data Disclaimer",
@@ -20,7 +20,7 @@ For our full editorial policies, please review our comprehensive News Disclaimer
 
 You may not copy, reproduce, distribute, republish, syndicate, sell, modify, or create derivative works from any content without prior written permission from The Pride Times.
 
-Fair Use: Limited quotation of our news content (under 100 words) for commentary, criticism, or news reporting is permitted under 17 U.S.C. 107, provided clear editorial attribution is given with a direct, clickable hyperlink to the original article on thepridetimes.com.
+Fair Use: Limited quotation of our news content (under 100 words) for commentary, criticism, or news reporting is permitted under 17 U.S.C. 107, provided clear editorial attribution is given with a direct, clickable hyperlink to the original article on thepridetime.com.
 
 Data Scraping & AI Prohibition: Automated scraping, bot harvesting, or utilizing our content to train artificial intelligence models or machine learning systems without an explicit written license agreement is strictly prohibited.`
   },
@@ -53,7 +53,7 @@ TO THE FULLEST EXTENT PERMITTED BY LAW, THE PRIDE TIMES INC., ITS DIRECTORS, EMP
   },
   {
     title: "8. Digital Millennium Copyright Act (DMCA) / Takedowns",
-    content: `The Pride Times complies with the Digital Millennium Copyright Act (17 U.S.C. 512). If you believe any material on our site infringes upon your copyright, please review our DMCA Takedown procedure on our Disclaimer page (/disclaimer) or submit a notice to dmca@thepridetimes.com.`
+    content: `The Pride Times complies with the Digital Millennium Copyright Act (17 U.S.C. 512). If you believe any material on our site infringes upon your copyright, please review our DMCA Takedown procedure on our Disclaimer page (/disclaimer) or submit a notice to dmca@thepridetime.com.`
   },
   {
     title: "9. Governing Law & Jurisdiction",
@@ -61,7 +61,7 @@ TO THE FULLEST EXTENT PERMITTED BY LAW, THE PRIDE TIMES INC., ITS DIRECTORS, EMP
   },
   {
     title: "10. Contact Us & Modifications",
-    content: `We may revise these Terms of Service periodically. We will post any updates here with the revised effective date. For legal questions or permissions requests, contact us at legal@thepridetimes.com or by mail at The Pride Times Inc., 1 Enterprise Plaza, New York, NY 10004, United States.`
+    content: `We may revise these Terms of Service periodically. We will post any updates here with the revised effective date. For legal questions or permissions requests, contact us at legal@thepridetime.com or by mail at The Pride Times Inc., 1 Enterprise Plaza, New York, NY 10004, United States.`
   }
 ];
 
