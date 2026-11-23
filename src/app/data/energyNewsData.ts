@@ -49,7 +49,7 @@ export const energyArticles: SpecialArticle[] = [
       },
       {
         heading: "How investors reacted",
-        body: "Investors responded cautiously but positively. Tidewater's shares moved 9.5% in early trading, while peers in the sector were broadly flat. Market participants said attention now turns to grid investment, and to how quickly the company can turn a milestone into measurable results.",
+        body: "Energy sector trading was upbeat following the disclosure, lifting Tidewater equity by 9.5% on higher-than-average volume. Institutional trading desks highlighted grid interconnectivity as the primary metric for evaluating future capacity expansion.",
       },
       {
         heading: "What the analysts are saying",
@@ -159,7 +159,7 @@ export const energyArticles: SpecialArticle[] = [
       },
       {
         heading: "How the market responded",
-        body: "Investors responded cautiously but positively, with Helix's shares moving 18.9% in early trading while peers stayed broadly flat. Market participants said attention now turns to commodity prices. Calder and Voss Research's Priya Okafor said the move is consistent with broader trends in transition finance, and that early movers tend to get better terms and partners, though execution is the risk.",
+        body: "Equity markets reacted enthusiastically, sending Helix shares up 18.9% during early London hours while benchmark energy indices remained unchanged. Capital market desks noted that firm power-purchase contracts substantially de-risk long-term cash flows.",
       },
       {
         heading: "The wider pattern",
@@ -214,7 +214,7 @@ export const energyArticles: SpecialArticle[] = [
       },
       {
         heading: "How the market reacted",
-        body: "Shares of Helix Motors moved 14.4% in early trading while peers in the sector were broadly flat. Market participants said attention will now turn to power markets and to how quickly the company can convert announcements into measurable results. Investors responded cautiously but positively.",
+        body: "Automotive and clean-power investors welcomed the update, pushing Helix Motors stock up 14.4% as trading volume surged. Asset managers noted that reducing Scope 2 exposure provides measurable protection against anticipated European border carbon adjustments.",
       },
       {
         heading: "What the analysts say",
@@ -320,7 +320,7 @@ export const energyArticles: SpecialArticle[] = [
       },
       {
         heading: "How the market reacted",
-        body: "Shares of Meridian Partners moved 5.7% in early trading while peers were broadly flat, a calmer reaction than some other stories this week. Market participants said attention now turns to power markets and to how fast the company can turn announcements into results. Investors responded cautiously but positively.",
+        body: "Upstream energy traders took a measured stance, sending Meridian Partners equity up 5.7% in Amsterdam trading. Portfolio strategists noted that curbing exploratory capital expenditure directly enhances free cash-flow yields across the coming fiscal year.",
       },
       {
         heading: "Management and analyst views",

@@ -101,7 +101,7 @@ export const consumerRetailArticles: ConsumerRetailArticle[] = [
   {
     id: "consumer-stratos-logistics-product-recall",
     category: "SUPPLY CHAIN",
-    title: "Stratos Logistics recalls product line after safety review",
+    title: "Stratos Logistics audits cold-chain packaging following transit inspection",
     excerpt: "Stratos Logistics voluntarily recalled a product line in several markets following an internal safety review.",
     author: AUTHOR,
     publishedAt: "2026-09-27T08:00:00Z",
@@ -123,7 +123,7 @@ export const consumerRetailArticles: ConsumerRetailArticle[] = [
   {
     id: "consumer-ardent-capital-product-recall",
     category: "CUSTOMER TRUST",
-    title: "Ardent Capital recalls product line after safety review",
+    title: "Ardent Capital leads restructuring of consumer brand portfolio",
     excerpt: "Ardent Capital voluntarily recalled a product line in several markets following an internal safety review.",
     author: AUTHOR,
     publishedAt: "2026-09-26T08:00:00Z",
@@ -145,7 +145,7 @@ export const consumerRetailArticles: ConsumerRetailArticle[] = [
   {
     id: "consumer-kestrel-partners-product-recall",
     category: "RETAIL RISK",
-    title: "Kestrel Partners recalls product line after safety review",
+    title: "Kestrel Partners tightens supplier quality standards across European retail network",
     excerpt: "Kestrel Partners voluntarily recalled a product line in several markets following an internal safety review.",
     author: AUTHOR,
     publishedAt: "2026-09-25T08:00:00Z",

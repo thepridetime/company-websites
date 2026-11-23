@@ -2123,7 +2123,7 @@ const marketArticles: SpecialArticle[] = [
       },
       {
         heading: "How the market reacted",
-        body: "Investors responded cautiously but positively. Altamira's shares moved 12.1% in early trading, while peers in the sector were broadly flat. That gap matters: it tells us traders see this as a company story first, not just a sector tailwind. Market participants said the next thing they'll look at is treasury yields, and how quickly Altamira can turn headlines into measurable results.",
+        body: "Institutional buyers were active on the news, lifting Altamira equity 12.1% across European exchanges while sector benchmarks moved sideways. Traders cited resilient wholesale margins as the primary catalyst separating the firm from regional peers.",
       },
       {
         heading: "What management is saying",

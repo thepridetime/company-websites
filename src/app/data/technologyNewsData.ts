@@ -143,7 +143,7 @@ const redfernArticle: TechnologyArticle = {
     {
       heading: "The market's first reaction",
       body:
-        "Investors responded cautiously but positively. Shares of Redfern Retail moved 8.2% in early trading, while peers in the sector were broadly flat. Market participants say attention now turns to enterprise software, and how quickly the company can turn an announcement into measurable results.",
+        "Shares of Redfern Retail advanced 8.2% on news of the acquisition, outperforming retail software peers. Institutional desks observed that integrating proprietary security telemetry reduces payment friction and enhances cybersecurity margins.",
     },
     {
       heading: "What the analysts and skeptics say",
@@ -207,7 +207,7 @@ const altamiraMotorsArticle: TechnologyArticle = {
     {
       heading: "The market's reaction",
       body:
-        "Investors responded cautiously but positively, with Altamira Motors' shares moving 9.4% in early trading while peers were broadly flat. Market participants say attention now turns to compute capacity. Hiroshi Reyes of Meridian Advisory described the move as consistent with broader data-centre demand, and rated the company 'cautiously positive'.",
+        "Equities desks registered buying interest in Altamira Motors, lifting the stock 9.4% in morning trading. Analysts at Meridian Advisory emphasized that strict compliance adherence accelerates deal cycles with highly regulated enterprise clients.",
     },
     {
       heading: "The skeptics' corner",
@@ -393,7 +393,7 @@ const luminaArticle: TechnologyArticle = {
     {
       heading: "How the market reacted",
       body:
-        "Investors responded cautiously but positively, and shares of Lumina Foods moved 16.7% in early trading while peers were broadly flat. Market participants say attention now turns to enterprise software and how quickly the company can show measurable results. Amara Lindqvist of Meridian Advisory rates the situation 'watch closely'.",
+        "Shares of Lumina Foods surged 16.7% as investors weighed the benefits of standalone cloud transparency. Market participants noted that regulatory clarity often paves the way for unbundled commercial growth.",
     },
     {
       heading: "The skeptics' corner",

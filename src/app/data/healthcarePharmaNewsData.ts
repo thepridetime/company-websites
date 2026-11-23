@@ -87,7 +87,7 @@ export const healthcarePharmaArticles: HealthcarePharmaArticle[] = [
   {
     id: "healthcare-westbrook-aerospace-licensing",
     category: "PHARMA LICENSING",
-    title: "Westbrook Aerospace licenses experimental drug in deal worth up to $21.2B",
+    title: "Westbrook Pharma secures global oncology licensing rights in $2.1B deal",
     excerpt: "Westbrook Aerospace signed a licensing agreement that includes upfront payments and milestone-based fees.",
     location: "Stockholm",
     author: AUTHOR,
@@ -110,7 +110,7 @@ export const healthcarePharmaArticles: HealthcarePharmaArticle[] = [
   {
     id: "healthcare-vantor-group-licensing",
     category: "PHARMA LICENSING",
-    title: "Vantor Group licenses experimental drug in deal worth up to $48.7B",
+    title: "Vantor Biotherapeutics advances Phase 3 immunology pipeline in $4.8B partnership",
     excerpt: "Vantor Group signed a licensing agreement that includes upfront payments and milestone-based fees.",
     location: "Chicago",
     author: AUTHOR,
@@ -156,7 +156,7 @@ export const healthcarePharmaArticles: HealthcarePharmaArticle[] = [
   {
     id: "healthcare-yarrow-foods-licensing",
     category: "PHARMA LICENSING",
-    title: "Yarrow Foods licenses experimental drug in deal worth up to $42.9B",
+    title: "Yarrow Biosolutions targets metabolic therapies in multi-stage clinical licensing pact",
     excerpt: "Yarrow Foods signed a licensing agreement that includes upfront payments and milestone-based fees.",
     location: "Jakarta",
     author: AUTHOR,
