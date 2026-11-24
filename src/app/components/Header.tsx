@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { searchIndex } from "../data/searchIndex";
+import { AppInstallPrompt } from "./common/AppInstallPrompt";
 
 /* =========================================================
    PRIMARY NAVIGATION
@@ -300,6 +301,9 @@ export function Header() {
           ================================================= */}
 
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* Install Desktop & Mobile App */}
+            <AppInstallPrompt />
+
             {/* =================================================
                 SEARCH TOGGLE
 

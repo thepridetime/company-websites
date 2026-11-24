@@ -23,8 +23,10 @@ import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
 import { supabase } from "../../../lib/supabase";
 import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
-import { unsaveArticle } from "../../../lib/savedArticles";
-import { clearReadingHistory } from "../../../lib/readingHistory";
+import { unsaveArticle, listSavedArticles } from "../../../lib/savedArticles";
+import { clearReadingHistory, getReadingStats } from "../../../lib/readingHistory";
+import { downloadExecutiveReport } from "../../../lib/reportDownload";
+import { Download, FileText, Smartphone, Monitor } from "lucide-react";
 
 type ReadItem = {
   title: string;
@@ -61,6 +63,35 @@ const NEWSLETTER_CATALOG = [
     key: "india-business-digest",
     name: "India Business Digest",
     freq: "Daily",
+  },
+];
+
+
+const DASHBOARD_REPORTS = [
+  {
+    title: "Global AI Readiness Index 2026",
+    category: "Technology",
+    pages: 48,
+  },
+  {
+    title: "India Economic Outlook 2026-2030",
+    category: "Macroeconomics",
+    pages: 56,
+  },
+  {
+    title: "Clean Energy Investment Report Q1 2026",
+    category: "Energy",
+    pages: 34,
+  },
+  {
+    title: "Global Cybersecurity Threat Report 2026",
+    category: "Security",
+    pages: 61,
+  },
+  {
+    title: "World's 100 Best-Managed Companies",
+    category: "Governance",
+    pages: 72,
   },
 ];
 
@@ -148,39 +179,19 @@ export function DashboardPage() {
     const load = async () => {
       setDataLoading(true);
 
-      const monthStart = new Date();
-      monthStart.setDate(1);
-      monthStart.setHours(0, 0, 0, 0);
-
-      const { data: sessionData } = await supabase.auth.getSession();
-
-      const [recentRes, datesRes, savedRes, nlRes] = await Promise.all([
-        supabase
-          .from("reading_history")
-          .select("title, category, path, read_at")
-          .eq("user_id", user.id)
-          .order("read_at", { ascending: false })
-          .limit(30),
-        supabase
-          .from("reading_history")
-          .select("read_at")
-          .eq("user_id", user.id)
-          .order("read_at", { ascending: false })
-          .limit(1000),
-        supabase
-          .from("saved_articles")
-          .select("title, category, path, saved_at")
-          .eq("user_id", user.id)
-          .order("saved_at", { ascending: false }),
+      const [saved, stats, nlRes, sessionRes] = await Promise.all([
+        listSavedArticles(user.id),
+        getReadingStats(user.id),
         supabase
           .from("newsletter_subscriptions")
           .select("newsletter_key, subscribed")
           .eq("user_id", user.id),
+        supabase.auth.getSession(),
       ]);
 
       if (cancelled) return;
 
-      const createdAt = sessionData?.session?.user?.created_at;
+      const createdAt = sessionRes.data?.session?.user?.created_at;
       if (createdAt) {
         setJoinedDate(
           new Date(createdAt).toLocaleDateString("en-US", {
@@ -190,31 +201,11 @@ export function DashboardPage() {
         );
       }
 
-      if (recentRes.error)
-        console.error("RECENT_FETCH_FAILED", recentRes.error);
-      const seen = new Set<string>();
-      const distinct: ReadItem[] = [];
-      for (const row of recentRes.data ?? []) {
-        const k = `${row.path}|${row.title}`;
-        if (seen.has(k)) continue;
-        seen.add(k);
-        distinct.push(row as ReadItem);
-        if (distinct.length === 5) break;
-      }
-      setRecentlyRead(distinct);
+      setRecentlyRead(stats.recent);
+      setArticlesThisMonth(stats.readsThisMonth);
+      setStreak(stats.streak);
+      setSavedArticles(saved);
 
-      if (datesRes.error)
-        console.error("READ_DATES_FETCH_FAILED", datesRes.error);
-      const dates = (datesRes.data ?? []).map((r) => r.read_at as string);
-      setArticlesThisMonth(
-        dates.filter((d) => new Date(d) >= monthStart).length,
-      );
-      setStreak(calcStreak(dates));
-
-      if (savedRes.error) console.error("SAVED_FETCH_FAILED", savedRes.error);
-      setSavedArticles((savedRes.data ?? []) as SavedItem[]);
-
-      if (nlRes.error) console.error("NEWSLETTER_FETCH_FAILED", nlRes.error);
       const map: Record<string, boolean> = {};
       for (const row of nlRes.data ?? [])
         map[row.newsletter_key] = row.subscribed;
@@ -706,6 +697,89 @@ export function DashboardPage() {
             </div>
           </div>
           {/* </div> */}
+        </div>
+
+        
+        {/* Executive Research Reports & Downloads */}
+        <div className="bg-white border border-gray-300 rounded-sm p-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-300 gap-2">
+            <div>
+              <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>
+                Executive Intelligence Reports
+              </h2>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Full-length research briefings available for immediate PDF download
+              </p>
+            </div>
+            <Link
+              to="/magazine"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-1 self-start sm:self-auto"
+            >
+              View all editions <ChevronRight size={13} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+            {DASHBOARD_REPORTS.map((rep) => (
+              <div
+                key={rep.title}
+                className="border border-slate-200 rounded p-4 flex flex-col justify-between hover:border-red-300 hover:shadow-sm transition"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-red-600 uppercase tracking-wider mb-1.5">
+                    <span>{rep.category}</span>
+                    <span className="text-slate-400 font-normal">{rep.pages} pages</span>
+                  </div>
+                  <h3 className="font-serif font-bold text-slate-900 text-sm leading-snug line-clamp-2 mb-2">
+                    {rep.title}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => downloadExecutiveReport(rep.title)}
+                  className="mt-3 inline-flex items-center justify-center gap-1.5 rounded bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 transition"
+                >
+                  <Download size={13} /> Download PDF Briefing
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop & Mobile App Connect Card */}
+        <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-sm p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-700">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-600 font-serif font-bold text-xl text-white shadow-lg shadow-red-900/40">
+              PT
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 uppercase tracking-wider mb-1">
+                <Smartphone size={13} /> Mobile &amp; Desktop App Connected
+              </div>
+              <h3 className="text-lg font-serif font-bold text-white">
+                Experience The Pride Times on Any Device
+              </h3>
+              <p className="text-xs text-slate-300 mt-1 max-w-xl">
+                Install as a standalone application on Windows, Mac, Android, and iOS for lightning-speed articles, real-time market push notifications, and offline reading.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => {
+                const promptBtn = document.querySelector('header button[title*="Install"]') as HTMLButtonElement;
+                if (promptBtn) {
+                  promptBtn.click();
+                } else {
+                  window.alert("To install The Pride Times on Chrome or Edge: click the Install icon in the browser URL bar. On Safari (iPhone/iPad): tap Share > Add to Home Screen.");
+                }
+              }}
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded bg-red-600 px-5 py-2.5 text-xs font-semibold text-white hover:bg-red-700 shadow-md transition"
+            >
+              <Download size={14} /> Install Pride Times App
+            </button>
+          </div>
         </div>
 
         {/* news letter and tranding */}

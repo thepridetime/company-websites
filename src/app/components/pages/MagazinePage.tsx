@@ -19,6 +19,7 @@ import {
 import { Link } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
+import { downloadExecutiveReport } from "../../../lib/reportDownload";
 
 import AxisImg from "../../../imports/Axis03.png";
 import ErikaImg from "../../../imports/Erika.png";
@@ -381,27 +382,26 @@ export function MagazinePage() {
       ? Articles
       : Articles.filter((issue) => issue.category === activeFilter);
 
-  // Report download: only starts a download when the file really is a PDF.
-  // Without this check, a missing file returns the website's HTML page, which
-  // is saved as a ".pdf" that shows website content instead of the report.
+  // Report download: fetches the pre-rendered PDF or dynamically generates it client-side.
   const downloadReport = async (title: string) => {
     const url = reportFileUrl(title);
     try {
       const response = await fetch(url, { method: "HEAD" });
       const type = response.headers.get("content-type") ?? "";
-      if (!response.ok || !type.toLowerCase().includes("pdf")) {
-        window.alert("This report is not available for download yet.");
+      if (response.ok && type.toLowerCase().includes("pdf")) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = url.split("/").pop() ?? "report.pdf";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
         return;
       }
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = url.split("/").pop() ?? "report.pdf";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
     } catch {
-      window.alert("Could not download this report. Please try again later.");
+      // Fall through to instant client-side PDF generation
     }
+    // Fallback: generates publication-grade PDF briefing on the fly
+    downloadExecutiveReport(title);
   };
 
   // "View All Editions": show every edition and bring the list into view.

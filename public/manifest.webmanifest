@@ -1,0 +1,63 @@
+{
+  "name": "The Pride Times — Global News & Media",
+  "short_name": "The Pride Times",
+  "description": "The Global Voice of Innovation, Leadership & Financial Intelligence",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#111111",
+  "categories": ["news", "business", "finance", "magazines"],
+  "icons": [
+    {
+      "src": "/icons/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Breaking News",
+      "url": "/breaking-news",
+      "description": "Real-time updates on global business and geopolitics"
+    },
+    {
+      "name": "Financial Markets",
+      "url": "/markets",
+      "description": "Stock indices, currencies, commodities and bonds"
+    },
+    {
+      "name": "Magazine & Reports",
+      "url": "/magazine",
+      "description": "Monthly editions and downloadable executive research"
+    },
+    {
+      "name": "User Dashboard",
+      "url": "/dashboard",
+      "description": "Your saved articles, reading history and subscriptions"
+    }
+  ]
+}
