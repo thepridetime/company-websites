@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { submitFeedback } from "../../../lib/feedbackApi";
 import {
   ArrowRight,
   Mail,
@@ -182,16 +183,35 @@ export function ContactPage() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     setIsSubmitting(true);
-    // Simulate lightweight client submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    let category = "general";
+    if (subject.includes("Editorial") || subject.includes("Pitch")) category = "editorial";
+    else if (subject.includes("Correction") || subject.includes("Fact")) category = "corrections";
+    else if (subject.includes("Advertising") || subject.includes("Partnership")) category = "partnerships";
+    else if (subject.includes("Magazine") || subject.includes("Subscription")) category = "subscriptions";
+    else if (subject.includes("Press") || subject.includes("Media")) category = "press";
+
+    const res = await submitFeedback({
+      name: fullName,
+      email,
+      category,
+      subject,
+      message,
+    });
+
+    setIsSubmitting(false);
+    if (!res.success) {
+      setErrorMessage(res.error || "Unable to send message. Please try again.");
+    } else {
       setSubmitted(true);
-    }, 600);
+    }
   };
 
   const handleCategorySelect = (subjectValue: string) => {
@@ -360,6 +380,13 @@ export function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {errorMessage && (
+                    <div className="p-3.5 bg-[#fdf2f2] border border-[#e31b23] text-[#e31b23] text-[13px] flex items-center gap-2">
+                      <ShieldAlert size={16} className="shrink-0" />
+                      <span>{errorMessage}</span>
+                    </div>
+                  )}
+
                   {/* Full Name */}
                   <div>
                     <label
