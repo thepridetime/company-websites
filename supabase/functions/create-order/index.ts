@@ -1,18 +1,44 @@
 // @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// Restrict CORS to official domains and local development environments
+const ALLOWED_ORIGINS = [
+  "https://thepridetime.com",
+  "https://www.thepridetime.com",
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173",
+];
 
-// Amounts are in paise (₹1 = 100 paise)
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") || "";
+  const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : "https://thepridetime.com";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Credentials": "true",
+  };
+}
+
+// Amounts are in paise (₹1 = 100 paise), synced exactly with PremiumPage.tsx
 const PLANS: Record<string, number> = {
-  monthly: 39900,
-  annual: 349900,
+  monthly: 29900,         // ₹299
+  quarterly: 79900,       // ₹799
+  annual: 299900,         // ₹2,999
+  professional: 599900,   // ₹5,999
+  executive: 1199900,     // ₹11,999
+  // One-time digital products
+  single_report: 9900,        // ₹99
+  monthly_magazine: 19900,    // ₹199
+  business_analysis: 29900,   // ₹299
+  industry_report: 49900,     // ₹499
+  annual_bundle: 99900,       // ₹999
+  market_research: 149900,    // ₹1,499
 };
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
@@ -64,9 +90,8 @@ Deno.serve(async (req) => {
     const order = await rzpRes.json();
     if (!rzpRes.ok) {
       console.error("RAZORPAY_ERROR", rzpRes.status, JSON.stringify(order));
-      console.log("KEY_ID_PREFIX", keyId.slice(0, 9), "SECRET_LENGTH", keySecret.length);
       return new Response(
-        JSON.stringify({ error: `Razorpay: ${order?.error?.description ?? "rejected the order"} (key ${keyId.slice(0, 9)}...)` }),
+        JSON.stringify({ error: `Razorpay: ${order?.error?.description ?? "rejected the order"}` }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
