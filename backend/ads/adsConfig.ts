@@ -3,7 +3,7 @@
 // Replace placeholder values with real credentials before deploying
 // ============================================================
 
-import type { GoogleAdSenseConfig } from "./adsTypes";
+import type { GoogleAdSenseConfig } from
 
 // ── Google AdSense Configuration ──────────────────────────────
 // Register at: https://www.google.com/adsense/
