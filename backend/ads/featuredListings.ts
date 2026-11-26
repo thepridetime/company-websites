@@ -123,13 +123,5 @@ export const FEATURED_LISTINGS: FeaturedListingAd[] = [
   },
 ];
 
-export function getFeaturedListingsForPage(page: string, limit = 3): FeaturedListingAd[] {
-  return FEATURED_LISTINGS.filter(
-    (l) =>
-      l.status === "active" &&
-      (l.pages.includes(page) || l.pages.includes("*")) &&
-      (!l.expiresAt || new Date(l.expiresAt) > new Date())
-  )
-    .sort((a, b) => a.priority - b.priority)
-    .slice(0, limit);
+export function 
 }
