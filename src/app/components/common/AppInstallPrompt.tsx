@@ -6,6 +6,10 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+export function triggerAppInstallModal() {
+  window.dispatchEvent(new CustomEvent("open-app-install-modal"));
+}
+
 export function AppInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -35,6 +39,11 @@ export function AppInstallPrompt() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
+    const handleOpenModal = () => {
+      setShowModal(true);
+    };
+    window.addEventListener("open-app-install-modal", handleOpenModal);
+
     window.addEventListener("appinstalled", () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
@@ -43,6 +52,7 @@ export function AppInstallPrompt() {
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("open-app-install-modal", handleOpenModal);
     };
   }, []);
 

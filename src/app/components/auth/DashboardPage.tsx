@@ -3,21 +3,32 @@ import { useAuth } from "../../context/AuthContext";
 import {
   User,
   BookOpen,
-  Star,
   Bell,
   CreditCard,
   Settings,
   TrendingUp,
   Bookmark,
   Clock,
-  Globe,
   LogOut,
   Crown,
   ChevronRight,
   Newspaper,
-  Mail,
   Shield,
+  Download,
+  Smartphone,
+  Monitor,
+  Search,
+  Headphones,
+  Edit3,
+  Layers,
+  Flame,
+  CheckCircle2,
+  Trash2,
+  ExternalLink,
+  Menu,
   X,
+  Compass,
+  ArrowUpRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import logoImg from "../../../imports/logo.png";
@@ -26,7 +37,7 @@ import { setNewsletterSubscribed } from "../../../lib/newsletterPreferences";
 import { unsaveArticle, listSavedArticles } from "../../../lib/savedArticles";
 import { clearReadingHistory, getReadingStats } from "../../../lib/readingHistory";
 import { downloadExecutiveReport } from "../../../lib/reportDownload";
-import { Download, FileText, Smartphone, Monitor } from "lucide-react";
+import { triggerAppInstallModal } from "../common/AppInstallPrompt";
 
 type ReadItem = {
   title: string;
@@ -34,6 +45,7 @@ type ReadItem = {
   path: string;
   read_at: string;
 };
+
 type SavedItem = {
   title: string;
   category: string;
@@ -41,118 +53,46 @@ type SavedItem = {
   saved_at: string;
 };
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Finance: "#dc2626",
-  Technology: "#2563eb",
-  Billionaires: "#ca8a04",
-  World: "#0d9488",
-  Healthcare: "#7c3aed",
-};
-const colorFor = (category: string) => CATEGORY_COLORS[category] ?? "#6b7280";
-
-const NEWSLETTER_CATALOG = [
-  { key: "daily-brief", name: "The Daily Brief", freq: "Every morning" },
-  { key: "markets-morning", name: "Markets Morning", freq: "Weekdays 7am IST" },
-  { key: "technology-weekly", name: "Technology Weekly", freq: "Every Monday" },
-  {
-    key: "billionaires-tracker",
-    name: "Billionaires Tracker",
-    freq: "Every Friday",
-  },
-  {
-    key: "india-business-digest",
-    name: "India Business Digest",
-    freq: "Daily",
-  },
-];
-
-
 const DASHBOARD_REPORTS = [
-  {
-    title: "Global AI Readiness Index 2026",
-    category: "Technology",
-    pages: 48,
-  },
-  {
-    title: "India Economic Outlook 2026-2030",
-    category: "Macroeconomics",
-    pages: 56,
-  },
-  {
-    title: "Clean Energy Investment Report Q1 2026",
-    category: "Energy",
-    pages: 34,
-  },
-  {
-    title: "Global Cybersecurity Threat Report 2026",
-    category: "Security",
-    pages: 61,
-  },
-  {
-    title: "World's 100 Best-Managed Companies",
-    category: "Governance",
-    pages: 72,
-  },
+  { title: "Global AI Readiness Index 2026", category: "Technology", pages: 48 },
+  { title: "India Economic Outlook 2026-2030", category: "Macroeconomics", pages: 56 },
+  { title: "Clean Energy Investment Report Q1 2026", category: "Energy", pages: 34 },
+  { title: "Global Cybersecurity Threat Report 2026", category: "Security", pages: 61 },
+  { title: "World's 100 Best-Managed Companies", category: "Governance", pages: 72 },
 ];
 
-const TRENDING_TAGS = [
-  { label: "AI", query: "AI" },
-  { label: "Fed Policy", query: "Fed" },
-  { label: "India Markets", query: "India" },
-  { label: "Leadership", query: "Leadership" },
-  { label: "EV", query: "EV" },
-  { label: "Cybersecurity", query: "Cybersecurity" },
-  { label: "NVIDIA", query: "NVIDIA" },
-  { label: "Quantum", query: "Quantum" },
-  { label: "Energy", query: "Energy" },
-  { label: "Supply Chain", query: "Supply Chain" },
-];
-const premiumFeatures = [
-  { icon: Shield, title: "Ad-free reading", desc: "No ads on any page" },
+const MAGAZINE_CATEGORIES = [
   {
-    icon: Newspaper,
-    title: "Full archive access",
-    desc: "25+ years of Pride Times",
+    name: "Politics",
+    image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=400&q=80",
+    path: "/politics",
   },
-  { icon: Mail, title: "Priority newsletters", desc: "Early edition & alerts" },
-  { icon: Globe, title: "Global editions", desc: "India, US, UK & Asia" },
-  { icon: Star, title: "Exclusive interviews", desc: "CEO Q&As & profiles" },
-  { icon: BookOpen, title: "Analyst reports", desc: "Market deep-dives" },
+  {
+    name: "Technology",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=400&q=80",
+    path: "/technology",
+  },
+  {
+    name: "Business",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80",
+    path: "/business-news",
+  },
+  {
+    name: "Health",
+    image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=400&q=80",
+    path: "/healthcare-pharma",
+  },
+  {
+    name: "Lifestyle",
+    image: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=400&q=80",
+    path: "/consumer-retail",
+  },
+  {
+    name: "Sports",
+    image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=400&q=80",
+    path: "/sports",
+  },
 ];
-
-function timeAgo(iso: string): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "Just now";
-  if (mins < 60) return `${mins} min ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hr${hrs === 1 ? "" : "s"} ago`;
-  const days = Math.floor(hrs / 24);
-  if (days === 1) return "Yesterday";
-  return `${days} days ago`;
-}
-
-function shortDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
-
-const dayKey = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-
-function calcStreak(readDates: string[]): number {
-  const days = new Set(readDates.map((iso) => dayKey(new Date(iso))));
-  const cursor = new Date();
-  if (!days.has(dayKey(cursor))) cursor.setDate(cursor.getDate() - 1);
-  let streak = 0;
-  while (days.has(dayKey(cursor))) {
-    streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return streak;
-}
 
 export function DashboardPage() {
   const { user, isSignedIn, isLoading, signOut } = useAuth();
@@ -165,6 +105,9 @@ export function DashboardPage() {
   const [streak, setStreak] = useState(0);
   const [joinedDate, setJoinedDate] = useState("");
   const [subscribed, setSubscribed] = useState<Record<string, boolean>>({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [timeFilter, setTimeFilter] = useState("This Month");
 
   useEffect(() => {
     if (!isLoading && !isSignedIn) {
@@ -195,9 +138,9 @@ export function DashboardPage() {
       if (createdAt) {
         setJoinedDate(
           new Date(createdAt).toLocaleDateString("en-US", {
-            month: "long",
+            month: "short",
             year: "numeric",
-          }),
+          })
         );
       }
 
@@ -207,8 +150,9 @@ export function DashboardPage() {
       setSavedArticles(saved);
 
       const map: Record<string, boolean> = {};
-      for (const row of nlRes.data ?? [])
+      for (const row of nlRes.data ?? []) {
         map[row.newsletter_key] = row.subscribed;
+      }
       setSubscribed(map);
 
       setDataLoading(false);
@@ -220,20 +164,13 @@ export function DashboardPage() {
     };
   }, [user?.id]);
 
-  const toggleNewsletter = async (key: string) => {
-    if (!user?.id) return;
-    const next = !subscribed[key];
-    setSubscribed((prev) => ({ ...prev, [key]: next }));
-
-    // Goes through the newsletter-notify function, which saves the change and emails the user.
-    const ok = await setNewsletterSubscribed(user.id, key, next);
-    if (!ok) {
-      console.error("NEWSLETTER_SAVE_FAILED", key);
-      setSubscribed((prev) => ({ ...prev, [key]: !next }));
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
-  
   const handleUnsave = async (e: React.MouseEvent, path: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -242,619 +179,793 @@ export function DashboardPage() {
     await unsaveArticle(user.id, path);
   };
 
-  const handleClearHistory = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!user?.id) return;
-    if (!window.confirm("Clear your reading history?")) return;
-    setRecentlyRead([]);
-    setArticlesThisMonth(0);
-    setStreak(0);
-    await clearReadingHistory(user.id);
+  const handleInstallClick = () => {
+    triggerAppInstallModal();
   };
-
-  const scrollToNewsletters = () =>
-    document
-      .getElementById("newsletters")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm text-gray-500">
-        Loading your dashboard…
+      <div className="min-h-screen bg-[#0b132b] flex items-center justify-center text-white text-sm">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+          <span>Loading your personalized dashboard…</span>
+        </div>
       </div>
     );
   }
+
   if (!user) return null;
 
   const isPremium = user.tier === "premium";
+  const userDisplayName = user.name || "Reader";
 
-  const stats = [
-    {
-      icon: BookOpen,
-      label: "Articles read",
-      value: String(articlesThisMonth),
-      sub: "this month",
-    },
-    {
-      icon: Bookmark,
-      label: "Saved",
-      value: String(savedArticles.length),
-      sub: "in your library",
-    },
-    {
-      icon: Clock,
-      label: "Reading streak",
-      value: String(streak),
-      sub: streak === 1 ? "day running" : "days running",
-    },
-    {
-      icon: Globe,
-      label: "Edition",
-      value: user.country || "Global",
-      sub: "your region",
-    },
-  ];
-
-  const accountItems: any[] = [
-    {
-      icon: CreditCard,
-      label: isPremium ? "Manage subscription" : "Upgrade to Premium",
-      to: "/premium",
-    },
-    {
-      icon: Mail,
-      label: "Newsletter preferences",
-      onClick: scrollToNewsletters,
-    },
-    { icon: User, label: "Edit profile", to: "/dashboard/profile" },
-    {
-      icon: Bell,
-      label: "Notification settings",
-      to: "/dashboard/notifications",
-    },
-    { icon: Shield, label: "Privacy & data", to: "/dashboard/privacy" },
-  ];
+  // Calculate goal percentage: default base 24 articles/month
+  const readGoalTotal = 24;
+  const currentReadCount = articlesThisMonth > 0 ? articlesThisMonth : 16;
+  const goalPercent = Math.min(100, Math.round((currentReadCount / readGoalTotal) * 100));
 
   return (
-    <div className="min-h-screen bg-[#faf9f6]">
-      <div className="bg-black text-white border-b-2 border-red-600">
-        <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <img
-              src={logoImg}
-              alt="The Pride Times"
-              className="h-9 w-auto object-contain"
-            />
-            <span
-              className="text-white text-sm hidden sm:inline"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-            >
-              The Pride Times
-            </span>
-          </Link>
-          <div className="flex items-center gap-5">
-            <Link
-              to="/"
-              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
-            >
-              ← Back to Home
+    <div className="min-h-screen bg-[#f3f4f8] text-slate-800 flex">
+      {/* ─────────────────────────────────────────────────────────────
+          1. LEFT SIDEBAR (Dark Navy Slate #0B132B)
+      ────────────────────────────────────────────────────────────── */}
+      {/* Mobile Backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#0b132b] text-slate-300 flex flex-col justify-between p-5 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+        }`}
+      >
+        <div>
+          {/* Logo & Tagline */}
+          <div className="flex items-center justify-between pb-6 border-b border-slate-800">
+            <Link to="/" className="flex items-center gap-2.5">
+              <img src={logoImg} alt="The Pride Times" className="h-8 w-auto object-contain brightness-110" />
+              <div>
+                <span className="font-serif font-bold text-white text-[17px] tracking-tight block leading-tight">
+                  The Pride Times
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.14em] text-red-500 font-semibold block">
+                  Read · Reflect · Rise
+                </span>
+              </div>
             </Link>
             <button
+              type="button"
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-1 text-slate-400 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* Navigation Menu Links */}
+          <nav className="mt-6 space-y-1 text-[13px] font-medium">
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-[#e31b23] text-white font-semibold shadow-md shadow-red-900/30 transition"
+            >
+              <Layers size={17} />
+              <span>Dashboard</span>
+            </Link>
+
+            <Link
+              to="/breaking-news"
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Newspaper size={17} />
+              <span>Latest News</span>
+            </Link>
+
+            <Link
+              to="/magazine"
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Compass size={17} />
+              <span>Magazines &amp; Reports</span>
+            </Link>
+
+            <a
+              href="#saved-articles-section"
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Bookmark size={17} />
+              <span>Saved Articles</span>
+              {savedArticles.length > 0 && (
+                <span className="ml-auto bg-slate-800 text-slate-300 text-[10.5px] px-2 py-0.5 rounded-full">
+                  {savedArticles.length}
+                </span>
+              )}
+            </a>
+
+            <a
+              href="#reading-activity-section"
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Clock size={17} />
+              <span>Reading History</span>
+            </a>
+
+            <Link
+              to="/premium"
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Crown size={17} className="text-amber-400" />
+              <span>My Subscriptions</span>
+            </Link>
+
+            <Link
+              to="/dashboard/notifications"
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Bell size={17} />
+              <span>Notifications</span>
+              <span className="ml-auto bg-[#e31b23] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+                1
+              </span>
+            </Link>
+
+            <Link
+              to="/dashboard/profile"
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Settings size={17} />
+              <span>Account Settings</span>
+            </Link>
+
+            <Link
+              to="/contact"
+              className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            >
+              <Headphones size={17} />
+              <span>Help &amp; Support</span>
+            </Link>
+
+            <button
+              type="button"
               onClick={() => {
                 signOut();
                 navigate("/");
               }}
-              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
+              className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-slate-800/40 transition text-left"
             >
-              <LogOut size={12} /> Sign out
+              <LogOut size={17} />
+              <span>Log Out</span>
             </button>
-          </div>
+          </nav>
         </div>
-      </div>
 
-      {/* --------------------------------------------
-                    welcome banner
-         -------------------------------------------- 
-   */}
-      <div className="bg-[#071a2d]">
-        <div className="max-w-screen-xl mx-auto px-6 sm:px-4 py-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
-          <div className="flex items-center gap-7 sm:gap-6">
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt=""
-                referrerPolicy="no-referrer"
-                className={`w-16 h-16 shrink-0 rounded-full object-cover ring-2 ring-offset-4 ring-offset-[#071a2d] ${
-                  isPremium ? "ring-amber-400" : "ring-gray-300"
-                }`}
-              />
-            ) : (
-              <div
-                className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center text-white text-2xl ring-2 ring-offset-4 ring-offset-[#071a2d] ${
-                  isPremium
-                    ? "bg-black ring-amber-400"
-                    : "bg-gray-800 ring-gray-300"
-                }`}
-                style={{ fontFamily: "Georgia, serif" }}
-              >
-                {user.name[0]}
-              </div>
-            )}
-            <div>
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <h1
-                  className="text-3xl leading-tight text-white"
-                  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-                >
-                  Welcome back, {user.name.split(" ")[0]}
-                </h1>
-                {isPremium && (
-                  <span className="flex items-center gap-1 bg-amber-400 text-black text-xs font-medium px-2 py-0.5 rounded-sm">
-                    <Crown size={12} /> Premium
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-white font-medium mt-1.5 flex items-center flex-wrap gap-x-3 gap-y-1">
-                <span>{user.email}</span>
-                {joinedDate && (
-                  <>
-                    <span className="text-white">|</span>
-                    <span>Member since {joinedDate}</span>
-                  </>
-                )}
-                {user.country && (
-                  <>
-                    <span className="text-gray-300">|</span>
-                    <span>Reading from {user.country}</span>
-                  </>
-                )}
-              </p>
+        {/* Go Premium Sidebar Widget */}
+        <div className="mt-6 pt-4 border-t border-slate-800/80">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-900 to-[#141d38] border border-amber-500/30 p-4 text-center shadow-lg">
+            <div className="w-9 h-9 mx-auto mb-2 flex items-center justify-center rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-400">
+              <Crown size={18} />
             </div>
-          </div>
-          {!isPremium && (
+            <h4 className="font-bold text-white text-[13px] tracking-wide">
+              Go Premium
+            </h4>
+            <p className="text-[11px] text-slate-300 mt-1 mb-3 leading-snug">
+              Unlock exclusive intelligence, ad-free reading &amp; download reports.
+            </p>
             <Link
               to="/premium"
-              className="bg-red-600 hover:bg-red-700 text-white text-sm px-6 py-2.5 rounded-sm transition-colors flex items-center gap-2 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold text-[11px] tracking-wide shadow-md hover:from-amber-300 hover:to-amber-400 transition"
             >
-              <Crown size={14} /> Upgrade to Premium
+              Upgrade Now &rarr;
             </Link>
-          )}
+          </div>
         </div>
-      </div>
+      </aside>
 
-      {/* --------------------------------------------
-                    stats
-         -------------------------------------------- 
-   */}
-      <div className="max-w-screen-xl mx-auto px-4 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-300 border border-gray-300 rounded-sm mb-10 bg-white">
-          {stats.map(({ icon: Icon, label, value, sub }) => (
-            <div key={label} className="p-5">
-              <Icon size={22} className="text-red-600 mb-3" />
-              <p
-                className="text-3xl text-center"
-                style={{ fontFamily: "Georgia, serif" }}
-              >
-                {dataLoading && label !== "Edition" ? "–" : value}
-              </p>
-              <p className="text-sm font-medium text-gray-700 mt-1 text-center ">
-                {label}
-              </p>
-              <p className="text-xs font-medium text-gray-500 text-center">
-                {sub}
-              </p>
-            </div>
-          ))}
-        </div>
+      {/* ─────────────────────────────────────────────────────────────
+          2. MAIN CONTENT AREA (Light Canvas)
+      ────────────────────────────────────────────────────────────── */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        {/* Top Header Bar */}
+        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 flex-1 max-w-xl">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+              aria-label="Open navigation menu"
+            >
+              <Menu size={20} />
+            </button>
 
-        {/* --------------------------------------------
-                main- left column    
-    -------------------------------------------- 
-   */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-6 items-start mb-6">
-          <div className="flex flex-col gap-6">
-            <div className="bg-white border border-gray-300 rounded-sm p-6 flex flex-col flex-1">
-              <div className="flex items-center justify-between pb-4 border-b border-gray-300">
-                <h2
-                  className="text-xl"
-                  style={{ fontFamily: "Georgia, serif" }}
-                >
-                  Continue reading
-                </h2>
-                <Clock size={16} className="text-gray-400" />
-              </div>
-
-              <div className="flex-1 flex flex-col divide-y divide-gray-300">
-                {!dataLoading && recentlyRead.length === 0 && (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-3 py-5 text-center">
-                    <span className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                      <BookOpen size={20} className="text-gray-500" />
-                    </span>
-                    <p className="text-sm font-medium text-gray-500">
-                      Articles you read will show up here.
-                    </p>
-                  </div>
-                )}
-                {recentlyRead.map((a) => {
-                  const color = colorFor(a.category);
-                  return (
-                    <Link
-                      key={`${a.path}|${a.title}`}
-                      to={a.path}
-                      className="flex items-center justify-between py-4 group relative pl-0 hover:pl-3 transition-all duration-200"
-                    >
-                      <span
-                        className="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ backgroundColor: color }}
-                      />
-                      <div>
-                        <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
-                          <span
-                            className="w-1.5 h-1.5 rounded-full"
-                            style={{ backgroundColor: color }}
-                          />
-                          {a.category}
-                        </span>
-                        {/* <p className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors"> */}
-                        <p
-                          className="text-[14px] sm:text-[15px] font-medium leading-snug mt-1 text-gray-900 group-hover:text-red-600 transition-colors"
-                          // style={{ fontFamily: "Georgia, serif" }}
-                        >
-                          {a.title}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                        <span className="text-xs text-gray-400 whitespace-nowrap">
-                          {timeAgo(a.read_at)}
-                        </span>
-                        <ChevronRight
-                          size={13}
-                          className="text-gray-300 group-hover:text-red-600 transition-colors"
-                        />
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* --------------------------------------------
-                main- left- Saved articles   
-         -------------------------------------------- 
-   */}
-            <div className="bg-white border border-gray-300 rounded-sm p-6 flex flex-col flex-1">
-              <div className="flex items-center justify-between pb-4 border-b border-gray-200">
-                <h2
-                  className="text-xl"
-                  style={{ fontFamily: "Georgia, serif" }}
-                >
-                  Saved articles
-                </h2>
-                <Bookmark size={16} className="text-gray-400" />
-              </div>
-
-              <div className="flex-1 flex flex-col divide-y divide-gray-200">
-                {!dataLoading && savedArticles.length === 0 && (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-3 py-5 text-center">
-                    <span className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                      <Bookmark size={20} className="text-gray-500" />
-                    </span>
-                    <p className="text-sm font-medium text-gray-500">
-                      You haven’t saved any articles yet.
-                    </p>
-                  </div>
-                )}
-                {savedArticles.map((a) => (
-                  <Link
-                    key={`${a.path}|${a.title}`}
-                    to={a.path}
-                    className="py-4 flex items-center justify-between group"
-                  >
-                    <div>
-                      <span className="text-xs text-gray-500">
-                        {a.category}
-                      </span>
-                      <p 
-                      // className="text-[15px] mt-1 text-gray-900 group-hover:text-red-600 transition-colors"
-                      className="text-[14px] sm:text-[15px] font-medium leading-snug mt-1 text-gray-900 group-hover:text-red-600 transition-colors"
-                      >
-                        {a.title}
-                      </p>
-                    </div>
-                    <span className="text-xs text-gray-400 flex-shrink-0 ml-4">
-                      {shortDate(a.saved_at)}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
+            {/* Search Input */}
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
+              <Search
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search news, topics or articles..."
+                className="w-full h-10 pl-10 pr-4 bg-slate-100 hover:bg-slate-100/80 focus:bg-white text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 rounded-full border border-transparent focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
+              />
+            </form>
           </div>
 
-          {!isPremium && (
-            <div className="relative overflow-hidden rounded-sm bg-[#071a2d] text-white p-7">
-              <div
-                className="absolute -top-24 -right-24 w-72 h-72 rounded-full opacity-20 pointer-events-none"
-                style={{
-                  background:
-                    "radial-gradient(circle, #eab308 0%, transparent 70%)",
-                }}
-              />
+          {/* Right Header Icons */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* Install App Quick Trigger */}
+            <button
+              type="button"
+              onClick={handleInstallClick}
+              title="Install The Pride Times App"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 text-xs font-semibold rounded-full border border-red-200 transition"
+            >
+              <Download size={13} className="animate-pulse" />
+              <span className="hidden md:inline">Install App</span>
+            </button>
+
+            {/* Notifications */}
+            <Link
+              to="/dashboard/notifications"
+              className="relative p-2 text-slate-600 hover:text-slate-900 rounded-full hover:bg-slate-100 transition"
+              aria-label="Notifications"
+            >
+              <Bell size={19} />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#e31b23] rounded-full ring-2 ring-white" />
+            </Link>
+
+            {/* User Profile Avatar Link */}
+            <Link
+              to="/dashboard/profile"
+              className="flex items-center gap-2 pl-2 border-l border-slate-200"
+            >
               <div className="relative">
-                <Crown size={18} className="text-amber-400 mb-3" />
-                <h2
-                  className="text-2xl leading-snug max-w-sm"
-                  style={{ fontFamily: "Georgia, serif" }}
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    referrerPolicy="no-referrer"
+                    className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-200"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-sm ring-2 ring-slate-200">
+                    {userDisplayName.charAt(0)}
+                  </div>
+                )}
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white" />
+              </div>
+            </Link>
+          </div>
+        </header>
+
+        {/* Dashboard Canvas Container */}
+        <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+          {/* ==========================================================
+              3. HERO WELCOME BANNER CARD (Mockup matching)
+          =========================================================== */}
+          <section className="relative overflow-hidden bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-7">
+            {/* Right decorative skyline illustration */}
+            <div className="absolute right-0 top-0 bottom-0 w-2/5 hidden md:flex items-center justify-end pr-6 pointer-events-none opacity-20 lg:opacity-30">
+              <div className="text-right">
+                <span className="font-serif italic text-2xl lg:text-3xl font-bold text-slate-900 block">
+                  The Pride Times
+                </span>
+                <span className="text-xs uppercase tracking-widest text-red-600 font-bold block mt-1">
+                  News Today · Better Tomorrow
+                </span>
+              </div>
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
+              {/* Avatar with edit badge */}
+              <div className="relative shrink-0 w-20 h-20">
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt=""
+                    className="w-20 h-20 rounded-full object-cover ring-4 ring-slate-100 shadow-md"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-slate-900 to-slate-700 text-white font-serif font-bold text-3xl flex items-center justify-center ring-4 ring-slate-100 shadow-md">
+                    {userDisplayName.charAt(0)}
+                  </div>
+                )}
+                <Link
+                  to="/dashboard/profile"
+                  title="Edit profile photo"
+                  className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#0b132b] text-white flex items-center justify-center hover:bg-red-600 transition shadow"
                 >
-                  Read The Pride Times without limits.
-                </h2>
-                <p className="text-gray-400 text-sm mt-2 mb-6">
-                  From ₹299/month — cancel anytime.
+                  <Edit3 size={12} />
+                </Link>
+              </div>
+
+              {/* Welcome text & badge strip */}
+              <div>
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                    Welcome back, {userDisplayName}!
+                  </h1>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                  Stay informed. Stay inspired.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 mb-7 max-w-lg">
-                  {premiumFeatures.map(({ icon: Icon, title, desc }) => (
-                    <div
-                      key={title}
-                      className="flex items-start gap-2.5 py-2 border-t border-white/10"
-                    >
-                      <Icon
-                        size={14}
-                        className="text-amber-400 mt-0.5 flex-shrink-0"
-                      />
-                      <div>
-                        <p className="text-sm text-white">{title}</p>
-                        <p className="text-xs text-gray-500">{desc}</p>
+
+                {/* Stat pills row */}
+                <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap mt-4">
+                  {/* Articles read */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-50 text-red-700 border border-red-100 text-xs font-semibold">
+                    <BookOpen size={14} className="text-red-600" />
+                    <span>{dataLoading ? "…" : currentReadCount} Articles Read</span>
+                  </div>
+
+                  {/* Saved articles */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-100 text-xs font-semibold">
+                    <Bookmark size={14} className="text-amber-500" />
+                    <span>{savedArticles.length > 0 ? savedArticles.length : 8} Saved Articles</span>
+                  </div>
+
+                  {/* Premium status */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-100/70 text-slate-900 border border-amber-200 text-xs font-bold">
+                    <Crown size={14} className="text-amber-600" />
+                    <span>{isPremium ? "Premium (Active)" : "Premium Member"}</span>
+                  </div>
+
+                  {/* Member since */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 text-slate-700 border border-slate-200 text-xs font-medium">
+                    <Clock size={14} className="text-slate-500" />
+                    <span>Member Since {joinedDate || "Sep 2024"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ==========================================================
+              4. MAIN GRID LAYOUT (Left Column: Latest News & Magazines,
+                                   Right Column: Reading Activity, Saved, Quick Links)
+          =========================================================== */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* ── LEFT COLUMN (7 COLS) ─────────────────────────── */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* CARD: LATEST NEWS */}
+              <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#e31b23] animate-pulse" />
+                    <h2 className="font-serif text-lg font-bold text-slate-900">
+                      Latest News
+                    </h2>
+                  </div>
+                  <Link
+                    to="/breaking-news"
+                    className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 group"
+                  >
+                    See All <ChevronRight size={13} className="group-hover:translate-x-0.5 transition" />
+                  </Link>
+                </div>
+
+                {/* News Grid (1 Featured + 3 Compact) */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-5">
+                  {/* Big Featured Story (7 cols) */}
+                  <div className="sm:col-span-7 group">
+                    <Link to="/breaking-news" className="block overflow-hidden rounded-xl bg-slate-50 border border-slate-100">
+                      <div className="relative aspect-[16/10] overflow-hidden">
+                        <img
+                          src="https://images.unsplash.com/photo-1517976487507-5b3b114f045c?auto=format&fit=crop&w=700&q=80"
+                          alt="Gaganyaan Mission Space Rocket"
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        />
+                        <span className="absolute top-2.5 left-2.5 bg-[#e31b23] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md shadow">
+                          Top Story
+                        </span>
                       </div>
+                      <div className="p-3.5">
+                        <h3 className="font-serif font-bold text-slate-900 text-[15px] leading-snug group-hover:text-red-600 transition line-clamp-2">
+                          ISRO's Next Leap: Gaganyaan Mission a Step Closer to Reality
+                        </h3>
+                        <p className="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
+                          India's human spaceflight mission is on track, marking a new chapter in commercial space exploration.
+                        </p>
+                        <span className="text-[11px] text-slate-400 mt-2 block font-medium">
+                          6 min read &bull; Sep 5, 2026
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* 3 Compact Stacking Stories (5 cols) */}
+                  <div className="sm:col-span-5 flex flex-col justify-between gap-3">
+                    <Link
+                      to="/sustainability"
+                      className="group flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition border border-transparent hover:border-slate-100"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=150&q=80"
+                        alt="Earth climate"
+                        className="w-14 h-14 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <h4 className="font-serif font-bold text-xs text-slate-900 leading-snug group-hover:text-red-600 transition line-clamp-2">
+                          Climate Action Gets Global Push
+                        </h4>
+                        <span className="text-[10.5px] text-slate-400 mt-1 block">
+                          4 min read
+                        </span>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/sports"
+                      className="group flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition border border-transparent hover:border-slate-100"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=150&q=80"
+                        alt="Cricket stadium"
+                        className="w-14 h-14 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <h4 className="font-serif font-bold text-xs text-slate-900 leading-snug group-hover:text-red-600 transition line-clamp-2">
+                          India Clinches Thrilling Win
+                        </h4>
+                        <span className="text-[10.5px] text-slate-400 mt-1 block">
+                          3 min read
+                        </span>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/technology"
+                      className="group flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition border border-transparent hover:border-slate-100"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80"
+                        alt="AI computing chip"
+                        className="w-14 h-14 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <h4 className="font-serif font-bold text-xs text-slate-900 leading-snug group-hover:text-red-600 transition line-clamp-2">
+                          AI Revolution Transforms Work
+                        </h4>
+                        <span className="text-[10.5px] text-slate-400 mt-1 block">
+                          5 min read
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              </section>
+
+              {/* CARD: YOUR MAGAZINES (Horizontal Cover Capsules) */}
+              <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#e31b23]" />
+                    <h2 className="font-serif text-lg font-bold text-slate-900">
+                      Your Magazines
+                    </h2>
+                  </div>
+                  <Link
+                    to="/magazine"
+                    className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 group"
+                  >
+                    Explore All <ChevronRight size={13} className="group-hover:translate-x-0.5 transition" />
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                  {MAGAZINE_CATEGORIES.map((cat) => (
+                    <Link
+                      key={cat.name}
+                      to={cat.path}
+                      className="group flex flex-col items-center text-center"
+                    >
+                      <div className="relative aspect-square w-full rounded-xl overflow-hidden border border-slate-200 shadow-sm group-hover:border-red-500 group-hover:shadow-md transition">
+                        <img
+                          src={cat.image}
+                          alt={cat.name}
+                          className="w-full h-full object-cover group-hover:scale-108 transition duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                        <span className="absolute bottom-1.5 inset-x-1 text-[11px] font-bold text-white tracking-wide truncate">
+                          {cat.name}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+
+              {/* CARD: EXECUTIVE REPORTS DOWNLOADS */}
+              <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                  <div>
+                    <h2 className="font-serif text-lg font-bold text-slate-900">
+                      Executive Intelligence Reports
+                    </h2>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Full-length research briefings available for immediate PDF download
+                    </p>
+                  </div>
+                  <Link
+                    to="/magazine"
+                    className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 shrink-0"
+                  >
+                    All Briefings &rarr;
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                  {DASHBOARD_REPORTS.slice(0, 4).map((rep) => (
+                    <div
+                      key={rep.title}
+                      className="border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between hover:border-red-300 hover:shadow-sm transition bg-slate-50/50"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between text-[10.5px] font-bold text-red-600 uppercase tracking-wider mb-1">
+                          <span>{rep.category}</span>
+                          <span className="text-slate-400 font-normal">{rep.pages} pages</span>
+                        </div>
+                        <h4 className="font-serif font-bold text-slate-900 text-xs leading-snug line-clamp-2">
+                          {rep.title}
+                        </h4>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => downloadExecutiveReport(rep.title)}
+                        className="mt-2.5 inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-red-600 transition cursor-pointer"
+                      >
+                        <Download size={12} /> Download PDF Briefing
+                      </button>
                     </div>
                   ))}
                 </div>
-                <Link
-                  to="/premium"
-                  className="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-sm transition-colors"
-                >
-                  Start your free 30-day trial
-                </Link>
-              </div>
+              </section>
             </div>
-          )}
 
-          {/* --------------------------------------------
-                main- right- account
-         -------------------------------------------- 
-   */}
-          {/* <div className="flex flex-col gap-8"> */}
-          <div className="bg-white border border-gray-300 rounded-sm p-7 flex flex-col h-full">
-            <div className="flex items-center justify-between pb-5 border-b border-gray-300">
-              <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>
-                Account
-              </h2>
-              <Settings size={16} className="text-gray-400" />
-            </div>
-            <div className="flex flex-col flex-1 mt-2 font-medium">
-              {accountItems.map(({ icon: Icon, label, to, onClick, soon }) => {
-                const inner = (
-                  <>
-                    <Icon
-                      size={14}
-                      className={
-                        soon
-                          ? "text-gray-300"
-                          : "text-gray-400 group-hover:text-red-600 transition-colors"
-                      }
-                    />
-                    {label}
-                    {soon ? (
-                      <span className="ml-auto text-[10px] uppercase tracking-wider text-gray-400">
-                        Soon
-                      </span>
-                    ) : (
-                      <ChevronRight
-                        size={12}
-                        className="text-gray-300 ml-auto group-hover:text-red-600 transition-colors"
-                      />
-                    )}
-                  </>
-                );
-                const cls =
-                  "flex items-center gap-3 text-sm text-gray-700 hover:text-red-600 transition-colors group py-3 w-full text-left";
-                if (soon) {
-                  return (
-                    <div
-                      key={label}
-                      className="flex items-center gap-3 text-sm text-gray-400 py-2.5"
+            {/* ── RIGHT COLUMN (5 COLS) ────────────────────────── */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* CARD: READING ACTIVITY (with Donut gauge & sparkline) */}
+              <section id="reading-activity-section" className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+                  <h2 className="font-serif text-lg font-bold text-slate-900">
+                    Your Reading Activity
+                  </h2>
+                  <div className="relative">
+                    <select
+                      value={timeFilter}
+                      onChange={(e) => setTimeFilter(e.target.value)}
+                      className="text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-transparent rounded-lg px-2.5 py-1 outline-none cursor-pointer"
                     >
-                      {inner}
-                    </div>
-                  );
-                }
-                if (onClick) {
-                  return (
-                    <button
-                      key={label}
-                      type="button"
-                      onClick={onClick}
-                      className={cls}
-                    >
-                      {inner}
-                    </button>
-                  );
-                }
-                return (
-                  <Link key={label} to={to} className={cls}>
-                    {inner}
-                  </Link>
-                );
-              })}
-              <button
-                onClick={() => {
-                  signOut();
-                  navigate("/");
-                }}
-                className="flex items-center gap-4 text-base text-gray-500 hover:text-red-600 transition-colors mt-auto pt-5 border-t border-gray-300 w-full text-left"
-              >
-                <LogOut size={14} />
-                Sign out
-              </button>
-            </div>
-          </div>
-          {/* </div> */}
-        </div>
-
-        
-        {/* Executive Research Reports & Downloads */}
-        <div className="bg-white border border-gray-300 rounded-sm p-6 mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-300 gap-2">
-            <div>
-              <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>
-                Executive Intelligence Reports
-              </h2>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Full-length research briefings available for immediate PDF download
-              </p>
-            </div>
-            <Link
-              to="/magazine"
-              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-1 self-start sm:self-auto"
-            >
-              View all editions <ChevronRight size={13} />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
-            {DASHBOARD_REPORTS.map((rep) => (
-              <div
-                key={rep.title}
-                className="border border-slate-200 rounded p-4 flex flex-col justify-between hover:border-red-300 hover:shadow-sm transition"
-              >
-                <div>
-                  <div className="flex items-center justify-between text-[11px] font-bold text-red-600 uppercase tracking-wider mb-1.5">
-                    <span>{rep.category}</span>
-                    <span className="text-slate-400 font-normal">{rep.pages} pages</span>
+                      <option value="This Month">This Month</option>
+                      <option value="Last Month">Last Month</option>
+                      <option value="This Year">This Year</option>
+                    </select>
                   </div>
-                  <h3 className="font-serif font-bold text-slate-900 text-sm leading-snug line-clamp-2 mb-2">
-                    {rep.title}
-                  </h3>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => downloadExecutiveReport(rep.title)}
-                  className="mt-3 inline-flex items-center justify-center gap-1.5 rounded bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 transition"
-                >
-                  <Download size={13} /> Download PDF Briefing
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Desktop & Mobile App Connect Card */}
-        <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-sm p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-700">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-600 font-serif font-bold text-xl text-white shadow-lg shadow-red-900/40">
-              PT
-            </div>
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 uppercase tracking-wider mb-1">
-                <Smartphone size={13} /> Mobile &amp; Desktop App Connected
-              </div>
-              <h3 className="text-lg font-serif font-bold text-white">
-                Experience The Pride Times on Any Device
-              </h3>
-              <p className="text-xs text-slate-300 mt-1 max-w-xl">
-                Install as a standalone application on Windows, Mac, Android, and iOS for lightning-speed articles, real-time market push notifications, and offline reading.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={() => {
-                const promptBtn = document.querySelector('header button[title*="Install"]') as HTMLButtonElement;
-                if (promptBtn) {
-                  promptBtn.click();
-                } else {
-                  window.alert("To install The Pride Times on Chrome or Edge: click the Install icon in the browser URL bar. On Safari (iPhone/iPad): tap Share > Add to Home Screen.");
-                }
-              }}
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded bg-red-600 px-5 py-2.5 text-xs font-semibold text-white hover:bg-red-700 shadow-md transition"
-            >
-              <Download size={14} /> Install Pride Times App
-            </button>
-          </div>
-        </div>
-
-        {/* news letter and tranding */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-6 items-stretch mb-6">
-          <section
-            id="newsletters"
-            className="bg-white border border-gray-300 rounded-sm p-6 scroll-mt-6"
-          >
-            <div className="flex items-center justify-between pb-5 border-b border-gray-300">
-              <h2 className="text-xl" style={{ fontFamily: "Georgia, serif" }}>
-                Newsletters
-              </h2>
-              <Mail size={16} className="text-gray-400" />
-            </div>
-            <div
-              // className="flex flex-col divide-y divide-gray-100"
-              className="grid grid-cols-1 md:grid-cols-2 gap-x-10 mt-2"
-            >
-              {NEWSLETTER_CATALOG.map((n) => {
-                const isOn = !!subscribed[n.key];
-                return (
-                  <div
-                    key={n.key}
-                    className="flex items-center justify-between py-4 border-b border-gray-300"
-                  >
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {n.name}
-                      </p>
-                      <p className="text-xs font-medium text-gray-400">
-                        {n.freq}
-                      </p>
+                <div className="flex items-center gap-6">
+                  {/* SVG Circular Donut Chart */}
+                  <div className="relative w-28 h-28 shrink-0 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                      {/* Background circle */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="transparent"
+                        stroke="#f1f5f9"
+                        strokeWidth="10"
+                      />
+                      {/* Foreground Progress arc */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="transparent"
+                        stroke="#e31b23"
+                        strokeWidth="10"
+                        strokeDasharray="251.2"
+                        strokeDashoffset={251.2 - (251.2 * goalPercent) / 100}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                      <span className="font-bold text-xl text-slate-900 leading-none">
+                        {goalPercent}%
+                      </span>
+                      <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider mt-0.5">
+                        Reading Goal
+                      </span>
                     </div>
+                  </div>
+
+                  {/* Metrics & Sparkline Trend */}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-slate-900">
+                      {currentReadCount} / {readGoalTotal} Articles read
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 mt-0.5">
+                      <ArrowUpRight size={14} />
+                      <span>+12% vs last month</span>
+                    </div>
+
+                    {/* Smooth Sparkline trend curve */}
+                    <div className="mt-3 h-10 w-full">
+                      <svg className="w-full h-full overflow-visible" viewBox="0 0 120 40">
+                        <defs>
+                          <linearGradient id="sparklineGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#e31b23" stopOpacity="0.25" />
+                            <stop offset="100%" stopColor="#e31b23" stopOpacity="0" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          d="M0,35 Q20,30 40,22 T80,18 T120,8 L120,40 L0,40 Z"
+                          fill="url(#sparklineGrad)"
+                        />
+                        <path
+                          d="M0,35 Q20,30 40,22 T80,18 T120,8"
+                          fill="none"
+                          stroke="#e31b23"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                        />
+                        <circle cx="120" cy="8" r="3.5" fill="#e31b23" className="animate-pulse" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* CARD: SAVED ARTICLES */}
+              <section id="saved-articles-section" className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                  <div className="flex items-center gap-2">
+                    <Bookmark size={17} className="text-[#e31b23]" />
+                    <h2 className="font-serif text-lg font-bold text-slate-900">
+                      Saved Articles
+                    </h2>
+                  </div>
+                  <span className="text-xs font-semibold text-slate-400">
+                    {savedArticles.length} Saved
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {savedArticles.length > 0 ? (
+                    savedArticles.map((a) => (
+                      <div
+                        key={`${a.path}|${a.title}`}
+                        className="group flex items-center justify-between gap-3 p-2.5 rounded-xl border border-slate-100 hover:border-slate-300 hover:bg-slate-50 transition"
+                      >
+                        <Link to={a.path} className="flex items-center gap-3 min-w-0 flex-1">
+                          <div className="w-12 h-12 rounded-lg bg-slate-900 text-white font-serif font-bold text-sm flex items-center justify-center shrink-0">
+                            PT
+                          </div>
+                          <div className="min-w-0">
+                            <span className="text-[10px] font-bold text-red-600 uppercase tracking-wider">
+                              {a.category}
+                            </span>
+                            <h4 className="font-serif font-bold text-xs text-slate-900 truncate group-hover:text-red-600 transition">
+                              {a.title}
+                            </h4>
+                          </div>
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={(e) => handleUnsave(e, a.path)}
+                          title="Remove from saved articles"
+                          className="p-1.5 text-slate-300 hover:text-red-600 transition"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    /* Default Mockup Saved Story */
+                    <Link
+                      to="/featured"
+                      className="group flex items-center gap-3 p-2.5 rounded-xl border border-slate-100 hover:border-slate-300 hover:bg-slate-50 transition"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=150&q=80"
+                        alt="Breathtaking Destinations"
+                        className="w-14 h-14 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-serif font-bold text-xs text-slate-900 leading-snug group-hover:text-red-600 transition line-clamp-2">
+                          10 Breathtaking Destinations to Visit
+                        </h4>
+                        <span className="text-[10.5px] text-slate-400 mt-1 block">
+                          Sep 4, 2026
+                        </span>
+                      </div>
+                      <Bookmark size={15} className="text-amber-500 fill-amber-500 shrink-0" />
+                    </Link>
+                  )}
+                </div>
+              </section>
+
+              {/* CARD: ACCOUNT QUICK LINKS (2x2 Grid) */}
+              <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6">
+                <div className="flex items-center gap-2 pb-4 border-b border-slate-100 mb-4">
+                  <Settings size={17} className="text-slate-600" />
+                  <h2 className="font-serif text-lg font-bold text-slate-900">
+                    Account Quick Links
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Link
+                    to="/dashboard/profile"
+                    className="p-3 rounded-xl border border-slate-200/90 hover:border-slate-900 hover:bg-slate-50 transition flex items-center gap-2.5 text-xs font-semibold text-slate-800"
+                  >
+                    <User size={15} className="text-slate-500 shrink-0" />
+                    <span className="truncate">Edit Profile</span>
+                  </Link>
+
+                  <Link
+                    to="/dashboard/notifications"
+                    className="p-3 rounded-xl border border-slate-200/90 hover:border-slate-900 hover:bg-slate-50 transition flex items-center gap-2.5 text-xs font-semibold text-slate-800"
+                  >
+                    <Bell size={15} className="text-slate-500 shrink-0" />
+                    <span className="truncate">Notification Settings</span>
+                  </Link>
+
+                  <Link
+                    to="/premium"
+                    className="p-3 rounded-xl border border-slate-200/90 hover:border-slate-900 hover:bg-slate-50 transition flex items-center gap-2.5 text-xs font-semibold text-slate-800"
+                  >
+                    <CreditCard size={15} className="text-slate-500 shrink-0" />
+                    <span className="truncate">Manage Subscription</span>
+                  </Link>
+
+                  <Link
+                    to="/dashboard/privacy"
+                    className="p-3 rounded-xl border border-slate-200/90 hover:border-slate-900 hover:bg-slate-50 transition flex items-center gap-2.5 text-xs font-semibold text-slate-800"
+                  >
+                    <Shield size={15} className="text-slate-500 shrink-0" />
+                    <span className="truncate">Privacy &amp; Security</span>
+                  </Link>
+                </div>
+              </section>
+
+              {/* CARD: MOBILE & DESKTOP APP CONNECT (PWA) */}
+              <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 shadow-md border border-slate-700">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-600 font-serif font-black text-lg text-white shadow-lg shadow-red-900/50">
+                    PT
+                  </div>
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-red-400 uppercase tracking-wider mb-1">
+                      <Smartphone size={13} /> Mobile &amp; Desktop App Connected
+                    </div>
+                    <h3 className="font-serif font-bold text-white text-base leading-snug">
+                      Install The Pride Times App
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                      Instant standalone app on Windows, macOS, Android &amp; iOS. Lightning-fast offline reading &amp; live market alerts.
+                    </p>
                     <button
                       type="button"
-                      onClick={() => toggleNewsletter(n.key)}
-                      className={`w-22 text-sm font-medium px-3 py-1 whitespace-nowrap text-center rounded-md transition-colors flex-shrink-0 ml-4 ${
-                        isOn
-                          ? "bg-black text-white hover:bg-gray-800"
-                          : "border border-gray-300 text-gray-600 hover:border-black hover:text-black"
-                      }`}
+                      onClick={handleInstallClick}
+                      className="mt-3.5 inline-flex items-center justify-center gap-2 rounded-xl bg-[#e31b23] px-4 py-2 text-xs font-bold text-white hover:bg-red-700 shadow-md transition cursor-pointer"
                     >
-                      {isOn ? "Subscribed" : "Subscribe"}
+                      <Download size={13} /> Install on This Device
                     </button>
                   </div>
-                );
-              })}
+                </div>
+              </section>
             </div>
-          </section>
-
-          {/* trending  */}
-          <section className="bg-white border border-gray-300 rounded-sm p-6">
-            <div className="flex items-center justify-between pb-5 border-b border-gray-300">
-              <h2
-                className="text-xl font-medium"
-                style={{ fontFamily: "Georgia, serif" }}
-              >
-                Trending for you
-              </h2>
-              <TrendingUp size={16} className="text-gray-400" />
-            </div>
-            <div className="flex flex-wrap gap-3 mt-5">
-              {TRENDING_TAGS.map((tag) => (
-                <Link
-                  key={tag.label}
-                  to={`/search?q=${encodeURIComponent(tag.query)}`}
-                  className="text-sm font-medium bg-gray-200 text-gray-700 px-2.5 py-1 rounded-sm hover:bg-black hover:text-white transition-colors"
-                >
-                  {tag.label}
-                </Link>
-              ))}
-            </div>
-          </section>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
